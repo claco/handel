@@ -1,9 +1,6 @@
 NAME
     Handel - Simple commerce framework with AxKit/TT2 support
 
-VERSION
-        $Id: Handel.pm 275 2005-03-02 02:22:31Z claco $
-
 DESCRIPTION
     Handel is a quick and not-so-dirty ecommerce framework with AxKit taglib
     support and TT2 (template Toolkit) support. It was started for the

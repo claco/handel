@@ -1,9 +1,10 @@
+# $Id$
 package Handel;
 use strict;
 use warnings;
 use vars qw($VERSION);
 
-$VERSION = '0.13';
+$VERSION = '0.14';
 
 1;
 __END__
@@ -11,10 +12,6 @@ __END__
 =head1 NAME
 
 Handel - Simple commerce framework with AxKit/TT2 support
-
-=head1 VERSION
-
-    $Id$
 
 =head1 DESCRIPTION
 
