@@ -1,7 +1,7 @@
 [%# $Id$ %]
 [% USE hcart  = Handel.Cart %]
 <body>
-    [% FOREACH cart IN hcart.fetch %]
+    [% FOREACH cart = hcart.fetch %]
 		<cart>
 			<count>[% cart.count %]</count>
 			<description>[% cart.description %]</description>

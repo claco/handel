@@ -61,7 +61,7 @@
 			<shopper>[% cart.shopper %]</shopper>
 			<subtotal>[% cart.subtotal %]</subtotal>
 			<type>[% cart.type %]</type>
-			[% FOREACH item IN cart.items %]
+			[% FOREACH item = cart.items %]
 				<item>
 					<description>[% item.description %]</description>
 					<id>[% item.id %]</id>
@@ -76,7 +76,7 @@
 			<name>[% cart.name %]</name>
 			<count>[% cart.count %]</count>
 			<subtotal>[% cart.subtotal %]</subtotal>
-			[% FOREACH item IN cart.items %]
+			[% FOREACH item = cart.items %]
 				<restoreditem>
 					<description>[% item.description %]</description>
 					<price>[% item.price %]</price>

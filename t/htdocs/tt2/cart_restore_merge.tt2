@@ -61,7 +61,7 @@
 			<shopper>[% cart.shopper %]</shopper>
 			<subtotal>[% cart.subtotal %]</subtotal>
 			<type>[% cart.type %]</type>
-			[% FOREACH item IN cart.items %]
+			[% FOREACH item = cart.items %]
 				<item>
 					<description>[% item.description %]</description>
 					<id>[% item.id %]</id>
@@ -74,7 +74,7 @@
 			[% CALL cart.restore({id => '01B9CE36-B18D-4D30-A860-DB54993D4F80'}, hcart.CART_MODE_MERGE) %]
 			<count>[% cart.count %]</count>
 			<subtotal>[% cart.subtotal %]</subtotal>
-			[% FOREACH item IN cart.items %]
+			[% FOREACH item = cart.items %]
 				<restoreditem>
 					<description>[% item.description %]</description>
 					<price>[% item.price %]</price>
