@@ -1,4 +1,9 @@
-.svn
-blib
+\bRCS\b
+\bCVS\b
+,v$
+\B\.svn\b
+^blib/
+^pm_to_blib
+^MakeMaker-\d
 Makefile
 \.db
