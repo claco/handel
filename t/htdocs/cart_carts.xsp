@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<xsp:page
+	xmlns:xsp="http://apache.org/xsp/core/v1"
+	xmlns:cart="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart"
+>
+	<body>
+		<cart:new>
+			<cart:id>892AB156-A5F3-4DBA-B140-58F006A2D138</cart:id>
+			<cart:description>My First Shopping Cart</cart:description>
+			<cart:name>New Cart 1</cart:name>
+			<cart:shopper>563BD51D-A738-4F5A-8DA5-5A2979A1D377</cart:shopper>
+			<cart:type>1</cart:type>
+			<cart:no-results><message>Error adding cart</message></cart:no-results>
+		</cart:new>
+		<cart:new>
+			<cart:id>07895EA8-59BE-450B-B551-49A1A613020F</cart:id>
+			<cart:description>My Second Shopping Cart</cart:description>
+			<cart:name>New Cart 2</cart:name>
+			<cart:shopper>563BD51D-A738-4F5A-8DA5-5A2979A1D377</cart:shopper>
+			<cart:type>1</cart:type>
+			<cart:no-results><message>Error adding cart</message></cart:no-results>
+		</cart:new>
+
+		<cart:carts>
+			<cart:results>
+				<cart>
+					<count><cart:count/></count>
+					<description><cart:description/></description>
+					<id><cart:id/></id>
+					<name><cart:name/></name>
+					<shopper><cart:shopper/></shopper>
+					<subtotal><cart:subtotal/></subtotal>
+					<type><cart:type/></type>
+				</cart>
+			</cart:results>
+			<cart:no-results>
+				<message>Could not find carts</message>
+			</cart:no-results>
+		</cart:carts>
+	</body>
+</xsp:page>

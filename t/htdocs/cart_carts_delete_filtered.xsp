@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<xsp:page
+	xmlns:xsp="http://apache.org/xsp/core/v1"
+	xmlns:cart="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart"
+>
+	<body>
+		<cart:new>
+			<cart:description>My New Shopping Cart</cart:description>
+			<cart:id>61EA6588-22B7-43AE-AF35-169A40E21899</cart:id>
+			<cart:name>New Cart</cart:name>
+			<cart:shopper>F0FC9F05-6692-498F-A1B6-305687AB059A</cart:shopper>
+			<cart:type>0</cart:type>
+			<cart:results>
+				<cart:add>
+					<cart:description>My New Item</cart:description>
+					<cart:id>AEFB671A-9C22-45E0-B97D-D21BC032CB19</cart:id>
+					<cart:price>1.23</cart:price>
+					<cart:quantity>2</cart:quantity>
+					<cart:sku>NEWSKU123</cart:sku>
+					<cart:no-results>
+						<message>Error adding cart item</message>
+					</cart:no-results>
+				</cart:add>
+				<cart:add>
+					<cart:description>My New Item</cart:description>
+					<cart:id>4E296DFA-6310-46EC-97DA-BE529349D6CF</cart:id>
+					<cart:price>1.01</cart:price>
+					<cart:quantity>1</cart:quantity>
+					<cart:sku>NEWSKU345</cart:sku>
+					<cart:no-results>
+						<message>Error adding cart item</message>
+					</cart:no-results>
+				</cart:add>
+			</cart:results>
+			<cart:no-results>
+				<message>Error creating shopping cart</message>
+			</cart:no-results>
+		</cart:new>
+		<cart:new>
+			<cart:description>My New Shopping Cart 2</cart:description>
+			<cart:id>FB52DB56-4BED-4F70-869D-0BAC2427186D</cart:id>
+			<cart:name>New Cart 2</cart:name>
+			<cart:shopper>F0FC9F05-6692-498F-A1B6-305687AB059A</cart:shopper>
+			<cart:type>0</cart:type>
+			<cart:results>
+				<cart:add>
+					<cart:description>My New Item</cart:description>
+					<cart:id>D6748E22-8920-4C29-A8FC-236E6387E967</cart:id>
+					<cart:price>1.23</cart:price>
+					<cart:quantity>2</cart:quantity>
+					<cart:sku>NEWSKU123</cart:sku>
+					<cart:no-results>
+						<message>Error adding cart item</message>
+					</cart:no-results>
+				</cart:add>
+				<cart:add>
+					<cart:description>My New Item</cart:description>
+					<cart:id>11D964CD-13DC-4476-BBD0-DAF3A2F70E86</cart:id>
+					<cart:price>1.01</cart:price>
+					<cart:quantity>1</cart:quantity>
+					<cart:sku>NEWSKU345</cart:sku>
+					<cart:no-results>
+						<message>Error adding cart item</message>
+					</cart:no-results>
+				</cart:add>
+			</cart:results>
+			<cart:no-results>
+				<message>Error creating shopping cart</message>
+			</cart:no-results>
+		</cart:new>
+
+		<cart:carts>
+			<cart:filter name="shopper">F0FC9F05-6692-498F-A1B6-305687AB059A</cart:filter>
+			<cart:results>
+				<cart>
+					<count><cart:count/></count>
+					<description><cart:description/></description>
+					<id><cart:id/></id>
+					<name><cart:name/></name>
+					<shopper><cart:shopper/></shopper>
+					<subtotal><cart:subtotal/></subtotal>
+					<type><cart:type/></type>
+					<cart:delete sku="NEW123"/>
+					<count><cart:count/></count>
+					<subtotal><cart:subtotal/></subtotal>
+				</cart>
+			</cart:results>
+			<cart:no-results>
+				<message>Could not find cart</message>
+			</cart:no-results>
+		</cart:carts>
+	</body>
+</xsp:page>

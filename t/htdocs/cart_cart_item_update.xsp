@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<xsp:page
+	xmlns:xsp="http://apache.org/xsp/core/v1"
+	xmlns:cart="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart"
+>
+	<body>
+		<cart:new>
+			<cart:description>My New Shopping Cart</cart:description>
+			<cart:id>EC53E087-381B-4267-B021-B94963F95187</cart:id>
+			<cart:name>New Cart</cart:name>
+			<cart:shopper>6317D584-7EEF-4D16-8FCA-C37568F09DCF</cart:shopper>
+			<cart:type>0</cart:type>
+			<cart:results>
+				<cart:add id="18C9050C-1973-4A56-A7C6-F609BD204898" sku="SKU1" price="1.11" quantity="1" description="Description 1"/>
+				<cart:add id="C2B8F092-2AAF-4D59-845F-2A119E4408B5" sku="SKU2" price="2.22" quantity="2" description="Description 1"/>
+			</cart:results>
+			<cart:no-results>
+				<message>Error creating shopping cart</message>
+			</cart:no-results>
+		</cart:new>
+
+		<cart:cart type="0">
+			<cart:filter name="id">EC53E087-381B-4267-B021-B94963F95187</cart:filter>
+			<cart:results>
+				<cart>
+					<count><cart:count/></count>
+					<description><cart:description/></description>
+					<id><cart:id/></id>
+					<name><cart:name/></name>
+					<shopper><cart:shopper/></shopper>
+					<subtotal><cart:subtotal/></subtotal>
+					<type><cart:type/></type>
+					<cart:item id="18C9050C-1973-4A56-A7C6-F609BD204898">
+						<cart:filter name="sku">SKU1</cart:filter>
+						<cart:results>
+							<item>
+								<description><cart:description/></description>
+								<id><cart:id/></id>
+								<price><cart:price/></price>
+								<quantity><cart:quantity/></quantity>
+								<sku><cart:sku/></sku>
+								<total><cart:total/></total>
+							</item>
+							<cart:update>
+								<cart:description>My Updated Item</cart:description>
+								<cart:price>3.33</cart:price>
+								<cart:quantity>3</cart:quantity>
+								<cart:sku>UPDATED123</cart:sku>
+							</cart:update>
+							<item>
+								<description><cart:description/></description>
+								<id><cart:id/></id>
+								<price><cart:price/></price>
+								<quantity><cart:quantity/></quantity>
+								<sku><cart:sku/></sku>
+								<total><cart:total/></total>
+							</item>
+						</cart:results>
+						<cart:no-results>
+							<message>Cart item not found</message>
+						</cart:no-results>
+					</cart:item>
+					<subtotal><cart:subtotal/></subtotal>
+				</cart>
+			</cart:results>
+			<cart:no-results>
+				<message>Could not find cart</message>
+			</cart:no-results>
+		</cart:cart>
+	</body>
+</xsp:page>
