@@ -2,6 +2,7 @@ package AxKit::XSP::Handel::Cart;
 use strict;
 use warnings;
 use vars qw($NS);
+use Handel::ConfigReader;
 use Handel::Constants qw(:cart str_to_const);
 use Handel::Exception;
 use Handel::L10N qw(translate);
@@ -238,15 +239,18 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
                 return "\n\$_xsp_handel_cart_new_filter{$tag} = ''";
             } elsif ($context[$#context] eq 'add' && $tag =~ /^(id|description)$/) {
                 return "\n\$_xsp_handel_cart_add_filter{$tag} = ''";
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'new') {
+            } elsif ($context[$#context] eq 'results' && $context[$#context-1] =~ /^(new|cart(s?))$/) {
                 $e->start_expr($tag);
-                $e->append_to_script("\$_xsp_handel_cart_cart->$tag;\n");
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'cart') {
-                $e->start_expr($tag);
-                $e->append_to_script("\$_xsp_handel_cart_cart->$tag;\n");
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'carts') {
-                $e->start_expr($tag);
-                $e->append_to_script("\$_xsp_handel_cart_cart->$tag;\n");
+
+                if ($tag eq 'subtotal' && defined($attr{'format'})) {
+                    my $cfg = Handel::ConfigReader->new();
+                    my $code   = $attr{'code'}    || $cfg->{'HandelCurrencyCode'};
+                    my $format = $attr{'options'} || $cfg->{'HandelCurrencyFormat'};
+
+                    $e->append_to_script("\$_xsp_handel_cart_cart->$tag->format('$code', '$format');\n");
+                } else {
+                    $e->append_to_script("\$_xsp_handel_cart_cart->$tag;\n");
+                };
             } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'item') {
                 $e->start_expr($tag);
                 $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
@@ -279,12 +283,18 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
             } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'add') {
                 $e->start_expr($tag);
                 $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'item') {
+            } elsif ($context[$#context] eq 'results' && $context[$#context-1] =~ /^item(s?)$/) {
                 $e->start_expr($tag);
-                $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'items') {
-                $e->start_expr($tag);
-                $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
+
+                if ($tag =~ /^(price|total)$/ && defined($attr{'format'})) {
+                    my $cfg = Handel::ConfigReader->new();
+                    my $code   = $attr{'code'}    || $cfg->{'HandelCurrencyCode'};
+                    my $format = $attr{'options'} || $cfg->{'HandelCurrencyFormat'};
+
+                    $e->append_to_script("\$_xsp_handel_cart_item->$tag->format('$code', '$format');\n");
+                } else {
+                    $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
+                };
             } elsif ($context[$#context] eq 'delete') {
                 return "\n\$_xsp_handel_cart_delete_filter{$tag} = ''";
             } elsif ($context[$#context] eq 'update') {
@@ -763,7 +773,7 @@ attribute in C<E<lt>cart:restoreE<gt>> now take the constants declared in C<Hand
             <cart:id/>
             <cart:name/>
             <cart:shopper/>
-            <cart:subtotal/>
+            <cart:subtotal format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
             <cart:type/>
             <cart:add id|sku|quantity|price|description="value"...>
                 <cart:description>value</cart:description>
@@ -774,10 +784,10 @@ attribute in C<E<lt>cart:restoreE<gt>> now take the constants declared in C<Hand
                 <cart:results>
                     <cart:description/>
                     <cart:id/>
-                    <cart:price/>
+                    <cart:price format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
                     <cart:quantity/>
                     <cart:sku/>
-                    <cart:total/>
+                    <cart:total format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
                 </cart:results>
                 <cart:no-results>
                     ...
@@ -800,10 +810,10 @@ attribute in C<E<lt>cart:restoreE<gt>> now take the constants declared in C<Hand
                 <cart:results>
                     <cart:description/>
                     <cart:id/>
-                    <cart:price/>
+                    <cart:price format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
                     <cart:quantity/>
                     <cart:sku/>
-                    <cart:total/>
+                    <cart:total format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
                 </cart:results>
                 </cart:no-results>
                     ...
@@ -825,10 +835,10 @@ attribute in C<E<lt>cart:restoreE<gt>> now take the constants declared in C<Hand
                 <cart:results>
                     <cart:description/>
                     <cart:id/>
-                    <cart:price/>
+                    <cart:price format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
                     <cart:quantity/>
                     <cart:sku/>
-                    <cart:total/>
+                    <cart:total format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
                     <cart:update>
                         <cart:description>value</cart:description>
                         <cart:price>value</cart:price>
@@ -845,7 +855,7 @@ attribute in C<E<lt>cart:restoreE<gt>> now take the constants declared in C<Hand
                 <cart:filter name="description|id|name|shopper|type">value</cart:filter>
             </cart:restore>
             <cart:save/>
-            <cart:subtotal/>
+            <cart:subtotal format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
             <cart:type/>
             <cart:update>
                 <cart:description></cart:description>
@@ -1213,6 +1223,34 @@ In C<E<lt>cart:itemE<gt>> or C<E<lt>cart:itemsE<gt>> it returns the price for th
         </cart:no-results>
     </cart:cart>
 
+Starting in version C<0.13>, the currency formatting options from L<Handel::Currency>
+are now available within the taglib.
+
+     <cart:price format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
+
+=over
+
+=item format
+
+Toggle switch that enables or disables currency formatting. If empty, unspecified, or
+set to 0, no formatting will take place and the result price (usually in decimal form)
+is returns unaltered.
+
+If C<format> is set to anhything else, the default formatting will be applied. See L<Handel::Currency>
+for the currency default settings.
+
+=item code
+
+If formatting is enabled, the C<code> attribute specifies the desired three letter ISO currency code
+to be used when formatting currency. See <Locale::Currency::Format> for the available codes.
+
+=item options
+
+If formatting is enabled, the C<options> attribute specifies the desired formatting options
+to be used when formatting currency. See <Locale::Currency::Format> for the available options.
+
+=back
+
 =head2 <cart:quantity>
 
 Context aware tag to get or set the quantity of a cart item. In C<E<lt>cart:addE<gt>> and C<E<lt>cart:updateE<gt>>
@@ -1378,6 +1416,13 @@ Returns the subtotal of the items in the current cart:
         </cart:no-results>
     </cart:cart>
 
+Starting in version C<0.13>, the currency formatting options from L<Handel::Currency>
+are now available within the taglib.
+
+     <cart:subtotal format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
+
+See <cart:price> above for further details about price formatting.
+
 =head2 <cart:total>
 
 Returns the total of the current cart item:
@@ -1401,6 +1446,13 @@ Returns the total of the current cart item:
             <message>The cart requested could not be found.</message>
         </cart:no-results>
     </cart:cart>
+
+Starting in version C<0.13>, the currency formatting options from L<Handel::Currency>
+are now available within the taglib.
+
+     <cart:total format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
+
+See <cart:price> above for further details about price formatting.
 
 =head2 <cart:type>
 
