@@ -1,6 +1,7 @@
 package Handel::L10N::fr;
 use strict;
 use warnings;
+use utf8;
 use vars qw(%Lexicon);
 
 BEGIN {
@@ -8,14 +9,38 @@ BEGIN {
 };
 
 %Lexicon = (
-    'An unspecified commerce error has ocurred' =>
-        'Une erreur non spécifiée de commerce a ocurred',
+    "Language" =>
+        "Français",
 
-    'The supplied field(s) failed database constraints' =>
-        'Le field(s) assuré a échoué des contraintes de base de données',
+    ## Base exceptions
+    "An unspecified error has occurred" =>
+        "Une erreur non spécifiée s'est produite",
 
-    'The argument supplied is invalid or of the wrong type' =>
-        "L'argument fourni est inadmissible ou du type inapproprié"
+    "The supplied field(s) failed database constraints" =>
+        "Le field(s) assuré a échoué des contraintes de base de données",
+
+    "The argument supplied is invalid or of the wrong type" =>
+        "L'argument fourni est inadmissible ou du type inapproprié",
+
+    "Required modules not found" =>
+        "Modules requis non trouvés",
+
+    ## param 1 violations
+    "Param 1 is not a HASH reference" =>
+        "Le param 1 n'est pas une référence d'cInformations PARASITES",
+
+    "Param 1 is not a HASH reference or Handel::Cart::Item" =>
+        "Le param 1 n'est pas une référence d'cInformations PARASITES ou un Handel::Cart::Item",
+
+    "Unknown restore mode" =>
+        "Mode inconnu de restauration",
+
+    ## naughty bits
+    "has invalid value" =>
+        "a la valeur inadmissible",
+
+    "[_1] value already exists" =>
+        "[_1] la valeur existe déjà",
 );
 
 1;
