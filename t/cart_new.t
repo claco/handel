@@ -11,7 +11,7 @@ BEGIN {
     if($@) {
         plan skip_all => 'DBD::SQLite not installed';
     } else {
-        plan tests => 43;
+        plan tests => 47;
     };
 
     use_ok('Handel::Cart');
@@ -141,6 +141,19 @@ BEGIN {
     is($cart->description, undef);
     is($cart->count, 0);
     is($cart->subtotal, 0);
+
+    eval 'use Locale::Currency::Format';
+    if ($@) {
+        is($cart->subtotal->format, 0);
+        is($cart->subtotal->format('CAD'), 0);
+        is($cart->subtotal->format(undef, 'FMT_NAME'), 0);
+        is($cart->subtotal->format('CAD', 'FMT_NAME'), 0);
+    } else {
+        is($cart->subtotal->format, '0.00 USD');
+        is($cart->subtotal->format('CAD'), '0.00 CAD');
+        is($cart->subtotal->format(undef, 'FMT_NAME'), '0.00 US Dollar');
+        is($cart->subtotal->format('CAD', 'FMT_NAME'), '0.00 Canadian Dollar');
+    };
 };
 
 
