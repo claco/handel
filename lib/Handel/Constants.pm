@@ -36,7 +36,7 @@ __END__
 
 =head1 NAME
 
-Handel::Constants - Common constats used in Handel
+Handel::Constants - Common constants used in Handel
 
 =head1 VERSION
 
