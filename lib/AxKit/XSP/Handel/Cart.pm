@@ -243,12 +243,20 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
             } elsif ($context[$#context] eq 'results' && $context[$#context-1] =~ /^(new|cart(s?))$/) {
                 $e->start_expr($tag);
 
-                if ($tag eq 'subtotal' && defined($attr{'format'})) {
+                if ($tag eq 'subtotal' && ($attr{'format'} || $attr{'convert'})) {
                     my $cfg = Handel::ConfigReader->new();
-                    my $code   = $attr{'code'}    || $cfg->{'HandelCurrencyCode'};
+                    my $code   = $attr{'to'}      || $attr{'code'} || $cfg->{'HandelCurrencyCode'};
                     my $format = $attr{'options'} || $cfg->{'HandelCurrencyFormat'};
+                    my $from   = $attr{'from'}    || $cfg->{'HandelCurrencyCode'};
+                    my $to     = $attr{'to'}      || $attr{'code'} || $cfg->{'HandelCurrencyCode'};
 
-                    $e->append_to_script("\$_xsp_handel_cart_cart->$tag->format('$code', '$format');\n");
+                    AxKit::Debug(5, "[Handel] [$tag] code=$code, format=$format, from=$from, to=$to");
+
+                    if ($attr{'convert'}) {
+                        $e->append_to_script("\$_xsp_handel_cart_cart->$tag->convert('$from', '$to', '".$attr{'format'}."', '$format');\n");
+                    } elsif ($attr{'format'}) {
+                        $e->append_to_script("\$_xsp_handel_cart_cart->$tag->format('$code', '$format');\n");
+                    };
                 } else {
                     $e->append_to_script("\$_xsp_handel_cart_cart->$tag;\n");
                 };
@@ -287,12 +295,20 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
             } elsif ($context[$#context] eq 'results' && $context[$#context-1] =~ /^item(s?)$/) {
                 $e->start_expr($tag);
 
-                if ($tag =~ /^(price|total)$/ && defined($attr{'format'})) {
+                if ($tag =~ /^(price|total)$/ && ($attr{'format'} || $attr{'convert'})) {
                     my $cfg = Handel::ConfigReader->new();
-                    my $code   = $attr{'code'}    || $cfg->{'HandelCurrencyCode'};
+                    my $code   = $attr{'to'}      || $attr{'code'} || $cfg->{'HandelCurrencyCode'};
                     my $format = $attr{'options'} || $cfg->{'HandelCurrencyFormat'};
+                    my $from   = $attr{'from'}    || $cfg->{'HandelCurrencyCode'};
+                    my $to     = $attr{'to'}      || $attr{'code'} || $cfg->{'HandelCurrencyCode'};
 
-                    $e->append_to_script("\$_xsp_handel_cart_item->$tag->format('$code', '$format');\n");
+                    AxKit::Debug(5, "[Handel] [$tag] code=$code, format=$format, from=$from, to=$to");
+
+                    if ($attr{'convert'}) {
+                        $e->append_to_script("\$_xsp_handel_cart_item->$tag->convert('$from', '$to', '".$attr{'format'}."', '$format');\n");
+                    } elsif ($attr{'format'}) {
+                        $e->append_to_script("\$_xsp_handel_cart_item->$tag->format('$code', '$format');\n");
+                    };
                 } else {
                     $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
                 };
@@ -755,6 +771,16 @@ attribute in C<E<lt>cart:restoreE<gt>> now take the constants declared in C<Hand
         ...
     </cart:restore>
 
+Starting in version C<0.15>, the currency conversion options from L<Handel::Currency>
+are now available within the taglib.
+
+    <cart:subtotal convert="0|1" from="USD|CAD|..." to="CAD|JPY|..." />
+
+Starting in version C<0.13>, the currency formatting options from L<Handel::Currency>
+are now available within the taglib.
+
+     <cart:price format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
+
 =head1 TAG HIERARCHY
 
     <cart:uuid/>
@@ -770,7 +796,14 @@ attribute in C<E<lt>cart:restoreE<gt>> now take the constants declared in C<Hand
             <cart:id/>
             <cart:name/>
             <cart:shopper/>
-            <cart:subtotal format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
+            <cart:subtotal
+                format="0|1"
+                code="USD|CAD|..."
+                options="FMT_STANDARD|FMT_NAME|..."
+                convert="0|1"
+                from="USD|CAD|..."
+                to="CAD|JPY|..."
+            />
             <cart:type/>
             <cart:add id|sku|quantity|price|description="value"...>
                 <cart:description>value</cart:description>
@@ -781,10 +814,24 @@ attribute in C<E<lt>cart:restoreE<gt>> now take the constants declared in C<Hand
                 <cart:results>
                     <cart:description/>
                     <cart:id/>
-                    <cart:price format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
+                    <cart:price
+                        format="0|1"
+                        code="USD|CAD|..."
+                        options="FMT_STANDARD|FMT_NAME|..."
+                        convert="0|1"
+                        from="USD|CAD|..."
+                        to="CAD|JPY|..."
+                    />
                     <cart:quantity/>
                     <cart:sku/>
-                    <cart:total format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
+                    <cart:total
+                        format="0|1"
+                        code="USD|CAD|..."
+                        options="FMT_STANDARD|FMT_NAME|..."
+                        convert="0|1"
+                        from="USD|CAD|..."
+                        to="CAD|JPY|..."
+                    />
                 </cart:results>
                 <cart:no-results>
                     ...
@@ -807,10 +854,24 @@ attribute in C<E<lt>cart:restoreE<gt>> now take the constants declared in C<Hand
                 <cart:results>
                     <cart:description/>
                     <cart:id/>
-                    <cart:price format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
+                    <cart:price
+                        format="0|1"
+                        code="USD|CAD|..."
+                        options="FMT_STANDARD|FMT_NAME|..."
+                        convert="0|1"
+                        from="USD|CAD|..."
+                        to="CAD|JPY|..."
+                    />
                     <cart:quantity/>
                     <cart:sku/>
-                    <cart:total format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
+                    <cart:total
+                        format="0|1"
+                        code="USD|CAD|..."
+                        options="FMT_STANDARD|FMT_NAME|..."
+                        convert="0|1"
+                        from="USD|CAD|..."
+                        to="CAD|JPY|..."
+                    />
                 </cart:results>
                 </cart:no-results>
                     ...
@@ -832,10 +893,24 @@ attribute in C<E<lt>cart:restoreE<gt>> now take the constants declared in C<Hand
                 <cart:results>
                     <cart:description/>
                     <cart:id/>
-                    <cart:price format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
+                    <cart:price
+                        format="0|1"
+                        code="USD|CAD|..."
+                        options="FMT_STANDARD|FMT_NAME|..."
+                        convert="0|1"
+                        from="USD|CAD|..."
+                        to="CAD|JPY|..."
+                    />
                     <cart:quantity/>
                     <cart:sku/>
-                    <cart:total format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
+                    <cart:total
+                        format="0|1"
+                        code="USD|CAD|..."
+                        options="FMT_STANDARD|FMT_NAME|..."
+                        convert="0|1"
+                        from="USD|CAD|..."
+                        to="CAD|JPY|..."
+                    />
                     <cart:update>
                         <cart:description>value</cart:description>
                         <cart:price>value</cart:price>
@@ -852,7 +927,14 @@ attribute in C<E<lt>cart:restoreE<gt>> now take the constants declared in C<Hand
                 <cart:filter name="description|id|name|shopper|type">value</cart:filter>
             </cart:restore>
             <cart:save/>
-            <cart:subtotal format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
+            <cart:subtotal
+                format="0|1"
+                code="USD|CAD|..."
+                options="FMT_STANDARD|FMT_NAME|..."
+                convert="0|1"
+                from="USD|CAD|..."
+                to="CAD|JPY|..."
+            />
             <cart:type/>
             <cart:update>
                 <cart:description></cart:description>
@@ -1220,8 +1302,10 @@ In C<E<lt>cart:itemE<gt>> or C<E<lt>cart:itemsE<gt>> it returns the price for th
         </cart:no-results>
     </cart:cart>
 
+=head3 Currency Formatting
+
 Starting in version C<0.13>, the currency formatting options from L<Handel::Currency>
-are now available within the taglib.
+are now available within the taglib if L<Locale::Currency::Format> is installed.
 
      <cart:price format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
 
@@ -1231,15 +1315,19 @@ are now available within the taglib.
 
 Toggle switch that enables or disables currency formatting. If empty, unspecified, or
 set to 0, no formatting will take place and the result price (usually in decimal form)
-is returns unaltered.
+is returned unaltered.
 
-If C<format> is set to anhything else, the default formatting will be applied. See L<Handel::Currency>
-for the currency default settings.
+If C<format> is set to anything else, the default formatting will be applied. See L<Handel::Currency>
+for the default currency formatting settings.
 
 =item code
 
 If formatting is enabled, the C<code> attribute specifies the desired three letter ISO currency code
-to be used when formatting currency. See <Locale::Currency::Format> for the available codes.
+to be used when formatting currency. See L<Locale::Currency::Format> for the available codes.
+
+If you are also using the currency conversion options below, the value of C<to> will always be used
+first, even if C<code> is not empty. If C<to> is empty and C<code> is also empty, the
+C<HandelCurrencyCode> configuration setting will be used instead.
 
 =item options
 
@@ -1247,6 +1335,45 @@ If formatting is enabled, the C<options> attribute specifies the desired formatt
 to be used when formatting currency. See <Locale::Currency::Format> for the available options.
 
 =back
+
+=head3 Currency Conversion
+
+Starting in version C<0.15>, the currency conversion options from L<Handel::Currency>
+are now available within the taglib if L<Finance::Currency::Convert::WebserviceX> is installed.
+
+    <cart:price convert="0|1" from="USD|CAD|..." to="CAD|JPY|..." />
+
+=over
+
+=item convert
+
+Toggle switch that enables or disables currency conversion. If empty, unspecified, or
+set to 0, no currency conversion will take place and the result price is returned unaltered.
+
+If C<convert> is set to anything else, the default conversion will be applied. See L<Handel::Currency>
+for the default currency conversion settings.
+
+=item from
+
+If conversion is enabled, the C<from> attribute specifies the three letter ISO currency code
+of the price to be converted. If no C<from> is specified, the C<HandelCurrencyCode> configuration
+setting will be used instead. See <Locale::Currency> for the available codes.
+
+=item to
+
+If conversion is enabled, the C<to> attribute specifies what the current C<price> should be
+converted to. If no C<to> is specified, the C<code> attribute from the formatting options above will be used
+instead. If both C<to> and C<code> are empty, the C<HandelCurrencyCode> configuration setting will be
+used as a last resort.
+
+=back
+
+If you try to convert from and to the same currency, the C<price> is returned as is.
+
+=head3 Precedence
+
+If you are using both the currency conversion and the currency formatting options, the conversion will
+be performaed first, then the result will be formatted.
 
 =head2 <cart:quantity>
 
@@ -1418,6 +1545,11 @@ are now available within the taglib.
 
      <cart:subtotal format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
 
+Starting in version C<0.15>, the currency conversion options from L<Handel::Currency>
+are now available within the taglib.
+
+    <cart:subtotal convert="0|1" from="USD|CAD|..." to="CAD|JPY|..." />
+
 See <cart:price> above for further details about price formatting.
 
 =head2 <cart:total>
@@ -1448,6 +1580,12 @@ Starting in version C<0.13>, the currency formatting options from L<Handel::Curr
 are now available within the taglib.
 
      <cart:total format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
+
+Starting in version C<0.15>, the currency conversion options from L<Handel::Currency>
+are now available within the taglib.
+
+    <cart:total convert="0|1" from="USD|CAD|..." to="CAD|JPY|..." />
+
 
 See <cart:price> above for further details about price formatting.
 
