@@ -1,7 +1,7 @@
 # http://module-build.sourceforge.net/META-spec.html
 #XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
 name:         Handel
-version:      0.01_08
+version:      0.01_09
 version_from: lib/Handel.pm
 installdirs:  site
 license:      perl
@@ -9,7 +9,7 @@ requires:
     Class::DBI:                    0.96
     DBI:                           1.36
     Error:                         0.14
-    Locale::Maketext:
+    Locale::Maketext:              1.06
     Test::More:                    0.48
 
 distribution_type: module
