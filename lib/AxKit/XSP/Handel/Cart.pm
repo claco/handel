@@ -29,11 +29,15 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
                 return "q|$text|";
             } elsif ($context[$#context] eq 'delete') {
                 return "q|$text|";
+            } elsif ($context[$#context] eq 'update') {
+                return "q|$text|";
             };
         } elsif ($tag =~ /^(sku|price|quantity)$/) {
             if ($context[$#context] eq 'add') {
                 return "q|$text|";
             } elsif ($context[$#context] eq 'delete') {
+                return "q|$text|";
+            } elsif ($context[$#context] eq 'update') {
                 return "q|$text|";
             };
         } elsif ($tag eq 'filter') {
@@ -79,6 +83,22 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
             return "\n{\n$code\n";
 
 
+        ## cart:carts
+        } elsif ($tag eq 'carts') {
+            throw Handel::Exception::Taglib(
+                -text => translate("Tag '[_1]' not valid inside of other Handel tags", $tag)
+            ) if ($context[$#context] ne 'root');
+
+            push @context, $tag;
+
+            my $code = "my \@_xsp_handel_cart_carts;\nmy \$_xsp_handel_carts_called_load;\n";
+            $code .= scalar keys %attr ?
+                'my %_xsp_handel_carts_load_filter = ("' . join('", "', %attr) . '");' :
+                'my %_xsp_handel_carts_load_filter;' ;
+
+            return "\n{\n$code\n";
+
+
         ## cart:item
         } elsif ($tag eq 'item') {
             throw Handel::Exception::Taglib(
@@ -117,14 +137,14 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
                 -text => translate("Tag '[_1]' not valid here", $tag)
             ) if ($context[$#context] ne 'results' || $context[$#context-1] !~ /^(cart(s?))$/);
 
-           return "\nwarn 'clearing';\$_xsp_handel_cart_cart->clear;\n";
+           return "\n\$_xsp_handel_cart_cart->clear;\n";
 
 
         ## cart:add
         } elsif ($tag eq 'add') {
             throw Handel::Exception::Taglib(
                 -text => translate("Tag '[_1]' not valid here", $tag)
-            ) if ($context[$#context] ne 'results' || $context[$#context-1] !~ /^(new|cart)$/);
+            ) if ($context[$#context] ne 'results' || $context[$#context-1] !~ /^(new|cart(s?))$/);
 
             push @context, $tag;
 
@@ -135,6 +155,33 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
 
             return "\n{\n$code\n";
 
+
+        ## cart:update
+        } elsif ($tag eq 'update') {
+            throw Handel::Exception::Taglib(
+                -text => translate("Tag '[_1]' not valid here", $tag)
+            ) if ($context[$#context] ne 'results' || $context[$#context-1] !~ /^((cart(s?)|item(s?)))$/);
+
+            push @context, $tag;
+
+            if ($context[$#context-2] =~ /^(cart(s?))$/) {
+                return "\n\$_xsp_handel_cart_cart->autoupdate(0);\n";
+            } elsif ($context[$#context-2] =~ /^(item(s?))$/) {
+                return "\n\$_xsp_handel_cart_item->autoupdate(0);\n";
+            };
+
+            return '';
+
+
+        } elsif ($tag eq 'save') {
+            throw Handel::Exception::Taglib(
+                -text => translate("Tag '[_1]' not valid here", $tag)
+            ) if ($context[$#context-1] !~ /^(cart(s?))$/);
+
+            return '
+                $_xsp_handel_cart_cart->save;
+                $_xsp_handel_cart_cart->update;
+            ';
 
         ## cart:delete
         } elsif ($tag eq 'delete') {
@@ -164,6 +211,9 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
             } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'cart') {
                 $e->start_expr($tag);
                 $e->append_to_script("\$_xsp_handel_cart_cart->$tag;\n");
+            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'carts') {
+                $e->start_expr($tag);
+                $e->append_to_script("\$_xsp_handel_cart_cart->$tag;\n");
             } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'item') {
                 $e->start_expr($tag);
                 $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
@@ -175,6 +225,16 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
                 $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
             } elsif ($context[$#context] eq 'delete' && $tag !~ /^(count|subtotal)$/) {
                 return "\n\$_xsp_handel_cart_delete_filter{$tag} = ";
+            } elsif ($context[$#context] eq 'update') {
+                throw Handel::Exception::Taglib(
+                    -text => translate("Tag '[_1]' not valid here", $tag)
+                ) if ($tag eq 'id');
+
+                if ($context[$#context-2] =~ /^(cart(s?))$/) {
+                    return "\n\$_xsp_handel_cart_cart->$tag(";
+                } elsif ($context[$#context-2] =~ /^(item(s?))$/) {
+                    return "\n\$_xsp_handel_cart_item->$tag(";
+                };
             };
 
 
@@ -194,6 +254,12 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
                 $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
             } elsif ($context[$#context] eq 'delete') {
                 return "\n\$_xsp_handel_cart_delete_filter{$tag} = ";
+            } elsif ($context[$#context] eq 'update') {
+                if ($context[$#context-2] =~ /^(cart(s?))$/) {
+                    return "\n\$_xsp_handel_cart_cart->$tag(";
+                } elsif ($context[$#context-2] =~ /^(item(s?))$/) {
+                    return "\n\$_xsp_handel_cart_item->$tag(";
+                };
             };
 
 
@@ -203,6 +269,8 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
 
             if ($context[$#context] eq 'cart') {
                 return "\n\$_xsp_handel_cart_load_filter{'$key'} = ";
+            } elsif ($context[$#context] eq 'carts') {
+                return "\n\$_xsp_handel_carts_load_filter{'$key'} = ";
             } elsif ($context[$#context] eq 'item') {
                 return "\n\$_xsp_handel_cart_item_filter{'$key'} = ";
             } elsif ($context[$#context] eq 'items') {
@@ -236,6 +304,17 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
                             $_xsp_handel_cart_called_load = 1;
                     };
                     if ($_xsp_handel_cart_cart) {
+
+                ';
+            } elsif ($context[$#context-1] eq 'carts') {
+                return '
+                    if (!$_xsp_handel_carts_called_load) {
+                        @_xsp_handel_cart_carts = (scalar keys %_xsp_handel_carts_load_filter) ?
+                            Handel::Cart->load(\%_xsp_handel_carts_load_filter) :
+                            Handel::Cart->load();
+                            $_xsp_handel_carts_called_load = 1;
+                    };
+                    foreach my $_xsp_handel_cart_cart (@_xsp_handel_cart_carts) {
 
                 ';
             } elsif ($context[$#context-1] eq 'item') {
@@ -298,6 +377,16 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
                     };
                     if (!$_xsp_handel_cart_cart) {
                 ';
+            } elsif ($context[$#context-1] eq 'carts') {
+                return '
+                    if (!$_xsp_handel_carts_called_load) {
+                        @_xsp_handel_cart_carts = (scalar keys %_xsp_handel_carts_load_filter) ?
+                            Handel::Cart->load(\%_xsp_handel_carts_load_filter) :
+                            Handel::Cart->load();
+                            $_xsp_handel_carts_called_load = 1;
+                    };
+                    if (!scalar @_xsp_handel_cart_carts) {
+                ';
             } elsif ($context[$#context-1] eq 'item') {
                 return '
                     if (!$_xsp_handel_cart_called_item) {
@@ -335,7 +424,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
     sub parse_end {
         my ($e, $tag) = @_;
 
-        AxKit::Debug(5, "[Handel] parse_end [$tag] context: " . join('->', @context));
+        AxKit::Debug(5, "[Handel] parse_end   [$tag] context: " . join('->', @context));
 
         ## cart:new
         if ($tag eq 'new') {
@@ -351,6 +440,13 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
 
         ## cart:cart
         } elsif ($tag eq 'cart') {
+            pop @context;
+
+            return "\n};\n";
+
+
+        ## cart:carts
+        } elsif ($tag eq 'carts') {
             pop @context;
 
             return "\n};\n";
@@ -383,6 +479,23 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
             ';
 
 
+        ## cart:update
+        } elsif ($tag eq 'update') {
+            if ($context[$#context-2] =~ /^(cart(s?))$/) {
+                pop @context;
+                return '
+                    $_xsp_handel_cart_cart->update;
+                ';
+            } elsif ($context[$#context-2] =~ /^(item(s?))$/) {
+                pop @context;
+                return '
+                    $_xsp_handel_cart_item->update;
+                ';
+            };
+
+            pop @context;
+
+
         ## cart:delete
         } elsif ($tag eq 'delete') {
             pop @context;
@@ -405,6 +518,12 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
                 $e->end_expr($tag);
             } elsif ($context[$#context] eq 'delete' && $tag !~ /^(count|subtotal)$/) {
                 return ";\n";
+            } elsif ($context[$#context] eq 'update') {
+                if ($context[$#context-2] =~ /^(cart(s?))$/) {
+                    return ");\n";
+                } elsif ($context[$#context-2] =~ /^(item(s?))$/) {
+                    return ");\n";
+                };
             };
 
 
@@ -421,12 +540,20 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
                 $e->end_expr($tag);
             } elsif ($context[$#context] eq 'delete' && $tag !~ /^(count|subtotal)$/) {
                 return ";\n";
+            } elsif ($context[$#context] eq 'update') {
+                if ($context[$#context-2] =~ /^(cart(s?))$/) {
+                    return ");\n";
+                } elsif ($context[$#context-2] =~ /^(item(s?))$/) {
+                    return ");\n";
+                };
             };
 
 
         ## cart:filter
         } elsif ($tag eq 'filter') {
             if ($context[$#context] eq 'cart') {
+                return ";\n";
+            } elsif ($context[$#context] eq 'carts') {
                 return ";\n";
             } elsif ($context[$#context] eq 'item') {
                 return ";\n";
@@ -442,6 +569,10 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
 
                 return "\n};\n";
             } elsif ($context[$#context-1] eq 'cart') {
+                pop @context;
+
+                return "\n};\n";
+            } elsif ($context[$#context-1] eq 'carts') {
                 pop @context;
 
                 return "\n};\n";
@@ -468,6 +599,10 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
 
                 return "\n};\n";
             } elsif ($context[$#context-1] eq 'cart') {
+                pop @context;
+
+                return "\n};\n";
+            } elsif ($context[$#context-1] eq 'carts') {
                 pop @context;
 
                 return "\n};\n";
@@ -655,7 +790,7 @@ AxKit XSP pages.
 
 =head1 TAG REFERENCE
 
-=head2 C<E<lt>cart:addE<gt>>
+=head2 <cart:add>
 
 Adds an a item to the current cart. You can specify the item properties as
 attributes in the tag itself:
@@ -687,10 +822,13 @@ or any combination of the two:
         <cart:price>1.23</cart:price>
     </cart:add>
 
-This tag is only valid within the C<E<lt>cart:cartE<gt>> block. See
-L<Handel::Cart> for more information about adding parts to the shopping cart.
+This tag is only valid within the C<E<lt>cart:resultsE<gt>> block for C<cart>
+and C<carts>. See L<Handel::Cart> for more information about adding parts to
+the shopping cart.
 
-=head2 C<E<lt>cart:cartE<gt>>
+You can also access the newly added item using the C<E<lt>cart:resultsE<gt>>.
+
+=head2 <cart:cart>
 
 Container tag for the current cart used to load a specific cart.
 
@@ -716,7 +854,7 @@ C<E<lt>cart:cartsE<gt>> instead.
         </cart:no-results>
     </cart:cart>
 
-=head2 C<E<lt>cart:cartsE<gt>>
+=head2 <cart:carts>
 
 Loops through all loaded carts.
 
@@ -739,7 +877,7 @@ Loops through all loaded carts.
         </cart:carts>
     </carts>
 
-=head2 C<E<lt>cart:clearE<gt>>
+=head2 <cart:clear>
 
 Deletes all items in the current shopping cart.
 
@@ -753,7 +891,7 @@ Deletes all items in the current shopping cart.
         </cart:no-results>
     </cart:cart>
 
-=head2 C<E<lt>cart:countE<gt>>
+=head2 <cart:count>
 
 Returns the number of items in the current shopping cart.
 
@@ -764,7 +902,7 @@ Returns the number of items in the current shopping cart.
                 <name><<cart:name/></name>
                 <description><cart:description/></description>
                 <subtotal><cart:subtotal/></subtotal>
-                <count>cart:count/></count>
+                <count><cart:count/></count>
             </cart>
         </cart:results>
         <cart:no-results>
@@ -772,7 +910,7 @@ Returns the number of items in the current shopping cart.
         </cart:no-results>
     </cart:cart>
 
-=head2 C<E<lt>cart:descriptionE<gt>>
+=head2 <cart:description>
 
 Context aware tag to get or set the description of various other parent tags.
 Within C<E<lt>cart:cartE<gt>> or C<E<lt>cart:cartsE<gt>> it returns the current
@@ -813,7 +951,7 @@ or cart items description:
         </cart:no-results>
     </cart:cart>
 
-=head2 C<E<lt>cart:filterE<gt>>
+=head2 <cart:filter>
 
 Adds a new name/value pair to the filter used in C<E<lt>cart:cartE<gt>>, C<E<lt>cart:cartsE<gt>>
 C<E<lt>cart:deleteE<gt>>, C<E<lt>cart:itemE<gt>>, and C<E<lt>cart:itemsE<gt>>. Pass the
@@ -848,7 +986,7 @@ You can supply as many C<filter>s as needed to get the job done.
         <cart:filter name="shopper">12345678-9098-7654-3212-345678909876</cart:filter>
     </cart:cart>
 
-=head2 C<E<lt>cart:idE<gt>>
+=head2 <cart:id>
 
 Context aware tag to get or set the record id within various other tags. In C<E<lt>cart:cartE<gt>>
 and C<E<lt>cart:itemE<gt>> it returns the record id for the object:
@@ -891,7 +1029,7 @@ it sets the id value used in the operation specified:
 It cannot be used within C<E<lt>cart:updateE<gt>> and will C<die> if you try updating
 the record ids which are the primary keys.
 
-=head2 C<E<lt>cart:itemsE<gt>>
+=head2 <cart:items>
 
 Loops through all items in the current cart:
 
@@ -920,7 +1058,7 @@ Loops through all items in the current cart:
         </cart:no-results>
     </cart:cart>
 
-=head2 C<E<lt>cart:nameE<gt>>
+=head2 <cart:name>
 
 Context aware tag to get or set the name within various other tags. In C<E<lt>cart:cartE<gt>>
 it returns the name for the cart object:
@@ -953,7 +1091,7 @@ used in the operation specified:
         <cart:name>New Cart</cart:name>
     </cart:new>
 
-=head2 C<E<lt>cart:newE<gt>>
+=head2 <cart:new>
 
 Creates a new shopping cart using the supplied attributes and child tags:
 
@@ -966,7 +1104,7 @@ Creates a new shopping cart using the supplied attributes and child tags:
 The child tags take precedence over the attributes of the same name.
 C<new> B<must be a top level tag> within it's declared namespace. It will C<die> otherwise.
 
-=head2 C<E<lt>cart:priceE<gt>>
+=head2 <cart:price>
 
 Context aware tag to get or set the price of a cart item. In C<E<lt>cart:addE<gt>> and C<E<lt>cart:updateE<gt>>
 it sets the price:
@@ -1004,7 +1142,7 @@ In C<E<lt>cart:itemE<gt>> or C<E<lt>cart:itemsE<gt>> it returns the price for th
         </cart:no-results>
     </cart:cart>
 
-=head2 C<E<lt>cart:quantityE<gt>>
+=head2 <cart:quantity>
 
 Context aware tag to get or set the quantity of a cart item. In C<E<lt>cart:addE<gt>> and C<E<lt>cart:updateE<gt>>
 it sets the quantity:
@@ -1042,7 +1180,7 @@ In C<E<lt>cart:itemE<gt>> or C<E<lt>cart:itemsE<gt>> it returns the quantity for
         </cart:no-results>
     </cart:cart>
 
-=head2 C<E<lt>cart:updateE<gt>>
+=head2 <cart:update>
 
 Updates the current cart values:
 
@@ -1059,7 +1197,7 @@ Updates the current cart values:
 
 C<E<lt>cart:idE<gt>> is not valid within an update statement.
 
-=head2 C<E<lt>cart:resultsE<gt>>
+=head2 <cart:results>
 
 Contains the results for the current action. both the singular and plural forms are
 valid for your syntactic sanity:
@@ -1076,7 +1214,7 @@ valid for your syntactic sanity:
         </cart:results?
     </cart:carts>
 
-=head2 C<E<lt>cart:no-resultsE<gt>>
+=head2 <cart:no-results>
 
 The anti-results or 'not found' tag. This tag is executed when
 C<cart>, C<carts>, C<item>, or C<items> fails to fild a match for it's filters.
@@ -1095,7 +1233,7 @@ singular and plural forms are available for your enjoyment:
         </cart:no-results?
     </cart:carts>
 
-=head2 C<E<lt>cart:saveE<gt>>
+=head2 <cart:save>
 
 Saves the current cart by setting its type to C<CART_TYPE_SAVED>:
 
@@ -1108,7 +1246,7 @@ Saves the current cart by setting its type to C<CART_TYPE_SAVED>:
         </cart:no-results>
     </cart:cart>
 
-=head2 C<E<lt>cart:skuE<gt>>
+=head2 <cart:sku>
 
 Context aware tag to get or set the sku of a cart item. In C<E<lt>cart:addE<gt>> and C<E<lt>cart:updateE<gt>>
 it sets the sku:
@@ -1146,7 +1284,7 @@ In C<E<lt>cart:itemE<gt>> or C<E<lt>cart:itemsE<gt>> it returns the sku for the 
         </cart:no-results>
     </cart:cart>
 
-=head2 C<E<lt>cart:subtotalE<gt>>
+=head2 <cart:subtotal>
 
 Returns the subtotal of the items in the current cart:
 
@@ -1159,7 +1297,7 @@ Returns the subtotal of the items in the current cart:
         </cart:no-results>
     </cart:cart>
 
-=head2 C<E<lt>cart:totalE<gt>>
+=head2 <cart:total>
 
 Returns the total of the current cart item:
 
@@ -1183,7 +1321,7 @@ Returns the total of the current cart item:
         </cart:no-results>
     </cart:cart>
 
-=head2 C<E<lt>cart:typeE<gt>>
+=head2 <cart:type>
 
 Context aware tag to get or set the type within various other tags. In C<E<lt>cart:cartE<gt>> or C<E<lt>cart:cartsE<gt>>
 it returns the type for the object:
