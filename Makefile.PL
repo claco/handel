@@ -24,8 +24,10 @@ WriteMakefile(
         'DBI'              => '1.36',
         'Test::More'       => '0.48',
         'Error'            => '0.14',
-        'Locale::Maketext' => undef
+        'Locale::Maketext' => '1.06'
     },
-    NO_META      => 1,
+    (ExtUtils::MakeMaker->VERSION >= 6.11) ?
+    (NO_META      => 1) : (),
+
     clean => { FILES => 't/cart*.db t/TEST t/logs t/htdocs/cart*.db' }
 );
