@@ -62,6 +62,7 @@ t/conf/extra.conf.in
 t/config.t
 t/constants.t
 t/constraints_cart_type.t
+t/constraints_currency_code.t
 t/constraints_price.t
 t/constraints_quantity.t
 t/constraints_uuid.t
@@ -106,6 +107,7 @@ t/htdocs/axkit/cart_carts_items_update.xsp
 t/htdocs/axkit/cart_carts_no_results.xsp
 t/htdocs/axkit/cart_carts_save.xsp
 t/htdocs/axkit/cart_carts_update.xsp
+t/htdocs/axkit/cart_currency_convert.xsp
 t/htdocs/axkit/cart_currency_format.xsp
 t/htdocs/axkit/cart_new.xsp
 t/htdocs/axkit/cart_new_and_add.xsp
