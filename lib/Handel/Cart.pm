@@ -1,3 +1,4 @@
+# $Id$
 package Handel::Cart;
 use strict;
 use warnings;
@@ -237,10 +238,6 @@ __END__
 =head1 NAME
 
 Handel::Cart - Module for maintaining shopping cart contents
-
-=head1 VERSION
-
-    $Id$
 
 =head1 SYNOPSIS
 
@@ -552,5 +549,5 @@ L<Handel::Contstants>
 
     Christopher H. Laco
     CPAN ID: CLACO
-    cpan@chrislaco.com
+    claco@chrislaco.com
     http://today.icantfocus.com/blog/

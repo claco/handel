@@ -1,3 +1,4 @@
+# $Id$
 package Template::Plugin::Handel::Cart;
 use strict;
 use warnings;
@@ -48,10 +49,6 @@ __END__
 =head1 NAME
 
 Template::Plugin::Handel::Cart - Template Toolkit plugin for shopping cart
-
-=head1 VERSION
-
-    $Id$
 
 =head1 SYNOPSIS
 
@@ -186,5 +183,5 @@ L<Template::Plugin::Handel::Constants>, L<Handel::Constants>, L<Handel::Cart>
 
     Christopher H. Laco
     CPAN ID: CLACO
-    cpan@chrislaco.com
+    claco@chrislaco.com
     http://today.icantfocus.com/blog/

@@ -1,3 +1,4 @@
+# $Id$
 package Template::Plugin::Handel::Constants;
 use strict;
 use warnings;
@@ -30,10 +31,6 @@ __END__
 
 Template::Plugin::Handel::Constants - Template Toolkit plugin for Handel constants
 
-=head1 VERSION
-
-    $Id$
-
 =head1 SYNOPSIS
 
     [% USE hdl = Handel.Constants %]
@@ -54,5 +51,5 @@ L<Handel::Constants>
 
     Christopher H. Laco
     CPAN ID: CLACO
-    cpan@chrislaco.com
+    claco@chrislaco.com
     http://today.icantfocus.com/blog/

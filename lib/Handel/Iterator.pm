@@ -1,3 +1,4 @@
+# $Id$
 package Handel::Iterator;
 use strict;
 use warnings;
@@ -12,10 +13,6 @@ __END__
 =head1 NAME
 
 Handel::Iterator - Iterator class used for collection looping
-
-=head1 VERSION
-
-    $Id$
 
 =head1 SYNOPSIS
 
@@ -46,8 +43,5 @@ L<Handel::Cart>
 
     Christopher H. Laco
     CPAN ID: CLACO
-    cpan@chrislaco.com
+    claco@chrislaco.com
     http://today.icantfocus.com/blog/
-
-
-

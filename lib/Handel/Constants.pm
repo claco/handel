@@ -1,3 +1,4 @@
+# $Id$
 package Handel::Constants;
 use strict;
 use warnings;
@@ -58,10 +59,6 @@ __END__
 =head1 NAME
 
 Handel::Constants - Common constants used in Handel
-
-=head1 VERSION
-
-    $Id$
 
 =head1 SYNOPSIS
 
@@ -162,8 +159,5 @@ This exports all C<RETURNAS_*> constants in this module.
 
     Christopher H. Laco
     CPAN ID: CLACO
-    cpan@chrislaco.com
+    claco@chrislaco.com
     http://today.icantfocus.com/blog/
-
-
-

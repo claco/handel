@@ -1,3 +1,4 @@
+# $Id$
 package Handel::Constraints;
 use strict;
 use warnings;
@@ -74,10 +75,6 @@ __END__
 
 Handel::Constraints - Common database constraints used to validate input data
 
-=head1 VERSION
-
-    $Id$
-
 =head1 SYNOPSIS
 
     use Handel::Constraints qw(constraint_quantity);
@@ -138,15 +135,5 @@ Exports all functions into the classes namespace.
 
     Christopher H. Laco
     CPAN ID: CLACO
-    cpan@chrislaco.com
+    claco@chrislaco.com
     http://today.icantfocus.com/blog/
-
-
-
-
-
-
-
-
-
-

@@ -1,3 +1,4 @@
+# $Id$
 package Handel::DBI;
 use strict;
 use warnings;
@@ -122,10 +123,6 @@ Handel::DBI - Base DBI class used by cart/order objects
     my $newid = Handel::Cart::Item->uuid;
     ..etc...
 
-=head1 VERSION
-
-    $Id$
-
 =head1 DESCRIPTION
 
 This is the main base class for Handel objects that access the database. There
@@ -210,5 +207,5 @@ L<UUID>, L<Data::UUID>, L<Win32::Guidgen>, L<Win32API::GUID>
 
     Christopher H. Laco
     CPAN ID: CLACO
-    cpan@chrislaco.com
+    claco@chrislaco.com
     http://today.icantfocus.com/blog/

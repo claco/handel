@@ -1,3 +1,4 @@
+# $Id$
 package Handel::Currency;
 use strict;
 use warnings;
@@ -46,10 +47,6 @@ Handel::Currency - Price container to do currency formatting
     print $curr->format();          # 1.20 USD
     print $curr->format('CAD');     # 1.20 CAD
     print $curr->format(undef, 'FMT_SYMBOL');   # $1.20
-
-=head1 VERSION
-
-    $Id$
 
 =head1 DESCRIPTION
 
@@ -117,5 +114,5 @@ L<Locale::Currency::Format>
 
     Christopher H. Laco
     CPAN ID: CLACO
-    cpan@chrislaco.com
+    claco@chrislaco.com
     http://today.icantfocus.com/blog/

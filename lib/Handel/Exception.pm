@@ -1,3 +1,4 @@
+# $Id$
 package Handel::Exception;
 use strict;
 use warnings;
@@ -79,10 +80,6 @@ __END__
 
 Handel::Exception - Exceptions used within Handel
 
-=head1 VERSION
-
-    $Id$
-
 =head1 SYNOPSIS
 
     use Handel::Cart;
@@ -148,11 +145,5 @@ L<Error>, L<Handel::constraints>
 
     Christopher H. Laco
     CPAN ID: CLACO
-    cpan@chrislaco.com
+    claco@chrislaco.com
     http://today.icantfocus.com/blog/
-
-
-
-
-
-

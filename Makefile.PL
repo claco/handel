@@ -57,7 +57,7 @@ if ($^O eq 'MSWin32') {
 WriteMakefile(
     NAME         => 'Handel',
     VERSION_FROM => 'lib/Handel.pm',
-    AUTHOR       => 'Christopher H. Laco (cpan@chrislaco.com)',
+    AUTHOR       => 'Christopher H. Laco <claco@chrislaco.com>',
     ABSTRACT     => 'Simple ecommerce framework with AxKit support',
     PREREQ_PM    => {
         'Class::DBI'       => '0.96',

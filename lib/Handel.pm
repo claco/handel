@@ -103,16 +103,5 @@ L<Handel::Cart>
 
     Christopher H. Laco
     CPAN ID: CLACO
-    cpan@chrislaco.com
+    claco@chrislaco.com
     http://today.icantfocus.com/blog/
-
-
-
-
-
-
-
-
-
-
-
