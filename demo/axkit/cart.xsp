@@ -77,7 +77,7 @@
 											<description><cart:description/></description>
 											<price><cart:price/></price>
 											<quantity><cart:quantity/></quantity>
-											<total><cart:price/></total>
+											<total><cart:total/></total>
 										</item>
 									</cart:results>
 								</cart:items>
