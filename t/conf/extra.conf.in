@@ -1,17 +1,29 @@
 # $Id$
-PerlModule AxKit
-AxNoCache On
-AxLogDeclines On
-AxDebugLevel 10
-AxStackTrace On
+<IfModule mod_perl.c>
+	PerlSetVar db_name		@documentroot@/cart.db
+	PerlSetVar db_driver	"SQLite"
 
-PerlSetVar db_name		@documentroot@/cart.db
-PerlSetVar db_driver	"SQLite"
+	<IfDefine AXKIT>
+		PerlModule		AxKit
+		AxNoCache		On
+		AxLogDeclines	On
+		AxDebugLevel	10
+		AxStackTrace	On
+		AxAddProcessor	application/x-xsp .
+		AxAddXSPTaglib	AxKit::XSP::Handel::Cart
 
-AxAddProcessor application/x-xsp .
+		<Files *.xsp>
+			SetHandler	AxKit
+		</Files>
+	</IfDefine>
+	<IfDefine TT2>
+		PerlModule		Apache::Template
+		TT2Trim			On
 
-AxAddXSPTaglib AxKit::XSP::Handel::Cart
+		<Files *.tt2>
+			SetHandler	perl-script
+			PerlHandler	Apache::Template
+		</Files>
+	</IfDefine>
+</IfModule>
 
-<Files *.xsp>
-	SetHandler AxKit
-</Files>
