@@ -735,8 +735,8 @@ AxKit XSP pages.
 
 =head1 CHANGES
 
-Starting in version C<0.09>, C<E<lt>cart:typeE<gt>>, the <type> attribute, and the C<mode>
-attribute in C<E<lt>cart:restore<gt>> now take the constants declared in C<Handel::Constants>:
+Starting in version C<0.09>, C<E<lt>cart:typeE<gt>>, the C<type> attribute, and the C<mode>
+attribute in C<E<lt>cart:restoreE<gt>> now take the constants declared in C<Handel::Constants>:
 
     <cart:type>CART_TYPE_SAVED</cart:type>
 
