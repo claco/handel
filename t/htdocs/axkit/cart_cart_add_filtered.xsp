@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<xsp:page
+	xmlns:xsp="http://apache.org/xsp/core/v1"
+	xmlns:cart="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart"
+>
+	<body>
+		<cart:new>
+			<cart:description>My New Shopping Cart</cart:description>
+			<cart:id>D0EF03E8-2FCE-4E66-BE83-241BC316B381</cart:id>
+			<cart:name>New Cart</cart:name>
+			<cart:shopper>41612C26-C655-4FF6-8FA8-35D8DC07AEF6</cart:shopper>
+			<cart:type>0</cart:type>
+			<cart:results>
+				<cart>
+					<count><cart:count/></count>
+					<description><cart:description/></description>
+					<id><cart:id/></id>
+					<name><cart:name/></name>
+					<shopper><cart:shopper/></shopper>
+					<subtotal><cart:subtotal/></subtotal>
+					<type><cart:type/></type>
+				</cart>
+			</cart:results>
+			<cart:no-results>
+				<message>Error creating shopping cart</message>
+			</cart:no-results>
+		</cart:new>
+
+		<cart:cart type="0">
+			<cart:filter name="id">D0EF03E8-2FCE-4E66-BE83-241BC316B381</cart:filter>
+			<cart:results>
+				<cart:add quantity="3">
+					<cart:description>My New Item</cart:description>
+					<cart:id>C3496D46-508D-44B2-B0E5-E53B9B9E10F0</cart:id>
+					<cart:sku>NEWSKU789</cart:sku>
+					<cart:price>3.33</cart:price>
+					<cart:results>
+						<addeditem>
+							<description><cart:description/></description>
+							<id><cart:id/></id>
+							<price><cart:price/></price>
+							<quantity><cart:quantity/></quantity>
+							<sku><cart:sku/></sku>
+							<total><cart:total/></total>
+						</addeditem>
+					</cart:results>
+					<cart:no-results>
+						<message>New item not added</message>
+					</cart:no-results>
+				</cart:add>
+				<cart>
+					<count><cart:count/></count>
+					<description><cart:description/></description>
+					<id><cart:id/></id>
+					<name><cart:name/></name>
+					<shopper><cart:shopper/></shopper>
+					<subtotal><cart:subtotal/></subtotal>
+					<type><cart:type/></type>
+				</cart>
+			</cart:results>
+			<cart:no-results>
+				<message>Could not find cart</message>
+			</cart:no-results>
+		</cart:cart>
+	</body>
+</xsp:page>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<xsp:page
+	xmlns:xsp="http://apache.org/xsp/core/v1"
+	xmlns:cart="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart"
+>
+	<body>
+		<cart:new>
+			<cart:description>My New Shopping Cart</cart:description>
+			<cart:id>B05779D0-6D40-4F0A-B6A3-1CC2193571C6</cart:id>
+			<cart:name>New Cart</cart:name>
+			<cart:shopper>D3D7C81D-3BA7-41E6-A8B8-34550CD6C793</cart:shopper>
+			<cart:type>0</cart:type>
+			<cart:results>
+				<cart:add>
+					<cart:description>My New Item</cart:description>
+					<cart:id>2505E956-D5A6-47B0-AEB5-D19429FCA5FD</cart:id>
+					<cart:price>1.23</cart:price>
+					<cart:quantity>2</cart:quantity>
+					<cart:sku>NEWSKU123</cart:sku>
+					<cart:no-results>
+						<message>Error adding cart item</message>
+					</cart:no-results>
+				</cart:add>
+				<cart:add>
+					<cart:description>My New Item</cart:description>
+					<cart:id>0D2F5773-5347-4930-B93F-EF61A0A49EF0</cart:id>
+					<cart:price>1.01</cart:price>
+					<cart:quantity>1</cart:quantity>
+					<cart:sku>NEWSKU345</cart:sku>
+					<cart:no-results>
+						<message>Error adding cart item</message>
+					</cart:no-results>
+				</cart:add>
+				<cart>
+					<count><cart:count/></count>
+					<description><cart:description/></description>
+					<id><cart:id/></id>
+					<name><cart:name/></name>
+					<shopper><cart:shopper/></shopper>
+					<subtotal><cart:subtotal/></subtotal>
+					<type><cart:type/></type>
+				</cart>
+			</cart:results>
+			<cart:no-results>
+				<message>Error creating shopping cart</message>
+			</cart:no-results>
+		</cart:new>
+
+		<cart:cart type="0">
+			<cart:filter name="id">B05779D0-6D40-4F0A-B6A3-1CC2193571C6</cart:filter>
+			<cart:results>
+				<cart>
+					<count><cart:count/></count>
+					<description><cart:description/></description>
+					<id><cart:id/></id>
+					<name><cart:name/></name>
+					<shopper><cart:shopper/></shopper>
+					<subtotal><cart:subtotal/></subtotal>
+					<type><cart:type/></type>
+					<cart:delete>
+						<cart:id>2505E956-D5A6-47B0-AEB5-D19429FCA5FD</cart:id>
+						<cart:sku>NEWSKU123</cart:sku>
+					</cart:delete>
+					<count><cart:count/></count>
+					<subtotal><cart:subtotal/></subtotal>
+				</cart>
+			</cart:results>
+			<cart:no-results>
+				<message>Could not find cart</message>
+			</cart:no-results>
+		</cart:cart>
+	</body>
+</xsp:page>

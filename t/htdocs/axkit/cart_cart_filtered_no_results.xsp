@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<xsp:page
+	xmlns:xsp="http://apache.org/xsp/core/v1"
+	xmlns:cart="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart"
+>
+	<body>
+		<cart:cart type="1">
+			<cart:filter name="id">C5CB6794-A70B-4B38-81C3-FC173D51E5CF</cart:filter>
+			<cart:filter name="shopper">985FF16B-E61C-4003-B654-38CBD8A84A70</cart:filter>
+			<cart:results>
+				<cart>
+					<count><cart:count/></count>
+					<description><cart:description/></description>
+					<id><cart:id/></id>
+					<name><cart:name/></name>
+					<shopper><cart:shopper/></shopper>
+					<subtotal><cart:subtotal/></subtotal>
+					<type><cart:type/></type>
+				</cart>
+			</cart:results>
+			<cart:no-results>
+				<message>Could not find cart</message>
+			</cart:no-results>
+		</cart:cart>
+	</body>
+</xsp:page>

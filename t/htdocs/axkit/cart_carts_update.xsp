@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<xsp:page
+	xmlns:xsp="http://apache.org/xsp/core/v1"
+	xmlns:cart="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart"
+>
+	<body>
+		<cart:new>
+			<cart:description>My New Shopping Cart</cart:description>
+			<cart:id>A244E945-117E-4BE2-B34B-3155C4438749</cart:id>
+			<cart:name>New Cart</cart:name>
+			<cart:shopper>3AFA39E4-F420-4B17-85F2-C2270F07DB16</cart:shopper>
+			<cart:type>1</cart:type>
+			<cart:no-results>
+				<message>Error creating shopping cart</message>
+			</cart:no-results>
+		</cart:new>
+		<cart:new>
+			<cart:description>My New Shopping Cart 2</cart:description>
+			<cart:id>CCC624F9-7AC1-4F60-A63E-63B1A8981B28</cart:id>
+			<cart:name>New Cart 2</cart:name>
+			<cart:shopper>3AFA39E4-F420-4B17-85F2-C2270F07DB16</cart:shopper>
+			<cart:type>1</cart:type>
+			<cart:no-results>
+				<message>Error creating shopping cart</message>
+			</cart:no-results>
+		</cart:new>
+
+		<cart:carts>
+			<cart:filter name="shopper">3AFA39E4-F420-4B17-85F2-C2270F07DB16</cart:filter>
+			<cart:results>
+				<cart>
+					<count><cart:count/></count>
+					<description><cart:description/></description>
+					<id><cart:id/></id>
+					<name><cart:name/></name>
+					<shopper><cart:shopper/></shopper>
+					<subtotal><cart:subtotal/></subtotal>
+					<type><cart:type/></type>
+				</cart>
+				<cart:update>
+					<cart:description>My New Description</cart:description>
+					<cart:shopper>846E82AC-E8BF-4348-86CD-C521C1E3194A</cart:shopper>
+					<cart:name>My New Name</cart:name>
+					<cart:type>0</cart:type>
+				</cart:update>
+				<cart>
+					<count><cart:count/></count>
+					<description><cart:description/></description>
+					<id><cart:id/></id>
+					<name><cart:name/></name>
+					<shopper><cart:shopper/></shopper>
+					<subtotal><cart:subtotal/></subtotal>
+					<type><cart:type/></type>
+				</cart>
+			</cart:results>
+			<cart:no-results>
+				<message>Could not find cart</message>
+			</cart:no-results>
+		</cart:carts>
+	</body>
+</xsp:page>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<xsp:page
+	xmlns:xsp="http://apache.org/xsp/core/v1"
+	xmlns:cart="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart"
+>
+	<body>
+		<cart:new>
+			<cart:description>My New Shopping Cart</cart:description>
+			<cart:id>E8FCDC80-AE70-4E26-A71F-C688885DE5F3</cart:id>
+			<cart:name>New Cart</cart:name>
+			<cart:shopper>12A5F7DD-F930-4330-8268-C29324D0A063</cart:shopper>
+			<cart:type>0</cart:type>
+			<cart:results>
+				<cart:add>
+					<cart:description>My New Item</cart:description>
+					<cart:id>7F016031-C86A-439D-B55C-506ABD7AE2BD</cart:id>
+					<cart:price>1.23</cart:price>
+					<cart:quantity>2</cart:quantity>
+					<cart:sku>NEWSKU123</cart:sku>
+					<cart:no-results>
+						<message>Error adding cart item</message>
+					</cart:no-results>
+				</cart:add>
+				<cart>
+					<count><cart:count/></count>
+					<description><cart:description/></description>
+					<id><cart:id/></id>
+					<name><cart:name/></name>
+					<shopper><cart:shopper/></shopper>
+					<subtotal><cart:subtotal/></subtotal>
+					<type><cart:type/></type>
+				</cart>
+			</cart:results>
+			<cart:no-results>
+				<message>Error creating shopping cart</message>
+			</cart:no-results>
+		</cart:new>
+		<cart:new>
+			<cart:description>My New Shopping Cart 2</cart:description>
+			<cart:id>44DFADDE-3F7A-455A-AA5E-FE736B0F1B4B</cart:id>
+			<cart:name>New Cart 2</cart:name>
+			<cart:shopper>12A5F7DD-F930-4330-8268-C29324D0A063</cart:shopper>
+			<cart:type>0</cart:type>
+			<cart:results>
+				<cart:add>
+					<cart:description>My New Item</cart:description>
+					<cart:id>FEA2211B-9443-4A6A-99F1-670C7A2A9311</cart:id>
+					<cart:price>1.23</cart:price>
+					<cart:quantity>2</cart:quantity>
+					<cart:sku>NEWSKU123</cart:sku>
+					<cart:no-results>
+						<message>Error adding cart item</message>
+					</cart:no-results>
+				</cart:add>
+				<cart>
+					<count><cart:count/></count>
+					<description><cart:description/></description>
+					<id><cart:id/></id>
+					<name><cart:name/></name>
+					<shopper><cart:shopper/></shopper>
+					<subtotal><cart:subtotal/></subtotal>
+					<type><cart:type/></type>
+				</cart>
+			</cart:results>
+			<cart:no-results>
+				<message>Error creating shopping cart</message>
+			</cart:no-results>
+		</cart:new>
+
+		<cart:carts>
+			<cart:filter name="shopper">12A5F7DD-F930-4330-8268-C29324D0A063</cart:filter>
+			<cart:results>
+				<cart>
+					<count><cart:count/></count>
+					<description><cart:description/></description>
+					<id><cart:id/></id>
+					<name><cart:name/></name>
+					<shopper><cart:shopper/></shopper>
+					<subtotal><cart:subtotal/></subtotal>
+					<type><cart:type/></type>
+					<cart:clear/>
+					<count><cart:count/></count>
+					<subtotal><cart:subtotal/></subtotal>
+				</cart>
+			</cart:results>
+			<cart:no-results>
+				<message>Could not find cart</message>
+			</cart:no-results>
+		</cart:carts>
+	</body>
+</xsp:page>
