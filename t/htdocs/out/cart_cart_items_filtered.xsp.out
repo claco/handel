@@ -2,9 +2,9 @@
 <!-- $Id$ -->
 <body>
 	<cart>
-		<count>2</count>
+		<count>3</count>
 		<description>My New Shopping Cart</description>
-		<id>FBC4A843-2667-48ED-AA9F-EF4B52537E7</id>
+		<id>FBC4A843-2667-48ED-AA9F-EF4B52537E72</id>
 		<name>New Cart</name>
 		<shopper>FE816B07-7E3D-4A00-97D4-667FEA60F767</shopper>
 		<subtotal>15.54</subtotal>
