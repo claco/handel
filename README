@@ -9,6 +9,15 @@ DESCRIPTION
 
     For the curious, Handel is German for commerce.
 
+FEATURES
+    Add/Update/Delete/Save/Restore Cart Contents
+    Full AxKit XSP Taglib support
+    Template Toolkit 2 Plugin support
+    Currency conversion
+    Currency formatting
+    Basic Localization support
+    Multiple database support via Class::DBI
+
 REQUIREMENTS
   Prerequisites
     The following modules are required for Handel to work properly. Older
@@ -36,6 +45,14 @@ REQUIREMENTS
         When present, this module allows all prices to be formatted to
         specific currency codes and formats.
 
+    Finance::Currency::Convert::WebserviceX
+        When present, this module allows all prices to be converted from one
+        currency to another.
+
+    Locale::Currency
+        When present, this module allows all conversion and currency codes
+        to be verified as real 3 letter ISO currency codes.
+
     The following modules are only required for the test suite:
 
     Test::More 0.48+
@@ -58,12 +75,14 @@ REQUIREMENTS
         "Test::Pod::Coverage" 1.04 was made taint safe, and we run the tests
         with -wT like good girls and boys.
 
+    Test:Strict
+        This keeps me honest and makes sure I always "use strict".
+
 SEE ALSO
     Handel::Cart
 
 AUTHOR
         Christopher H. Laco
         CPAN ID: CLACO
-        cpan@chrislaco.com
+        claco@chrislaco.com
         http://today.icantfocus.com/blog/
-
