@@ -41,9 +41,15 @@ work correctly.
 
 =item C<Error> version 0.14+
 
-=item C<Locale::Maketext>
+=item C<Locale::Maketext> version 1.06+
 
-=item C<Axit> 1.6.1+
+=item C<UUID*/GUID*>
+
+At least one of the following modules are required to create uuids:
+L<UUID> 0.02, L<Win32::Guidgen> 0.04, L<Win32API::GUID> 0.02,
+or L<Data::UUID> 0.10.
+
+=item C<Axit> 1.6.2+
 
 C<AxKit> is only required if you plan on using C<Handel> within XSP using the
 supplied taglibs.
