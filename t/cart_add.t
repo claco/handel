@@ -1,5 +1,5 @@
 #!perl -wT
-# $Id: cart_add.t 4 2004-12-28 03:01:15Z claco $
+# $Id$
 use Test::More;
 use lib 't/lib';
 use Handel::TestHelper;
@@ -30,8 +30,7 @@ BEGIN {
     Handel::TestHelper::executesql($db, $data);
 
     local $^W = 0;
-    Handel::Cart->connection($db);
-    Handel::Cart::Item->connection($db);
+    Handel::DBI->connection($db);
 };
 
 

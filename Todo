@@ -1,9 +1,8 @@
 TODO list for Perl module Handel
 
-    - finished tests/code for Handel::Cart->restore w/merge
     - add tests/code for Handel::Cart XSP Taglibs
     - complete pod for all current modules
     - start work on Handel::Order part of framework
 	- add tests for L10N and find translation volunteer
 	- clean up cart test variable names
-	
+	- finish cart->restore(\%filter) code and tests

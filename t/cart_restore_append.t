@@ -1,5 +1,5 @@
 #!perl -wT
-# $Id: cart_restore_append.t 4 2004-12-28 03:01:15Z claco $
+# $Id$
 use Test::More;
 use lib 't/lib';
 use Handel::TestHelper;
@@ -30,13 +30,12 @@ BEGIN {
     Handel::TestHelper::executesql($db, $data);
 
     local $^W = 0;
-    Handel::Cart->connection($db);
-    Handel::Cart::Item->connection($db);
+    Handel::DBI->connection($db);
 };
 
 
 ## restore saved cart appending items to current cart
-## just for snity sake, we're checking all cart and item values
+## just for sanity sake, we're checking all cart and item values
 {
     # load the temp cart
     my $cart = Handel::Cart->load({

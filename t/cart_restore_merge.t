@@ -1,5 +1,5 @@
 #!perl -wT
-# $Id: cart_restore_merge.t 4 2004-12-28 03:01:15Z claco $
+# $Id$
 use Test::More;
 use lib 't/lib';
 use Handel::TestHelper;
@@ -9,7 +9,7 @@ BEGIN {
     if($@) {
         plan skip_all => 'SQLite not installed';
     } else {
-        plan tests => 120;
+        plan tests => 112;
     };
 
     use_ok('Handel::Cart');
@@ -30,13 +30,12 @@ BEGIN {
     Handel::TestHelper::executesql($db, $data);
 
     local $^W = 0;
-    Handel::Cart->connection($db);
-    Handel::Cart::Item->connection($db);
+    Handel::DBI->connection($db);
 };
 
 
 ## restore saved cart appending items to current cart
-## just for snity sake, we're checking all cart and item values
+## just for sanity sake, we're checking all cart and item values
 {
     # load the temp cart
     my $cart = Handel::Cart->load({
@@ -119,22 +118,22 @@ BEGIN {
     is($cart->type, CART_TYPE_TEMP);
     is($cart->name, 'Cart 1');
     is($cart->description, 'Test Temp Cart 1');
-    is($cart->count, 4);
-    is($cart->subtotal, 51.06);
+    is($cart->count, 3);
+    is($cart->subtotal, 28.86);
 
     my $items3 = $cart->items(undef, 1);
     isa_ok($items3, 'Handel::Iterator');
-    is($items3->count, 4);
+    is($items3->count, 3);
 
     my $item5 = $items3->next;
     isa_ok($item5, 'Handel::Cart::Item');
     is($item5->id, '11111111-1111-1111-1111-111111111111');
     is($item5->cart, $cart->id);
     is($item5->sku, 'SKU1111');
-    is($item5->quantity, 1);
+    is($item5->quantity, 6);
     is($item5->price, 1.11);
     is($item5->description, 'Line Item SKU 1');
-    is($item5->total, 1.11);
+    is($item5->total, 6.66);
 
     my $item6 = $items3->next;
     isa_ok($item6, 'Handel::Cart::Item');
@@ -155,16 +154,6 @@ BEGIN {
     is($item7->price, 4.44);
     is($item7->description, 'Line Item SKU 4');
     is($item7->total, 17.76);
-
-    my $item8 = $items3->next;
-    isa_ok($item8, 'Handel::Cart::Item');
-    isnt($item8->id, '55555555-5555-5555-5555-555555555555');
-    is($item8->cart, $cart->id);
-    is($item8->sku, 'SKU1111');
-    is($item8->quantity, 5);
-    is($item8->price, 5.55);
-    is($item8->description, 'Line Item SKU 5');
-    is($item8->total, 27.75);
 
 
     # load the saved cart again
