@@ -1,7 +1,7 @@
 TODO list for Perl module Handel
 
+    - finish Axit::XSP::Handel::Cart rewrite
     - add restore code in AxKit::XSP::Handel::Cart
-    - define a better way to compare XSP output to output file
     - start work on Handel::Order part of framework
     - find translation volunteer other than Google translate
     - clean up cart test variable names

@@ -2,7 +2,8 @@ Revision history for Perl module Handel
 
 0.01_08 Fri Jan 14 21:32:03 2005
     - Locale::Maketext >= 1.04 required for utf8 pragma
-    - Complete rewrite of Axit::XSP::Handel::Cart w/API changes
+    - Axit::XSP::Handel::Cart API solidified
+    - Rewrite of Axit::XSP::Handel::Cart for new API in progress
     - slight Exporter refactoring in TestHelper.pm
     - Handel::DBI::uuid can now use UUID, Data::UUID, Win32::Guidgen,
       or Win32API::GUID to create uuids
