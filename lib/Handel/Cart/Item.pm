@@ -9,7 +9,7 @@ BEGIN {
 };
 
 __PACKAGE__->table('cart_items');
-__PACKAGE__->autoupdate(0);
+__PACKAGE__->autoupdate(1);
 __PACKAGE__->iterator_class('Handel::Iterator');
 __PACKAGE__->columns( All => qw(id cart sku quantity price description) );
 __PACKAGE__->columns( Essential => qw(id cart sku quantity price description) );
