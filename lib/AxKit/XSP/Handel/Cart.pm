@@ -20,28 +20,28 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
         my ($e, $text) = @_;
         my $tag = $e->current_element();
 
+        return unless length($text);
+
         if ($tag =~ /^(description|id|name|shopper|type)$/) {
             if ($context[$#context] eq 'new') {
-                return "q|$text|";
-            } elsif ($context[$#context] eq 'new') {
-                return "q|$text|";
+                return ".q|$text|";
             } elsif ($context[$#context] eq 'add') {
-                return "q|$text|";
+                return ".q|$text|";
             } elsif ($context[$#context] eq 'delete') {
-                return "q|$text|";
+                return ".q|$text|";
             } elsif ($context[$#context] eq 'update') {
-                return "q|$text|";
+                return ".q|$text|";
             };
         } elsif ($tag =~ /^(sku|price|quantity)$/) {
             if ($context[$#context] eq 'add') {
-                return "q|$text|";
+                return ".q|$text|";
             } elsif ($context[$#context] eq 'delete') {
-                return "q|$text|";
+                return ".q|$text|";
             } elsif ($context[$#context] eq 'update') {
-                return "q|$text|";
+                return ".q|$text|";
             };
         } elsif ($tag eq 'filter') {
-            return "q|$text|";
+            return ".q|$text|";
         };
         return '';
     };
@@ -51,8 +51,14 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
 
         AxKit::Debug(5, "[Handel] parse_start [$tag] context: " . join('->', @context));
 
+        ## cart:uuid
+        if ($tag =~ /^(g|u)uid$/) {
+            $e->start_expr($tag);
+            $e->append_to_script("Handel::Cart->uuid");
+            $e->end_expr($tag);
+
         ## cart:new
-        if ($tag eq 'new') {
+        } elsif ($tag eq 'new') {
             throw Handel::Exception::Taglib(
                 -text => translate("Tag '[_1]' not valid inside of other Handel tags", $tag)
             ) if ($context[$#context] ne 'root');
@@ -202,9 +208,9 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
         ## cart:description, id, name, shopper, type, count, subtotal
         } elsif ($tag =~ /^(description|id|name|shopper|type|count|subtotal)$/) {
             if ($context[$#context] eq 'new' && $tag !~ /^(count|subtotal)$/) {
-                return "\n\$_xsp_handel_cart_new_filter{$tag} = ";
+                return "\n\$_xsp_handel_cart_new_filter{$tag} = ''";
             } elsif ($context[$#context] eq 'add' && $tag =~ /^(id|description)$/) {
-                return "\n\$_xsp_handel_cart_add_filter{$tag} = ";
+                return "\n\$_xsp_handel_cart_add_filter{$tag} = ''";
             } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'new') {
                 $e->start_expr($tag);
                 $e->append_to_script("\$_xsp_handel_cart_cart->$tag;\n");
@@ -224,16 +230,16 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
                 $e->start_expr($tag);
                 $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
             } elsif ($context[$#context] eq 'delete' && $tag !~ /^(count|subtotal)$/) {
-                return "\n\$_xsp_handel_cart_delete_filter{$tag} = ";
+                return "\n\$_xsp_handel_cart_delete_filter{$tag} = ''";
             } elsif ($context[$#context] eq 'update') {
                 throw Handel::Exception::Taglib(
                     -text => translate("Tag '[_1]' not valid here", $tag)
                 ) if ($tag eq 'id');
 
                 if ($context[$#context-2] =~ /^(cart(s?))$/) {
-                    return "\n\$_xsp_handel_cart_cart->$tag(";
+                    return "\n\$_xsp_handel_cart_cart->$tag(''";
                 } elsif ($context[$#context-2] =~ /^(item(s?))$/) {
-                    return "\n\$_xsp_handel_cart_item->$tag(";
+                    return "\n\$_xsp_handel_cart_item->$tag(''";
                 };
             };
 
@@ -242,7 +248,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
         ## cart:sku, price, quantity, total
         } elsif ($tag =~ /^(sku|price|quantity|total)$/) {
             if ($context[$#context] eq 'add' && $tag ne 'total') {
-                return "\n\$_xsp_handel_cart_add_filter{$tag} = ";
+                return "\n\$_xsp_handel_cart_add_filter{$tag} = ''";
             } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'add') {
                 $e->start_expr($tag);
                 $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
@@ -253,12 +259,12 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
                 $e->start_expr($tag);
                 $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
             } elsif ($context[$#context] eq 'delete') {
-                return "\n\$_xsp_handel_cart_delete_filter{$tag} = ";
+                return "\n\$_xsp_handel_cart_delete_filter{$tag} = ''";
             } elsif ($context[$#context] eq 'update') {
                 if ($context[$#context-2] =~ /^(cart(s?))$/) {
-                    return "\n\$_xsp_handel_cart_cart->$tag(";
+                    return "\n\$_xsp_handel_cart_cart->$tag(''";
                 } elsif ($context[$#context-2] =~ /^(item(s?))$/) {
-                    return "\n\$_xsp_handel_cart_item->$tag(";
+                    return "\n\$_xsp_handel_cart_item->$tag(''";
                 };
             };
 
@@ -268,18 +274,18 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
             my $key = $attr{'name'} || 'id';
 
             if ($context[$#context] eq 'cart') {
-                return "\n\$_xsp_handel_cart_load_filter{'$key'} = ";
+                return "\n\$_xsp_handel_cart_load_filter{'$key'} = ''";
             } elsif ($context[$#context] eq 'carts') {
-                return "\n\$_xsp_handel_carts_load_filter{'$key'} = ";
+                return "\n\$_xsp_handel_carts_load_filter{'$key'} = ''";
             } elsif ($context[$#context] eq 'item') {
-                return "\n\$_xsp_handel_cart_item_filter{'$key'} = ";
+                return "\n\$_xsp_handel_cart_item_filter{'$key'} = ''";
             } elsif ($context[$#context] eq 'items') {
-                return "\n\$_xsp_handel_cart_items_filter{'$key'} = ";
+                return "\n\$_xsp_handel_cart_items_filter{'$key'} = ''";
             };
 
 
         ## cart:results
-        } elsif ($tag eq 'results') {
+        } elsif ($tag =~ /^result(s?)$/) {
             throw Handel::Exception::Taglib(
                 -text => translate("Tag '[_1]' not valid here", $tag)
             ) if ($context[$#context] !~ /^(new|add|cart(s?)|item(s?))$/);
@@ -352,7 +358,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
 
 
         ## cart:no-results
-        } elsif ($tag eq 'no-results') {
+        } elsif ($tag =~ /^no-result(s?)$/) {
             throw Handel::Exception::Taglib(
                 -text => translate("Tag '[_1]' not valid here", $tag)
             ) if ($context[$#context] !~ /^(new|add|cart(s?)|item(s?))$/);
@@ -563,7 +569,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
 
 
         ## cart:results
-        } elsif ($tag eq 'results') {
+        } elsif ($tag =~ /^result(s?)$/) {
             if ($context[$#context-1] eq 'new') {
                 pop @context;
 
@@ -593,7 +599,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
 
 
         ## cart:no-results
-        } elsif ($tag eq 'no-results') {
+        } elsif ($tag =~ /^no-result(s?)$/) {
             if ($context[$#context-1] eq 'new') {
                 pop @context;
 
@@ -631,7 +637,7 @@ __END__
 
 =head1 NAME
 
-AxKit::XSP::Handel::Cart - XSP Cart Taglib
+AxKit::XSP::Handel::Cart - AxKit XSP Shopping Cart Taglib
 
 =head1 SYNOPSIS
 
@@ -683,6 +689,7 @@ AxKit XSP pages.
 
 =head1 TAG HIERARCHY
 
+    <cart:uuid/>
     <cart:new description|id|name|shopper|type="value"...>
         <cart:description>value</cart:description>
         <cart:id>value</cart:id>
@@ -1354,6 +1361,14 @@ it sets the type value used in the operation specified:
     <cart:new>
         <cart:type>1</cart:type>
     </cart:new>
+
+=head2 <cart:uuid/>
+
+This tag returns a new uuid/guid for use in C<new> and C<add> in the following format:
+
+    xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+
+For those like me who always type the wrong thing, <cart:guid/> returns the same things as <cart:uuid/>
 
 =head1 TAG RECIPES
 
