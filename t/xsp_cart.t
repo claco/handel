@@ -96,6 +96,7 @@ foreach (@tests) {
 
     my ($ok, $response, $file) = comp_to_file($r->content, "$docroot/axkit/out/$_.out");
 
+    t_debug($_);
     t_debug("HTTP Status: " . $r->code);
     t_debug("Expected:\n", $file);
     t_debug("Received:\n", $response);
