@@ -11,71 +11,107 @@ DESCRIPTION
 
 FEATURES
     Add/Update/Delete/Save/Restore Cart Contents
-    Full AxKit XSP Taglib support
-    Template Toolkit 2 Plugin support
-    Currency conversion
-    Currency formatting
-    Basic Localization support
-    Multiple database support via Class::DBI
+    Full AxKit XSP Taglib Support
+    Template Toolkit 2 Plugin Support
+    Currency Conversion
+    Currency Formatting
+    Basic Localization Support
+    Multiple Database Support
 
 REQUIREMENTS
   Prerequisites
     The following modules are required for Handel to work properly. Older
-    versions may work fine. For now, these are the versions I have installed
-    and verified to work correctly.
+    versions may work fine, but hese are the versions I have installed and
+    verified to work correctly. IF you have older versious and all tests
+    pass, send me an email and I'll lower the version requirements.
 
-    Class::DBI 0.96+
-    DBI version 1.36+
-    Error 0.14+
-    Locale::Maketext 1.06+
-    UUID*/GUID
+    Class::DBI
+        "Class::DBI" version 0.96 or greater.
+
+    DBI "DBI" version 1.36 or greater.
+
+    Error
+        "Error" version 0.14 or greater.
+
+    Locale::Maketext
+        "Locale::Maketext" version 1.06 or greater.
+
+    Data::UUID
         At least one of the following modules are required to create uuids:
-        UUID 0.02, Win32::Guidgen 0.04, Win32API::GUID 0.02, or Data::UUID
-        0.10.
+        "UUID" 0.02, "Win32::Guidgen" 0.04, "Win32API::GUID" 0.02, or
+        "Data::UUID" 0.10.
 
-    Axit 1.6.2+
+  Optional Modules
+    The following modules are not required for Handel to run, although some
+    features may be unavailable without them.
+
+    AxKit
+        "AxKit" version 1.61 or greater.
+
         "AxKit" is only required if you plan on using "Handel" within XSP
         using the supplied taglibs.
 
-  Optional Modules
-    The following modules are required for Handel to run, although some
-    features may be unavailable without the:
-
     Locale::Currency::Format
+        "Locale::Currency::Format" version 1.22 or greater.
+
         When present, this module allows all prices to be formatted to
         specific currency codes and formats.
 
     Finance::Currency::Convert::WebserviceX
+        "Finance::Currency::Convert::WebserviceX" version 0.03 or greater.
+
         When present, this module allows all prices to be converted from one
         currency to another.
 
     Locale::Currency
+        "Locale::Currency" version 2.07 or greater.
+
         When present, this module allows all conversion and currency codes
         to be verified as real 3 letter ISO currency codes.
 
-    The following modules are only required for the test suite:
+    Template
+        "Template" version 2.07 or greater.
 
-    Test::More 0.48+
+        "Template" (TT2/Template ToolKit) is only required if you plan on
+        using Handel within TT2 based websites.
+
+  Build/Test Modules
+    The following modules are only required for the test suite when running
+    "make test".
+
+    Test::More
+        "Test::More" version 0.48 or greater.
+
         The "Test::More" included with perl 5.8.4 and "Test::More" <= 0.48
-        have issues with ithreads that usually cause crashes in "Class::DBI"
-        tests.
+        have issues with ithreads that usually cause crashes in tests that
+        use "Class::DBI" or "DBIx:ContextualFetch". The errors usual mention
+        "attempt to free unreferenced scalar". If you reveive these during
+        "make test", try upgrading "Test::More".
 
-    Pod::Coverage 0.14+
+    Pod::Coverage
+        "Pod::Coverage" version 0.14 or greater.
+
         The pod coverage tests may fail complaining about missing pod for
         methods if Pod::Coverage < 0.14 is installed. This is due to certain
         syntax variations of the pod with escaped gt/lt. I may just alter
         the pod and bump this version down if there is enough feedback to do
         so.
 
-    Test::Pod 1.00+
+    Test::Pod
+        "Test::Pod" version 1.00 or greater.
+
         "Test::Pod" 1.00 added the "all_pod_files_ok()" method which makes
         my life easier. :-)
 
-    Test::Pod::Coverage 1.04+
+    Test::Pod::Coverage
+        "Test::Pod::Coverage" version 1.04 or greater.
+
         "Test::Pod::Coverage" 1.04 was made taint safe, and we run the tests
         with -wT like good girls and boys.
 
     Test:Strict
+        "Test::Strict" version 0.01 or greater.
+
         This keeps me honest and makes sure I always "use strict".
 
 SEE ALSO
