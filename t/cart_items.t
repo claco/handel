@@ -11,7 +11,7 @@ BEGIN {
     if($@) {
         plan skip_all => 'DBD::SQLite not installed';
     } else {
-        plan tests => 107;
+        plan tests => 109;
     };
 
     use_ok('Handel::Cart');
@@ -72,6 +72,31 @@ BEGIN {
     is($item2->price, 2.22);
     is($item2->description, 'Line Item SKU 2');
     is($item2->total, 4.44);
+
+    ## While we are here, lets poop out a max quantity exception
+    ## THere should be a better place for this, but I haven't found it yet. :-)
+    {
+        local $ENV{'HandelMaxQuantity'} = 5;
+        local $ENV{'HandelMaxQuantityAction'} = 'Exception';
+
+        try {
+            $item2->quantity(6);
+        } catch Handel::Exception::Constraint with {
+            pass;
+        } otherwise {
+            fail;
+        };
+    };
+
+
+    ## While we are here, lets poop out a max quantity adjustment
+    ## There should be a better place for this, but I haven't found it yet. :-)
+    {
+        local $ENV{'HandelMaxQuantity'} = 2;
+
+        $item2->quantity(6);
+        is($item2->quantity, 2);
+    };
 };
 
 
