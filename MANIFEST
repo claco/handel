@@ -25,8 +25,11 @@ t/cart_load.t
 t/cart_new.t
 t/cart_restore.t
 t/cart_restore_replace.t
+t/cart_restore_replace_filter.t
 t/cart_restore_merge.t
+t/cart_restore_merge_filter.t
 t/cart_restore_append.t
+t/cart_restore_append_filter.t
 t/cart_save.t
 t/constraints_cart_type.t
 t/constraints_price.t
