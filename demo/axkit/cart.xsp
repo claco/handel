@@ -75,13 +75,13 @@
 											<id><cart:id/></id>
 											<sku><cart:sku/></sku>
 											<description><cart:description/></description>
-											<price><cart:price/></price>
+											<price><cart:price format="1" options="FMT_COMMON"/></price>
 											<quantity><cart:quantity/></quantity>
-											<total><cart:total/></total>
+											<total><cart:total format="1" options="FMT_COMMON"/> (<cart:total format="1" options="FMT_SYMBOL" convert="1" to="JPY"/>)</total>
 										</item>
 									</cart:results>
 								</cart:items>
-								<subtotal><cart:subtotal/></subtotal>
+								<subtotal><cart:subtotal format="1" options="FMT_COMMON"/> (<cart:subtotal format="1" options="FMT_SYMBOL" convert="1" to="JPY"/>)</subtotal>
 							</cart>
 						</cart:results>
 						<cart:no-results>
