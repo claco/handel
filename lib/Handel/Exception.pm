@@ -13,13 +13,13 @@ sub new {
     my $class = shift;
     my %args  = @_;
     my $text  = translate(
-        $args{-text} || 'An unspecified error has ocurred'
+        $args{-text} || 'An unspecified error has occurred'
     );
 
     if ( defined( $args{-details} ) ) {
         $text .= ': ' . $args{-details};
     } else {
-        $text .= '.';
+        # $text .= '.';
     };
 
     ## don't pass the original text
