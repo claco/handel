@@ -5,6 +5,7 @@ use warnings;
 BEGIN {
     use base 'Handel::DBI';
     use Handel::Constraints qw(:all);
+    use Handel::Currency;
     use Handel::L10N qw(translate);
 };
 
@@ -32,9 +33,20 @@ sub new {
     return $self->construct($data);
 };
 
+sub price {
+    my ($self, $price) = @_;
+
+    if (defined $price) {
+        $self->_price($price);
+        return undef;
+    } else {
+        return Handel::Currency->new($self->_price);
+    };
+};
+
 sub total {
     my $self = shift;
-    return $self->quantity * $self->price;
+    return Handel::Currency->new($self->quantity * $self->price);
 };
 
 1;
@@ -114,10 +126,18 @@ Returns or sets the quantity the cart item.
 
 Returns or sets the price for the cart item.
 
+Starting in version C<0.12>, price now returns a stringified
+L<Handel::Currency> object. This can be used to format the price,
+and hopefully to convert it's currency to another locale in the future.
+
 =head2 C<$item-E<gt>total>
 
 Returns the total price for the cart item. This is really just
 quantity*total and is provided for convenience.
+
+Starting in version C<0.12>, subtotal now returns a stringified
+L<Handel::Currency> object. This can be used to format the price,
+and hopefully to convert it's currency to another locale in the future.
 
 =head2 C<$item-E<gt>description>
 
