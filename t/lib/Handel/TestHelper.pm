@@ -40,7 +40,11 @@ sub comp_to_file {
         $contents =~ s/\n//g;
         $contents =~ s/\s//g;
         $contents =~ s/\t//g;
+
+        # remove the tt2 and xml Ids
         $contents =~ s/<!--.*-->//;
+        $contents =~ s/\[%#.*%\]//;
+
         undef $fh;
 
         if ($string eq $contents) {
