@@ -1,6 +1,7 @@
 package Handel::L10N;
 use strict;
 use warnings;
+use utf8;
 use vars qw(@EXPORT_OK %Lexicon $handle);
 
 BEGIN {
@@ -52,6 +53,9 @@ You can also export C<translate> into the users namespace:
 
     warn translate('My message');
 
+Thus far, the French trasnlation comes from Googles trasnlation tools.IF you
+have the time and can do better, the help would be much appreciated.
+
 =head1 METHODS
 
 =head2 C<translate>
@@ -69,6 +73,7 @@ L<Locale::Maketext>, L<Handel::L10N::us_en>, L<Handel::L10N::fr>
     CPAN ID: CLACO
     cpan@chrislaco.com
     http://today.icantfocus.com/blog/
+
 
 
 
