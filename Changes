@@ -1,5 +1,12 @@
 Revision history for Perl module Handel v
 
+0.14 Tue Mar 08 20:24:13 2005
+    - Fixed xsp_cart.t errors when Apache::Test wasn't installed
+    - Fixed xsp_cart.t test failure when Locale::Currency::Format
+        wasn't installed
+    - Fixed xsp_cart.t test failure do to FOREACH IN syntax when
+        Template < 2.10 was installed
+
 0.13 Sun Mar 06 16:42:23 2005
     - Removed Test::More from PREREQ_PM. It's only needed for tests
     - Added Makefile.PL test warnings for Test::More < 0.48
