@@ -1,7 +1,9 @@
 TODO list for Perl module Handel
 
-    - add tests/code for Handel::Cart XSP Taglibs
-    - complete pod for all current modules
+    - add better tests for AxKit::XSP::Handel::Cart
+    - complete pod for AxKit::XSP::Handel::Cart
+    - add restore code in AxKit::XSP::Handel::Cart
+    - define a better way to compare XSP output to output file
     - start work on Handel::Order part of framework
     - find translation volunteer other than Google translate
     - clean up cart test variable names
@@ -9,3 +11,4 @@ TODO list for Perl module Handel
     - figure out a centralized config scheme, possibly using XS/Handel.pm
     - add max quantity check to cart constraint
     - devise method for overriding constraints
+    - add examples/demo pages
