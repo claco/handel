@@ -15,9 +15,9 @@ BEGIN {
     _AUTO => 1
 );
 
-$handle = __PACKAGE__->get_handle();
-
 sub translate {
+    my $handle = __PACKAGE__->get_handle();
+
     return $handle->maketext(@_);
 };
 
