@@ -35,6 +35,13 @@ BEGIN {
     "Unknown restore mode" =>
         "Mode inconnu de restauration",
 
+    ## Taglib exceptions
+    "Tag '[_1]' not valid inside of other Handel tags" =>
+        "L'étiquette '[_1] 'peut intérieur inadmissible d'autres étiquettes de Handel",
+
+    "Tag '[_1]' not valid here" =>
+        "Étiquette '[_1]' inadmissible ici",
+
     ## naughty bits
     "has invalid value" =>
         "a la valeur inadmissible",
