@@ -106,6 +106,9 @@ t/htdocs/cart_new_and_add_filtered.xsp
 t/htdocs/cart_new_filtered.xsp
 t/htdocs/cart_new_minimal.xsp
 t/htdocs/cart_new_no_results_trigger.xsp
+t/htdocs/cart_restore_append.xsp
+t/htdocs/cart_restore_merge.xsp
+t/htdocs/cart_restore_replace.xsp
 t/htdocs/cart_uuid.xsp
 t/htdocs/out/cart_cart.xsp.out
 t/htdocs/out/cart_cart_add.xsp.out
@@ -151,6 +154,9 @@ t/htdocs/out/cart_new_and_add_filtered.xsp.out
 t/htdocs/out/cart_new_filtered.xsp.out
 t/htdocs/out/cart_new_minimal.xsp.out
 t/htdocs/out/cart_new_no_results_trigger.xsp.out
+t/htdocs/out/cart_restore_append.xsp.out
+t/htdocs/out/cart_restore_merge.xsp.out
+t/htdocs/out/cart_restore_replace.xsp.out
 t/l10n.t
 t/lib/Handel/TestHelper.pm
 t/pod_coverage.t
