@@ -1,5 +1,12 @@
 Revision history for Perl module Handel
 
+0.01_06 Sun Jan 09 10:39:47 2004
+    - Look for DBI connection info in dir_config under mod_perl
+    - Added missing pod for methods in Handel::Cart::Item
+    - Supressed strict/warnings when loading Axit in basic.t
+    - Added new Apache::Test scripts/config and framework
+    - Added generic Axit::XSP::Handl::Cart tests and pages
+
 0.01_05 Fri Dec 31 12:36:25 2004
     - Fixed failed pod coverage test when Pod::Coverage < 0.14
     - Fixed l10n.t failures on perl <= 5.7.0 (use utf8)
