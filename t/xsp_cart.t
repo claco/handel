@@ -14,9 +14,6 @@ eval 'use DBD::SQLite';
 Test::More::plan(skip_all =>
     'DBD::SQLite not installed') if $@;
 
-Test::More::plan(skip_all =>
-    'Taglib unusable. Rewrite in progress.');
-
 ## test new/add first so we can use them to test everything else
 my @tests = (
     'cart_new.xsp',
@@ -67,7 +64,7 @@ my @tests = (
 
 use Apache::TestUtil;
 Apache::TestRequest->import(qw(GET));
-Apache::Test::plan(tests => (scalar @tests * 1),
+Apache::Test::plan(tests => (scalar @tests * 2),
     need('AxKit', 'mod_perl', need_apache(1), need_lwp())
 );
 
@@ -79,9 +76,11 @@ my $docroot = Apache::Test::vars('documentroot');
     my $dbfile  = "$docroot/cart.db";
     my $db      = "dbi:SQLite:dbname=$dbfile";
     my $create  = 't/sql/cart_create_table.sql';
+    my $data    = 't/sql/cart_fake_data.sql';
 
     unlink $dbfile;
     executesql($db, $create);
+    #executesql($db, $data);
 };
 
 foreach (@tests) {
@@ -92,8 +91,8 @@ foreach (@tests) {
     my ($ok, $response, $file) = comp_to_file($r->content, "$docroot/out/$_.out");
 
     t_debug("HTTP Status: " . $r->code);
-    t_debug("Received:\n", $response);
     t_debug("Expected:\n", $file);
+    t_debug("Received:\n", $response);
 
     ok($ok);
 };
