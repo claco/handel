@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<body>
+	<cart>
+		<count>1</count>
+		<description>My New Shopping Cart</description>
+		<id>BD40D1CB-7D85-4F47-867A-925E111EB2FA</id>
+		<name>New Cart</name>
+		<shopper>0CA564F1-EFBC-490F-8586-198FD14E97FA</shopper>
+		<subtotal>2.22</subtotal>
+		<subtotal>2.22 USD</subtotal>
+		<subtotal>2.22 CAD</subtotal>
+		<subtotal>&amp;#x0024;2.22</subtotal>
+		<subtotal>2.22 Canadian Dollar</subtotal>
+		<type>0</type>
+		<item>
+			<description>Description 1</description>
+			<id>EF254990-53FB-46DA-8B8A-A287698D3E6A</id>
+			<price>1.11</price>
+			<price>1.11 USD</price>
+			<price>1.11 CAD</price>
+			<price>&amp;#x0024;1.11</price>
+			<price>1.11 Canadian Dollar</price>
+			<quantity>2</quantity>
+			<sku>SKU1</sku>
+			<total>2.22</total>
+			<total>2.22 USD</total>
+			<total>2.22 CAD</total>
+			<total>&amp;#x0024;2.22</total>
+			<total>2.22 Canadian Dollar</total>
+		</item>
+	</cart>
+</body>
