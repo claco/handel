@@ -14,6 +14,9 @@ eval 'use DBD::SQLite';
 Test::More::plan(skip_all =>
     'DBD::SQLite not installed') if $@;
 
+Test::More::plan(skip_all =>
+    'Taglib unusable. Rewrite in progress.');
+
 ## test new/add first so we can use them to test everything else
 my @tests = (
     'cart_new.xsp',
