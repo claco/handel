@@ -81,7 +81,7 @@
 					<shopper><cart:shopper/></shopper>
 					<subtotal><cart:subtotal/></subtotal>
 					<type><cart:type/></type>
-					<cart:delete sku="NEW123"/>
+					<cart:delete sku="NEWSKU123"/>
 					<count><cart:count/></count>
 					<subtotal><cart:subtotal/></subtotal>
 				</cart>

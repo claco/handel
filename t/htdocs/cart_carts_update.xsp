@@ -40,7 +40,7 @@
 				</cart>
 				<cart:update>
 					<cart:description>My New Description</cart:description>
-					<cart:id>846E82AC-E8BF-4348-86CD-C521C1E3194A</cart:id>
+					<cart:shopper>846E82AC-E8BF-4348-86CD-C521C1E3194A</cart:shopper>
 					<cart:name>My New Name</cart:name>
 					<cart:type>0</cart:type>
 				</cart:update>

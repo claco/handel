@@ -22,7 +22,7 @@
 			<cart:no-results><message>Error adding cart</message></cart:no-results>
 		</cart:new>
 
-		<cart:carts>
+		<cart:carts shopper="563BD51D-A738-4F5A-8DA5-5A2979A1D377">
 			<cart:results>
 				<cart>
 					<count><cart:count/></count>

@@ -39,14 +39,14 @@
 		</cart:new>
 		<cart:new>
 			<cart:description>My New Shopping Cart 2</cart:description>
-			<cart:id>C7057259-1508-47B9-BE0D-B5FA447236F6</cart:id>
+			<cart:id>C7057259-1508-47B9-BE0D-B5FA447236F1</cart:id>
 			<cart:name>New Cart 2</cart:name>
 			<cart:shopper>0BE8E35D-67A0-4C89-B9D9-75FB38F75D66</cart:shopper>
 			<cart:type>0</cart:type>
 			<cart:results>
 				<cart:add>
 					<cart:description>My New Item</cart:description>
-					<cart:id>0C3A827B-B45B-413D-848D-075CAF451140</cart:id>
+					<cart:id>0C3A827B-B45B-413D-848D-075CAF451141</cart:id>
 					<cart:price>1.23</cart:price>
 					<cart:quantity>2</cart:quantity>
 					<cart:sku>NEWSKU123</cart:sku>
@@ -56,7 +56,7 @@
 				</cart:add>
 				<cart:add>
 					<cart:description>My New Item</cart:description>
-					<cart:id>E134D261-9382-4A7C-919E-55C2EB2BD994</cart:id>
+					<cart:id>E134D261-9382-4A7C-919E-55C2EB2BD991</cart:id>
 					<cart:price>1.01</cart:price>
 					<cart:quantity>1</cart:quantity>
 					<cart:sku>NEWSKU345</cart:sku>

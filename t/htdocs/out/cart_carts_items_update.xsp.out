@@ -23,15 +23,15 @@
 			<price>3.33</price>
 			<quantity>3</quantity>
 			<sku>UPDATED123</sku>
-			<total>3.33</total>
+			<total>9.99</total>
 		</item>
 		<item>
-			<description>Description 1</description>
+			<description>Description 2</description>
 			<id>0FB50961-6F51-4A6D-B224-B85BBCD8E357</id>
-			<price>1.11</price>
-			<quantity>1</quantity>
-			<sku>SKU1</sku>
-			<total>1.11</total>
+			<price>2.22</price>
+			<quantity>2</quantity>
+			<sku>SKU2</sku>
+			<total>4.44</total>
 		</item>
 		<item>
 			<description>My Updated Item</description>
@@ -39,7 +39,7 @@
 			<price>3.33</price>
 			<quantity>3</quantity>
 			<sku>UPDATED123</sku>
-			<total>3.33</total>
+			<total>9.99</total>
 		</item>
 		<subtotal>19.98</subtotal>
 	</cart>
@@ -56,7 +56,7 @@
 			<id>DFDAB889-CB9A-4887-9FFF-7BF4BB81D5B0</id>
 			<price>3.33</price>
 			<quantity>3</quantity>
-			<sku>SKU1</sku>
+			<sku>SKU3</sku>
 			<total>9.99</total>
 		</item>
 		<item>
@@ -65,15 +65,15 @@
 			<price>3.33</price>
 			<quantity>3</quantity>
 			<sku>UPDATED123</sku>
-			<total>3.33</total>
+			<total>9.99</total>
 		</item>
 		<item>
-			<description>Description 3</description>
+			<description>Description 4</description>
 			<id>118EB339-A5D5-4F3D-B5D7-62F5819D1CC8</id>
-			<price>3.33</price>
-			<quantity>3</quantity>
-			<sku>SKU1</sku>
-			<total>9.99</total>
+			<price>4.44</price>
+			<quantity>4</quantity>
+			<sku>SKU4</sku>
+			<total>17.76</total>
 		</item>
 		<item>
 			<description>My Updated Item</description>
@@ -81,7 +81,7 @@
 			<price>3.33</price>
 			<quantity>3</quantity>
 			<sku>UPDATED123</sku>
-			<total>3.33</total>
+			<total>9.99</total>
 		</item>
 		<subtotal>19.98</subtotal>
 	</cart>

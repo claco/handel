@@ -21,9 +21,9 @@
 			<description>My Updated Item</description>
 			<id>E766EAC7-CB67-4BFC-A54F-592B1F029363</id>
 			<price>10.13</price>
-			<quantity>2</quantity>
+			<quantity>22</quantity>
 			<sku>UPDATED123</sku>
-			<total>20.26</total>
+			<total>222.86</total>
 		</updateditem>
 		<item>
 			<description>Description 2</description>
@@ -37,10 +37,10 @@
 			<description>My Updated Item</description>
 			<id>AC156B65-0779-4D96-AE72-CAB2E981F34E</id>
 			<price>10.13</price>
-			<quantity>2</quantity>
+			<quantity>22</quantity>
 			<sku>UPDATED123</sku>
-			<total>20.26</total>
+			<total>222.86</total>
 		</updateditem>
-		<subtotal>40.52</subtotal>
+		<subtotal>445.72</subtotal>
 	</cart>
 </body>

@@ -45,7 +45,7 @@
 					<shopper><cart:shopper/></shopper>
 					<subtotal><cart:subtotal/></subtotal>
 					<type><cart:type/></type>
-					<cart:item>
+					<cart:items>
 						<cart:filter name="sku">BOGONSKU%</cart:filter>
 						<cart:results>
 							<item>
@@ -60,7 +60,7 @@
 						<cart:no-results>
 							<message>Your cart is empty</message>
 						</cart:no-results>
-					</cart:item>
+					</cart:items>
 				</cart>
 			</cart:results>
 			<cart:no-results>

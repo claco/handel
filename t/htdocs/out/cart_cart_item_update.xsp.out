@@ -18,21 +18,13 @@
 			<total>1.11</total>
 		</item>
 		<item>
-			<description>Description 1</description>
-			<id>18C9050C-1973-4A56-A7C6-F609BD204898</id>
-			<price>1.11</price>
-			<quantity>1</quantity>
-			<sku>SKU1</sku>
-			<total>1.11</total>
-		</item>
-		<item>
 			<description>My Updated Item</description>
 			<id>18C9050C-1973-4A56-A7C6-F609BD204898</id>
 			<price>3.33</price>
 			<quantity>3</quantity>
-			<sku>SKU1</sku>
+			<sku>UPDATED123</sku>
 			<total>9.99</total>
 		</item>
-		<subtotal>12.21</subtotal>
+		<subtotal>14.43</subtotal>
 	</cart>
 </body>

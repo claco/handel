@@ -4,7 +4,7 @@
 	<cart>
 		<count>2</count>
 		<description>My New Shopping Cart</description>
-		<id>221DB0C6-A4A4-4C2D-8E7F-C5D369A47BC7</id>
+		<id>1E8AA291-888C-4887-AAC6-2C266024669C</id>
 		<name>New Cart</name>
 		<shopper>E628B342-24D4-427F-815A-264C45B1FC33</shopper>
 		<subtotal>5.55</subtotal>
@@ -31,7 +31,7 @@
 			<id>E7C40FA5-5C34-4174-B63F-A9EF595E4AEF</id>
 			<price>3.33</price>
 			<quantity>3</quantity>
-			<sku>SKU1</sku>
+			<sku>SKU3</sku>
 			<total>9.99</total>
 		</item>
 	</cart>

@@ -17,7 +17,7 @@
 		</cart:new>
 
 		<cart:cart type="1">
-			<cart:filter name="id">D65692C4-B043-43A7-BFAA-D5326C099B71</cart:filter>
+			<cart:filter name="id">535FD0DD-A88E-42B0-B503-7FFB4384B4D6</cart:filter>
 			<cart:results>
 				<cart>
 					<count><cart:count/></count>
@@ -30,7 +30,7 @@
 				</cart>
 				<cart:update>
 					<cart:description>My New Description</cart:description>
-					<cart:id>846E82AC-E8BF-4348-86CD-C521C1E3194A</cart:id>
+					<cart:shopper>846E82AC-E8BF-4348-86CD-C521C1E3194A</cart:shopper>
 					<cart:name>My New Name</cart:name>
 					<cart:type>0</cart:type>
 				</cart:update>

@@ -45,7 +45,7 @@
 					<shopper><cart:shopper/></shopper>
 					<subtotal><cart:subtotal/></subtotal>
 					<type><cart:type/></type>
-					<cart:item>
+					<cart:items>
 						<cart:results>
 							<item>
 								<description><cart:description/></description>
@@ -73,7 +73,7 @@
 						<cart:no-results>
 							<message>Your cart is empty</message>
 						</cart:no-results>
-					</cart:item>
+					</cart:items>
 					<subtotal><cart:subtotal/></subtotal>
 				</cart>
 			</cart:results>
