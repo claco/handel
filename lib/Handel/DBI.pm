@@ -95,7 +95,7 @@ sub uuid {
     if (!$uuidstring) {
         eval {require Data::UUID};
         if (!$@) {
-            my $ug = Data::GUID->new;
+            my $ug = Data::UUID->new;
             $uuid = $ug->create;
             $uuidstring = $ug->to_string($uuid);
         } else {
