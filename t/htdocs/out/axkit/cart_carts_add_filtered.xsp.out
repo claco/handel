@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<body>
+	<cart>
+		<count>0</count>
+		<description>My First Shopping Cart</description>
+		<id>1FFD4DDA-6566-451F-804F-C26A5D4FA28C</id>
+		<name>New Cart 1</name>
+		<shopper>8753D77B-0AF4-4236-8990-643A491803B6</shopper>
+		<subtotal>0</subtotal>
+		<type>1</type>
+		<count>1</count>
+		<subtotal>1.23</subtotal>
+	</cart>
+	<cart>
+		<count>0</count>
+		<description>My Second Shopping Cart</description>
+		<id>E0EFC6CE-DF63-4E30-9194-8823911D3BE4</id>
+		<name>New Cart 2</name>
+		<shopper>8753D77B-0AF4-4236-8990-643A491803B6</shopper>
+		<subtotal>0</subtotal>
+		<type>0</type>
+		<count>1</count>
+		<subtotal>1.23</subtotal>
+	</cart>
+	<cart>
+		<count>0</count>
+		<description>My Third Shopping Cart</description>
+		<id>2BE2A6CB-CAFF-40BC-BE56-C914DE07BC6C</id>
+		<name>New Cart 3</name>
+		<shopper>8753D77B-0AF4-4236-8990-643A491803B6</shopper>
+		<subtotal>0</subtotal>
+		<type>1</type>
+		<count>1</count>
+		<subtotal>1.23</subtotal>
+	</cart>
+</body>

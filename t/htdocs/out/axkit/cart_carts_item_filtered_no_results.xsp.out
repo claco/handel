@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<body>
+	<cart>
+		<count>2</count>
+		<description>My New Shopping Cart</description>
+		<id>0DA8FC31-89BD-426A-991E-3572A8C8ECD5</id>
+		<name>New Cart</name>
+		<shopper>7F0165B3-2AE6-498C-908B-9915E6A8E254</shopper>
+		<subtotal>5.55</subtotal>
+		<type>0</type>
+		<message>Your cart is empty</message>
+	</cart>
+	<cart>
+		<count>2</count>
+		<description>My New Shopping Cart 2</description>
+		<id>ACAD7E33-81AA-40C8-9B46-D7024DE32D5B</id>
+		<name>New Cart 2</name>
+		<shopper>7F0165B3-2AE6-498C-908B-9915E6A8E254</shopper>
+		<subtotal>27.75</subtotal>
+		<type>0</type>
+		<message>Your cart is empty</message>
+	</cart>
+</body>

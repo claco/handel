@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<body>
+	<cart>
+		<count>1</count>
+		<description>My New Shopping Cart</description>
+		<id>B0462540-0564-4E27-B9FD-C3985A227C49</id>
+		<name>New Cart</name>
+		<shopper>E24FF465-F485-477B-8565-FDF30BB4DE13</shopper>
+		<subtotal>2.46</subtotal>
+		<type>0</type>
+	</cart>
+	<cart>
+		<count>1</count>
+		<description>My New Shopping Cart</description>
+		<id>B0462540-0564-4E27-B9FD-C3985A227C49</id>
+		<name>New Cart</name>
+		<shopper>E24FF465-F485-477B-8565-FDF30BB4DE13</shopper>
+		<subtotal>2.46</subtotal>
+		<type>0</type>
+		<count>0</count>
+		<subtotal>0</subtotal>
+	</cart>
+</body>

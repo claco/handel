@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<body>
+	<cart>
+		<item>
+			<description>My New Item</description>
+			<id>FF370272-BF75-4082-9E04-9FA5D302F3B4</id>
+			<price>1.23</price>
+			<quantity>2</quantity>
+			<sku>NEWSKU123</sku>
+			<total>2.46</total>
+		</item>
+		<count>1</count>
+		<description>My New Shopping Cart</description>
+		<id>0CA692A7-0387-48AF-89B0-35F67BD3CF4E</id>
+		<name>New Cart</name>
+		<shopper>2C98B811-B6EE-45A2-8ABD-DFBB5C308E4D</shopper>
+		<subtotal>2.46</subtotal>
+		<type>0</type>
+	</cart>
+</body>
