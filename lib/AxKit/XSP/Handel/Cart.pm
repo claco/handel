@@ -79,6 +79,38 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
             return "\n{\n$code\n";
 
 
+        ## cart:item
+        } elsif ($tag eq 'item') {
+            throw Handel::Exception::Taglib(
+                -text => translate("Tag '[_1]' not valid inside of tag '" . $context[$#context] . "'", $tag)
+            ) if ($context[$#context] =~ /^(cart(s?))$/);
+
+            push @context, $tag;
+
+            my $code = "my \$_xsp_handel_cart_item;\nmy \$_xsp_handel_cart_called_item;\n";
+            $code .= scalar keys %attr ?
+                'my %_xsp_handel_cart_item_filter = ("' . join('", "', %attr) . '");' :
+                'my %_xsp_handel_cart_item_filter;' ;
+
+            return "\n{\n$code\n";
+
+
+        ## cart:items
+        } elsif ($tag eq 'items') {
+            throw Handel::Exception::Taglib(
+                -text => translate("Tag '[_1]' not valid inside of tag '" . $context[$#context] . "'", $tag)
+            ) if ($context[$#context] =~ /^(cart(s?))$/);
+
+            push @context, $tag;
+
+            my $code = "my \@_xsp_handel_cart_items;\nmy \$_xsp_handel_cart_called_items;\n";
+            $code .= scalar keys %attr ?
+                'my %_xsp_handel_cart_items_filter = ("' . join('", "', %attr) . '");' :
+                'my %_xsp_handel_cart_items_filter;' ;
+
+            return "\n{\n$code\n";
+
+
         ## cart:clear
         } elsif ($tag eq 'clear') {
             throw Handel::Exception::Taglib(
@@ -132,6 +164,12 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
             } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'cart') {
                 $e->start_expr($tag);
                 $e->append_to_script("\$_xsp_handel_cart_cart->$tag;\n");
+            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'item') {
+                $e->start_expr($tag);
+                $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
+            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'items') {
+                $e->start_expr($tag);
+                $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
             } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'add') {
                 $e->start_expr($tag);
                 $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
@@ -148,6 +186,12 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
             } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'add') {
                 $e->start_expr($tag);
                 $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
+            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'item') {
+                $e->start_expr($tag);
+                $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
+            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'items') {
+                $e->start_expr($tag);
+                $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
             } elsif ($context[$#context] eq 'delete') {
                 return "\n\$_xsp_handel_cart_delete_filter{$tag} = ";
             };
@@ -159,6 +203,10 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
 
             if ($context[$#context] eq 'cart') {
                 return "\n\$_xsp_handel_cart_load_filter{'$key'} = ";
+            } elsif ($context[$#context] eq 'item') {
+                return "\n\$_xsp_handel_cart_item_filter{'$key'} = ";
+            } elsif ($context[$#context] eq 'items') {
+                return "\n\$_xsp_handel_cart_items_filter{'$key'} = ";
             };
 
 
@@ -188,6 +236,28 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
                             $_xsp_handel_cart_called_load = 1;
                     };
                     if ($_xsp_handel_cart_cart) {
+
+                ';
+            } elsif ($context[$#context-1] eq 'item') {
+                return '
+                    if (!$_xsp_handel_cart_called_item) {
+                        $_xsp_handel_cart_item = (scalar keys %_xsp_handel_cart_item_filter) ?
+                            $_xsp_handel_cart_cart->items(\%_xsp_handel_cart_item_filter, 1)->next :
+                            $_xsp_handel_cart_cart->items(undef, 1)->next;
+                            $_xsp_handel_cart_called_item = 1;
+                    };
+                    if ($_xsp_handel_cart_item) {
+
+                ';
+            } elsif ($context[$#context-1] eq 'items') {
+                return '
+                    if (!$_xsp_handel_cart_called_items) {
+                        @_xsp_handel_cart_items = (scalar keys %_xsp_handel_cart_items_filter) ?
+                            $_xsp_handel_cart_cart->items(\%_xsp_handel_cart_items_filter) :
+                            $_xsp_handel_cart_cart->items();
+                            $_xsp_handel_cart_called_items = 1;
+                    };
+                    foreach my $_xsp_handel_cart_item (@_xsp_handel_cart_items) {
 
                 ';
             } elsif ($context[$#context-1] eq 'add') {
@@ -228,6 +298,26 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
                     };
                     if (!$_xsp_handel_cart_cart) {
                 ';
+            } elsif ($context[$#context-1] eq 'item') {
+                return '
+                    if (!$_xsp_handel_cart_called_item) {
+                        $_xsp_handel_cart_item = (scalar keys %_xsp_handel_cart_item_filter) ?
+                            $_xsp_handel_cart_cart->items(\%_xsp_handel_cart_item_filter, 1)->next :
+                            $_xsp_handel_cart_cart->items(undef, 1)->next;
+                            $_xsp_handel_cart_called_item = 1;
+                    };
+                    if (!$_xsp_handel_cart_item) {
+                ';
+            } elsif ($context[$#context-1] eq 'items') {
+                return '
+                    if (!$_xsp_handel_cart_called_items) {
+                        @_xsp_handel_cart_items = (scalar keys %_xsp_handel_cart_items_filter) ?
+                            $_xsp_handel_cart_cart->items(\%_xsp_handel_cart_items_filter) :
+                            $_xsp_handel_cart_cart->items();
+                            $_xsp_handel_cart_called_items = 1;
+                    };
+                    if (!scalar @_xsp_handel_cart_items) {
+                ';
             } elsif ($context[$#context-1] eq 'add') {
                 return '
                     if (!$_xsp_handel_cart_called_add && scalar keys %_xsp_handel_cart_add_filter) {
@@ -251,7 +341,12 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
         if ($tag eq 'new') {
             pop @context;
 
-            return "\n};\n";
+            return '
+                if (!$_xsp_handel_cart_called_new && scalar keys %_xsp_handel_cart_new_filter) {
+                    $_xsp_handel_cart_cart = Handel::Cart->new(\%_xsp_handel_cart_new_filter);
+                    $_xsp_handel_cart_called_new = 1;
+                };
+            };';
 
 
         ## cart:cart
@@ -261,11 +356,31 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
             return "\n};\n";
 
 
+        ## cart:item
+        } elsif ($tag eq 'item') {
+            pop @context;
+
+            return "\n};\n";
+
+
+        ## cart:items
+        } elsif ($tag eq 'items') {
+            pop @context;
+
+            return "\n};\n";
+
+
         ## cart:add
         } elsif ($tag eq 'add') {
             pop @context;
 
-            return "\n};\n";;
+            return '
+                if (!$_xsp_handel_cart_called_add && scalar keys %_xsp_handel_cart_add_filter) {
+                    $_xsp_handel_cart_item = $_xsp_handel_cart_cart->add(\%_xsp_handel_cart_add_filter);
+                    $_xsp_handel_cart_called_add = 1;
+                };
+            };
+            ';
 
 
         ## cart:delete
@@ -300,6 +415,10 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
                 return ";\n";
             } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'add') {
                 $e->end_expr($tag);
+            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'item') {
+                $e->end_expr($tag);
+            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'items') {
+                $e->end_expr($tag);
             } elsif ($context[$#context] eq 'delete' && $tag !~ /^(count|subtotal)$/) {
                 return ";\n";
             };
@@ -308,6 +427,10 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
         ## cart:filter
         } elsif ($tag eq 'filter') {
             if ($context[$#context] eq 'cart') {
+                return ";\n";
+            } elsif ($context[$#context] eq 'item') {
+                return ";\n";
+            } elsif ($context[$#context] eq 'items') {
                 return ";\n";
             };
 
@@ -319,6 +442,14 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
 
                 return "\n};\n";
             } elsif ($context[$#context-1] eq 'cart') {
+                pop @context;
+
+                return "\n};\n";
+            } elsif ($context[$#context-1] eq 'item') {
+                pop @context;
+
+                return "\n};\n";
+            } elsif ($context[$#context-1] eq 'items') {
                 pop @context;
 
                 return "\n};\n";
@@ -337,6 +468,14 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
 
                 return "\n};\n";
             } elsif ($context[$#context-1] eq 'cart') {
+                pop @context;
+
+                return "\n};\n";
+            } elsif ($context[$#context-1] eq 'item') {
+                pop @context;
+
+                return "\n};\n";
+            } elsif ($context[$#context-1] eq 'items') {
                 pop @context;
 
                 return "\n};\n";
