@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use vars qw($VERSION);
 
-$VERSION = '0.01_06';
+$VERSION = '0.01_07';
 
 1;
 __END__
