@@ -69,5 +69,8 @@ WriteMakefile(
     (ExtUtils::MakeMaker->VERSION >= 6.11) ?
     (NO_META      => 1) : (),
 
+    dist => {
+        PREOP => '"pod2text ${DISTVNAME}/lib/Handel.pm > ${DISTVNAME}/README"',
+    },
     clean => { FILES => 'smoke-report-* t/cart*.db t/TEST t/SMOKE t/logs t/htdocs/cart*.db' }
 );
