@@ -1,5 +1,9 @@
 Revision history for Perl module Handel
 
+0.11 Tue Mar 01 21:16:29 2005
+    - Handel::ConfigReader is now a tied hash to abstract fetches
+    - Fixed FOREACH IN/= syntax issues in tt2_cart.t tests
+
 0.10 Mon Feb 28 23:35:13 2005
     - Added max quantity checks, constraint and tests
     - Added Handel::ConfigReader to abstract mod_perl/ENV settings logic
