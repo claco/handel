@@ -45,7 +45,7 @@
 			<shopper>[% cart.shopper %]</shopper>
 			<subtotal>[% cart.subtotal %]</subtotal>
 			<type>[% cart.type %]</type>
-			[% FOREACH item IN cart.items({sku => 'SKU%'}) %]
+			[% FOREACH item = cart.items({sku => 'SKU%'}) %]
 				<item>
 					<description>[% item.description %]</description>
 					<id>[% item.id %]</id>
