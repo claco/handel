@@ -1,5 +1,6 @@
 TODO list for Perl module Handel
 
+    - Added cart:item code to Axit::XSP::Handl::Cart
     - add better tests for AxKit::XSP::Handel::Cart
     - complete pod for AxKit::XSP::Handel::Cart
     - add restore code in AxKit::XSP::Handel::Cart
