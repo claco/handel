@@ -2,6 +2,7 @@ package AxKit::XSP::Handel::Cart;
 use strict;
 use warnings;
 use vars qw($NS);
+use Handel::Constants qw(:cart);
 use Handel::Exception;
 use Handel::L10N qw(translate);
 use base 'Apache::AxKit::Language::XSP';
@@ -71,6 +72,28 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
 
             return "\n{\n$code\n";
 
+
+        ## cart:restore
+        } elsif ($tag eq 'restore') {
+            throw Handel::Exception::Taglib(
+                -text => translate("Tag '[_1]' not valid inside of tag '" . $context[$#context] . "'", $tag)
+            ) if ($context[$#context] =~ /^(cart(s?))$/);
+
+            push @context, $tag;
+
+            my $mode = $attr{'mode'} || 'CART_MODE_APPEND';
+            if (Handel::Constants->can($mode)) {
+                $mode = Handel::Constants->$mode;
+            } else {
+                $mode = CART_MODE_APPEND;
+            };
+            delete $attr{'mode'};
+
+            my $code .= scalar keys %attr ?
+                'my %_xsp_handel_cart_restore_filter = ("' . join('", "', %attr) . '");' :
+                'my %_xsp_handel_cart_restore_filter;' ;
+
+            return "\n{\nmy \$_xsp_handel_cart_restore_mode = $mode;\n$code\n";
 
         ## cart:cart
         } elsif ($tag eq 'cart') {
@@ -280,6 +303,8 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
                 return "\n\$_xsp_handel_cart_item_filter{'$key'} = ''";
             } elsif ($context[$#context] eq 'items') {
                 return "\n\$_xsp_handel_cart_items_filter{'$key'} = ''";
+            } elsif ($context[$#context] eq 'restore') {
+                return "\n\$_xsp_handel_cart_restore_filter{'$key'} = ''";
             };
 
 
@@ -443,6 +468,17 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
             };';
 
 
+        ## cart:restore
+        } elsif ($tag eq 'restore') {
+            pop @context;
+
+            return '
+                $_xsp_handel_cart_cart->restore(\%_xsp_handel_cart_restore_filter,
+                    $_xsp_handel_cart_restore_mode);
+            };
+            ';
+
+
         ## cart:cart
         } elsif ($tag eq 'cart') {
             pop @context;
@@ -563,6 +599,8 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
             } elsif ($context[$#context] eq 'item') {
                 return ";\n";
             } elsif ($context[$#context] eq 'items') {
+                return ";\n";
+            } elsif ($context[$#context] eq 'restore') {
                 return ";\n";
             };
 
@@ -783,6 +821,9 @@ AxKit XSP pages.
                 </cart:no-results>
             </cart:item(s)>
             <cart:name/>
+            <cart:restore mode="CART_MODE_APPEND|CART_MODE_MERGE|CART_MODE_REPLACE" description|id|name|shopper|type="value"...>
+                <cart:filter name="description|id|name|shopper|type">value</cart:filter>
+            </cart:restore>
             <cart:save/>
             <cart:subtotal/>
             <cart:type/>
@@ -1242,6 +1283,16 @@ singular and plural forms are available for your enjoyment:
 
         </cart:no-results?
     </cart:carts>
+
+=head2 <cart:restore>
+
+Restores another cart into the current cart.
+
+    <cart:restore mode="CART_MODE_APPEND">
+        <cart:filter name="id">11111111-1111-1111-1111-111111111111</cart:filter>
+    </cart:restore>
+
+See L<Handel::Constants> for the available C<mode> values.
 
 =head2 <cart:save>
 
