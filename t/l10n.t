@@ -13,17 +13,17 @@ BEGIN {
 
 ## Check simple translation through Handel::L10N
 {
-    $Handel::L10N::handle = Handel::L10N->get_handle('en');
+    local $ENV{'LANG'} = 'en';
     is(translate('Language'), "English");
 
-    $Handel::L10N::handle = Handel::L10N->get_handle('fr');
+    local $ENV{'LANG'} = 'fr';
     is(translate('Language'), "Français");
 };
 
 
 ## Test translation in exceptions
 {
-    $Handel::L10N::handle = Handel::L10N->get_handle('fr');
+    local $ENV{'LANG'} = 'fr';
 
     ## check the stock exceptions
     try {
@@ -79,7 +79,7 @@ BEGIN {
 
 ## test translation within another module that uses the exceptions
 {
-    $Handel::L10N::handle = Handel::L10N->get_handle('fr');
+    local $ENV{'LANG'} = 'fr';
 
     require Handel::Cart;
 
