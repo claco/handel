@@ -41,8 +41,14 @@ t/exceptions.t
 t/l10n.t
 t/pod_coverage.t
 t/pod_syntax.t
+t/conf/extra.conf.in
 t/lib/Handel/TestHelper.pm
 t/sql/cart_create_table.sql
 t/sql/cart_fake_data.sql
+t/xsp_cart.t
+t/htdocs/cart_load.xsp
+t/htdocs/cart_load_all.xsp
+t/htdocs/cart_load_filter.xsp
+t/TEST.PL
 Makefile.PL
 META.yml
