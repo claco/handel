@@ -18,8 +18,14 @@ BEGIN {
     use_ok('Handel::L10N::fr');
 
     SKIP: {
-        skip 'AxKit not installed', 1 unless eval 'use AxKit';
+        eval 'use Apache::AxKit::Language::XSP';
+        skip 'AxKit not installed', 1 if $@;
 
-        use_ok('AxKit::XSP::Handle::Cart');
+        {
+            ##
+            no strict;
+            no warnings;
+            use_ok('AxKit::XSP::Handel::Cart');
+        };
     };
 };
