@@ -17,6 +17,7 @@ demo/tt2/includes/header.tt2
 demo/tt2/includes/menu.tt2
 demo/tt2/index.tt2
 demo/tt2/products.tt2
+demo/tt2/README
 demo/tt2/style/css/basic.css
 lib/AxKit/XSP/Handel/Cart.pm
 lib/Handel.pm
@@ -31,6 +32,7 @@ lib/Handel/L10N.pm
 lib/Handel/L10N/en_us.pm
 lib/Handel/L10N/fr.pm
 lib/Template/Plugin/Handel/Cart.pm
+lib/Template/Plugin/Handel/Constants.pm
 LICENSE
 Makefile.PL
 MANIFEST
