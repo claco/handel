@@ -1,7 +1,20 @@
+# $Id$
 use ExtUtils::MakeMaker;
 use 5.006;
 use strict;
 use warnings FATAL => 'all';
+
+require Test::More;
+if (Test::More->VERSION < 0.48) {
+    print "\a\a\a\a\a";
+    print "----------------------------------------------------------\n";
+    print "Test::More < 0.48 sometimes causes test failures with\n";
+    print "Class::DBI/IMA::DBI. Please consider updating Test::More\n";
+    print "to version 0.48 or greater if you experience test failures\n";
+    print "with 'attemt to free unreferenced scalar' errors.\n";
+    print "----------------------------------------------------------\n";
+    sleep 5;
+};
 
 eval 'use Apache::Test 1.16';
 if (!$@) {
@@ -49,7 +62,6 @@ WriteMakefile(
     PREREQ_PM    => {
         'Class::DBI'       => '0.96',
         'DBI'              => '1.36',
-        'Test::More'       => '0.48',
         'Error'            => '0.14',
         'Locale::Maketext' => '1.06',
         %modules
