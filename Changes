@@ -1,6 +1,6 @@
 Revision history for Perl module Handel v
 
-0.15 Tue Mar 17 21:06:36 2005
+0.15 Thur Mar 17 21:06:36 2005
     - Added Test::Strict tests
     - Added convert to Handel::Currency
     - Added convert/from/to attributes to price/subtotal/total in
