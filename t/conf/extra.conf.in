@@ -1,11 +1,14 @@
 # $Id$
 PerlModule AxKit
 AxNoCache On
+AxLogDeclines On
 AxDebugLevel 10
-AxAddProcessor application/x-xsp .
+AxStackTrace On
 
 PerlSetVar db_name		@documentroot@/cart.db
 PerlSetVar db_driver	"SQLite"
+
+AxAddProcessor application/x-xsp .
 
 AxAddXSPTaglib AxKit::XSP::Handel::Cart
 
