@@ -37,13 +37,16 @@ sub comp_to_file {
     if (defined $fh) {
         local $/ = undef;
         my $contents = <$fh>;
-        $contents =~ s/\n//;
-        $contents =~ s/\s//;
-        $contents =~ s/\t//;
+        $contents =~ s/\n//g;
+        $contents =~ s/\s//g;
+        $contents =~ s/\t//g;
+        $contents =~ s/<!--.*-->//;
         undef $fh;
 
         if ($string eq $contents) {
-           return 1;
+            return (1, $string, $contents);
+        } else {
+            return (0, $string, $contents);
         };
     };
 
