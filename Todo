@@ -1,6 +1,6 @@
 TODO list for Perl module Handel
 
-    - finish Axit::XSP::Handel::Cart rewrite
+    - slim Cart taglib code to remove repeated code blocks left for clarity
     - add restore code in AxKit::XSP::Handel::Cart
     - start work on Handel::Order part of framework
     - find translation volunteer other than Google translate
