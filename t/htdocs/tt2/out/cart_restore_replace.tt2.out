@@ -1,0 +1,46 @@
+[%# $Id$ %]
+<body>
+	<cart>
+		<count>2</count>
+		<description>My First Shopping Cart</description>
+		<id>6ACAB02E-502D-440A-B4EB-A354E6F0C2D6</id>
+		<name>New Cart 1</name>
+		<shopper>B9E6EF4C-DC45-4DB5-836C-2AF3EE9CA256</shopper>
+		<subtotal>5.55</subtotal>
+		<type>1</type>
+		<item>
+			<description>Description 1</description>
+			<id>F3340759-790D-4287-9E96-9093DC677AAD</id>
+			<price>1.11</price>
+			<quantity>1</quantity>
+			<sku>SKU1</sku>
+			<total>1.11</total>
+		</item>
+		<item>
+			<description>Description 2</description>
+			<id>D8A14B72-BDAE-4F80-BB15-A0C5233E53D9</id>
+			<price>2.22</price>
+			<quantity>2</quantity>
+			<sku>SKU2</sku>
+			<total>4.44</total>
+		</item>
+		<description>My Second Shopping Cart</description>
+		<name>New Cart 2</name>
+		<count>2</count>
+		<subtotal>27.75</subtotal>
+		<restoreditem>
+			<description>Description 3</description>
+			<price>3.33</price>
+			<quantity>3</quantity>
+			<sku>SKU3</sku>
+			<total>9.99</total>
+		</restoreditem>
+		<restoreditem>
+			<description>Description 4</description>
+			<price>4.44</price>
+			<quantity>4</quantity>
+			<sku>SKU4</sku>
+			<total>17.76</total>
+		</restoreditem>
+	</cart>
+</body>

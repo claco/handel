@@ -1,0 +1,90 @@
+[%# $Id$ %]
+[% USE hcart  = Handel.Cart %]
+<body>
+    [% IF (cart = hcart.create({
+		description	=> 'My First Shopping Cart',
+		id			=> '76DFA8B1-644A-44C5-B545-7D0BAE09313D',
+		name    	=> 'New Cart 1',
+        shopper 	=> '471DAC4F-BDAB-409C-B64C-5C7745252BC2',
+		type		=> hcart.CART_TYPE_SAVED
+	})) %]
+		[% CALL cart.add({
+			description => 'Description 1',
+			id			=> 'ACB8CA46-C119-47C1-B38B-73119770294E',
+			price		=> 1.11,
+			quantity	=> 1,
+			sku			=> 'SKU1'
+		}) %]
+		[% CALL cart.add({
+			description => 'Description 2',
+			id			=> 'D1D94E55-D270-43D5-A8EE-128FD053B97A',
+			price		=> 2.22,
+			quantity	=> 2,
+			sku			=> 'SKU2'
+		}) %]
+	[% ELSE %]
+		<message>Error adding cart</message>
+	[% END %]
+    [% IF (cart = hcart.create({
+		description	=> 'My Second Shopping Cart',
+		id			=> 'CB2787E4-FC6B-48C8-A76D-F64AA9EC48CF',
+		name    	=> 'New Cart 2',
+        shopper 	=> 'FA24824B-B889-4B3F-A8E3-91D346CD566E',
+		type		=> hcart.CART_TYPE_SAVED
+	})) %]
+		[% CALL cart.add({
+			description => 'Description 3',
+			id			=> 'E89B54F9-34EB-4A55-90E9-765345BD2E37',
+			price		=> 3.33,
+			quantity	=> 3,
+			sku			=> 'SKU3'
+		}) %]
+		[% CALL cart.add({
+			description => 'Description 4',
+			id			=> '846B56E4-B273-4F4B-9AE2-7AC2C91A7E81',
+			price		=> 4.44,
+			quantity	=> 4,
+			sku			=> 'SKU4'
+		}) %]
+	[% ELSE %]
+		<message>Error adding cart</message>
+	[% END %]
+
+	[% IF (cart = hcart.fetch({
+		id 	 => '76DFA8B1-644A-44C5-B545-7D0BAE09313D'
+	})) %]
+		<cart>
+			<count>[% cart.count %]</count>
+			<description>[% cart.description %]</description>
+			<id>[% cart.id %]</id>
+			<name>[% cart.name %]</name>
+			<shopper>[% cart.shopper %]</shopper>
+			<subtotal>[% cart.subtotal %]</subtotal>
+			<type>[% cart.type %]</type>
+			[% FOREACH item IN cart.items %]
+				<item>
+					<description>[% item.description %]</description>
+					<id>[% item.id %]</id>
+					<price>[% item.price %]</price>
+					<quantity>[% item.quantity %]</quantity>
+					<sku>[% item.sku %]</sku>
+					<total>[% item.total %]</total>
+				</item>
+			[% END %]
+			[% CALL cart.restore({id => 'CB2787E4-FC6B-48C8-A76D-F64AA9EC48CF'}, hcart.CART_MODE_APPEND) %]
+			<count>[% cart.count %]</count>
+			<subtotal>[% cart.subtotal %]</subtotal>
+			[% FOREACH item IN cart.items %]
+				<restoreditem>
+					<description>[% item.description %]</description>
+					<price>[% item.price %]</price>
+					<quantity>[% item.quantity %]</quantity>
+					<sku>[% item.sku %]</sku>
+					<total>[% item.total %]</total>
+				</restoreditem>
+			[% END %]
+		</cart>
+	[% ELSE %]
+		<message>Could not find cart</message>
+	[% END %]
+</body>

@@ -1,0 +1,15 @@
+[%# $Id$ %]
+[% USE hcart  = Handel.Cart %]
+<body>
+    [% FOREACH cart IN hcart.fetch %]
+		<cart>
+			<count>[% cart.count %]</count>
+			<description>[% cart.description %]</description>
+			<id>[% cart.id %]</id>
+			<name>[% cart.name %]</name>
+			<shopper>[% cart.shopper %]</shopper>
+			<subtotal>[% cart.subtotal %]</subtotal>
+			<type>[% cart.type %]</type>
+		</cart>
+    [% END %]
+</body>

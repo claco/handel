@@ -1,0 +1,19 @@
+[%# $Id$ %]
+[% USE hcart  = Handel.Cart %]
+<body>
+    [% IF (carts = hcart.fetch(undef, hcart.RETURNAS_ITERATOR)) %]
+    	[% WHILE (cart = carts.next) %]
+			<cart>
+				<count>[% cart.count %]</count>
+				<description>[% cart.description %]</description>
+				<id>[% cart.id %]</id>
+				<name>[% cart.name %]</name>
+				<shopper>[% cart.shopper %]</shopper>
+				<subtotal>[% cart.subtotal %]</subtotal>
+				<type>[% cart.type %]</type>
+			</cart>
+		[% END %]
+	[% ELSE %]
+		<message>Error loading carts</message>
+    [% END %]
+</body>

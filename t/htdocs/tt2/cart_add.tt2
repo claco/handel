@@ -1,0 +1,58 @@
+[%# $Id$ %]
+[% USE hcart  = Handel.Cart %]
+<body>
+    [% IF (cart = hcart.create({
+		description	=> 'My New Shopping Cart',
+		id			=> '94FE4F12-4C1A-46E4-9DD5-3757555862A8',
+		name    	=> 'New Cart',
+        shopper 	=> 'B002A4CB-2D60-4743-B4E5-D54F999944E6',
+		type		=> hcart.CART_TYPE_TEMP
+	})) %]
+		<cart>
+			<count>[% cart.count %]</count>
+			<description>[% cart.description %]</description>
+			<id>[% cart.id %]</id>
+			<name>[% cart.name %]</name>
+			<shopper>[% cart.shopper %]</shopper>
+			<subtotal>[% cart.subtotal %]</subtotal>
+			<type>[% cart.type %]</type>
+		</cart>
+	[% ELSE %]
+		<message>Error creating shopping cart</message>
+	[% END %]
+
+	[% IF (cart = hcart.fetch({
+		type => hcart.CART_TYPE_TEMP,
+		id 	 => '94FE4F12-4C1A-46E4-9DD5-3757555862A8'
+	})) %]
+		[% IF (addeditem = cart.add({
+			description => 'My New Item',
+			id			=> '9BE94446-ABB8-493D-9C8D-5177901B59D3',
+			price		=> 2.22,
+			quantity	=> 2,
+			sku			=> 'NEWSKU456'
+		})) %]
+			<addeditem>
+				<description>[% addeditem.description %]</description>
+				<id>[% addeditem.id %]</id>
+				<price>[% addeditem.price %]</price>
+				<quantity>[% addeditem.quantity %]</quantity>
+				<sku>[% addeditem.sku %]</sku>
+				<total>[% addeditem.total %]</total>
+			</addeditem>
+		[% ELSE %]
+			<message>New item not added</message>
+		[% END %]
+		<cart>
+			<count>[% cart.count %]</count>
+			<description>[% cart.description %]</description>
+			<id>[% cart.id %]</id>
+			<name>[% cart.name %]</name>
+			<shopper>[% cart.shopper %]</shopper>
+			<subtotal>[% cart.subtotal %]</subtotal>
+			<type>[% cart.type %]</type>
+		</cart>
+	[% ELSE %]
+		<message>Could not find cart</message>
+	[% END %]
+</body>

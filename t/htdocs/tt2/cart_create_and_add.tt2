@@ -1,0 +1,41 @@
+[%# $Id$ %]
+[% USE hcart  = Handel.Cart %]
+<body>
+    [% IF (cart = hcart.create({
+		description	=> 'My New Shopping Cart',
+		id			=> '0CA692A7-0387-48AF-89B0-35F67BD3CF4E',
+		name    	=> 'New Cart',
+        shopper 	=> '2C98B811-B6EE-45A2-8ABD-DFBB5C308E4D',
+		type		=> hcart.CART_TYPE_TEMP
+	})) %]
+		<cart>
+			[% IF (addeditem = cart.add({
+				description => 'My New Item',
+				id			=> 'FF370272-BF75-4082-9E04-9FA5D302F3B4',
+				price		=> 1.23,
+				quantity	=> 2,
+				sku			=> 'NEWSKU123'
+			})) %]
+				<item>
+					<description>[% addeditem.description %]</description>
+					<id>[% addeditem.id %]</id>
+					<price>[% addeditem.price %]</price>
+					<quantity>[% addeditem.quantity %]</quantity>
+					<sku>[% addeditem.sku %]</sku>
+					<total>[% addeditem.total %]</total>
+				</item>
+			[% ELSE %]
+				<message>Error adding cart item</message>
+			[% END %]
+			<count>[% cart.count %]</count>
+			<description>[% cart.description %]</description>
+			<id>[% cart.id %]</id>
+			<name>[% cart.name %]</name>
+			<shopper>[% cart.shopper %]</shopper>
+			<subtotal>[% cart.subtotal %]</subtotal>
+			<type>[% cart.type %]</type>
+		</cart>
+	[% ELSE %]
+		<message>Error creating shopping cart</message>
+    [% END %]
+</body>

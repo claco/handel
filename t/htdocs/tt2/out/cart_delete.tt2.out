@@ -1,0 +1,23 @@
+[%# $Id$ %]
+<body>
+	<cart>
+		<count>2</count>
+		<description>My New Shopping Cart</description>
+		<id>B05779D0-6D40-4F0A-B6A3-1CC2193571C6</id>
+		<name>New Cart</name>
+		<shopper>D3D7C81D-3BA7-41E6-A8B8-34550CD6C793</shopper>
+		<subtotal>3.47</subtotal>
+		<type>0</type>
+	</cart>
+	<cart>
+		<count>2</count>
+		<description>My New Shopping Cart</description>
+		<id>B05779D0-6D40-4F0A-B6A3-1CC2193571C6</id>
+		<name>New Cart</name>
+		<shopper>D3D7C81D-3BA7-41E6-A8B8-34550CD6C793</shopper>
+		<subtotal>3.47</subtotal>
+		<type>0</type>
+		<count>1</count>
+		<subtotal>1.01</subtotal>
+	</cart>
+</body>
