@@ -83,19 +83,18 @@ my $docroot = Apache::Test::vars('documentroot');
 
     unlink $dbfile;
     executesql($db, $create);
-    #executesql($db, $data);
 };
 
-my $r = GET('cart_uuid.xsp');
+my $r = GET('/axkit/cart_uuid.xsp');
 ok($r->code == 200);
 ok($r->content =~ /(<p>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}<\/p>){2}/i);
 
 foreach (@tests) {
-    my $r = GET($_);
+    my $r = GET("/axkit/$_");
 
     ok($r->code == 200);
 
-    my ($ok, $response, $file) = comp_to_file($r->content, "$docroot/out/$_.out");
+    my ($ok, $response, $file) = comp_to_file($r->content, "$docroot/out/axkit/$_.out");
 
     t_debug("HTTP Status: " . $r->code);
     t_debug("Expected:\n", $file);
