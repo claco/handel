@@ -1,9 +1,18 @@
 Revision history for Perl module Handel
 
-0.01_01 Mon Dec 27 21:47:04 2004
-    - initial alpha release
+0.01_03 Wed Dec 28 18:40:37 2004
+	- Changed cart restore to deal with multiple saved carts
+	- Added cart restore w/filter tests
+	- rearranged constants alphabetically :-)
+	- Finished pod for existing modules
+	- Removed leftover 'fr' from Exceptions get_handle
+	- Added VERSION to all pod
+	- Added *.db to MANIFEST.SKIP
 
 0.01_02 Tue Dec 28 22:18:14 2004
 	- Added Handel::Cart pod
 	- completed cart restore/merge tests
 	- changed tests to set Handel::DBI->connection
+
+0.01_01 Mon Dec 27 21:47:04 2004
+    - initial alpha release
