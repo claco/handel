@@ -5,6 +5,7 @@ use warnings;
 BEGIN {
     use base 'Handel::DBI';
     use Handel::Constraints qw(:all);
+    use Handel::L10N qw(translate);
 };
 
 __PACKAGE__->table('cart_items');
