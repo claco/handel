@@ -69,7 +69,7 @@ my @tests = (
 require Apache::TestUtil;
 Apache::TestUtil->import(qw(t_debug));
 Apache::TestRequest->import(qw(GET));
-Apache::Test::plan(tests => ((scalar @tests * 2) + 2),
+Apache::Test::plan(tests => ((scalar @tests * 2) + 3),
     need('AxKit', 'mod_perl', need_apache(1), need_lwp())
 );
 
@@ -114,3 +114,7 @@ LOOP: foreach (@tests) {
 
     ok($ok);
 };
+
+my $c = GET('/axkit/cart_currency_convert.xsp');
+ok($c->code == 200);
+t_debug($c->content);
