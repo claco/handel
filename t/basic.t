@@ -22,7 +22,7 @@ BEGIN {
         skip 'AxKit not installed', 1 if $@;
 
         {
-            ##
+            ## squelch AxKit strict/warnings
             no strict;
             no warnings;
             use_ok('AxKit::XSP::Handel::Cart');
