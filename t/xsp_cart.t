@@ -90,7 +90,7 @@ my $r = GET('/axkit/cart_uuid.xsp');
 ok($r->code == 200);
 ok($r->content =~ /(<p>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}<\/p>){2}/i);
 
-foreach (@tests) {
+LOOP: foreach (@tests) {
     my $r = GET("/axkit/$_");
 
     ok($r->code == 200);
@@ -101,6 +101,15 @@ foreach (@tests) {
     t_debug("HTTP Status: " . $r->code);
     t_debug("Expected:\n", $file);
     t_debug("Received:\n", $response);
+
+    ## This is a hack, but hey, it's just one test right?
+    if ($_ =~ /currency/) {
+        SKIP: {
+            eval 'use Locale::Currency::Format';
+            Apache::Test::skip('Locale::Currency::Format not installed', 2) if $@;
+            next LOOP if $@;
+        };
+    };
 
     ok($ok);
 };
