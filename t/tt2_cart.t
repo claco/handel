@@ -6,8 +6,8 @@ use Test::More;
 use lib 't/lib';
 use Handel::TestHelper qw(executesql comp_to_file);
 
-eval 'use Template 2.08';
-    plan(skip_all => 'Template 2.08 not installed') if $@;
+eval 'use Template 2.07';
+    plan(skip_all => 'Template Toolkit 2.07 not installed') if $@;
 
 eval 'use DBD::SQLite';
     plan(skip_all => 'DBD::SQLite not installed') if $@;

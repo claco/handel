@@ -31,7 +31,7 @@ BEGIN {
 
     SKIP: {
         eval 'use Template 2.07';
-        skip 'Template Toolkit not installed', 2 if $@;
+        skip 'Template Toolkit 2.07 not installed', 2 if $@;
 
         use_ok('Template::Plugin::Handel::Cart');
         use_ok('Template::Plugin::Handel::Constants');
