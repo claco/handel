@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf8"?>
+<!-- $Id$ -->
+<xsp:page xmlns:xsp="http://apache.org/xsp/core/v1"
+	xmlns:cart="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart"
+>
+	<body>
+		<cart:load>
+			<loadfoo>loadfoo</loadfoo>
+			loadfoo
+
+			<cart:clear>sfsdf</cart:clear>
+			<cart:save>saasas</cart:save>
+
+			<cart:cart>
+				<cartfoo>cartfoo</cartfoo>
+				cartfoo
+
+				<cart:delete>
+					<deletefoo>deletefoo</deletefoo>
+					deletefoo
+
+					<cart:filter name="id">22222222-2222-2222-2222-222222222222</cart:filter>
+				</cart:delete>
+
+				<cart:add>
+					<cart:sku>NEWSKU</cart:sku>
+					<cart:quantity>24</cart:quantity>
+					<cart:price>1.23</cart:price>
+					<cart:description>My XSP Item</cart:description>
+				</cart:add>
+
+				<cart:update>
+					<cartupdate>cartupdate</cartupdate>
+					cartupdatefoo
+					<cart:name>updatedname</cart:name>
+					<cart:description>new description</cart:description>
+				</cart:update>
+
+				<cart:save/>
+
+				<cart>
+					<id><cart:id/></id>
+					<name><cart:name/></name>
+					<description><cart:description/></description>
+					<shopper><cart:shopper/></shopper>
+					<subtotal><cart:subtotal/></subtotal>
+					<type><cart:type/></type>
+					<count><cart:count/></count>
+					<cart:items>
+						<item>
+							<id><cart:id/></id>
+							<sku><cart:sku/></sku>
+							<total><cart:total/></total>
+							<quantity><cart:quantity/></quantity>
+							<price><cart:price/></price>
+							<description><cart:description/></description>
+						</item>
+					</cart:items>
+				</cart>
+
+				<endcartfoo>endcartfoo</endcartfoo>
+				endcartfoo
+			</cart:cart>
+
+			<endloadfoo>endloadfoo</endloadfoo>
+			endloadfoo
+		</cart:load>
+	</body>
+</xsp:page>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf8"?>
+<!-- $Id$ -->
+<xsp:page xmlns:xsp="http://apache.org/xsp/core/v1"
+	xmlns:cart="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart"
+>
+	<body>
+		<cart:load type="1">
+			<cart:filter name="id">11111111-1111-1111-1111-111111111111</cart:filter>
+			<cart:cart>
+				<cart>
+					<id><cart:id/></id>
+					<name><cart:name/></name>
+					<description><cart:description/></description>
+					<shopper><cart:shopper/></shopper>
+					<subtotal><cart:subtotal/></subtotal>
+					<type><cart:type/></type>
+					<count><cart:count/></count>
+					<cart:items>
+						<item>
+							<id><cart:id/></id>
+							<sku><cart:sku/></sku>
+							<total><cart:total/></total>
+							<quantity><cart:quantity/></quantity>
+							<price><cart:price/></price>
+							<description><cart:description/></description>
+						</item>
+					</cart:items>
+				</cart>
+			</cart:cart>
+		</cart:load>
+	</body>
+</xsp:page>
