@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use vars qw($VERSION);
 
-$VERSION = '0.11';
+$VERSION = '0.12';
 
 1;
 __END__
@@ -35,21 +35,21 @@ work correctly.
 
 =over
 
-=item C<Class::DBI> version 0.96+
+=item Class::DBI 0.96+
 
-=item C<DBI> version 1.36+
+=item DBI version 1.36+
 
-=item C<Error> version 0.14+
+=item Error 0.14+
 
-=item C<Locale::Maketext> version 1.06+
+=item Locale::Maketext 1.06+
 
-=item C<UUID*/GUID*>
+=item UUID*/GUID
 
 At least one of the following modules are required to create uuids:
 L<UUID> 0.02, L<Win32::Guidgen> 0.04, L<Win32API::GUID> 0.02,
 or L<Data::UUID> 0.10.
 
-=item C<Axit> 1.6.2+
+=item Axit 1.6.2+
 
 C<AxKit> is only required if you plan on using C<Handel> within XSP using the
 supplied taglibs.
@@ -58,59 +58,45 @@ supplied taglibs.
 
 =head2 Optional Modules
 
+The following modules are required for Handel to run, although some features
+may be unavailable without the:
+
+=over
+
+=item Locale::Currency::Format
+
+When present, this module allows all prices to be formatted to specific
+currency codes and formats.
+
+=back
+
 The following modules are only required for the test suite:
 
 =over
 
-=item C<Test::More> version 0.48+
+=item Test::More 0.48+
 
 The C<Test::More> included with perl 5.8.4 and C<Test::More> <= 0.48 have issues
 with ithreads that usually cause crashes in C<Class::DBI> tests.
 
-=item C<Pod::Coverage> version 0.14+
+=item Pod::Coverage 0.14+
 
 The pod coverage tests may fail complaining about missing pod for methods if
 Pod::Coverage < 0.14 is installed. This is due to certain syntax variations of
 the pod with escaped gt/lt. I may just alter the pod and bump this version down
 if there is enough feedback to do so.
 
-=item C<Test::Pod> version 1.00+
+=item Test::Pod 1.00+
 
 C<Test::Pod> 1.00 added the C<all_pod_files_ok()> method which makes my life
 easier. :-)
 
-=item C<Test::Pod::Coverage> version 1.04+
+=item Test::Pod::Coverage 1.04+
 
 C<Test::Pod::Coverage> 1.04 was made taint safe, and we run the tests with -wT
 like good girls and boys.
 
 =back
-
-=head1 CONFIGURATION
-
-Various Handel runtime options can be set via C<%ENV> variables, or using
-C<PerlSetVar> when running under C<mod_perl>.
-
-=head2 HandelMaxQuantity
-
-    PerlSetVar  HandelMaxQuantity   32
-    ...
-    $ENV{HandelMaxQuantity} = 32;
-
-If defined, this sets the maximum quantity allowed for each C<Handel::Cart::Item>
-in the shopping cart. By default, when the user request more than C<HandelMaxQuantity>,
-C<quantity> is reset to C<HandelMaxQuantity>. IF you would rather raise an
-C<Handel::Exception::Constraint> instead, see C<HandelMaxQuantityAction> below.
-
-=head2 HandelMaxQuantityAction (Adjust|Exception)
-
-This option defines what action should be taken when a cart items quantity is being set
-to something above C<HandelMaxQuantity>. When set to C<Adjust> the quantity qill simple
-be reset to C<HandelMaxQuantity> and no exception will be raised. This is the default
-action.
-
-When set to <Exception> and the quantity requested is greater than C<HandelMaxQuantity>,
-a C<Handel::Exception::Constraint> exception is thrown.
 
 =head1 SEE ALSO
 
