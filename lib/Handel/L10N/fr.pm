@@ -39,6 +39,9 @@ BEGIN {
     "Unknown restore mode" =>
         "Mode inconnu de restauration",
 
+    "Currency code '[_1]' is invalid or malformed" =>
+        "Le code '[_1]' de devise est inadmissible ou mal formé",
+
     ## Taglib exceptions
     "Tag '[_1]' not valid inside of other Handel tags" =>
         "L'étiquette '[_1] 'peut intérieur inadmissible d'autres étiquettes de Handel",
