@@ -14,9 +14,6 @@ eval 'use DBD::SQLite';
 Test::More::plan(skip_all =>
     'DBD::SQLite not installed') if $@;
 
-Test::More::plan(skip_all =>
-    'XSP Taglib is incomplete!');
-
 ## test new/add first so we can use them to test everything else
 my @tests = (
     'cart_new.xsp',
@@ -61,6 +58,8 @@ my @tests = (
     'cart_carts_no_results.xsp',
     'cart_carts_save.xsp',
     'cart_carts_update.xsp',
+    'cart_new_minimal.xsp',
+    'cart_new_no_results_trigger.xsp',
 );
 
 use Apache::TestUtil;
