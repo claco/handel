@@ -13,7 +13,9 @@ requires:
   Locale::Maketext: 1.06
 recommends:
   AxKit: 1.62
+  Finance-Currency-Convert-WebserviceX: 0.03
   Locale::Currency::Format: 1.22
+  Locale::Currency: 2.07
   Pod::Coverage: 0.14
   Template: 2.14
   Test::More: 0.48
