@@ -26,6 +26,7 @@ lib/Handel/Cart/Item.pm
 lib/Handel/ConfigReader.pm
 lib/Handel/Constants.pm
 lib/Handel/Constraints.pm
+lib/Handel/Currency.pm
 lib/Handel/DBI.pm
 lib/Handel/Exception.pm
 lib/Handel/Iterator.pm
@@ -39,6 +40,7 @@ Makefile.PL
 MANIFEST
 MANIFEST.SKIP
 META.yml
+README
 t/basic.t
 t/cart_add.t
 t/cart_clear.t
@@ -63,6 +65,7 @@ t/constraints_cart_type.t
 t/constraints_price.t
 t/constraints_quantity.t
 t/constraints_uuid.t
+t/currency.t
 t/dbi.t
 t/exceptions.t
 t/htdocs/axkit/cart_cart.xsp
