@@ -35,6 +35,10 @@ my @tests = (
     '/cart_cart_item_filtered.xsp',
     '/cart_cart_item_filtered_no_results.xsp',
     '/cart_cart_item_update.xsp',
+    '/cart_cart_items.xsp',
+    '/cart_cart_items_filtered.xsp',
+    '/cart_cart_items_filtered_no_results.xsp',
+    '/cart_cart_items_update.xsp',
     '/cart_carts.xsp',
     '/cart_carts_filtered.xsp',
     '/cart_carts_filtered_no_results.xsp',
@@ -43,10 +47,12 @@ my @tests = (
     '/cart_carts_clear.xsp',
     '/cart_carts_delete.xsp',
     '/cart_carts_delete_filtered.xsp',
+    '/cart_carts_no_results.xsp',
     '/cart_carts_update.xsp',
     '/cart_carts_save.xsp',
 );
 
+use Apache::TestUtil;
 Apache::TestRequest->import(qw(GET));
 Apache::Test::plan(tests => (scalar @tests * 1),
     need('AxKit', 'mod_perl', need_apache(1), need_lwp())
@@ -67,7 +73,14 @@ my $docroot = Apache::Test::vars('documentroot');
 
 foreach (@tests) {
     my $r = GET($_);
+
     ok($r->code == 200);
-    warn $r->content;
-    ok(comp_to_file($r->content, "$docroot/dat$_.dat"));
+
+    my ($ok, $response, $file) = comp_to_file($r->content, "$docroot/out/$_.out");
+
+    t_debug("HTTP Status: " . $r->code);
+    t_debug("Received:\n", $response);
+    t_debug("Expected:\n", $file);
+
+    ok($ok);
 };
