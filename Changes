@@ -6,7 +6,7 @@ Revision history for Perl module Handel
     - Converted AxKit::XSP::Handel::Cart to use string constants
     - Converted XSP tests to use string constants
 
-0.08 Sat Feb 26 18:2$:17 2005
+0.08 Sat Feb 26 18:23:17 2005
     - Added TT2 cart tests
     - Changed Handel::Cart::Item to autoupdate on every method
       like Handel::Cart
