@@ -212,6 +212,7 @@ t/l10n.t
 t/lib/Handel/TestHelper.pm
 t/pod_coverage.t
 t/pod_syntax.t
+t/strict.t
 t/SMOKE.PL
 t/sql/cart_create_table.sql
 t/sql/cart_fake_data.sql
