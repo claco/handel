@@ -14,11 +14,20 @@ use constant CART_MODE_REPLACE => 1;
 use constant CART_TYPE_TEMP    => 0;
 use constant CART_TYPE_SAVED   => 1;
 
+use constant RETURNAS_AUTO     => 0;
+use constant RETURNAS_ITERATOR => 1;
+use constant RETURNAS_LIST     => 2;
+use constant RETURNAS_ARRAY    => 2;
+
 @EXPORT_OK = qw(CART_MODE_APPEND
                 CART_MODE_MERGE
                 CART_MODE_REPLACE
                 CART_TYPE_SAVED
                 CART_TYPE_TEMP
+                RETURNAS_AUTO
+                RETURNAS_ITERATOR
+                RETURNAS_LIST
+                RETURNAS_ARRAY
 );
 
 %EXPORT_TAGS =
@@ -27,7 +36,12 @@ use constant CART_TYPE_SAVED   => 1;
                      CART_MODE_MERGE
                      CART_MODE_REPLACE
                      CART_TYPE_SAVED
-                      CART_TYPE_TEMP
+                     CART_TYPE_TEMP
+        )],
+        returnas => [ qw(RETURNAS_AUTO
+                        RETURNAS_ITERATOR
+                        RETURNAS_LIST
+                        RETURNAS_ARRAY
         )]
     );
 
@@ -66,13 +80,51 @@ below to export all or only certain groups of constants.
 
 =head2 C<CART_MODE_APPEND>
 
+All items in the saved cart will be appended to the list of items in the current
+cart. No effort will be made to merge items with the same SKU and duplicates
+will be ignored.
+
 =head2 C<CART_MODE_MERGE>
+
+If an item with the same SKU exists in both the current cart and the saved cart,
+the quantity of each will be added together and applied to the same sku in the
+current cart. Any price differences are ignored and we assume that the price in
+the current cart is more up to date.
 
 =head2 C<CART_MODE_REPLACE>
 
+All items in the current cart will be deleted before the saved cart is restored
+into it. This is the default if no mode is specified.
+
 =head2 C<CART_TYPE_SAVED>
 
+Marks the cart as permanent. Carts with this value set should never be
+automatically reaped from the database during cleanup.
+
 =head2 C<CART_TYPE_TEMP>
+
+Any cart with this type could be purged form the database during cleanup at any
+time.
+
+=head2 C<RETURNAS_AUTO>
+
+When calling C<load> or C<items> on C<Handel::Cart>, it will attempt to return
+the most appropriate object. In list context, it will return a list. In
+scalar context, it will return a C<Handel::Iterator> object. If the iterator
+only contains one item, that item will be returns instead.
+
+=head2 C<RETURNAS_ITERATOR>
+
+Always return a C<Handel::Iterator> object regardless of context or the amount
+of retults.
+
+=head2 C<RETURNAS_LIST>
+
+Always return a list regardless of context or the amount of results.
+
+=head2 C<RETURNAS_ARRAY>
+
+Same as C<RETURNAS_LIST>
 
 =head1 EXPORT_TAGS
 
@@ -86,6 +138,10 @@ This exports all constants found in this module.
 =head2 C<:cart>
 
 This exports all C<CART_*> constants in this module.
+
+=head2 C<:returnas>
+
+This exports all C<RETURNAS_*> constants in this module.
 
 =head1 AUTHOR
 
