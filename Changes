@@ -1,5 +1,10 @@
 Revision history for Perl module Handel
 
+0.01_08 Fri Jan 14 21:32:03 2005
+    - Locale::Maketext >= 1.04 required for utf8 pragma
+    - Complete rewrite of Axit::XSP::Handel::Cart w/API changes
+    - slight Exporter refactoring in TestHelper.pm
+
 0.01_07 Mon Jan 10 21:17:45 2005
     - Added Axit::XSP::Handl::Cart tag reference pod
 
