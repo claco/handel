@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<body>
+	<cart>
+		<count>0</count>
+		<description>My New Shopping Cart</description>
+		<id>1F5284C7-C4F3-4399-87DF-494E1CACD50B</id>
+		<name>New Cart</name>
+		<shopper>397C6540-1841-4540-9315-4E1BE4BA82B0</shopper>
+		<subtotal>0</subtotal>
+		<type>0</type>
+	</cart>
+</body>
