@@ -2,6 +2,8 @@ package Handel::ConfigReader;
 use strict;
 use warnings;
 use vars qw(%Defaults);
+use Tie::Hash;
+use base 'Tie::StdHash';
 
 %Defaults = (
     HandelMaxQuantityAction => 'Adjust'
@@ -9,34 +11,47 @@ use vars qw(%Defaults);
 
 sub new {
     my $class = shift;
-    my $self = bless {}, ref($class) || $class;
+    my %config;
+    tie %config, __PACKAGE__;
 
-    return $self;
+    return bless \%config, $class;
 };
 
 sub get {
-    my $self    = shift;
-    my $key     = shift || '';
+    my ($self, $key) = (shift, shift);
     my $default = shift || $Defaults{$key} || '';
+
+    return $self->{$key} || $default;
+};
+
+sub FETCH {
+    my ($self, $key) = @_;
+    my $default = $Defaults{$key} || '';
     my $value   = '';
 
     if ($ENV{MOD_PERL}) {
         require Apache;
         my $r = Apache->request;
 
-        $value = $r->dir_config($key) || '';
+        $value = $r->dir_config($key) || $default;
     };
 
-    if (!length($value)) {
-        $value = $ENV{$key} || '';
-    };
-
-    if (!length($value) && length($default)) {
-        $value = $default;
+    if (!$value) {
+        $value = $ENV{$key} || $default;
     };
 
     return $value;
 };
+
+sub EXISTS {
+    my ($self, $key) = @_;
+
+    return 1 if ($self->FETCH($key));
+};
+
+sub STORE {};
+sub DELETE {};
+sub CLEAR {};
 
 1;
 __END__
@@ -61,6 +76,17 @@ Handel::ConfigReader - Read in Handel configuration settings
 Handel::ConfigReader is a generic wrapper to get various configuration
 values. As some point this will probably get worked into XS/custom httpd.conf
 directives.
+
+Starting in version 0.11, each instance is also a tied hash. The two usages are
+the same:
+
+    my $cfg = Handel::ConfigReader->new();
+
+    my $setting = $cfg->get('Setting');
+    my $setting = $cfg->{'Setting'};
+
+Thie latter is the preferred usage in anticipation of als integrating
+Apache::ModuleConfig and custom directives which use the same hash syntax.
 
 =head1 CONSTRUCTOR
 
