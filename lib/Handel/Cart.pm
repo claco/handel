@@ -4,7 +4,7 @@ use warnings;
 
 BEGIN {
     use base 'Handel::DBI';
-    use Handel::Constants qw(:cart);
+    use Handel::Constants qw(:cart :returnas);
     use Handel::Constraints qw(:all);
     use Handel::L10N qw(translate);
 };
@@ -93,23 +93,30 @@ sub items {
         translate('Param 1 is not a HASH reference') . '.') unless(
             ref($filter) eq 'HASH' or !$filter);
 
-    $filter ||= {};
+    $wantiterator ||= RETURNAS_AUTO;
+    $filter       ||= {};
 
     my $wildcard = Handel::DBI::has_wildcard($filter);
 
     ## If the filter as a wildcard, push it through a fresh search_like since it
     ## doesn't appear to be available within a loaded object.
-    if (wantarray) {
+    if ((wantarray && $wantiterator != RETURNAS_ITERATOR) || $wantiterator == RETURNAS_LIST) {
         my @items = $wildcard ?
             Handel::Cart::Item->search_like(%{$filter}, cart => $self->id) :
             $self->_items(%{$filter});
 
         return @items;
+    } elsif ($wantiterator == RETURNAS_ITERATOR) {
+        my $iterator = $wildcard ?
+            Handel::Cart::Item->search_like(%{$filter}, cart => $self->id) :
+            $self->_items(%{$filter});
+
+        return $iterator;
     } else {
         my $iterator = $wildcard ?
             Handel::Cart::Item->search_like(%{$filter}, cart => $self->id) :
             $self->_items(%{$filter});
-        if ($iterator->count == 1 and !$wantiterator) {
+        if ($iterator->count == 1 && $wantiterator != RETURNAS_ITERATOR && $wantiterator != RETURNAS_LIST) {
             return $iterator->next;
         } else {
             return $iterator;
@@ -124,15 +131,26 @@ sub load {
         translate('Param 1 is not a HASH reference') . '.') unless(
             ref($filter) eq 'HASH' or !$filter);
 
-    if (wantarray) {
+    $wantiterator ||= RETURNAS_AUTO;
+
+    ## only return array if wantarray and not explicitly asking for an iterator
+    ## or we've explicitly asked for a list/array
+    if ((wantarray && $wantiterator != RETURNAS_ITERATOR) || $wantiterator == RETURNAS_LIST) {
         my @carts = $filter ? $self->search_like(%{$filter}) :
             $self->retrieve_all;
         return @carts;
+    ## return an iterator if explicitly asked for
+    } elsif ($wantiterator == RETURNAS_ITERATOR) {
+        my $iterator = $filter ?
+            $self->search_like(%{$filter}) : $self->retrieve_all;
+
+        return $iterator;
+    ## full out auto
     } else {
         my $iterator = $filter ?
             $self->search_like(%{$filter}) : $self->retrieve_all;
 
-        if ($iterator->count == 1 && !$wantiterator) {
+        if ($iterator->count == 1 && $wantiterator != RETURNAS_ITERATOR && $wantiterator != RETURNAS_LIST) {
             return $iterator->next;
         } else {
             return $iterator;
@@ -285,12 +303,14 @@ You can also omit \%filter to load all available carts.
 In scalar context C<load> returns a C<Handel::Cart> object if there is a single
 result, or a L<Handel::Iterator> object if there are multiple results. You can
 force C<load> to always return an iterator even if only one cart exists by
-setting the C<$wantiterator> parameter to true.
+setting the C<$wantiterator> parameter to C<RETURNAS_ITERATOR>.
 
-    my $iterator = Handel::Cart->load(undef, 1);
+    my $iterator = Handel::Cart->load(undef, RETURNAS_ITERATOR);
     while (my $item = $iterator->next) {
         print $item->sku;
     };
+
+See L<Handel::Contstants> for the available C<RETURNAS> options.
 
 A C<Handel::Exception::Argument> exception is thrown if the first parameter is
 not a hashref.
@@ -361,9 +381,10 @@ When filtering the items in the shopping cart in scalar context, a
 C<Handel::Cart::Item> object will be returned if there is only one result. If
 there are multiple results, a Handel::Iterator object will be returned
 instead. You can force C<items> to always return a C<Handel::Iterator> object
-even if only one item exists by setting the $wantiterator parameter to true.
+even if only one item exists by setting the $wantiterator parameter to
+C<RETURNAS_ITERATOR>.
 
-    my $item = $cart->items({sku => 'SKU1234'});
+    my $item = $cart->items({sku => 'SKU1234'}, RETURNAS_ITERATOR);
     if ($item->isa('Handel::Cart::Item)) {
         print $item->sku;
     } else {
@@ -371,6 +392,8 @@ even if only one item exists by setting the $wantiterator parameter to true.
             print $_->sku;
         };
     };
+
+See the C<RETURNAS> constants in L<Handel::Constants> for other options.
 
 In list context, filtered items return an array of items just as when items is
 called without a filter specified.
@@ -516,33 +539,13 @@ shopper at any time.
 
 =back
 
+=head1 SEE ALSO
+
+L<Handel::Contstants>
+
 =head1 AUTHOR
 
     Christopher H. Laco
     CPAN ID: CLACO
     cpan@chrislaco.com
     http://today.icantfocus.com/blog/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
