@@ -106,7 +106,7 @@ unexpected things happen.
 
 =head1 EXCEPTIONS
 
-=head2 C<Handel::Exception>
+=head2 Handel::Exception
 
 This is the base exception thrown in C<Handel>. All other exceptions subclass
 C<Handel::Exception> so it's possibly to catch all Handel generated exceptions
@@ -126,16 +126,28 @@ with a single C<catch> statement.
 See L<Error> for more information on how to use
 exceptions.
 
-=head2 C<Handel::Exception::Constraint>
+=head2 Handel::Exception::Constraint
 
 This exception is thrown if a database constraint is violated. This is true for
 both raw DBI database constraint errors as well as  field updates that don't
 pass constraints in C<Handel::Constraints>.
 
-=head2 C<Handel::Exception::Argument>
+=head2 Handel::Exception::Argument
 
 This exception is thrown when an invalid or unexpected argument value is passed
 into methods.
+
+=head1 METHODS
+
+=head2 new
+
+This returns a new Handel::Exception object. This is mostly used internall by
+L<Error>. In most circumstance, you don't need to call C<new> at all. Instead,
+simply use the C<throw> syntax:
+
+    throw Handel::Exception::Taglib(
+        -text => translate("Tag '[_1]' not valid inside of other Handel tags", $tag)
+    ) if ($context[$#context] ne 'root');
 
 =head1 SEE ALSO
 
