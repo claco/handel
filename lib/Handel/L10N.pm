@@ -53,14 +53,14 @@ You can also export C<translate> into the users namespace:
 
     warn translate('My message');
 
-Thus far, the French trasnlation comes from Googles trasnlation tools.IF you
+Thus far, the French translation comes from Googles translation tools.IF you
 have the time and can do better, the help would be much appreciated.
 
 =head1 METHODS
 
 =head2 C<translate>
 
-Translates the supplied text into the appropriate language if avsailable. If no
+Translates the supplied text into the appropriate language if available. If no
 match is available, the original text is returned.
 
 =head1 SEE ALSO

@@ -20,7 +20,7 @@ Handel - Simple commerce framework with AxKit support
 
 Handel is a quick and not-so-dirty ecommerce framework with L<AxKit> taglib
 support. It was started for the conversion of an IIS/ASP based commerce site to
-Apache/ModPerl, but I decided that is might be usefull to others so here it is
+Apache/ModPerl, but I decided that is might be useful to others so here it is
 on CPAN.
 
 For the curious, Handel is German for commerce.
@@ -64,16 +64,16 @@ with ithreads that usually cause crashes in C<Class::DBI> tests.
 =item C<Pod::Coverage> version 0.14+
 
 The pod coverage tests may fail complaining about missing pod for methods if
-Pod::Coverage < 0.14 is installed. This is due to vertain syntax variations of
+Pod::Coverage < 0.14 is installed. This is due to certain syntax variations of
 the pod with escaped gt/lt. I may just alter the pod and bump this version down
 if there is enough feedback to do so.
 
 =item C<Test::Pod> version 1.00+
 
-C<Test::Pod> 1.00 added the C<all_pod_files_ok()> method which maes my life
+C<Test::Pod> 1.00 added the C<all_pod_files_ok()> method which makes my life
 easier. :-)
 
-=item C<Test::Pod::Coverage> veraion 1.04+
+=item C<Test::Pod::Coverage> version 1.04+
 
 C<Test::Pod::Coverage> 1.04 was made taint safe, and we run the tests with -wT
 like good girls and boys.

@@ -94,7 +94,7 @@ Returns 1 if the value passed is a numeric, non-negative value between 0 and
 =head2 C<constraint_uuid>
 
 Returns 1 if the value passed is conforms to the GUID/UUID format, otherwise it
-returns C<undef>. Currently, this does B<not> expect the brackted around the
+returns C<undef>. Currently, this does B<not> expect the brackets around the
 value.
 
     constraint_uuid( '11111111-1111-1111-1111-111111111111' ); # 1

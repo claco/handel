@@ -131,7 +131,7 @@ as well
 =head2 C<has_wildcard>
 
 Inspects the supplied search filter to determine whether it contains wildcard
-searching. Retuns 1 if the filter contains SQL wildcards, other it returns
+searching. Returns 1 if the filter contains SQL wildcards, other it returns
 C<undef>.
 
     has_wildcard({sku => '1234'}); # 1
@@ -150,7 +150,7 @@ variables:
 
 =item C<db_driver>
 
-The name of the DBD driver. Defailts to C<mysql>.
+The name of the DBD driver. Defaults to C<mysql>.
 
 =item C<db_host>
 

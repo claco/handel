@@ -247,12 +247,13 @@ Handel::Cart - Module for maintaining shopping cart contents
 
 =head1 DESCRIPTION
 
-C<Handel::Cart> is quick and dirty component for maintaing simple shopping cart
+C<Handel::Cart> is quick and dirty component for maintaining simple shopping
+cart
 data.
 
 While C<Handel::Cart> subclasses L<Class::DBI>, it is strongly recommended that
 you not use its methods unless it's absolutely necessary. Stick to the
-documented methods here and you'll be safe should I decide to impliment some
+documented methods here and you'll be safe should I decide to implement some
 other data access mechanism. :-)
 
 =head1 CONSTRUCTOR
@@ -404,17 +405,18 @@ returns the number of items deleted.
 
 =head2 Saving Your Cart
 
-By default every shopping cart created is consided temporary (C<CART_TYPE_TEMP>)
-and could be deleted by cleanup processes at any time after the defined
-inactivity period. This could also be considered characteristic of whether the
-shopper id is from a temporary part of where it's used, or whether it is
-generated and stored within a customer profile assigned during authentication.
+By default every shopping cart created is considered temporary
+(C<CART_TYPE_TEMP>) and could be deleted by cleanup processes at any time after
+the defined inactivity period. This could also be considered characteristic of
+whether the shopper id is from a temporary part of where it's used, or whether
+it is generated and stored within a customer profile assigned during
+authentication.
 
 By saving your shopping cart, you are marking it as C<CART_TYPE_SAVED> and it
 should be left alone by any cleanup processes and available to that shopper at
 any time.
 
-For all intents and purposes, a saved cart is a wishlist. At some pointin the
+For all intents and purposes, a saved cart is a wishlist. At some point in the
 future they may be treated differently.
 
 =over
@@ -487,7 +489,7 @@ Returns/set the name of the current cart.
 =item C<$cart-E<gt>subtotal()>
 
 Returns the current total price of all the items in the cart object. This is
-equivilent to:
+equivalent to:
 
     my $iterator = $cart->items;
     while (my $item = $iterator->next) {
@@ -520,6 +522,9 @@ shopper at any time.
     CPAN ID: CLACO
     cpan@chrislaco.com
     http://today.icantfocus.com/blog/
+
+
+
 
 
 
