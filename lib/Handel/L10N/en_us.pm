@@ -1,6 +1,7 @@
 package Handel::L10N::en_us;
 use strict;
 use warnings;
+use utf8;
 use vars qw(%Lexicon);
 
 BEGIN {
@@ -8,7 +9,7 @@ BEGIN {
 };
 
 %Lexicon = (
-
+    Language => 'English',
 );
 
 1;
