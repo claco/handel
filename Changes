@@ -1,6 +1,11 @@
 Revision history for Perl module Handel
 
-0.01_08 Fri Jan 14 21:32:03 2005
+0.01_09 Tue Feb 08 18:21:37 2005
+    - Added new generic Handel::Exception::Taglib exception
+    - Added missing Makefile.PL from MANIFEST
+    - Added more xsp tests for minimal add and new tags
+
+0.01_08 Mon Feb 07 21:32:03 2005
     - Locale::Maketext >= 1.04 required for utf8 pragma
     - Axit::XSP::Handel::Cart API solidified
     - Rewrite of Axit::XSP::Handel::Cart for new API in progress
