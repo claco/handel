@@ -1,6 +1,9 @@
 Revision history for Perl module Handel
 
-0.01_06 Sun Jan 09 10:39:47 2004
+0.01_07 Mon Jan 10 21:17:45 2005
+    - Added Axit::XSP::Handl::Cart tag reference pod
+
+0.01_06 Sun Jan 09 10:39:47 2005
     - Look for DBI connection info in dir_config under mod_perl
     - Added missing pod for methods in Handel::Cart::Item
     - Supressed strict/warnings when loading Axit in basic.t
