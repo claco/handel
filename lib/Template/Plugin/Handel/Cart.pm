@@ -8,7 +8,7 @@ use Handel::Constants ();
 
 sub new {
     my ($class, $context, @params) = @_;
-    my $self = bless {_CONTEXT => $context}, ref($class) || $class;
+    my $self = bless {_CONTEXT => $context}, $class;
 
     foreach my $const (@Handel::Constants::EXPORT_OK) {
         if ($const =~ /^[A-Z]{1}/) {
@@ -147,7 +147,17 @@ C<create> or C<load> to return a new cart object, iterator, or array of carts.
 
 =over
 
-=item C<create(\%filter)>
+=item new
+
+This returns a new Handel.Cart object. This is used internally when
+loading TT2 plugins and should not be used directly.
+
+=item load
+
+This method is called when TT@ loaded the plugin for the first time.
+This is used internally by TT@ and should not be used directly.
+
+=item create(\%filter)
 
     [% USE Handel.Cart %]
     [% IF (cart = Handel.Cart.create({
@@ -160,7 +170,7 @@ C<create> or C<load> to return a new cart object, iterator, or array of carts.
 
     [% END %]
 
-=item C<fetch(\%filter [, $wantiterator])>
+=item fetch(\%filter [, $wantiterator])
 
 The safest way to get a cart is to use FOREACH. This negates the need
 to specfy C<$wanteriterator> for C<Handel::Cart::load>. See L<CAVEATS>
@@ -172,6 +182,26 @@ for further info on C<$wantiterator>, Perls C<wantarray> within TT2.
         [% cart.name %]
         ...
     [% END %]
+
+=item uuid
+
+Returns a new uuid for use in add/create:
+
+    [% USE Handel.Cart %]
+    [% IF (cart = Handel.Cart.create({
+        id      => Handel.Cart.uuid,
+        shopper => '12345678-9876-5432-1234-567890987654',
+        name    => 'My New Cart',
+        description =>'Favorite Items'})) %]
+
+        [% cart.name %]
+        ...
+
+    [% END %]
+
+=item guid
+
+Same as C<uuid> above.
 
 =back
 
