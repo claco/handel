@@ -2,22 +2,22 @@
 [% META title='Shopping Cart' %]
 [% INCLUDE header.tt2 %]
 	[% USE CGI %]
-	[% USE cart  = Handel.Cart %]
+	[% USE Handel.Cart %]
 
 	[% shopper = CGI.cookie('shopper') %]
 	[% UNLESS shopper %]
-		[% shopper = cart.uuid %]
+		[% shopper = Handel.Cart.uuid %]
 		[% cookie = CGI.cookie('-name', 'shopper', '-value', shopper, '-expires', '+1y') %]
 		[% CGI.header('-cookie', cookie) %]
 	[% END %]
 
-	[% UNLESS cart.fetch(shopper = shopper) %]
-		[% UNLESS cart.create(shopper = shopper) %]
+	[% UNLESS Handel.Cart.fetch({shopper => shopper, type => 0}) %]
+		[% UNLESS Handel.Cart.create({shopper => shopper}) %]
 			<p class="error">Could not create new shopping cart.</p>
 		[% END %]
 	[% END %]
 
-	[% IF cart.fetch(shopper = shopper, type = 0) %]
+	[% FOREACH cart IN Handel.Cart.fetch({shopper => shopper, type => 0}) %]
 		[% IF CGI.param('action') == 'add' %]
 			[% CALL cart.add(
 				sku=CGI.param('sku'),
@@ -34,6 +34,7 @@
 				[% CALL item.update %]
 			[% END %]
 		[% END %]
+
 		[% IF cart.count > 0 %]
 			<table id="cart" border="1">
 				<tr>
@@ -47,22 +48,28 @@
 				[% FOREACH item = cart.items %]
 					<tr>
 						<td>
-							<a href="products.tt2#[% item.sku %]" title="Read more about [% item.sku %]">[% item.sku %]</a>
+							<a href="products.tt2#[% item.sku %]" title="Read
+							more about [% item.sku %]">[% item.sku %]</a>
 						</td>
 						<td>[% item.description %]</td>
 						<td>[% item.price %]</td>
 						<td>
 							<form action="cart.tt2" method="post">
-								<input type="hidden" name="action" value="update"/>
-								<input type="hidden" name="id" value="[% item.id %]"/>
-								<input type="text" name="quantity" size="3" value="[% item.quantity %]"/>
+								<input type="hidden" name="action"
+								value="update"/>
+								<input type="hidden" name="id" value="[% item.id
+								%]"/>
+								<input type="text" name="quantity" size="3"
+								value="[% item.quantity %]"/>
 							</form>
 						</td>
 						<td>[% item.total %]</td>
 						<td>
 							<form action="cart.tt2" method="post">
-								<input type="hidden" name="action" value="delete"/>
-								<input type="hidden" name="id" value="[% item.id %]"/>
+								<input type="hidden" name="action"
+								value="delete"/>
+								<input type="hidden" name="id" value="[% item.id
+								%]"/>
 								<input type="submit" value="Delete"/>
 							</form>
 						</td>
@@ -77,10 +84,6 @@
 		[% ELSE %]
 			<p class="warning">Your shopping cart is empty.</p>
 		[% END %]
-	[% ELSE %]
-		<p class="error">
-			Your shopping cart could not be found.
-		</p>
 	[% END %]
 
 [% INCLUDE footer.tt2 %]
