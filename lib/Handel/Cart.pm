@@ -6,6 +6,7 @@ BEGIN {
     use base 'Handel::DBI';
     use Handel::Constants qw(:cart);
     use Handel::Constraints qw(:all);
+    use Handel::L10N qw(translate);
 };
 
 __PACKAGE__->autoupdate(1);
@@ -20,8 +21,9 @@ __PACKAGE__->add_constraint('type',    type    => \&constraint_cart_type);
 sub new {
     my ($self, $data) = @_;
 
-    throw Handel::Exception::Argument( -details =>
-        'Param 1 is not a HASH reference.') unless ref($data) eq 'HASH';
+    throw Handel::Exception::Argument(
+        -details => translate('Param 1 is not a HASH reference') . '.') unless
+            ref($data) eq 'HASH';
 
     if (!defined($data->{'id'}) || !constraint_uuid($data->{'id'})) {
         $data->{'id'} = $self->uuid;
@@ -38,8 +40,9 @@ sub add {
     my ($self, $data) = @_;
 
     throw Handel::Exception::Argument( -details =>
-        'Param 1 is not a HASH reference or Handel::Cart::Item.') unless(
-            ref($data) eq 'HASH' or $data->isa('Handel::Cart::Item'));
+      translate(
+          'Param 1 is not a HASH reference or Handel::Cart::Item') . '.') unless
+              (ref($data) eq 'HASH' or $data->isa('Handel::Cart::Item'));
 
     if (ref($data) eq 'HASH') {
         if (!defined($data->{'id'}) || !constraint_uuid($data->{'id'})) {
@@ -74,7 +77,8 @@ sub delete {
     my ($self, $filter) = @_;
 
     throw Handel::Exception::Argument( -details =>
-        'Param 1 is not a HASH reference.') unless ref($filter) eq 'HASH';
+        translate('Param 1 is not a HASH reference') . '.') unless
+            ref($filter) eq 'HASH';
 
     ## I'd much rather use $self->_items->search_like, but it doesn't work that
     ## way yet. This should be fine as long as :weaken refs works.
@@ -86,7 +90,7 @@ sub items {
     my ($self, $filter, $wantiterator) = @_;
 
     throw Handel::Exception::Argument( -details =>
-        'Param 1 is not a HASH reference.') unless(
+        translate('Param 1 is not a HASH reference') . '.') unless(
             ref($filter) eq 'HASH' or !$filter);
 
     $filter ||= {};
@@ -117,7 +121,7 @@ sub load {
     my ($self, $filter, $wantiterator) = @_;
 
     throw Handel::Exception::Argument( -details =>
-        'Param 1 is not a HASH reference.') unless(
+        translate('Param 1 is not a HASH reference') . '.') unless(
             ref($filter) eq 'HASH' or !$filter);
 
     if (wantarray) {
@@ -142,8 +146,9 @@ sub restore {
     $mode ||= CART_MODE_REPLACE;
 
     throw Handel::Exception::Argument( -details =>
-        'Param 1 is not a HASH reference or Handel::Cart.') unless(
-            ref($data) eq 'HASH' or $data->isa('Handel::Cart'));
+        translate(
+            'Param 1 is not a HASH reference or Handel::Cart') . '.') unless(
+                ref($data) eq 'HASH' or $data->isa('Handel::Cart'));
 
     my @carts = (ref($data) eq 'HASH') ?
         Handel::Cart->search_like(%{$data}) : $data;
@@ -184,7 +189,8 @@ sub restore {
             };
         };
     } else {
-        return new Handel::Exception::Argument(-text => 'Unknown restore mode');
+        return new Handel::Exception::Argument(-text =>
+            translate('Unknown restore mode'));
     };
 };
 
@@ -514,6 +520,12 @@ shopper at any time.
     CPAN ID: CLACO
     cpan@chrislaco.com
     http://today.icantfocus.com/blog/
+
+
+
+
+
+
 
 
 
