@@ -13,7 +13,7 @@ lib/Handel/L10N.pm
 lib/Handel/L10N/en_us.pm
 lib/Handel/L10N/fr.pm
 LICENSE
-MANIFEST			This list of files
+MANIFEST
 MANIFEST.SKIP
 META.yml
 t/basic.t
@@ -63,6 +63,7 @@ t/htdocs/cart_carts_delete.xsp
 t/htdocs/cart_carts_delete_filtered.xsp
 t/htdocs/cart_carts_filtered.xsp
 t/htdocs/cart_carts_filtered_no_results.xsp
+t/htdocs/cart_carts_no_results.xsp
 t/htdocs/cart_carts_save.xsp
 t/htdocs/cart_carts_update.xsp
 t/htdocs/cart_new.xsp
@@ -92,6 +93,7 @@ t/htdocs/out/cart_carts_delete.xsp.out
 t/htdocs/out/cart_carts_delete_filtered.xsp.out
 t/htdocs/out/cart_carts_filtered.xsp.out
 t/htdocs/out/cart_carts_filtered_no_results.xsp.out
+t/htdocs/out/cart_carts_no_results.xsp.out
 t/htdocs/out/cart_carts_save.xsp.out
 t/htdocs/out/cart_carts_update.xsp.out
 t/htdocs/out/cart_new.xsp.out
