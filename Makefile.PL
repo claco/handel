@@ -12,6 +12,7 @@ if (!$@) {
 
     Apache::TestMM::filter_args();
     Apache::TestMM::generate_script('t/TEST');
+    Apache::TestMM::generate_script('t/SMOKE');
 };
 
 my %modules;
@@ -42,5 +43,5 @@ WriteMakefile(
     (ExtUtils::MakeMaker->VERSION >= 6.11) ?
     (NO_META      => 1) : (),
 
-    clean => { FILES => 't/cart*.db t/TEST t/logs t/htdocs/cart*.db' }
+    clean => { FILES => 'smoke-report-* t/cart*.db t/TEST t/SMOKE t/logs t/htdocs/cart*.db' }
 );
