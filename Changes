@@ -1,5 +1,9 @@
 Revision history for Perl module Handel
 
+0.04 Thur Feb 17 22:11:35 2005
+    - Added Template Toolkit Plugin for Handel::Cart
+    - Added demo site for Template Toolkit 2
+
 0.03 Mon Feb 14 23:18:28 2005
     - Fixed empty tag crash in parse_char
     - Added demo site for AxKit
