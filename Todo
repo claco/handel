@@ -6,7 +6,6 @@ TODO list for Perl module Handel
     - find translation volunteer other than Google translate
     - clean up cart test variable names
     - add additional cart restore w/filter tests for multiple saved carts
-    - figure out a centralized config scheme, possibly using XS/Handel.pm
-    - add max quantity check to cart constraint
     - devise method for overriding constraints
     - add format attribute to <cart:price/> and <cart:subtotal>
+        possibly using Locale::Currency::Format

@@ -1,5 +1,10 @@
 Revision history for Perl module Handel
 
+0.10 Mon Feb 28 23:35:13 2005
+    - Added max quantity checks, constraint and tests
+    - Added Handel::ConfigReader to abstract mod_perl/ENV settings logic
+    - Added simple t/config.t tests
+
 0.09 Sun Feb 27 21:43:27 2005
     - Added str_to_const to convert strings to their constant value
     - Added constant exports and conversion tests
