@@ -16,9 +16,12 @@ BEGIN {
                 &constraint_price
                 &constraint_uuid
                 &constraint_cart_type
+                &constraint_currency_code
 );
 
 %EXPORT_TAGS = (all => \@EXPORT_OK);
+
+my %codes;
 
 sub constraint_quantity {
     my ($value, $object, $column, $changing) = @_;
@@ -58,13 +61,29 @@ sub constraint_uuid {
 };
 
 sub constraint_cart_type {
-    my $value    = shift;
+    my $value = shift;
 
     return if $value !~ /[0-9]/;
 
     if ($value != CART_TYPE_SAVED && $value != CART_TYPE_TEMP) {
         return 0;
     };
+    return 1;
+};
+
+sub constraint_currency_code {
+    my $value = uc(shift);
+
+    return  unless ($value =~ /^[A-Z]{3}$/);
+
+    eval 'use Locale::Currency';
+    if (!$@) {
+        if (! keys %codes) {
+            %codes = map {uc($_) => uc($_)} all_currency_codes();
+        };
+        return exists $codes{$value};
+    };
+
     return 1;
 };
 
@@ -95,17 +114,17 @@ information on using export tags.
 
 =head1 FUNCTIONS
 
-=head2 C<constraint_quantity>
+=head2 constraint_quantity
 
 Returns 1 if the value passed is a numeric, non-negative value, otherwise
  it returns C<undef>.
 
-=head2 C<constraint_price>
+=head2 constraint_price
 
 Returns 1 if the value passed is a numeric, non-negative value between 0 and
 99999.99, otherwise it returns C<undef>.
 
-=head2 C<constraint_uuid>
+=head2 constraint_uuid
 
 Returns 1 if the value passed is conforms to the GUID/UUID format, otherwise it
 returns C<undef>. Currently, this does B<not> expect the brackets around the
@@ -118,14 +137,25 @@ value.
 This will probably change in the future, or some sort of stripping of the
 brackets may occur.
 
-=head2 C<constraint_cart_type>
+=head2 constraint_cart_type
 
 Returns 1 if the value passed is C<CART_TYPE_SAVED> or C<CART_TYPE_TEMP>,
 otherwise it returns C<undef>.
 
+=head2 constraint_currency_code
+
+Returns 1 if the value passed is considered a 3 letter currency code.
+If L<Locale::Currency> is installed, it will verify the 3 letter code is
+actually a valid currency code.
+
+If C<Locale::Currency> is not installed, it simply checks that the code
+conforms to:
+
+    /^[A-Z]{3}$/
+
 =head1 EXPORT_TAGS
 
-=head2 C<:all>
+=head2 :all
 
 Exports all functions into the classes namespace.
 
