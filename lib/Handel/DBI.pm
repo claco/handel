@@ -17,7 +17,7 @@ my $db_user;
 my $db_pass;
 
 if ($ENV{MOD_PERL}) {
-    use Apache;
+    require Apache;
     my $r = Apache->request;
 
     $db_driver = $r->dir_config('db_driver') || '';
