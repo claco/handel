@@ -37,7 +37,7 @@ Handel::L10N - Localization module for Handel
 
 =head1 DESCRIPTION
 
-This module is simply a subclass of L<Localte::Maketext>. By default it doesn't
+This module is simply a subclass of C<Locale::Maketext>. By default it doesn't
 export anything. You can either use it directly:
 
     use Handel::L10N;
@@ -50,12 +50,12 @@ You can also export C<translate> into the users namespace:
 
     warn translate('My message');
 
-Thus far, the French translation comes from Googles translation tools.IF you
+Thus far, the French translation comes from Googles translation tools. IF you
 have the time and can do better, the help would be much appreciated.
 
 =head1 METHODS
 
-=head2 C<translate>
+=head2 translate
 
 Translates the supplied text into the appropriate language if available. If no
 match is available, the original text is returned.

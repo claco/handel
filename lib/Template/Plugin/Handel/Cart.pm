@@ -69,7 +69,9 @@ minor exceptions noted below.
 Since C<new> and C<load> are used by TT2 to load plugins, Handel::Carts
 C<new> and C<load> can be accesed using C<create> and C<fetch>.
 
-C<Handel::Constants> are now imported into this module automatically in C<0.08>.
+Starting in version C<0.08>, C<Handel::Constants> are now imported into this
+module automatically. This removes the need to use
+C<Template::Plugin::Handel::Constants> seperately when working with carts.
 
     [% USE hc = Handel.Cart %]
     [% cart = hc.create(...) %]
@@ -106,21 +108,21 @@ For example:
 
     [% carts = Handel.Cart.fetch() %]
 
-returns an array reference sinceit's not clear at this point what you really want.
-To counteract this behaviour, you can use C<RETURNAS> constants to specify the exact
-output desired:
+returns an array reference since it's not clear at this point what you really
+want. To counteract this behaviour, you can use C<RETURNAS> constants to
+specify the exact output desired:
 
     [% carts = Handel.Cart.fetch(undef, Handel.Cart.RETURNAS_ITERATOR) %]
 
-This will force a return of a C<Handel::Iterator> in scalar context. Then you can
-simply loop through the iterator:
+This will force a return of a C<Handel::Iterator> in scalar context. Then you
+can simply loop through the iterator:
 
     [% WHILE (cart = carts.next) %]
         ...
     [% END %]
 
-On the upshot, if you are only expecting a single result, like loading a specific
-cart by C<id>, then it will just do Do What You Want:
+On the upshot, if you are only expecting a single result, like loading a
+specific cart by C<id>, then it will just do Do What You Want:
 
     [% cart = Handel.Cart.fetch({id => '12345678-7654-3212-345678987654'}) %]
     [% cart.id %]
@@ -145,19 +147,19 @@ approach to cart objects. Because C<USE>ing in TT2 calls C<new>, we first
 C<USE> or create a new C<Template::Plugin::Handel::Cart> object then
 C<create> or C<load> to return a new cart object, iterator, or array of carts.
 
-=over
-
-=item new
+=head2 new
 
 This returns a new Handel.Cart object. This is used internally when
 loading TT2 plugins and should not be used directly.
 
-=item load
+=head1 METHODS
 
-This method is called when TT@ loaded the plugin for the first time.
-This is used internally by TT@ and should not be used directly.
+=head2 load
 
-=item create(\%filter)
+This method is called when TT2 loaded the plugin for the first time.
+This is used internally by TT2 and should not be used directly.
+
+=head2 create(\%filter)
 
     [% USE Handel.Cart %]
     [% IF (cart = Handel.Cart.create({
@@ -170,7 +172,7 @@ This is used internally by TT@ and should not be used directly.
 
     [% END %]
 
-=item fetch(\%filter [, $wantiterator])
+=head2 fetch(\%filter [, $wantiterator])
 
 The safest way to get a cart is to use FOREACH. This negates the need
 to specfy C<$wanteriterator> for C<Handel::Cart::load>. See L<CAVEATS>
@@ -183,7 +185,7 @@ for further info on C<$wantiterator>, Perls C<wantarray> within TT2.
         ...
     [% END %]
 
-=item uuid
+=head2 uuid
 
 Returns a new uuid for use in add/create:
 
@@ -199,15 +201,14 @@ Returns a new uuid for use in add/create:
 
     [% END %]
 
-=item guid
+=head2 guid
 
 Same as C<uuid> above.
 
-=back
-
 =head1 SEE ALSO
 
-L<Template::Plugin::Handel::Constants>, L<Handel::Constants>, L<Handel::Cart>
+L<Template::Plugin::Handel::Constants>, L<Handel::Constants>, L<Handel::Cart>,
+L<Template::Plugin>
 
 =head1 AUTHOR
 

@@ -94,7 +94,9 @@ collection of C<Handel::Cart::Item> objects:
 
 =head1 CONSTRUCTOR
 
-You can create a new C<Handel::Cart::Item> object by call the C<new> method:
+=head2 new
+
+You can create a new C<Handel::Cart::Item> object by calling the C<new> method:
 
     my $item = Handel::Cart::Item->new({
         sku => '1234',
@@ -107,42 +109,42 @@ You can create a new C<Handel::Cart::Item> object by call the C<new> method:
     print $item->total;
 
 This is a lazy operation. No actual item record is created until the item object
-is passed into the carts C<add> method.
+is passed into the C<add> method of a C<Handel::Cart> object.
 
 =head1 METHODS
 
-=head2 C<$item-E<gt>sku>
+=head2 sku
 
 Returns or sets the sku (stock keeping unit/part number) for the cart item.
 
-=head2 C<$item-E<gt>quantity>
+=head2 quantity
 
 Returns or sets the quantity the cart item.
 
-=head2 C<$item-E<gt>price>
+=head2 price
 
 Returns or sets the price for the cart item.
 
 Starting in version C<0.12>, price now returns a stringified
-L<Handel::Currency> object. This can be used to format the price,
-and hopefully to convert it's currency to another locale in the future.
+C<Handel::Currency> object. This can be used to format the price,
+and convert its value from on currency to another.
 
-=head2 C<$item-E<gt>total>
+=head2 total
 
 Returns the total price for the cart item. This is really just
 quantity*total and is provided for convenience.
 
 Starting in version C<0.12>, subtotal now returns a stringified
-L<Handel::Currency> object. This can be used to format the price,
-and hopefully to convert it's currency to another locale in the future.
+C<Handel::Currency> object. This can be used to format the price,
+and convert its value from on currency to another.
 
-=head2 C<$item-E<gt>description>
+=head2 description
 
 Returns or sets the description for the cart item.
 
 =head1 SEE ALSO
 
-L<Handel::Cart>
+L<Handel::Cart>, L<Handel::Currency>
 
 =head1 AUTHOR
 

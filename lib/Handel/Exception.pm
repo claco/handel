@@ -109,7 +109,7 @@ unexpected things happen.
 =head2 Handel::Exception
 
 This is the base exception thrown in C<Handel>. All other exceptions subclass
-C<Handel::Exception> so it's possibly to catch all Handel generated exceptions
+C<Handel::Exception> so it's possibl to catch all Handel generated exceptions
 with a single C<catch> statement.
 
     try {
@@ -118,7 +118,7 @@ with a single C<catch> statement.
         my $E = shift;
         print 'Something bad happened in Handel: ' . E->text;
 
-    } catch MyApplicaitonException with {
+    } catch MyApplicationException with {
         print 'Something bad happened in MyApplication';
 
     };
@@ -137,13 +137,20 @@ pass constraints in C<Handel::Constraints>.
 This exception is thrown when an invalid or unexpected argument value is passed
 into methods.
 
+=head2 Handel::Exception::Taglib
+
+This exception is thrown when an unexpected error occurs within
+C<AxKit::XSP::Handel::Cart> taglib.
+
 =head1 METHODS
 
 =head2 new
 
-This returns a new Handel::Exception object. This is mostly used internall by
-L<Error>. In most circumstance, you don't need to call C<new> at all. Instead,
-simply use the C<throw> syntax:
+This returns a new C<Handel::Exception> object. This is mostly used internally
+by L<Error>. In most circumstance, you don't need to call C<new> at all.
+Instead, simply use the C<throw> syntax:
+
+    use Handel::Exceptions;
 
     throw Handel::Exception::Taglib(
         -text => translate("Tag '[_1]' not valid inside of other Handel tags", $tag)
@@ -151,7 +158,7 @@ simply use the C<throw> syntax:
 
 =head1 SEE ALSO
 
-L<Error>, L<Handel::constraints>
+L<Error>, L<Handel::Constraints>
 
 =head1 AUTHOR
 

@@ -2,7 +2,7 @@
 name: Handel
 abstract: Simple commerce framework with AxKit/TT2 support
 author: Christopher H. Laco <claco@chrislaco.com>
-version: 0.15
+version: 0.16
 version_from: lib/Handel.pm
 installdirs: site
 license: perl
@@ -12,7 +12,7 @@ requires:
   Error: 0.14
   Locale::Maketext: 1.06
 recommends:
-  AxKit: 1.62
+  AxKit: 1.61
   Finance-Currency-Convert-WebserviceX: 0.03
   Locale::Currency::Format: 1.22
   Locale::Currency: 2.07
@@ -21,6 +21,6 @@ recommends:
   Test::More: 0.48
   Test::Pod: 1.00
   Test::Pod::Coverage: 1.04
-  Test:Strict: 0
+  Test:Strict: 0.05
 distribution_type: module
 generated_by: ExtUtils::MakeMaker version 6.17

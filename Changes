@@ -1,5 +1,10 @@
 Revision history for Perl module Handel v
 
+0.16 Sun Mar 20 20:16:32 2005
+    - General POD cleanup
+    - Changed ConfigReader to use new DBI* connection settings
+    - Fixed UTF8 currency symbol display problem in 5.8.x
+
 0.15 Thur Mar 17 21:06:36 2005
     - Added Test::Strict tests
     - Added convert to Handel::Currency

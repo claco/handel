@@ -220,5 +220,6 @@ t/sql/cart_create_table.sql
 t/sql/cart_fake_data.sql
 t/TEST.PL
 t/tt2_cart.t
+t/warnings.t
 t/xsp_cart.t
 Todo

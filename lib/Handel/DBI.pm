@@ -11,12 +11,12 @@ BEGIN {
 };
 
 my $cfg = Handel::ConfigReader->new();
-my $db_driver  = $cfg->{'db_driver'};
-my $db_host    = $cfg->{'db_host'};
-my $db_port    = $cfg->{'db_port'};
-my $db_name    = $cfg->{'db_name'};
-my $db_user    = $cfg->{'db_user'};
-my $db_pass    = $cfg->{'db_pass'};
+my $db_driver  = $cfg->{'HandelDBIDriver'}   || $cfg->{'db_driver'};
+my $db_host    = $cfg->{'HandelDBIHost'}     || $cfg->{'db_host'};
+my $db_port    = $cfg->{'HandelDBIPort'}     || $cfg->{'db_port'};
+my $db_name    = $cfg->{'HandelDBIName'}     || $cfg->{'db_name'};
+my $db_user    = $cfg->{'HandelDBIUser'}     || $cfg->{'db_user'};
+my $db_pass    = $cfg->{'HandelDBIPassword'} || $cfg->{'db_pass'};
 my $datasource = "dbi:$db_driver:dbname=$db_name";
 
 if ($db_host) {
@@ -126,78 +126,81 @@ Handel::DBI - Base DBI class used by cart/order objects
 =head1 DESCRIPTION
 
 This is the main base class for Handel objects that access the database. There
-shouldn't be and reason to use this module directly for now.
+shouldn't be any reason to use this module directly for now.
 
 =head1 FUNCTIONS
 
-=head2 C<uuid>
+=head2 uuid
 
 Returns a guid/uuid using the first available uuid generation module.
-The support modules are L<UUID>, L<Data::UUID>, L<Win32::Guidgen>, and
-L<Win32API::GUID>.
+The support modules are C<UUID>, C<Data::UUID>, C<Win32::Guidgen>, and
+C<Win32API::GUID>.
 
     use Handel::DBI;
 
     my $newid = Handel::DBI::uuid;
+    my $uuid  = Handel::DBI->uuid;
 
 Since C<Handel::Cart> and C<Handel::Cart::Item> are subclasses of
 C<Handel::DBI>, C<uuid> is available within those modules as a method/function
-as well
+as well:
 
     use Handel::Cart;
 
     my $newid = Handel::Cart->uuid;
 
-=head2 C<has_wildcard>
+=head2 has_wildcard
 
 Inspects the supplied search filter to determine whether it contains wildcard
-searching. Returns 1 if the filter contains SQL wildcards, other it returns
+searching. Returns 1 if the filter contains SQL wildcards, otherwise it returns
 C<undef>.
 
-    has_wildcard({sku => '1234'}); # 1
-    has_wildcard((sku => '12%'));  # undef
+    has_wildcard({sku => '12%'});  # 1
+    has_wildcard((sku => '123'));  # undef
 
 This is used by C<Handel::Cart-E<gt>items> and
 C<Handel::Cart::load> to determine which L<Class::DBI> methods to call (search
 vs. search_like).
 
-=head1 ENVIRONMENT VARIABLES
+=head1 CONFIGURATION
 
-For now, C<Handel::DBI> constructs its connection string using the following
-variables:
+Starting in version C<0.16>, the DBI configuration variables have been changed.
+The old variables are now considered depricated and will be removed in the
+future.
 
-=over
+These can either be set in C<ENV>, or using PerlSetVar in C<httpd.conf>.
+IF you are already using C<ENV> variables and want to use them within Apache
+instead of duplicating that config using C<PerlSetVar>, you can tell mod_perl
+to pass that configuration in by using C<PerlPassEnv>.
 
-=item C<db_driver>
+At some point, this needs to be reworked into a more generic config loader so
+we can use C<ENV>, httpd.conf directives, or config files, LDAP, etc.
+
+C<Handel::DBI> constructs its connection string using the following variables:
+
+=head2 HandelDBIDriver
 
 The name of the DBD driver. Defaults to C<mysql>.
 
-=item C<db_host>
+=head2 HandelDBIHost
 
 The name of the database server. Defaults to C<localhost>.
 
-=item C<db_port>
+=head2 HandelDBIPort
 
 The port of the database server. Defaults to C<3306>.
 
-=item C<db_name>
+=head2 HandelDBIName
 
 The name of the database. Defaults to C<commerce>.
 
-=item C<db_user>
+=head2 HandelDBIUser
 
 The user name used to connect to the server. Defaults to C<commerce>.
 
-=item C<db_pass>
+=head2 HandelDBIPassword
 
 The password used to connect to the server. Defaults to C<commerce>.
-
-=back
-
-For now, these can either be set in C<ENV>, or using PerlSetVar in C<httpd.conf>.
-
-At some point, this needs to be reworked into a more generic config loader so we
-can use $ENV, httpd.conf directives, of config files, etc.
 
 =head1 SEE ALSO
 

@@ -89,6 +89,8 @@ Apache::ModuleConfig and custom directives which use the same hash syntax.
 
 =head1 CONSTRUCTOR
 
+=head2 new
+
 Returns a new Handel::ConfigReader object.
 
     my $cfg = Handel::ConfigReader->new();
@@ -120,9 +122,10 @@ C<PerlSetVar> when running under C<mod_perl>.
     $ENV{HandelMaxQuantity} = 32;
 
 If defined, this sets the maximum quantity allowed for each C<Handel::Cart::Item>
-in the shopping cart. By default, when the user request more than C<HandelMaxQuantity>,
-C<quantity> is reset to C<HandelMaxQuantity>. IF you would rather raise an
-C<Handel::Exception::Constraint> instead, see C<HandelMaxQuantityAction> below.
+in the shopping cart. By default, when the user request more than
+C<HandelMaxQuantity>, C<quantity> is reset to C<HandelMaxQuantity>. If you
+would rather raise an C<Handel::Exception::Constraint> instead, see
+C<HandelMaxQuantityAction> below.
 
 =head2 HandelMaxQuantityAction (Adjust|Exception)
 
@@ -146,6 +149,30 @@ This sets the default options used to format the price. See
 L<Locale::Currency::Format> for all available currency codes. The default format
 used is C<FMT_STANDARD>. Just like in C<Locale::Currency::Format>, you can combine
 options using C<|>.
+
+=head2 HandelDBIDriver
+
+The name of the DBD driver. Defaults to C<mysql>.
+
+=head2 HandelDBIHost
+
+The name of the database server. Defaults to C<localhost>.
+
+=head2 HandelDBIPort
+
+The port of the database server. Defaults to C<3306>.
+
+=head2 HandelDBIName
+
+The name of the database. Defaults to C<commerce>.
+
+=head2 HandelDBIUser
+
+The user name used to connect to the server. Defaults to C<commerce>.
+
+=head2 HandelDBIPassword
+
+The password used to connect to the server. Defaults to C<commerce>.
 
 =head1 AUTHOR
 

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use vars qw($VERSION);
 
-$VERSION = '0.15';
+$VERSION = '0.16';
 
 1;
 __END__
@@ -28,17 +28,17 @@ For the curious, Handel is German for commerce.
 
 =item Add/Update/Delete/Save/Restore Cart Contents
 
-=item Full AxKit XSP Taglib support
+=item Full AxKit XSP Taglib Support
 
-=item Template Toolkit 2 Plugin support
+=item Template Toolkit 2 Plugin Support
 
-=item Currency conversion
+=item Currency Conversion
 
-=item Currency formatting
+=item Currency Formatting
 
-=item Basic Localization support
+=item Basic Localization Support
 
-=item Multiple database support via Class::DBI
+=item Multiple Database Support
 
 =back
 
@@ -47,83 +47,123 @@ For the curious, Handel is German for commerce.
 =head2 Prerequisites
 
 The following modules are required for Handel to work properly. Older versions
-may work fine. For now, these are the versions I have installed and verified to
-work correctly.
+may work fine, but hese are the versions I have installed and verified to
+work correctly. IF you have older versious and all tests pass, send me an email
+and I'll lower the version requirements.
 
 =over
 
-=item Class::DBI 0.96+
+=item Class::DBI
 
-=item DBI version 1.36+
+C<Class::DBI> version 0.96 or greater.
 
-=item Error 0.14+
+=item DBI
 
-=item Locale::Maketext 1.06+
+C<DBI> version 1.36 or greater.
 
-=item UUID*/GUID
+=item Error
+
+C<Error> version 0.14 or greater.
+
+=item Locale::Maketext
+
+C<Locale::Maketext> version 1.06 or greater.
+
+=item Data::UUID
 
 At least one of the following modules are required to create uuids:
-L<UUID> 0.02, L<Win32::Guidgen> 0.04, L<Win32API::GUID> 0.02,
-or L<Data::UUID> 0.10.
-
-=item Axit 1.6.2+
-
-C<AxKit> is only required if you plan on using C<Handel> within XSP using the
-supplied taglibs.
+C<UUID> 0.02, C<Win32::Guidgen> 0.04, C<Win32API::GUID> 0.02,
+or C<Data::UUID> 0.10.
 
 =back
 
 =head2 Optional Modules
 
-The following modules are required for Handel to run, although some features
-may be unavailable without the:
+The following modules are not required for Handel to run, although some
+features may be unavailable without them.
 
 =over
 
+=item AxKit
+
+C<AxKit> version 1.61 or greater.
+
+C<AxKit> is only required if you plan on using C<Handel> within XSP using the
+supplied taglibs.
+
 =item Locale::Currency::Format
+
+C<Locale::Currency::Format> version 1.22 or greater.
 
 When present, this module allows all prices to be formatted to specific
 currency codes and formats.
 
 =item Finance::Currency::Convert::WebserviceX
 
-When present, this module allows all prices to be converted from one
-currency to another.
+C<Finance::Currency::Convert::WebserviceX> version 0.03 or greater.
+
+When present, this module allows all prices to be converted from one currency
+to another.
 
 =item Locale::Currency
+
+C<Locale::Currency> version 2.07 or greater.
 
 When present, this module allows all conversion and currency codes
 to be verified as real 3 letter ISO currency codes.
 
+=item Template
+
+C<Template> version 2.07 or greater.
+
+C<Template> (TT2/Template ToolKit) is only required if you plan on using Handel
+within TT2 based websites.
+
 =back
 
-The following modules are only required for the test suite:
+=head2 Build/Test Modules
+
+The following modules are only required for the test suite when running
+C<make test>.
 
 =over
 
-=item Test::More 0.48+
+=item Test::More
+
+C<Test::More> version 0.48 or greater.
 
 The C<Test::More> included with perl 5.8.4 and C<Test::More> <= 0.48 have issues
-with ithreads that usually cause crashes in C<Class::DBI> tests.
+with ithreads that usually cause crashes in tests that use C<Class::DBI> or
+C<DBIx:ContextualFetch>. The errors usual mention
+"attempt to free unreferenced scalar". If you reveive these during C<make test>,
+try upgrading C<Test::More>.
 
-=item Pod::Coverage 0.14+
+=item Pod::Coverage
+
+C<Pod::Coverage> version 0.14 or greater.
 
 The pod coverage tests may fail complaining about missing pod for methods if
 Pod::Coverage < 0.14 is installed. This is due to certain syntax variations of
 the pod with escaped gt/lt. I may just alter the pod and bump this version down
 if there is enough feedback to do so.
 
-=item Test::Pod 1.00+
+=item Test::Pod
+
+C<Test::Pod> version 1.00 or greater.
 
 C<Test::Pod> 1.00 added the C<all_pod_files_ok()> method which makes my life
 easier. :-)
 
-=item Test::Pod::Coverage 1.04+
+=item Test::Pod::Coverage
+
+C<Test::Pod::Coverage> version 1.04 or greater.
 
 C<Test::Pod::Coverage> 1.04 was made taint safe, and we run the tests with -wT
 like good girls and boys.
 
 =item Test:Strict
+
+C<Test::Strict> version 0.01 or greater.
 
 This keeps me honest and makes sure I always C<use strict>.
 

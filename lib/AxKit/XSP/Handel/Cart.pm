@@ -753,13 +753,14 @@ Add the namespace to your XSP file and use the tags:
 
 =head1 DESCRIPTION
 
-This tag library provides an interface to use L<Handel::Cart> inside of your
+This tag library provides an interface to use C<Handel::Cart> inside of your
 AxKit XSP pages.
 
 =head1 CHANGES
 
-Starting in version C<0.09>, C<E<lt>cart:typeE<gt>>, the C<type> attribute, and the C<mode>
-attribute in C<E<lt>cart:restoreE<gt>> now take the constants declared in C<Handel::Constants>:
+Starting in version C<0.09>, C<E<lt>cart:typeE<gt>>, the C<type> attribute,
+and the C<mode> attribute in C<E<lt>cart:restoreE<gt>> now take the constants
+declared in C<Handel::Constants>:
 
     <cart:type>CART_TYPE_SAVED</cart:type>
 
@@ -771,15 +772,15 @@ attribute in C<E<lt>cart:restoreE<gt>> now take the constants declared in C<Hand
         ...
     </cart:restore>
 
-Starting in version C<0.15>, the currency conversion options from L<Handel::Currency>
-are now available within the taglib.
-
-    <cart:subtotal convert="0|1" from="USD|CAD|..." to="CAD|JPY|..." />
-
-Starting in version C<0.13>, the currency formatting options from L<Handel::Currency>
-are now available within the taglib.
+Starting in version C<0.13>, the currency formatting options from
+C<Handel::Currency> are now available within the taglib:
 
      <cart:price format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
+
+Starting in version C<0.15>, the currency conversion options from
+C<Handel::Currency> are now available within the taglib:
+
+    <cart:subtotal convert="0|1" from="USD|CAD|..." to="CAD|JPY|..." />
 
 =head1 TAG HIERARCHY
 
@@ -983,7 +984,7 @@ or any combination of the two:
     </cart:add>
 
 This tag is only valid within the C<E<lt>cart:resultsE<gt>> block for C<cart>
-and C<carts>. See L<Handel::Cart> for more information about adding parts to
+and C<carts>. See C<Handel::Cart> for more information about adding parts to
 the shopping cart.
 
 You can also access the newly added item using the C<E<lt>cart:resultsE<gt>>.
@@ -992,7 +993,7 @@ You can also access the newly added item using the C<E<lt>cart:resultsE<gt>>.
 
 Container tag for the current cart used to load a specific cart.
 
-If C<cart> or it's C<filter>s load more than one cart, C<cart> will contain only
+If C<cart> or its C<filter>s load more than one cart, C<cart> will contain only
 the first cart. If you're looking for loop through multiple carts, try
 C<E<lt>cart:cartsE<gt>> instead.
 
@@ -1082,8 +1083,8 @@ carts description:
         </cart:results>
     </cart:cart>
 
-Within C<E<lt>cart:addE<gt>> or C<E<lt>cart:updateE<gt>> it sets the current cart
-or cart items description:
+Within C<E<lt>cart:addE<gt>> or C<E<lt>cart:updateE<gt>> it sets the current
+cart or cart items description:
 
     <cart:cart>
         <cart:results>
@@ -1113,9 +1114,10 @@ or cart items description:
 
 =head2 <cart:filter>
 
-Adds a new name/value pair to the filter used in C<E<lt>cart:cartE<gt>>, C<E<lt>cart:cartsE<gt>>
-C<E<lt>cart:deleteE<gt>>, C<E<lt>cart:itemE<gt>>, and C<E<lt>cart:itemsE<gt>>. Pass the
-name of the pair in the C<name> atttribute and the value between the start and end filter tags:
+Adds a new name/value pair to the filter used in C<E<lt>cart:cartE<gt>>,
+C<E<lt>cart:cartsE<gt>>, C<E<lt>cart:deleteE<gt>>, C<E<lt>cart:itemE<gt>>,
+and C<E<lt>cart:itemsE<gt>>. Pass the name of the pair in the C<name>
+attribute and the value between the start and end filter tags:
 
     <cart:cart type="0">
         <cart:filter name="id">12345678-9098-7654-3212-345678909876</cart:filter>
@@ -1130,8 +1132,8 @@ name of the pair in the C<name> atttribute and the value between the start and e
         </cart:no-results>
     </cart:cart>
 
-If the same attribute is specified in a filter, the filter takes precedence over
-the parent tags attribute.
+If the same attribute is specified in a filter, the child filter tag value
+takes precedence over the parent tags attribute.
 
     <cart:cart type="0">
         <!-- type == 0 -->
@@ -1148,8 +1150,9 @@ You can supply as many C<filter>s as needed to get the job done.
 
 =head2 <cart:id>
 
-Context aware tag to get or set the record id within various other tags. In C<E<lt>cart:cartE<gt>>
-and C<E<lt>cart:itemE<gt>> it returns the record id for the object:
+Context aware tag to get or set the record id within various other tags.
+In C<E<lt>cart:cartE<gt>> and C<E<lt>cart:itemE<gt>> it returns the
+record id for the object:
 
     <cart:cart>
         <cart:results>
@@ -1167,8 +1170,8 @@ and C<E<lt>cart:itemE<gt>> it returns the record id for the object:
         </cart:no-results>
     </cart:cart>
 
-Within C<E<lt>cart:addE<gt>>, C<E<lt>cart:deleteE<gt>>, and C<E<lt>cart:newE<gt>>
-it sets the id value used in the operation specified:
+Within C<E<lt>cart:addE<gt>>, C<E<lt>cart:deleteE<gt>>, and
+C<E<lt>cart:newE<gt>> it sets the id value used in the operation specified:
 
     <cart:cart>
         <cart:results>
@@ -1186,7 +1189,8 @@ it sets the id value used in the operation specified:
         <cart:name>New Cart</cart:name>
     </cart:new>
 
-It cannot be used within C<E<lt>cart:updateE<gt>> and will C<die> if you try updating
+It cannot be used within C<E<lt>cart:updateE<gt>> and will return a
+C<Handel::Exception::Taglib> exception if you try updating
 the record ids which are the primary keys.
 
 =head2 <cart:items>
@@ -1220,8 +1224,8 @@ Loops through all items in the current cart:
 
 =head2 <cart:name>
 
-Context aware tag to get or set the name within various other tags. In C<E<lt>cart:cartE<gt>>
-it returns the name for the cart object:
+Context aware tag to get or set the name within various other tags.
+In C<E<lt>cart:cartE<gt>> it returns the name for the cart object:
 
     <cart:cart>
         <cart:results>
@@ -1262,11 +1266,13 @@ Creates a new shopping cart using the supplied attributes and child tags:
     </cart:new>
 
 The child tags take precedence over the attributes of the same name.
-C<new> B<must be a top level tag> within it's declared namespace. It will C<die> otherwise.
+C<new> B<must be a top level tag> within it's declared namespace.
+It will throw an C<Handel::Exception::Taglib> exception otherwise.
 
 =head2 <cart:price>
 
-Context aware tag to get or set the price of a cart item. In C<E<lt>cart:addE<gt>> and C<E<lt>cart:updateE<gt>>
+Context aware tag to get or set the price of a cart item.
+In C<E<lt>cart:addE<gt>> and C<E<lt>cart:updateE<gt>>
 it sets the price:
 
     <cart:cart>
@@ -1280,7 +1286,8 @@ it sets the price:
         </cart:no-results>
     </cart:cart>
 
-In C<E<lt>cart:itemE<gt>> or C<E<lt>cart:itemsE<gt>> it returns the price for the cart item:
+In C<E<lt>cart:itemE<gt>> or C<E<lt>cart:itemsE<gt>> it returns the price
+for the cart item:
 
     <cart:cart>
         <cart:results>
@@ -1304,8 +1311,9 @@ In C<E<lt>cart:itemE<gt>> or C<E<lt>cart:itemsE<gt>> it returns the price for th
 
 =head3 Currency Formatting
 
-Starting in version C<0.13>, the currency formatting options from L<Handel::Currency>
-are now available within the taglib if L<Locale::Currency::Format> is installed.
+Starting in version C<0.13>, the currency formatting options from
+C<Handel::Currency> are now available within the taglib if
+C<Locale::Currency::Format> is installed.
 
      <cart:price format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
 
@@ -1313,33 +1321,37 @@ are now available within the taglib if L<Locale::Currency::Format> is installed.
 
 =item format
 
-Toggle switch that enables or disables currency formatting. If empty, unspecified, or
-set to 0, no formatting will take place and the result price (usually in decimal form)
-is returned unaltered.
+Toggle switch that enables or disables currency formatting. If empty,
+unspecified, or set to 0, no formatting will take place and the result price
+(usually in decimal form) is returned unaltered.
 
-If C<format> is set to anything else, the default formatting will be applied. See L<Handel::Currency>
-for the default currency formatting settings.
+If C<format> is set to anything else, the default formatting will be applied.
+See C<Handel::Currency> for the default currency formatting settings.
 
 =item code
 
-If formatting is enabled, the C<code> attribute specifies the desired three letter ISO currency code
-to be used when formatting currency. See L<Locale::Currency::Format> for the available codes.
+If formatting is enabled, the C<code> attribute specifies the desired three
+letter ISO currency code to be used when formatting currency.
+See C<Locale::Currency::Format> for the available codes.
 
-If you are also using the currency conversion options below, the value of C<to> will always be used
-first, even if C<code> is not empty. If C<to> is empty and C<code> is also empty, the
-C<HandelCurrencyCode> configuration setting will be used instead.
+If you are also using the currency conversion options below, the value of
+C<to> will always be used first, even if C<code> is not empty.
+If C<to> is empty and C<code> is also empty, the C<HandelCurrencyCode>
+configuration setting will be used instead.
 
 =item options
 
-If formatting is enabled, the C<options> attribute specifies the desired formatting options
-to be used when formatting currency. See <Locale::Currency::Format> for the available options.
+If formatting is enabled, the C<options> attribute specifies the desired
+formatting options to be used when formatting currency.
+See C<Locale::Currency::Format> for the available options.
 
 =back
 
 =head3 Currency Conversion
 
-Starting in version C<0.15>, the currency conversion options from L<Handel::Currency>
-are now available within the taglib if L<Finance::Currency::Convert::WebserviceX> is installed.
+Starting in version C<0.15>, the currency conversion options from
+C<Handel::Currency> are now available within the taglib if
+C<Finance::Currency::Convert::WebserviceX> is installed.
 
     <cart:price convert="0|1" from="USD|CAD|..." to="CAD|JPY|..." />
 
@@ -1347,38 +1359,43 @@ are now available within the taglib if L<Finance::Currency::Convert::WebserviceX
 
 =item convert
 
-Toggle switch that enables or disables currency conversion. If empty, unspecified, or
-set to 0, no currency conversion will take place and the result price is returned unaltered.
+Toggle switch that enables or disables currency conversion. If empty,
+unspecified, or set to 0, no currency conversion will take place and the
+result price is returned unaltered.
 
-If C<convert> is set to anything else, the default conversion will be applied. See L<Handel::Currency>
-for the default currency conversion settings.
+If C<convert> is set to anything else, the default conversion will be
+applied. See C<Handel::Currency> for the default currency conversion settings.
 
 =item from
 
-If conversion is enabled, the C<from> attribute specifies the three letter ISO currency code
-of the price to be converted. If no C<from> is specified, the C<HandelCurrencyCode> configuration
-setting will be used instead. See <Locale::Currency> for the available codes.
+If conversion is enabled, the C<from> attribute specifies the three letter
+ISO currency code of the price to be converted. If no C<from> is specified,
+the C<HandelCurrencyCode> configuration setting will be used instead.
+See C<Locale::Currency> for the available codes.
 
 =item to
 
-If conversion is enabled, the C<to> attribute specifies what the current C<price> should be
-converted to. If no C<to> is specified, the C<code> attribute from the formatting options above will be used
-instead. If both C<to> and C<code> are empty, the C<HandelCurrencyCode> configuration setting will be
-used as a last resort.
+If conversion is enabled, the C<to> attribute specifies what the current
+C<price> should be converted to. If no C<to> is specified, the C<code>
+attribute from the formatting options above will be used instead.
+If both C<to> and C<code> are empty, the C<HandelCurrencyCode>
+configuration setting will be used as a last resort.
 
 =back
 
-If you try to convert from and to the same currency, the C<price> is returned as is.
+If you try to convert from and to the same currency, the C<price> is returned
+as is.
 
 =head3 Precedence
 
-If you are using both the currency conversion and the currency formatting options, the conversion will
-be performaed first, then the result will be formatted.
+If you are using both the currency conversion and the currency formatting
+options, the conversion will be performaed first, then the result will
+be formatted.
 
 =head2 <cart:quantity>
 
-Context aware tag to get or set the quantity of a cart item. In C<E<lt>cart:addE<gt>> and C<E<lt>cart:updateE<gt>>
-it sets the quantity:
+Context aware tag to get or set the quantity of a cart item.
+In C<E<lt>cart:addE<gt>> and C<E<lt>cart:updateE<gt>> it sets the quantity:
 
     <cart:cart>
         <cart:results>
@@ -1391,7 +1408,8 @@ it sets the quantity:
         </cart:no-results>
     </cart:cart>
 
-In C<E<lt>cart:itemE<gt>> or C<E<lt>cart:itemsE<gt>> it returns the quantity for the cart item:
+In C<E<lt>cart:itemE<gt>> or C<E<lt>cart:itemsE<gt>> it returns the quantity
+for the cart item:
 
     <cart:cart>
         <cart:results>
@@ -1432,8 +1450,8 @@ C<E<lt>cart:idE<gt>> is not valid within an update statement.
 
 =head2 <cart:results>
 
-Contains the results for the current action. both the singular and plural forms are
-valid for your syntactic sanity:
+Contains the results for the current action. both the singular and plural
+forms are valid for your syntactic sanity:
 
     <cart:cart>
         <cart:result>
@@ -1491,8 +1509,8 @@ Saves the current cart by setting its type to C<CART_TYPE_SAVED>:
 
 =head2 <cart:sku>
 
-Context aware tag to get or set the sku of a cart item. In C<E<lt>cart:addE<gt>> and C<E<lt>cart:updateE<gt>>
-it sets the sku:
+Context aware tag to get or set the sku of a cart item.
+In C<E<lt>cart:addE<gt>> and C<E<lt>cart:updateE<gt>> it sets the sku:
 
     <cart:cart>
         <cart:results>
@@ -1505,7 +1523,8 @@ it sets the sku:
         </cart:no-results>
     </cart:cart>
 
-In C<E<lt>cart:itemE<gt>> or C<E<lt>cart:itemsE<gt>> it returns the sku for the current cart item:
+In C<E<lt>cart:itemE<gt>> or C<E<lt>cart:itemsE<gt>> it returns the sku
+for the current cart item:
 
     <cart:cart>
         <cart:results>
@@ -1540,13 +1559,13 @@ Returns the subtotal of the items in the current cart:
         </cart:no-results>
     </cart:cart>
 
-Starting in version C<0.13>, the currency formatting options from L<Handel::Currency>
-are now available within the taglib.
+Starting in version C<0.13>, the currency formatting options from
+C<Handel::Currency> are now available within the taglib.
 
      <cart:subtotal format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
 
-Starting in version C<0.15>, the currency conversion options from L<Handel::Currency>
-are now available within the taglib.
+Starting in version C<0.15>, the currency conversion options from
+C<Handel::Currency> are now available within the taglib.
 
     <cart:subtotal convert="0|1" from="USD|CAD|..." to="CAD|JPY|..." />
 
@@ -1576,13 +1595,13 @@ Returns the total of the current cart item:
         </cart:no-results>
     </cart:cart>
 
-Starting in version C<0.13>, the currency formatting options from L<Handel::Currency>
-are now available within the taglib.
+Starting in version C<0.13>, the currency formatting options from
+C<Handel::Currency> are now available within the taglib.
 
      <cart:total format="0|1" code="USD|CAD|..." options="FMT_STANDARD|FMT_NAME|..." />
 
-Starting in version C<0.15>, the currency conversion options from L<Handel::Currency>
-are now available within the taglib.
+Starting in version C<0.15>, the currency conversion options from
+C<Handel::Currency> are now available within the taglib.
 
     <cart:total convert="0|1" from="USD|CAD|..." to="CAD|JPY|..." />
 
@@ -1591,8 +1610,9 @@ See <cart:price> above for further details about price formatting.
 
 =head2 <cart:type>
 
-Context aware tag to get or set the type within various other tags. In C<E<lt>cart:cartE<gt>> or C<E<lt>cart:cartsE<gt>>
-it returns the type for the object:
+Context aware tag to get or set the type within various other tags.
+In C<E<lt>cart:cartE<gt>> or C<E<lt>cart:cartsE<gt>> it returns the
+type for the object:
 
     <cart:cart>
         <cart:results>
@@ -1625,13 +1645,13 @@ it sets the type value used in the operation specified:
 
 =head2 <cart:uuid/>
 
-This tag returns a new uuid/guid for use in C<new> and C<add> in the following format:
+This tag returns a new uuid/guid for use in C<new> and C<add> in the
+following format:
 
     xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 
-For those like me who always type the wrong thing, <cart:guid/> returns the same things as <cart:uuid/>
-
-=head1 TAG RECIPES
+For those like me who always type the wrong thing, C<E<lt>cart:guid/<gt>>
+returns the same things as C<E<lt>cart:uuid/<gt>>.
 
 =head1 AUTHOR
 
