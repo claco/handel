@@ -62,7 +62,8 @@ my @tests = (
     'cart_new_no_results_trigger.xsp',
     'cart_restore_append.xsp',
     'cart_restore_replace.xsp',
-    'cart_restore_merge.xsp'
+    'cart_restore_merge.xsp',
+    'cart_currency_format.xsp',
 );
 
 use Apache::TestUtil;
