@@ -1,5 +1,18 @@
 use ExtUtils::MakeMaker;
-use 5.6.1;
+use 5.006;
+use strict;
+use warnings FATAL => 'all';
+
+eval 'use Apache::Test 1.16';
+if (!$@) {
+    require Apache::TestMM;
+    Apache::TestMM->import(qw(test clean));
+
+    my @scripts = qw(t/TEST);
+
+    Apache::TestMM::filter_args();
+    Apache::TestMM::generate_script('t/TEST');
+};
 
 WriteMakefile(
     NAME         => 'Handel',
@@ -14,5 +27,5 @@ WriteMakefile(
         'Locale::Maketext' => undef
     },
     NO_META      => 1,
-    clean => { FILES => 't/cart*.db' }
+    clean => { FILES => 't/cart*.db t/TEST t/logs t/htdocs/cart*.db' }
 );
