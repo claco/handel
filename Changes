@@ -1,6 +1,11 @@
 Revision history for Perl module Handel
 
-0.02_Sat Feb 12 10:42:27 2005
+0.03 Mon Feb 14 23:18:28 2005
+    - Fixed empty tag crash in parse_char
+    - Added demo site for AxKit
+    - Added cart:uuid tag to create GUIDs in XSP
+
+0.02 Sat Feb 12 10:42:27 2005
     - Completed rewrite of Axit::XSP::Handel::Cart
     - Changed Handel::L10N::translate to always get_handle
     - Added t/TEST.PL to MANIFEST
