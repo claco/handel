@@ -6,7 +6,9 @@ use Tie::Hash;
 use base 'Tie::StdHash';
 
 %Defaults = (
-    HandelMaxQuantityAction => 'Adjust'
+    HandelMaxQuantityAction => 'Adjust',
+    HandelCurrencyCode      => 'USD',
+    HandelCurrencyFormat    => 'FMT_STANDARD'
 );
 
 sub new {
@@ -108,6 +110,45 @@ instance method or as a simpleton:
 
 You can also pass a default value as the second parameter. If no value is loaded
 for the key specified, the default value will be returned instead.
+
+=head1 CONFIGURATION
+
+Various Handel runtime options can be set via C<%ENV> variables, or using
+C<PerlSetVar> when running under C<mod_perl>.
+
+=head2 HandelMaxQuantity
+
+    PerlSetVar  HandelMaxQuantity   32
+    ...
+    $ENV{HandelMaxQuantity} = 32;
+
+If defined, this sets the maximum quantity allowed for each C<Handel::Cart::Item>
+in the shopping cart. By default, when the user request more than C<HandelMaxQuantity>,
+C<quantity> is reset to C<HandelMaxQuantity>. IF you would rather raise an
+C<Handel::Exception::Constraint> instead, see C<HandelMaxQuantityAction> below.
+
+=head2 HandelMaxQuantityAction (Adjust|Exception)
+
+This option defines what action should be taken when a cart items quantity is being set
+to something above C<HandelMaxQuantity>. When set to C<Adjust> the quantity qill simple
+be reset to C<HandelMaxQuantity> and no exception will be raised. This is the default
+action.
+
+When set to <Exception> and the quantity requested is greater than C<HandelMaxQuantity>,
+a C<Handel::Exception::Constraint> exception is thrown.
+
+=head2 HandelCurrencyCode
+
+This sets the default currency code used when no code is passed into C<format>.
+See L<Locale::Currency::Format> for all available currency codes. The default code
+is USD.
+
+=head2 HandelCurrencyFormat
+
+This sets the default options used to format the price. See
+L<Locale::Currency::Format> for all available currency codes. The default format
+used is C<FMT_STANDARD>. Just like in C<Locale::Currency::Format>, you can combine
+options using C<|>.
 
 =head1 AUTHOR
 
