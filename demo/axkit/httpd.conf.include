@@ -4,7 +4,9 @@
 
 PerlModule AxKit
 
-<VirtualHost *:80>
+Listen 9001
+
+<VirtualHost *:9001>
 	DocumentRoot	C:\Development\CPAN\Handel\demo\axkit
 	ErrorLog		C:\Development\CPAN\Handel\demo\axkit\errors.log
 	DirectoryIndex	index.xsp
@@ -17,7 +19,7 @@ PerlModule AxKit
 	AxLogDeclines	On
 	AxDebugLevel	10
 	AxStackTrace	On
-	PerlSetVar		db_name				C:\Development\CPAN\Handel\demo\axkit\cart.db
+	PerlSetVar		db_name				C:\Development\CPAN\Handel\demo\cart.db
 	PerlSetVar		db_driver			"SQLite"
 
 	AxAddProcessor	application/x-xsp	.
