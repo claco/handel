@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<body>
+	<cart>
+		<count>2</count>
+		<description>My New Shopping Cart</description>
+		<id>DDD936A1-9CA7-4910-8EAC-828856A826BF</id>
+		<name>New Cart</name>
+		<shopper>BD2B48AD-4E60-4CE8-85FE-DEB90147C740</shopper>
+		<subtotal>1.11</subtotal>
+		<type>0</type>
+		<item>
+			<description>Description 1</description>
+			<id>8DC05B6C-9B24-43F1-B2C4-20B49C65CA01</id>
+			<price>1.11</price>
+			<quantity>1</quantity>
+			<sku>SKU1</sku>
+			<total>1.11</total>
+		</item>
+		<item>
+			<description>My Updated Item</description>
+			<id>8DC05B6C-9B24-43F1-B2C4-20B49C65CA01</id>
+			<price>3.33</price>
+			<quantity>3</quantity>
+			<sku>UPDATED123</sku>
+			<total>9.99</total>
+		</item>
+		<subtotal>9.99</subtotal>
+	</cart>
+	<cart>
+		<count>2</count>
+		<description>My New Shopping Cart 2</description>
+		<id>675040CE-6543-48DD-B781-05648D643C82</id>
+		<name>New Cart 2</name>
+		<shopper>BD2B48AD-4E60-4CE8-85FE-DEB90147C740</shopper>
+		<subtotal>4.44</subtotal>
+		<type>0</type>
+		<item>
+			<description>Description 2</description>
+			<id>50247962-98B2-4272-BBD4-4023FB77A8AE</id>
+			<price>2.22</price>
+			<quantity>2</quantity>
+			<sku>SKU2</sku>
+			<total>4.44</total>
+		</item>
+		<item>
+			<description>My Updated Item</description>
+			<id>50247962-98B2-4272-BBD4-4023FB77A8AE</id>
+			<price>3.33</price>
+			<quantity>3</quantity>
+			<sku>UPDATED123</sku>
+			<total>9.99</total>
+		</item>
+		<subtotal>9.99</subtotal>
+	</cart>
+</body>
