@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<xsp:page
+	xmlns:xsp="http://apache.org/xsp/core/v1"
+	xmlns:cart="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart"
+>
+	<body>
+		<cart:new>
+			<cart:description>My New Shopping Cart</cart:description>
+			<cart:id>BD40D1CB-7D85-4F47-867A-925E111EB2AA</cart:id>
+			<cart:name>New Cart</cart:name>
+			<cart:shopper>0CA564F1-EFBC-490F-8586-198FD14E97AA</cart:shopper>
+			<cart:type>CART_TYPE_TEMP</cart:type>
+			<cart:results>
+				<cart:add id="EF254990-53FB-46DA-8B8A-A287698D3EAA" sku="SKU1" price="1.11" quantity="2" description="Description 1"/>
+			</cart:results>
+			<cart:no-results>
+				<message>Error creating shopping cart</message>
+			</cart:no-results>
+		</cart:new>
+
+		<cart:cart type="CART_TYPE_TEMP">
+			<cart:filter name="id">BD40D1CB-7D85-4F47-867A-925E111EB2AA</cart:filter>
+			<cart:results>
+				<cart>
+					<count><cart:count/></count>
+					<description><cart:description/></description>
+					<id><cart:id/></id>
+					<name><cart:name/></name>
+					<shopper><cart:shopper/></shopper>
+					<subtotal><cart:subtotal/></subtotal>
+					<subtotal><cart:subtotal format="1"/></subtotal>
+					<subtotal><cart:subtotal format="1" code="CAD"/></subtotal>
+					<subtotal><cart:subtotal format="1" options="FMT_HTML"/></subtotal>
+					<subtotal><cart:subtotal format="1" code="CAD" options="FMT_NAME"/></subtotal>
+
+					<subtotal><cart:subtotal convert="1" from="USD" to="CAD" /></subtotal>
+					<subtotal><cart:subtotal convert="1" from="USD" to="CAD" format="1"/></subtotal>
+					<subtotal><cart:subtotal convert="1" from="USD" format="1" code="CAD"/></subtotal>
+					<subtotal><cart:subtotal convert="1" from="USD" to="CAD" format="1" /></subtotal>
+					<subtotal><cart:subtotal convert="1" from="USD" to="CAD" format="1" options="FMT_HTML"/></subtotal>
+					<subtotal><cart:subtotal convert="1" from="USD" code="CAD" format="1" options="FMT_HTML"/></subtotal>
+					<subtotal><cart:subtotal convert="1" from="USD" to="CAD" format="1" code="CAD" options="FMT_NAME"/></subtotal>
+					<subtotal><cart:subtotal convert="1" from="USD" format="1" code="CAD" options="FMT_NAME"/></subtotal>
+					<type><cart:type/></type>
+					<cart:item>
+						<cart:results>
+							<item>
+								<description><cart:description/></description>
+								<id><cart:id/></id>
+								<price><cart:price/></price>
+								<price><cart:price format="1"/></price>
+								<price><cart:price format="1" code="CAD"/></price>
+								<price><cart:price format="1" options="FMT_HTML"/></price>
+								<price><cart:price format="1" code="CAD" options="FMT_NAME"/></price>
+
+								<price><cart:price convert="1" from="USD" to="CAD" /></price>
+								<price><cart:price convert="1" from="USD" to="CAD" format="1"/></price>
+								<price><cart:price convert="1" from="USD" format="1" code="CAD"/></price>
+								<price><cart:price convert="1" from="USD" to="CAD" format="1" /></price>
+								<price><cart:price convert="1" from="USD" to="CAD" format="1" options="FMT_HTML"/></price>
+								<price><cart:price convert="1" from="USD" code="CAD" format="1" options="FMT_HTML"/></price>
+								<price><cart:price convert="1" from="USD" to="CAD" format="1" code="CAD" options="FMT_NAME"/></price>
+								<price><cart:price convert="1" from="USD" format="1" code="CAD" options="FMT_NAME"/></price>
+
+								<quantity><cart:quantity/></quantity>
+								<sku><cart:sku/></sku>
+								<total><cart:total/></total>
+								<total><cart:total format="1"/></total>
+								<total><cart:total format="1" code="CAD"/></total>
+								<total><cart:total format="1" options="FMT_HTML"/></total>
+								<total><cart:total format="1" code="CAD" options="FMT_NAME"/></total>
+
+								<total><cart:total convert="1" from="USD" to="CAD" /></total>
+								<total><cart:total convert="1" from="USD" to="CAD" format="1"/></total>
+								<total><cart:total convert="1" from="USD" format="1" code="CAD"/></total>
+								<total><cart:total convert="1" from="USD" to="CAD" format="1" /></total>
+								<total><cart:total convert="1" from="USD" to="CAD" format="1" options="FMT_HTML"/></total>
+								<total><cart:total convert="1" from="USD" code="CAD" format="1" options="FMT_HTML"/></total>
+								<total><cart:total convert="1" from="USD" to="CAD" format="1" code="CAD" options="FMT_NAME"/></total>
+								<total><cart:total convert="1" from="USD" format="1" code="CAD" options="FMT_NAME"/></total>
+
+							</item>
+						</cart:results>
+						<cart:no-results>
+							<message>Your cart is empty</message>
+						</cart:no-results>
+					</cart:item>
+				</cart>
+			</cart:results>
+			<cart:no-results>
+				<message>Could not find cart</message>
+			</cart:no-results>
+		</cart:cart>
+	</body>
+</xsp:page>
