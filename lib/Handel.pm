@@ -22,6 +22,26 @@ might be useful to others so here it is on CPAN.
 
 For the curious, Handel is German for commerce.
 
+=head1 FEATURES
+
+=over
+
+=item Add/Update/Delete/Save/Restore Cart Contents
+
+=item Full AxKit XSP Taglib support
+
+=item Template Toolkit 2 Plugin support
+
+=item Currency conversion
+
+=item Currency formatting
+
+=item Basic Localization support
+
+=item Multiple database support via Class::DBI
+
+=back
+
 =head1 REQUIREMENTS
 
 =head2 Prerequisites
@@ -65,6 +85,16 @@ may be unavailable without the:
 When present, this module allows all prices to be formatted to specific
 currency codes and formats.
 
+=item Finance::Currency::Convert::WebserviceX
+
+When present, this module allows all prices to be converted from one
+currency to another.
+
+=item Locale::Currency
+
+When present, this module allows all conversion and currency codes
+to be verified as real 3 letter ISO currency codes.
+
 =back
 
 The following modules are only required for the test suite:
@@ -92,6 +122,10 @@ easier. :-)
 
 C<Test::Pod::Coverage> 1.04 was made taint safe, and we run the tests with -wT
 like good girls and boys.
+
+=item Test:Strict
+
+This keeps me honest and makes sure I always C<use strict>.
 
 =back
 
