@@ -1,6 +1,5 @@
 TODO list for Perl module Handel
 
-    - make tt2_cart.t tests to mimic xsp_cart.t tests
     - enhance demo sites to use full feature set
     - slim Cart taglib code to remove repeated code blocks left for clarity
     - start work on Handel::Order part of framework

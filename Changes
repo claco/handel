@@ -1,5 +1,12 @@
 Revision history for Perl module Handel
 
+0.08 Sat Feb 26 18:2$:17 2005
+    - Added TT2 cart tests
+    - Changed Handel::Cart::Item to autoupdate on every method
+      like Handel::Cart
+    - Moved TT2 tests to inline Template intead of Apache::Template
+    - Added Handel::Constants into Template::PLugin::Handel::Cart
+
 0.07 Mon Feb 21 22:01:13 2005
     - Added Makefile.PL Apache::Test -defines for AxKit/TT2
     - Changed extra.conf.in to use IfModule/IfDefine
@@ -86,4 +93,3 @@ Revision history for Perl module Handel
 
 0.01_01 Mon Dec 27 21:47:04 2004
     - Initial alpha release
-
