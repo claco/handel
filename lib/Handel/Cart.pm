@@ -1,4 +1,3 @@
-# $Id$
 package Handel::Cart;
 use strict;
 use warnings;
@@ -146,37 +145,43 @@ sub restore {
         'Param 1 is not a HASH reference or Handel::Cart.') unless(
             ref($data) eq 'HASH' or $data->isa('Handel::Cart'));
 
-    if (ref($data) eq 'HASH') {
-
-    };
+    my @carts = (ref($data) eq 'HASH') ?
+        Handel::Cart->search_like(%{$data}) : $data;
 
     if ($mode == CART_MODE_REPLACE) {
         $self->clear;
 
+        my $first = $carts[0];
         $self->autoupdate(0);
-        $self->name($data->name);
-        $self->description($data->description);
+        $self->name($first->name);
+        $self->description($first->description);
         $self->update;
         $self->autoupdate(1);
 
-        my $iterator = $data->items(undef, 1);
-        while (my $item = $iterator->next) {
-            $self->add($item);
-        };
-    } elsif ($mode == CART_MODE_MERGE) {
-        my $iterator = $data->items(undef, 1);
-        while (my $item = $iterator->next) {
-            if (my $exists = $self->items({sku => $item->sku})){
-                $exists->quantity($item->quantity + $exists->quantity);
-                $exists->update;
-            } else {
+        foreach (@carts) {
+            my $iterator = $_->items(undef, 1);
+            while (my $item = $iterator->next) {
                 $self->add($item);
             };
         };
+    } elsif ($mode == CART_MODE_MERGE) {
+        foreach (@carts) {
+            my $iterator = $_->items(undef, 1);
+            while (my $item = $iterator->next) {
+                if (my $exists = $self->items({sku => $item->sku})){
+                    $exists->quantity($item->quantity + $exists->quantity);
+                    $exists->update;
+                } else {
+                    $self->add($item);
+                };
+            };
+        };
     } elsif ($mode == CART_MODE_APPEND) {
-        my $iterator = $data->items(undef, 1);
-        while (my $item = $iterator->next) {
-            $self->add($item);
+        foreach (@carts) {
+            my $iterator = $_->items(undef, 1);
+            while (my $item = $iterator->next) {
+                $self->add($item);
+            };
         };
     } else {
         return new Handel::Exception::Argument(-text => 'Unknown restore mode');
@@ -207,6 +212,10 @@ __END__
 =head1 NAME
 
 Handel::Cart - Module for maintaining shopping cart contents
+
+=head1 VERSION
+
+    $Id$
 
 =head1 SYNOPSIS
 
@@ -276,6 +285,9 @@ setting the C<$wantiterator> parameter to true.
         print $item->sku;
     };
 
+A C<Handel::Exception::Argument> exception is thrown if the first parameter is
+not a hashref.
+
 =back
 
 =head1 METHODS
@@ -310,6 +322,9 @@ later if need be. Oh yeah, and "Because I Can". :-P
     });
     ...
     $cart->add($item);
+
+A C<Handel::Exception::Argument> exception is thrown if the first parameter
+isn't a hashref or a C<Handel::Cart::Item> object.
 
 =back
 
@@ -354,6 +369,9 @@ In list context, filtered items return an array of items just as when items is
 called without a filter specified.
 
     my @items - $cart->items((sku -> 'SKU1%'});
+
+A C<Handel::Exception::Argument> exception is thrown if parameter one isn't a
+hashref or undef.
 
 =back
 
@@ -437,6 +455,9 @@ All items in the saved cart will be appended to the list of items in the current
 cart. No effort will be made to merge items with the same SKU and duplicates
 will be ignored.
 
+A C<Handel::Exception::Argument> exception is thrown if the first parameter
+isn't a hashref or a C<Handel::Cart> object.
+
 =back
 
 =head2 Misc. Methods
@@ -493,6 +514,13 @@ shopper at any time.
     CPAN ID: CLACO
     cpan@chrislaco.com
     http://today.icantfocus.com/blog/
+
+
+
+
+
+
+
 
 
 
