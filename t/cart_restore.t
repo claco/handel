@@ -7,7 +7,7 @@ use Test::More;
 BEGIN {
     eval 'require DBD::SQLite';
     if($@) {
-        plan skip_all => 'SQLite not installed';
+        plan skip_all => 'DBD::SQLite not installed';
     } else {
         plan tests => 4;
     };
