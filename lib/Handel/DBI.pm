@@ -7,17 +7,15 @@ BEGIN {
     use Handel::ConfigReader;
     use Handel::Exception;
     use Handel::L10N qw(translate);
-
 };
 
 my $cfg = Handel::ConfigReader->new();
-my $db_driver = $cfg->{'db_driver'};
-my $db_host   = $cfg->{'db_host'};
-my $db_port   = $cfg->{'db_port'};
-my $db_name   = $cfg->{'db_name'};
-my $db_user   = $cfg->{'db_user'};
-my $db_pass   = $cfg->{'db_pass'};
-
+my $db_driver  = $cfg->{'db_driver'};
+my $db_host    = $cfg->{'db_host'};
+my $db_port    = $cfg->{'db_port'};
+my $db_name    = $cfg->{'db_name'};
+my $db_user    = $cfg->{'db_user'};
+my $db_pass    = $cfg->{'db_pass'};
 my $datasource = "dbi:$db_driver:dbname=$db_name";
 
 if ($db_host) {
@@ -55,6 +53,14 @@ sub _croak {
 
     return;
 };
+
+sub accessor_name {
+    my ($class, $column) = @_;
+
+    $column =~ s/^(price)$/_$1/;
+
+    return $column;
+}
 
 sub has_wildcard {
     my $filter = shift;
