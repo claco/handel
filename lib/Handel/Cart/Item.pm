@@ -21,7 +21,8 @@ sub new {
     my ($self, $data) = @_;
 
     throw Handel::Exception::Argument( -details =>
-       'Param 1 is not a HASH reference.') unless ref($data) eq 'HASH';
+        translate('Param 1 is not a HASH reference') . '.') unless
+            ref($data) eq 'HASH';
 
     if (!defined($data->{'id'}) || !constraint_uuid($data->{'id'})) {
         $data->{'id'} = $self->uuid;
