@@ -36,6 +36,8 @@ t/constraints_price.t
 t/constraints_quantity.t
 t/constraints_uuid.t
 t/dbi.t
+t/exceptions.t
+t/l10n.t
 t/pod_coverage.t
 t/pod_syntax.t
 t/lib/Handel/TestHelper.pm
