@@ -6,6 +6,7 @@ BEGIN {
     use base 'Handel::DBI';
     use Handel::Constants qw(:cart :returnas);
     use Handel::Constraints qw(:all);
+    use Handel::Currency;
     use Handel::L10N qw(translate);
 };
 
@@ -227,7 +228,7 @@ sub subtotal {
         $subtotal += ( $item->total );
     };
 
-    return $subtotal;
+    return Handel::Currency->new($subtotal);
 };
 
 1;
@@ -518,6 +519,10 @@ equivalent to:
     while (my $item = $iterator->next) {
         $subtotal += $item->quantity*$item->price;
     };
+
+Starting in version C<0.12>, C<subtotal> now returns a stringified L<Handel::Currency>
+object. This can be used to format the price, and hopefully to convert it's currency
+to another locale in the future.
 
 =item C<$cart-E<gt>type()>
 
