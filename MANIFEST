@@ -1,4 +1,15 @@
 Changes
+demo/axkit/cart.xsp
+demo/axkit/createdb.pl
+demo/axkit/httpd.conf.include
+demo/axkit/includes/footer.xml
+demo/axkit/includes/menu.xml
+demo/axkit/index.xsp
+demo/axkit/products.xsp
+demo/axkit/style/css/basic.css
+demo/axkit/style/xsl/cart.xsl
+demo/axkit/style/xsl/to_xhtml.xsl
+demo/axkit/README
 lib/AxKit/XSP/Handel/Cart.pm
 lib/Handel.pm
 lib/Handel/Cart.pm
@@ -84,6 +95,7 @@ t/htdocs/cart_new_and_add_filtered.xsp
 t/htdocs/cart_new_filtered.xsp
 t/htdocs/cart_new_minimal.xsp
 t/htdocs/cart_new_no_results_trigger.xsp
+t/htdocs/cart_uuid.xsp
 t/htdocs/out/cart_cart.xsp.out
 t/htdocs/out/cart_cart_add.xsp.out
 t/htdocs/out/cart_cart_add_filtered.xsp.out
@@ -132,9 +144,9 @@ t/l10n.t
 t/lib/Handel/TestHelper.pm
 t/pod_coverage.t
 t/pod_syntax.t
+t/SMOKE.PL
 t/sql/cart_create_table.sql
 t/sql/cart_fake_data.sql
 t/TEST.PL
-t/SMOKE.PL
 t/xsp_cart.t
 Todo
