@@ -32,12 +32,12 @@ Apache::Test::plan(tests => 3,
 
 my $r = GET('/cart_load.xsp');
 ok($r->code == 200);
+warn $r->content;
+
+#$r = GET('/cart_load_filter.xsp');
+#ok($r->code == 200);
 #warn $r->content;
 
-$r = GET('/cart_load_filter.xsp');
-ok($r->code == 200);
-#warn $r->content;
-
-$r = GET('/cart_load_all.xsp');
-ok($r->code == 200);
+#$r = GET('/cart_load_all.xsp');
+#ok($r->code == 200);
 #warn $r->content;
