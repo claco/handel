@@ -1,5 +1,7 @@
 #!perl -wT
 # $Id$
+use strict;
+use warnings;
 use Test::More;
 use lib 't/lib';
 use Handel::TestHelper;
