@@ -1,6 +1,12 @@
 Revision history for Perl module Handel
 
-0.06 Sub Feb 20 20:15:36 2005
+0.07 Mon Feb 21 22:01:13 2005
+    - Added Makefile.PL Apache::Test -defines for AxKit/TT2
+    - Changed extra.conf.in to use IfModule/IfDefine
+    - Moved xsp tests in axkit subdirectory
+    - Created TT2 test structure and directories
+
+0.06 Sun Feb 20 20:15:36 2005
     - Added cart:restore to AxKit::XSP::Handel::Cart
     - Added cart:restore XSP tests
 
@@ -8,7 +14,7 @@ Revision history for Perl module Handel
     - Added RETURNAS constants
     - Changed load/items to use RETRUNAS constants
     - Added workaround to wantarray problems under TT2
-    - slight sytax change to Template::Plugin::Handel::Cart API
+    - Slight sytax change to Template::Plugin::Handel::Cart API
     - Added Template::Plugin::Handel::Constants
 
 0.04 Thur Feb 17 22:11:35 2005
