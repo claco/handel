@@ -1,5 +1,11 @@
 Revision history for Perl module Handel
 
+0.02_Sat Feb 12 10:42:27 2005
+    - Completed rewrite of Axit::XSP::Handel::Cart
+    - Changed Handel::L10N::translate to always get_handle
+    - Added t/TEST.PL to MANIFEST
+    - Add Apache::Test SMOKE t/SMOKE.PL
+
 0.01_09 Tue Feb 08 18:21:37 2005
     - Added new generic Handel::Exception::Taglib exception
     - Added missing Makefile.PL from MANIFEST
