@@ -1,0 +1,74 @@
+/* $Id$ */
+body {
+	font-family: Verdana, Arial, Helvetica, Geneva, sans-serif;
+	font-size: 74%;
+}
+h1 {
+	font-size: 1.7em;
+	font-weight: normal;
+}
+h2 {
+	font-size: 1.4em;
+	font-weight: normal;
+}
+p {
+	font-size: 1.0em;
+	line-height: 155%;
+}
+#container {
+	width: 750px;
+	margin: 25px auto 35px auto;
+}
+#header ul {
+	background: #000000;
+	padding: 2px 12px 4px 0;
+	margin: 0;
+	text-align: right;
+}
+#header li {
+	list-style: none;
+	display: inline;
+	padding-left: 12px;
+}
+#header li a {
+	color: #ffffff;
+	font-size: 0.8em;
+	text-transform: lowercase;
+}
+#header h2 {
+	background-color: #336699;
+	color: #ffffff;
+	padding: 3px 0 4px 6px;
+	margin: 0;
+	font-size: 1.2em;
+	font-weight: normal;
+	letter-spacing: 2px;
+}
+#contents h2 {
+	font-size: 1.2em;
+	font-weight: bold;
+}
+#contents p {
+	font-size: 0.9em;
+}
+#contents form {
+	margin-bottom: 45px;
+}
+#contents input {
+	font-size: 1.0em;
+}
+#cart {
+	border: 1px solid black;
+	width: 100%;
+}
+#cart th {
+	text-align: left;
+}
+#cart td {
+	vertical-align: top;
+}
+#footer {
+	font-size: 0.8em;
+	color: #555555;
+	padding: 3px;
+}

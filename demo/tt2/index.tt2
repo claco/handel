@@ -1,0 +1,5 @@
+[%# $Id$ %]
+[% META title='Home' %]
+[% INCLUDE header.tt2 %]
+
+[% INCLUDE footer.tt2 %]

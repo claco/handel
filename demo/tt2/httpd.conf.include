@@ -1,0 +1,27 @@
+# $Id$
+# Don't forget to change DocumentRoot, ErrorLog, db_name
+# and 'use lib' to match your system setup!!!!!
+
+PerlModule Apache::Template
+
+Listen 9002
+
+<VirtualHost *:9002>
+	DocumentRoot	C:\Development\CPAN\Handel\demo\tt2
+	ErrorLog		C:\Development\CPAN\Handel\demo\tt2\errors.log
+	DirectoryIndex	index.tt2
+
+	<Perl>
+		use lib 'C:\Development\CPAN\Handel\lib';
+	</Perl>
+
+	TT2Trim			On
+	TT2IncludePath	C:\Development\CPAN\Handel\demo\tt2\includes
+	PerlSetVar		db_name				C:\Development\CPAN\Handel\demo\cart.db
+	PerlSetVar		db_driver			"SQLite"
+
+	<Files *.tt2>
+        SetHandler	perl-script
+        PerlHandler	Apache::Template
+	</Files>
+</VirtualHost>

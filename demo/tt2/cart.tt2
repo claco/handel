@@ -1,0 +1,86 @@
+[%# $Id$ %]
+[% META title='Shopping Cart' %]
+[% INCLUDE header.tt2 %]
+	[% USE CGI %]
+	[% USE cart  = Handel.Cart %]
+
+	[% shopper = CGI.cookie('shopper') %]
+	[% UNLESS shopper %]
+		[% shopper = cart.uuid %]
+		[% cookie = CGI.cookie('-name', 'shopper', '-value', shopper, '-expires', '+1y') %]
+		[% CGI.header('-cookie', cookie) %]
+	[% END %]
+
+	[% UNLESS cart.fetch(shopper = shopper) %]
+		[% UNLESS cart.create(shopper = shopper) %]
+			<p class="error">Could not create new shopping cart.</p>
+		[% END %]
+	[% END %]
+
+	[% IF cart.fetch(shopper = shopper, type = 0) %]
+		[% IF CGI.param('action') == 'add' %]
+			[% CALL cart.add(
+				sku=CGI.param('sku'),
+				description=CGI.param('description'),
+				price=CGI.param('price'),
+				quantity=CGI.param('quantity')
+			) %]
+		[% ELSIF CGI.param('action') == 'delete' %]
+			[% CALL cart.delete(id=CGI.param('id')) %]
+		[% ELSIF CGI.param('action') == 'update' %]
+			[% item = cart.items(id=CGI.param('id')) %]
+			[% IF item %]
+				[% CALL item.quantity(CGI.param('quantity')) %]
+				[% CALL item.update %]
+			[% END %]
+		[% END %]
+		[% IF cart.count > 0 %]
+			<table id="cart" border="1">
+				<tr>
+					<th>SKU</th>
+					<th>Description</th>
+					<th>Price</th>
+					<th>Quantity</th>
+					<th>Total</th>
+					<th></th>
+				</tr>
+				[% FOREACH item = cart.items %]
+					<tr>
+						<td>
+							<a href="products.tt2#[% item.sku %]" title="Read more about [% item.sku %]">[% item.sku %]</a>
+						</td>
+						<td>[% item.description %]</td>
+						<td>[% item.price %]</td>
+						<td>
+							<form action="cart.tt2" method="post">
+								<input type="hidden" name="action" value="update"/>
+								<input type="hidden" name="id" value="[% item.id %]"/>
+								<input type="text" name="quantity" size="3" value="[% item.quantity %]"/>
+							</form>
+						</td>
+						<td>[% item.total %]</td>
+						<td>
+							<form action="cart.tt2" method="post">
+								<input type="hidden" name="action" value="delete"/>
+								<input type="hidden" name="id" value="[% item.id %]"/>
+								<input type="submit" value="Delete"/>
+							</form>
+						</td>
+					</tr>
+				[% END %]
+				<tr>
+					<td colspan="4">Subtotal</td>
+					<td>[% cart.subtotal %]</td>
+					<td></td>
+				</tr>
+			</table>
+		[% ELSE %]
+			<p class="warning">Your shopping cart is empty.</p>
+		[% END %]
+	[% ELSE %]
+		<p class="error">
+			Your shopping cart could not be found.
+		</p>
+	[% END %]
+
+[% INCLUDE footer.tt2 %]

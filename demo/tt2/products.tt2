@@ -1,0 +1,62 @@
+[%# $Id$ %]
+[% META title='Products' %]
+[% INCLUDE header.tt2 %]
+
+	<h2 id="SKU123">Item 1</h2>
+	<p>
+		Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Integer felis.
+		Nam scelerisque feugiat tortor. Integer aliquam semper odio. Nunc velit
+		lacus, elementum id, facilisis viverra, mollis in, neque. Integer vel
+		lectus. Sed ac turpis quis velit vehicula fermentum. Phasellus lobortis
+		est non leo. Sed aliquet dui eu orci. Etiam ligula lectus, imperdiet
+		vitae, pulvinar vitae, placerat at, pede. Vivamus lectus. Nam vel eros
+		nec odio commodo consequat. Vivamus vel urna at lacus cursus blandit.
+		Suspendisse at lacus sed mi luctus ultricies. Aliquam vehicula dapibus
+		orci. In hac habitasse platea dictumst.
+	</p>
+	<form action="cart.tt2" method="post">
+		<input type="hidden" name="action" value="add"/>
+		<input type="hidden" name="sku" value="SKU123"/>
+		<input type="hidden" name="description" value="Lorem ipsum dolor sit amet"/>
+		<input type="hidden" name="price" value="1.11"/>
+		<input type="text" name="quantity" value="1" size="3"/>
+		<input type="submit" value="Add To Cart"/>
+	</form>
+	<h2 id="SKU345">Item 2</h2>
+	<p>
+		Ut pellentesque fringilla mauris. Vivamus ullamcorper condimentum ligula.
+		Vestibulum orci. Cras condimentum est sit amet justo. Curabitur facilisis.
+		Ut rhoncus, lacus condimentum congue scelerisque, elit metus posuere libero,
+		a facilisis magna massa ut mauris. Donec lacus. Maecenas consectetuer tincidunt
+		diam. Donec gravida tortor ac ante. Maecenas ac wisi. Cras nec justo quis lectus
+		rutrum pretium. Nunc feugiat egestas diam. Morbi fermentum ipsum eu quam.
+		Praesent venenatis scelerisque mi. Fusce dictum, enim vitae feugiat posuere,
+		magna felis porta wisi, quis lobortis sem tortor eget lacus. Mauris vel elit.
+	</p>
+	<form action="cart.tt2" method="post">
+		<input type="hidden" name="action" value="add"/>
+		<input type="hidden" name="sku" value="SKU345"/>
+		<input type="hidden" name="description" value="Ut pellentesque fringilla mauris"/>
+		<input type="hidden" name="price" value="2.22"/>
+		<input type="text" name="quantity" value="1" size="3"/>
+		<input type="submit" value="Add To Cart"/>
+	</form>
+	<h2 id="SKU456">Item 3</h2>
+	<p>
+		Phasellus vel dolor et nibh laoreet pellentesque. Pellentesque wisi. Duis
+		nonummy nulla non urna. Nunc sed quam. Vivamus ullamcorper, ligula ac vulputate
+		hendrerit, ipsum mi molestie metus, id gravida pede eros rutrum purus. Suspendisse
+		ornare, wisi a scelerisque venenatis, nisl diam pulvinar tellus, ac laoreet eros
+		purus sit amet dui. Vestibulum porta ante id magna. Donec turpis leo, aliquet eget,
+		hendrerit vel, ornare eget, purus.
+	</p>
+	<form action="cart.tt2" method="post">
+		<input type="hidden" name="action" value="add"/>
+		<input type="hidden" name="sku" value="SKU456"/>
+		<input type="hidden" name="description" value="Phasellus vel dolor et nibh laoreet pellentesque"/>
+		<input type="hidden" name="price" value="3.33"/>
+		<input type="text" name="quantity" value="1" size="3"/>
+		<input type="submit" value="Add To Cart"/>
+	</form>
+
+[% INCLUDE footer.tt2 %]

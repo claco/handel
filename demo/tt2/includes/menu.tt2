@@ -1,0 +1,6 @@
+[%# $Id$ %]
+<ul>
+	<li><a href="index.tt2">Home</a></li>
+	<li><a href="products.tt2">Products</a></li>
+	<li><a href="cart.tt2">View Cart</a></li>
+</ul>

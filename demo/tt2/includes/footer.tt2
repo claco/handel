@@ -1,0 +1,11 @@
+[%# $Id$ %]
+			</div>
+			<div id="footer">
+				<p>
+					Copyright &#169; 2005 Foo Bar Baz. All rights wronged.  Batteries not included.
+					This demo site is part of the <a href="http://search.cpan.org/search?query=Handel&amp;mode=distribution">Handel</a> software distribution.
+				</p>
+			</div>
+		</div>
+	</body>
+</html>
