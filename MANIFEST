@@ -19,6 +19,7 @@ t/basic.t
 t/cart_add.t
 t/cart_clear.t
 t/cart_delete.t
+t/cart_item_new.t
 t/cart_items.t
 t/cart_iterator.t
 t/cart_load.t
