@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<?xml-stylesheet href="NULL" type="application/x-xsp"?>
+<?xml-stylesheet href="style/xsl/cart.xsl" type="text/xsl" media="all"?>
+<?xml-stylesheet href="style/xsl/to_xhtml.xsl" type="text/xsl" media="screen"?>
+<!DOCTYPE page [
+	<!ENTITY menu SYSTEM "includes/menu.xml">
+	<!ENTITY footer SYSTEM "includes/footer.xml">
+	<!ENTITY title "Shopping Cart">
+]>
+<xsp:page
+	xmlns:xsp="http://apache.org/xsp/core/v1"
+	xmlns:cart="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart"
+	xmlns:cookie="http://axkit.org/NS/xsp/cookie/v1"
+	xmlns:param="http://axkit.org/NS/xsp/param/v1"
+>
+	<xsp:structure>
+		<xsp:logic>
+			my $uuid;
+		</xsp:logic>
+	</xsp:structure>
+	<page>
+		<title>&title;</title>
+		<body>
+			<div id="container">
+				<div id="header">
+					<h1>Handel: Shopping Cart Demo</h1>
+					&menu;
+					<h2>&title;</h2>
+				</div>
+				<div id="contents">
+					<xsp:logic>
+						$uuid = <cookie:fetch name="shopper"/>;
+						if (!$uuid) {
+							$uuid = <cart:uuid/>;
+							<cookie:create name="shopper"><cookie:value><xsp:expr>$uuid</xsp:expr></cookie:value></cookie:create>
+							<cart:new>
+								<cart:shopper><xsp:expr>$uuid</xsp:expr></cart:shopper>
+								<cart:no-results>
+									<p class="error">Could not create new shopping cart.</p>
+								</cart:no-results>
+							</cart:new>
+						};
+					</xsp:logic>
+					<cart:cart type="0">
+						<cart:filter name="shopper"><xsp:expr>$uuid</xsp:expr></cart:filter>
+						<cart:results>
+							<xsp:logic>
+								if (<param:action/> eq 'add') {
+									<cart:add>
+										<cart:sku><param:sku/></cart:sku>
+										<cart:description><param:description/></cart:description>
+										<cart:quantity><param:quantity/></cart:quantity>
+										<cart:price><param:price/></cart:price>
+									</cart:add>
+								} elsif (<param:action/> eq 'delete') {
+									<cart:delete>
+										<cart:id><param:id/></cart:id>
+									</cart:delete>
+								} elsif (<param:action/> eq 'update') {
+									<cart:item>
+										<cart:filter name="id"><param:id/></cart:filter>
+										<cart:results>
+											<cart:update>
+												<cart:quantity><param:quantity/></cart:quantity>
+											</cart:update>
+										</cart:results>
+									</cart:item>
+								};
+							</xsp:logic>
+							<cart>
+								<cart:items>
+									<cart:results>
+										<item>
+											<id><cart:id/></id>
+											<sku><cart:sku/></sku>
+											<description><cart:description/></description>
+											<price><cart:price/></price>
+											<quantity><cart:quantity/></quantity>
+											<total><cart:price/></total>
+										</item>
+									</cart:results>
+								</cart:items>
+								<subtotal><cart:subtotal/></subtotal>
+							</cart>
+						</cart:results>
+						<cart:no-results>
+							<p class="error">
+								Your shopping cart could not be found.
+							</p>
+						</cart:no-results>
+					</cart:cart>
+				</div>
+				<div id="footer">
+					&footer;
+				</div>
+			</div>
+		</body>
+	</page>
+</xsp:page>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<ul>
+	<li><a href="index.xsp">Home</a></li>
+	<li><a href="products.xsp">Products</a></li>
+	<li><a href="cart.xsp">View Cart</a></li>
+</ul>

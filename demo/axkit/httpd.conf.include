@@ -1,0 +1,33 @@
+# $Id$
+# Don't forget to change DocumentRoot, ErrorLog, db_name
+# and 'use lib' to match your system setup!!!!!
+
+PerlModule AxKit
+
+<VirtualHost *:80>
+	DocumentRoot	C:\Development\CPAN\Handel\demo\axkit
+	ErrorLog		C:\Development\CPAN\Handel\demo\axkit\errors.log
+	DirectoryIndex	index.xsp
+
+	<Perl>
+		use lib 'C:\Development\CPAN\Handel\lib';
+	</Perl>
+
+	AxNoCache		On
+	AxLogDeclines	On
+	AxDebugLevel	10
+	AxStackTrace	On
+	PerlSetVar		db_name				C:\Development\CPAN\Handel\demo\axkit\cart.db
+	PerlSetVar		db_driver			"SQLite"
+
+	AxAddProcessor	application/x-xsp	.
+	AxAddStyleMap	application/x-xsp	Apache::AxKit::Language::XSP
+	AxAddStyleMap	text/xsl			Apache::AxKit::Language::LibXSLT
+	AxAddXSPTaglib	AxKit::XSP::Handel::Cart
+	AxAddXSPTaglib	AxKit::XSP::Cookie
+	AxAddXSPTaglib	AxKit::XSP::Param
+
+	<Files *.xsp>
+		SetHandler AxKit
+	</Files>
+</VirtualHost>
