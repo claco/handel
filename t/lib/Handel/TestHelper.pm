@@ -1,8 +1,13 @@
-# $Id: TestHelper.pm 4 2004-12-28 03:01:15Z claco $
+# $Id$
 package Handel::TestHelper;
 use strict;
 use warnings;
 use DBI;
+use FileHandle;
+use vars qw(@EXPORT_OK);
+use base 'Exporter';
+
+@EXPORT_OK = qw(executesql comp_to_file);
 
 sub executesql {
     my ($db, $sqlfile) = @_;
@@ -17,6 +22,32 @@ sub executesql {
     close SQL;
     $dbh->disconnect;
     undef $dbh;
+};
+
+sub comp_to_file {
+    my ($string, $file) = @_;
+
+    return 0 unless $string && $file && -e $file && -r $file;
+
+    $string =~ s/\n//g;
+    $string =~ s/\s//g;
+    $string =~ s/\t//g;
+
+    my $fh = FileHandle->new("<$file");
+    if (defined $fh) {
+        local $/ = undef;
+        my $contents = <$fh>;
+        $contents =~ s/\n//;
+        $contents =~ s/\s//;
+        $contents =~ s/\t//;
+        undef $fh;
+
+        if ($string eq $contents) {
+           return 1;
+        };
+    };
+
+    return 0;
 };
 
 1;
