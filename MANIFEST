@@ -51,6 +51,10 @@ t/htdocs/cart_cart_item.xsp
 t/htdocs/cart_cart_item_filtered.xsp
 t/htdocs/cart_cart_item_filtered_no_results.xsp
 t/htdocs/cart_cart_item_update.xsp
+t/htdocs/cart_cart_items.xsp
+t/htdocs/cart_cart_items_filtered.xsp
+t/htdocs/cart_cart_items_filtered_no_results.xsp
+t/htdocs/cart_cart_items_update.xsp
 t/htdocs/cart_cart_no_results.xsp
 t/htdocs/cart_cart_save.xsp
 t/htdocs/cart_cart_update.xsp
@@ -62,6 +66,10 @@ t/htdocs/cart_carts_delete.xsp
 t/htdocs/cart_carts_delete_filtered.xsp
 t/htdocs/cart_carts_filtered.xsp
 t/htdocs/cart_carts_filtered_no_results.xsp
+t/htdocs/cart_carts_item.xsp
+t/htdocs/cart_carts_item_filtered.xsp
+t/htdocs/cart_carts_item_filtered_no_results.xsp
+t/htdocs/cart_carts_item_update.xsp
 t/htdocs/cart_carts_no_results.xsp
 t/htdocs/cart_carts_save.xsp
 t/htdocs/cart_carts_update.xsp
@@ -81,6 +89,10 @@ t/htdocs/out/cart_cart_item.xsp.out
 t/htdocs/out/cart_cart_item_filtered.xsp.out
 t/htdocs/out/cart_cart_item_filtered_no_results.xsp.out
 t/htdocs/out/cart_cart_item_update.xsp.out
+t/htdocs/out/cart_cart_items.xsp.out
+t/htdocs/out/cart_cart_items_filtered.xsp.out
+t/htdocs/out/cart_cart_items_filtered_no_results.xsp.out
+t/htdocs/out/cart_cart_items_update.xsp.out
 t/htdocs/out/cart_cart_no_results.xsp.out
 t/htdocs/out/cart_cart_save.xsp.out
 t/htdocs/out/cart_cart_update.xsp.out
@@ -92,6 +104,10 @@ t/htdocs/out/cart_carts_delete.xsp.out
 t/htdocs/out/cart_carts_delete_filtered.xsp.out
 t/htdocs/out/cart_carts_filtered.xsp.out
 t/htdocs/out/cart_carts_filtered_no_results.xsp.out
+t/htdocs/out/cart_carts_item.xsp.out
+t/htdocs/out/cart_carts_item_filtered.xsp.out
+t/htdocs/out/cart_carts_item_filtered_no_results.xsp.out
+t/htdocs/out/cart_carts_item_update.xsp.out
 t/htdocs/out/cart_carts_no_results.xsp.out
 t/htdocs/out/cart_carts_save.xsp.out
 t/htdocs/out/cart_carts_update.xsp.out
