@@ -10,7 +10,7 @@ __END__
 
 =head1 NAME
 
-Handel - Simple commerce framework with AxKit support
+Handel - Simple commerce framework with AxKit/TT2 support
 
 =head1 VERSION
 
@@ -19,9 +19,9 @@ Handel - Simple commerce framework with AxKit support
 =head1 DESCRIPTION
 
 Handel is a quick and not-so-dirty ecommerce framework with L<AxKit> taglib
-support. It was started for the conversion of an IIS/ASP based commerce site to
-Apache/ModPerl, but I decided that is might be useful to others so here it is
-on CPAN.
+support and TT2 (template Toolkit) support. It was started for the conversion
+of an IIS/ASP based commerce site to Apache/ModPerl, but I decided that is
+might be useful to others so here it is on CPAN.
 
 For the curious, Handel is German for commerce.
 
