@@ -9,7 +9,9 @@ sub new {
     my $self = bless {_CONTEXT => $context}, ref($class) || $class;
 
     foreach my $const (@Handel::Constants::EXPORT_OK) {
-        $self->{$const} = Handel::Constants->$const;
+        if ($const =~ /^[A-Z]{1}/) {
+            $self->{$const} = Handel::Constants->$const;
+        };
     };
 
     return $self;
