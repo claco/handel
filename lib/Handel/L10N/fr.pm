@@ -25,6 +25,9 @@ BEGIN {
     "Required modules not found" =>
         "Modules requis non trouvés",
 
+    "The quantity requested ([_1]) is greater than the maximum quantity allowed ([_2])" =>
+        "La quantité a demandé ([_1]) est plus grande que la quantité maximum a permis ([_2])",
+
     ## param 1 violations
     "Param 1 is not a HASH reference" =>
         "Le param 1 n'est pas une référence d'cInformations PARASITES",
