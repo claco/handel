@@ -66,7 +66,8 @@ my @tests = (
     'cart_currency_format.xsp',
 );
 
-use Apache::TestUtil;
+require Apache::TestUtil;
+Apache::TestUtil->import(qw(t_debug));
 Apache::TestRequest->import(qw(GET));
 Apache::Test::plan(tests => ((scalar @tests * 2) + 2),
     need('AxKit', 'mod_perl', need_apache(1), need_lwp())
