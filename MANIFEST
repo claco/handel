@@ -134,5 +134,6 @@ t/pod_coverage.t
 t/pod_syntax.t
 t/sql/cart_create_table.sql
 t/sql/cart_fake_data.sql
+t/TEST.PL
 t/xsp_cart.t
 Todo
