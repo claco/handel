@@ -1,27 +1,33 @@
 Revision history for Perl module Handel
 
+0.01_05 Fri Dec 31 12:36:25 2004
+    - Fixed failed pod coverage test when Pod::Coverage < 0.14
+    - Fixed l10n.t failures on perl <= 5.7.0 (use utf8)
+    - Added simple cart item tests
+    - Added REQUIREMENTS to Handel pod
+
 0.01_04 Thur Dec 30 19:05:25 2004
-	- Added simple L10N tests
-	- Added simple exception tests
-	- Fixed =head1 SYNOPSIS in Handel::DBI
-	- Translated exception details in cart/cart item, and dbi modules
-	- Added strict/warnings to all tests
-	- Set NO_META in makefile and maintain META.yml manually
-	- Added license type to META.yml
+    - Added simple L10N tests
+    - Added simple exception tests
+    - Fixed =head1 SYNOPSIS in Handel::DBI
+    - Translated exception details in cart/cart item, and dbi modules
+    - Added strict/warnings to all tests
+    - Set NO_META in makefile and maintain META.yml manually
+    - Added license type to META.yml
 
 0.01_03 Wed Dec 29 18:40:37 2004
-	- Changed cart restore to deal with multiple saved carts
-	- Added cart restore w/filter tests
-	- Rearranged constants alphabetically :-)
-	- Finished pod for existing modules
-	- Removed leftover 'fr' from Exceptions get_handle
-	- Added VERSION to all pod
-	- Added *.db to MANIFEST.SKIP
+    - Changed cart restore to deal with multiple saved carts
+    - Added cart restore w/filter tests
+    - Rearranged constants alphabetically :-)
+    - Finished pod for existing modules
+    - Removed leftover 'fr' from Exceptions get_handle
+    - Added VERSION to all pod
+    - Added *.db to MANIFEST.SKIP
 
 0.01_02 Tue Dec 28 22:18:14 2004
-	- Added Handel::Cart pod
-	- Completed cart restore/merge tests
-	- Changed tests to set Handel::DBI->connection
+    - Added Handel::Cart pod
+    - Completed cart restore/merge tests
+    - Changed tests to set Handel::DBI->connection
 
 0.01_01 Mon Dec 27 21:47:04 2004
     - Initial alpha release
