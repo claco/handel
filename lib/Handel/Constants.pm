@@ -82,7 +82,7 @@ below to export all or only certain groups of constants.
 
 All items in the saved cart will be appended to the list of items in the current
 cart. No effort will be made to merge items with the same SKU and duplicates
-will be ignored.
+will be left as seperate items.
 
 =head2 C<CART_MODE_MERGE>
 
