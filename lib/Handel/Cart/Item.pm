@@ -1,4 +1,3 @@
-# $Id: Item.pm 4 2004-12-28 03:01:15Z claco $
 package Handel::Cart::Item;
 use strict;
 use warnings;
@@ -12,6 +11,7 @@ __PACKAGE__->table('cart_items');
 __PACKAGE__->autoupdate(0);
 __PACKAGE__->iterator_class('Handel::Iterator');
 __PACKAGE__->columns( All => qw(id cart sku quantity price description) );
+__PACKAGE__->columns( Essential => qw(id cart sku quantity price description) );
 __PACKAGE__->add_constraint( 'quantity', quantity => \&constraint_quantity );
 __PACKAGE__->add_constraint( 'price',    price    => \&constraint_price );
 __PACKAGE__->add_constraint( 'id',       id       => \&constraint_uuid );
@@ -40,17 +40,70 @@ __END__
 
 =head1 NAME
 
-Handel::Cart::Item - Cart Item
+Handel::Cart::Item - Module representing an indivudal shopping cart line item
+
+=head1 VERSION
+
+    $Id$
+
+=head1 SYNOPSIS
+
+    use Handel::Cart::Item;
+
+    my $item = Handel::Cart::Item->new({
+        sku => '1234',
+        price => 1.23,
+        quantity => 1
+    });
+
+    $cart->add($item);
+
+=head1 DESCRIPTION
+
+C<Handel::Cart::Item> is used in two main ways. First, you can create new line
+items and add them to an existing cart object:
+
+    use Handel::Cart::Item;
+
+    my $item = Handel::Cart::Item->new({
+        sku => '1234',
+        price => 1.23,
+        quantity => 1
+    });
+
+    $cart->add($item);
+
+Second, the C<items> method of any valid C<Handel::Cart> object returns a
+collection of C<Handel::Cart::Item> objects:
+
+    my @items = $cart->items;
+    foreach (@items) {
+        print $_->sku;
+    };
+
+=head1 CONSTRUCTOR
+
+You can create a new C<Handel::Cart::Item> object by call the C<new> method:
+
+    my $item = Handel::Cart::Item->new({
+        sku => '1234',
+        price => 1.23,
+        quantity => 1
+    });
+
+This is a lazy operation. No actual item record is created until the item object
+is passed into the carts C<add> method.
 
 =head1 METHODS
 
-=over
+=head2 C<$item-E<gt>total>
 
-=item C<new>
+Returns the total price for the cart item. This is really just quantity*total
+and is provided for convenience.
 
-=item C<total>
+=head1 SEE ALSO
 
-=back
+L<Handel::Cart>
 
 =head1 AUTHOR
 
@@ -58,3 +111,7 @@ Handel::Cart::Item - Cart Item
     CPAN ID: CLACO
     cpan@chrislaco.com
     http://today.icantfocus.com/blog/
+
+
+
+
