@@ -13,7 +13,7 @@
 			<cart:type>0</cart:type>
 			<cart:results>
 				<cart:add id="14E451AF-198E-4043-BEA1-5D2058A7B96F" sku="SKU1" price="1.11" quantity="1" description="Description 1"/>
-				<cart:add id="3BA3434A-183D-4E17-BA91-0EA15CD35F73" sku="SKU2" price="2.22" quantity="2" description="Description 1"/>
+				<cart:add id="3BA3434A-183D-4E17-BA91-0EA15CD35F73" sku="SKU2" price="2.22" quantity="2" description="Description 2"/>
 			</cart:results>
 			<cart:no-results>
 				<message>Error creating shopping cart</message>
