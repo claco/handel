@@ -5,7 +5,7 @@
 ^blib/
 ^pm_to_blib
 ^MakeMaker-\d
-Makefile
+Makefile$
 \.db
-t/TEST
+t/TEST$
 ^blibdirs\.ts
