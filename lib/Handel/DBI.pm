@@ -84,27 +84,34 @@ sub has_wildcard {
 };
 
 sub uuid {
-    my ($uuid, $uuidstring);
+    my $uuidstring = '';
 
-    eval {require UUID};
-    if (!$@) {
+    if (eval{require UUID}) {
+        my $uuid;
         UUID::generate($uuid);
         UUID::unparse($uuid, $uuidstring);
+    } elsif (eval{require Data::UUID}) {
+        my $ug = Data::UUID->new;
+        my $uuid = $ug->create;
+        $uuidstring = $ug->to_string($uuid);
+    } elsif (eval{
+            # for some reason 'no warnings' won't squelch
+            # the 'too late for INIT' warning in Win32::API::Type
+            local $^W = 0;
+            require Win32::Guidgen;
+        }) {
+        $uuidstring = Win32::Guidgen::create();
+    } elsif (eval{require Win32API::GUID}) {
+        $uuidstring = Win32API::GUID::CreateGuid();
+    } else {
+        throw Handel::Exception(
+            -text => 'Required modules not found',
+            -details => 'UUID/Data::UUID'
+        );
     };
 
-    if (!$uuidstring) {
-        eval {require Data::UUID};
-        if (!$@) {
-            my $ug = Data::UUID->new;
-            $uuid = $ug->create;
-            $uuidstring = $ug->to_string($uuid);
-        } else {
-            throw Handel::Exception(
-                -text => 'Required modules not found',
-                -details => 'UUID/Data::UUID',
-            );
-        };
-    };
+    $uuidstring =~ s/^{//;
+    $uuidstring =~ s/}$//;
 
     return uc($uuidstring);
 };
@@ -121,6 +128,10 @@ Handel::DBI - Base DBI class used by cart/order objects
     use Handel::DBI;
 
     my $newid = Handel::DBI::uuid;
+    my $newid = Handel::DBI->uuid;
+    my $newid = Handel::Cart->uuid;
+    my $newid = Handel::Cart::Item->uuid;
+    ..etc...
 
 =head1 VERSION
 
@@ -135,7 +146,9 @@ shouldn't be and reason to use this module directly for now.
 
 =head2 C<uuid>
 
-Returns a guid/uuid using L<UUID> or L<Data::UUID> depending on the platform.
+Returns a guid/uuid using the first available uuid generation module.
+The support modules are L<UUID>, L<Data::UUID>, L<Win32::Guidgen>, and
+L<Win32API::GUID>.
 
     use Handel::DBI;
 
@@ -195,12 +208,14 @@ The password used to connect to the server. Defaults to C<commerce>.
 
 =back
 
+For now, these can either be set in C<ENV>, or using PerlSetVar in C<httpd.conf>.
+
 At some point, this needs to be reworked into a more generic config loader so we
 can use $ENV, httpd.conf directives, of config files, etc.
 
 =head1 SEE ALSO
 
-L<UUID>, L<Data::UUID>
+L<UUID>, L<Data::UUID>, L<Win32::Guidgen>, L<Win32API::GUID>
 
 =head1 AUTHOR
 
@@ -208,13 +223,3 @@ L<UUID>, L<Data::UUID>
     CPAN ID: CLACO
     cpan@chrislaco.com
     http://today.icantfocus.com/blog/
-
-
-
-
-
-
-
-
-
-
