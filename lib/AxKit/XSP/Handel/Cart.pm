@@ -2,17 +2,16 @@
 package AxKit::XSP::Handel::Cart;
 use strict;
 use warnings;
-use vars qw(@ISA $NS);
-use Apache::AxKit::Language::XSP;
+use vars qw($NS);
+use base 'Apache::AxKit::Language::XSP';
 
-@ISA = ('Apache::AxKit::Language::XSP');
 $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
 
 {
-    my @context;
+    my @context = 'root';
 
     sub start_document {
-        return '';
+        return "use AxKit::XSP::Handel::Cart;\n";
     };
 
     sub parse_char {
@@ -24,11 +23,21 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
     sub parse_start {
         my ($e, $tag, %attr) = @_;
 
+        ## cart:new
+        if ($tag eq 'new') {
+
+        };
+
         return '';
     };
 
     sub parse_end {
         my ($e, $tag) = @_;
+
+        ## cart:new
+        if ($tag eq 'new') {
+
+        };
 
         return '';
     };
