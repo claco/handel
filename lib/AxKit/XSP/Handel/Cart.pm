@@ -3,6 +3,8 @@ package AxKit::XSP::Handel::Cart;
 use strict;
 use warnings;
 use vars qw($NS);
+use Handel::Exception;
+use Handel::L10N qw(translate);
 use base 'Apache::AxKit::Language::XSP';
 
 $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
@@ -11,21 +13,230 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
     my @context = 'root';
 
     sub start_document {
-        return "use AxKit::XSP::Handel::Cart;\n";
+        return "use Handel::Cart;\n";
     };
 
     sub parse_char {
         my ($e, $text) = @_;
+        my $tag = $e->current_element();
 
+        if ($tag =~ /^(description|id|name|shopper|type)$/) {
+            if ($context[$#context] eq 'new') {
+                return "q|$text|";
+            } elsif ($context[$#context] eq 'new') {
+                return "q|$text|";
+            } elsif ($context[$#context] eq 'add') {
+                return "q|$text|";
+            } elsif ($context[$#context] eq 'delete') {
+                return "q|$text|";
+            };
+        } elsif ($tag =~ /^(sku|price|quantity)$/) {
+            if ($context[$#context] eq 'add') {
+                return "q|$text|";
+            } elsif ($context[$#context] eq 'delete') {
+                return "q|$text|";
+            };
+        } elsif ($tag eq 'filter') {
+            return "q|$text|";
+        };
         return '';
     };
 
     sub parse_start {
         my ($e, $tag, %attr) = @_;
 
+        AxKit::Debug(5, "[Handel] parse_start [$tag] context: " . join('->', @context));
+
         ## cart:new
         if ($tag eq 'new') {
+            throw Handel::Exception::Taglib(
+                -text => translate("Tag '[_1]' not valid inside of other Handel tags", $tag)
+            ) if ($context[$#context] ne 'root');
 
+            push @context, $tag;
+
+            my $code = "my \$_xsp_handel_cart_cart;\nmy \$_xsp_handel_cart_called_new;\n";
+            $code .= scalar keys %attr ?
+                'my %_xsp_handel_cart_new_filter = ("' . join('", "', %attr) . '");' :
+                'my %_xsp_handel_cart_new_filter;' ;
+
+            return "\n{\n$code\n";
+
+
+        ## cart:cart
+        } elsif ($tag eq 'cart') {
+            throw Handel::Exception::Taglib(
+                -text => translate("Tag '[_1]' not valid inside of other Handel tags", $tag)
+            ) if ($context[$#context] ne 'root');
+
+            push @context, $tag;
+
+            my $code = "my \$_xsp_handel_cart_cart;\nmy \$_xsp_handel_cart_called_load;\n";
+            $code .= scalar keys %attr ?
+                'my %_xsp_handel_cart_load_filter = ("' . join('", "', %attr) . '");' :
+                'my %_xsp_handel_cart_load_filter;' ;
+
+            return "\n{\n$code\n";
+
+
+        ## cart:clear
+        } elsif ($tag eq 'clear') {
+            throw Handel::Exception::Taglib(
+                -text => translate("Tag '[_1]' not valid here", $tag)
+            ) if ($context[$#context] ne 'results' || $context[$#context-1] !~ /^(cart(s?))$/);
+
+           return "\nwarn 'clearing';\$_xsp_handel_cart_cart->clear;\n";
+
+
+        ## cart:add
+        } elsif ($tag eq 'add') {
+            throw Handel::Exception::Taglib(
+                -text => translate("Tag '[_1]' not valid here", $tag)
+            ) if ($context[$#context] ne 'results' || $context[$#context-1] !~ /^(new|cart)$/);
+
+            push @context, $tag;
+
+            my $code = "my \$_xsp_handel_cart_item;\nmy \$_xsp_handel_cart_called_add;\n";
+            $code .= scalar keys %attr ?
+                'my %_xsp_handel_cart_add_filter = ("' . join('", "', %attr) . '");' :
+                'my %_xsp_handel_cart_add_filter;' ;
+
+            return "\n{\n$code\n";
+
+
+        ## cart:delete
+        } elsif ($tag eq 'delete') {
+            throw Handel::Exception::Taglib(
+                -text => translate("Tag '[_1]' not valid here", $tag)
+            ) if ($context[$#context] ne 'results' || $context[$#context-1] !~ /^(cart(s?))$/);
+
+            push @context, $tag;
+
+            my $code .= scalar keys %attr ?
+                'my %_xsp_handel_cart_delete_filter = ("' . join('", "', %attr) . '");' :
+                'my %_xsp_handel_cart_delete_filter;' ;
+
+            return "\n{\n$code\n";
+
+
+        ## cart property tags
+        ## cart:description, id, name, shopper, type, count, subtotal
+        } elsif ($tag =~ /^(description|id|name|shopper|type|count|subtotal)$/) {
+            if ($context[$#context] eq 'new' && $tag !~ /^(count|subtotal)$/) {
+                return "\n\$_xsp_handel_cart_new_filter{$tag} = ";
+            } elsif ($context[$#context] eq 'add' && $tag =~ /^(id|description)$/) {
+                return "\n\$_xsp_handel_cart_add_filter{$tag} = ";
+            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'new') {
+                $e->start_expr($tag);
+                $e->append_to_script("\$_xsp_handel_cart_cart->$tag;\n");
+            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'cart') {
+                $e->start_expr($tag);
+                $e->append_to_script("\$_xsp_handel_cart_cart->$tag;\n");
+            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'add') {
+                $e->start_expr($tag);
+                $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
+            } elsif ($context[$#context] eq 'delete' && $tag !~ /^(count|subtotal)$/) {
+                return "\n\$_xsp_handel_cart_delete_filter{$tag} = ";
+            };
+
+
+        ## cart item property tags
+        ## cart:sku, price, quantity, total
+        } elsif ($tag =~ /^(sku|price|quantity|total)$/) {
+            if ($context[$#context] eq 'add' && $tag ne 'total') {
+                return "\n\$_xsp_handel_cart_add_filter{$tag} = ";
+            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'add') {
+                $e->start_expr($tag);
+                $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
+            } elsif ($context[$#context] eq 'delete') {
+                return "\n\$_xsp_handel_cart_delete_filter{$tag} = ";
+            };
+
+
+        ## cart:filter
+        } elsif ($tag eq 'filter') {
+            my $key = $attr{'name'} || 'id';
+
+            if ($context[$#context] eq 'cart') {
+                return "\n\$_xsp_handel_cart_load_filter{'$key'} = ";
+            };
+
+
+        ## cart:results
+        } elsif ($tag eq 'results') {
+            throw Handel::Exception::Taglib(
+                -text => translate("Tag '[_1]' not valid here", $tag)
+            ) if ($context[$#context] !~ /^(new|add|cart(s?)|item(s?))$/);
+
+            push @context, $tag;
+
+            if ($context[$#context-1] eq 'new') {
+                return '
+                    if (!$_xsp_handel_cart_called_new && scalar keys %_xsp_handel_cart_new_filter) {
+                        $_xsp_handel_cart_cart = Handel::Cart->new(\%_xsp_handel_cart_new_filter);
+                        $_xsp_handel_cart_called_new = 1;
+                    };
+                    if ($_xsp_handel_cart_cart) {
+
+                ';
+            } elsif ($context[$#context-1] eq 'cart') {
+                return '
+                    if (!$_xsp_handel_cart_called_load) {
+                        $_xsp_handel_cart_cart = (scalar keys %_xsp_handel_cart_load_filter) ?
+                            Handel::Cart->load(\%_xsp_handel_cart_load_filter, 1)->next :
+                            Handel::Cart->load(undef, 1)->next;
+                            $_xsp_handel_cart_called_load = 1;
+                    };
+                    if ($_xsp_handel_cart_cart) {
+
+                ';
+            } elsif ($context[$#context-1] eq 'add') {
+                return '
+                    if (!$_xsp_handel_cart_called_add && scalar keys %_xsp_handel_cart_add_filter) {
+                        $_xsp_handel_cart_item = $_xsp_handel_cart_cart->add(\%_xsp_handel_cart_add_filter);
+                        $_xsp_handel_cart_called_add = 1;
+                    };
+                    if ($_xsp_handel_cart_item) {
+
+                ';
+            };
+
+
+        ## cart:no-results
+        } elsif ($tag eq 'no-results') {
+            throw Handel::Exception::Taglib(
+                -text => translate("Tag '[_1]' not valid here", $tag)
+            ) if ($context[$#context] !~ /^(new|add|cart(s?)|item(s?))$/);
+
+            push @context, $tag;
+
+            if ($context[$#context-1] eq 'new') {
+                return '
+                    if (!$_xsp_handel_cart_called_new && scalar keys %_xsp_handel_cart_new_filter) {
+                        $_xsp_handel_cart_cart = Handel::Cart->new(\%_xsp_handel_cart_new_filter);
+                        $_xsp_handel_cart_called_new = 1;
+                    };
+                    if (!$_xsp_handel_cart_cart) {
+                ';
+            } elsif ($context[$#context-1] eq 'cart') {
+                return '
+                    if (!$_xsp_handel_cart_called_load) {
+                        $_xsp_handel_cart_cart = (scalar keys %_xsp_handel_cart_load_filter) ?
+                            Handel::Cart->load(\%_xsp_handel_cart_load_filter, 1)->next :
+                            Handel::Cart->load(undef, 1)->next;
+                            $_xsp_handel_cart_called_load = 1;
+                    };
+                    if (!$_xsp_handel_cart_cart) {
+                ';
+            } elsif ($context[$#context-1] eq 'add') {
+                return '
+                    if (!$_xsp_handel_cart_called_add && scalar keys %_xsp_handel_cart_add_filter) {
+                        $_xsp_handel_cart_item = $_xsp_handel_cart_cart->add(\%_xsp_handel_cart_add_filter);
+                        $_xsp_handel_cart_called_add = 1;
+                    };
+                    if (!$_xsp_handel_cart_item) {
+                ';
+            };
         };
 
         return '';
@@ -34,9 +245,107 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
     sub parse_end {
         my ($e, $tag) = @_;
 
+        AxKit::Debug(5, "[Handel] parse_end [$tag] context: " . join('->', @context));
+
         ## cart:new
         if ($tag eq 'new') {
+            pop @context;
 
+            return "\n};\n";
+
+
+        ## cart:cart
+        } elsif ($tag eq 'cart') {
+            pop @context;
+
+            return "\n};\n";
+
+
+        ## cart:add
+        } elsif ($tag eq 'add') {
+            pop @context;
+
+            return "\n};\n";;
+
+
+        ## cart:delete
+        } elsif ($tag eq 'delete') {
+            pop @context;
+
+            return '
+                if (scalar keys %_xsp_handel_cart_delete_filter) {
+                    $_xsp_handel_cart_cart->delete(\%_xsp_handel_cart_delete_filter);
+                };
+            };
+            ';
+
+        ## cart propery tags
+        ## cart:description, id, name, shopper, type, count, subtotal
+        } elsif ($tag =~ /^(description|id|name|shopper|type|count|subtotal)$/) {
+            if ($context[$#context] eq 'new' && $tag !~ /^(count|subtotal)$/) {
+                return ";\n";
+            } elsif ($context[$#context] eq 'add' && $tag !~ /^(count|subtotal)$/) {
+                return ";\n";
+            } elsif ($context[$#context] eq 'results') {
+                $e->end_expr($tag);
+            } elsif ($context[$#context] eq 'delete' && $tag !~ /^(count|subtotal)$/) {
+                return ";\n";
+            };
+
+
+        ## cart item property tags
+        ## cart:sku, price, quantity
+        } elsif ($tag =~ /^(sku|price|quantity|total)$/) {
+            if ($context[$#context] eq 'add' && $tag ne 'total') {
+                return ";\n";
+            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'add') {
+                $e->end_expr($tag);
+            } elsif ($context[$#context] eq 'delete' && $tag !~ /^(count|subtotal)$/) {
+                return ";\n";
+            };
+
+
+        ## cart:filter
+        } elsif ($tag eq 'filter') {
+            if ($context[$#context] eq 'cart') {
+                return ";\n";
+            };
+
+
+        ## cart:results
+        } elsif ($tag eq 'results') {
+            if ($context[$#context-1] eq 'new') {
+                pop @context;
+
+                return "\n};\n";
+            } elsif ($context[$#context-1] eq 'cart') {
+                pop @context;
+
+                return "\n};\n";
+            } elsif ($context[$#context-1] eq 'add') {
+                pop @context;
+
+                return "\n};\n";
+            };
+            pop @context;
+
+
+        ## cart:no-results
+        } elsif ($tag eq 'no-results') {
+            if ($context[$#context-1] eq 'new') {
+                pop @context;
+
+                return "\n};\n";
+            } elsif ($context[$#context-1] eq 'cart') {
+                pop @context;
+
+                return "\n};\n";
+            } elsif ($context[$#context-1] eq 'add') {
+                pop @context;
+
+                return "\n};\n";
+            };
+            pop @context;
         };
 
         return '';
