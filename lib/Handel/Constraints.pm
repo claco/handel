@@ -23,8 +23,8 @@ sub constraint_quantity {
     my ($value, $object, $column, $changing) = @_;
 
     my $cfg    = Handel::ConfigReader->new();
-    my $max    = $cfg->get('HandelMaxQuantity');
-    my $action = $cfg->get('HandelMaxQuantityAction');
+    my $max    = $cfg->{'HandelMaxQuantity'};
+    my $action = $cfg->{'HandelMaxQuantityAction'};
 
     if ($action =~ /^exception$/i && $max) {
         throw Handel::Exception::Constraint( -details =>
