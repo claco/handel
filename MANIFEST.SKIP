@@ -8,3 +8,4 @@
 Makefile
 \.db
 t/TEST
+^blibdirs\.ts
