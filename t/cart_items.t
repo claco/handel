@@ -11,11 +11,11 @@ BEGIN {
     if($@) {
         plan skip_all => 'DBD::SQLite not installed';
     } else {
-        plan tests => 82;
+        plan tests => 107;
     };
 
     use_ok('Handel::Cart');
-    use_ok('Handel::Constants', ':cart');
+    use_ok('Handel::Constants', qw(:cart :returnas));
     use_ok('Handel::Exception', ':try');
 };
 
@@ -36,7 +36,7 @@ BEGIN {
 };
 
 
-## load multiple item Handel::Cart object and get items array
+## load multiple item Handel::Cart object and get items array on RETURNAS_AUTO
 {
     my $cart = Handel::Cart->load({
         id => '11111111-1111-1111-1111-111111111111'
@@ -51,6 +51,45 @@ BEGIN {
     is($cart->subtotal, 5.55);
 
     my @items = $cart->items;
+    is(scalar @items, $cart->count);
+
+    my $item1 = $items[0];
+    isa_ok($item1, 'Handel::Cart::Item');
+    is($item1->id, '11111111-1111-1111-1111-111111111111');
+    is($item1->cart, $cart->id);
+    is($item1->sku, 'SKU1111');
+    is($item1->quantity, 1);
+    is($item1->price, 1.11);
+    is($item1->description, 'Line Item SKU 1');
+    is($item1->total, 1.11);
+
+    my $item2 = $items[1];
+    isa_ok($item2, 'Handel::Cart::Item');
+    is($item2->id, '22222222-2222-2222-2222-222222222222');
+    is($item2->cart, $cart->id);
+    is($item2->sku, 'SKU2222');
+    is($item2->quantity, 2);
+    is($item2->price, 2.22);
+    is($item2->description, 'Line Item SKU 2');
+    is($item2->total, 4.44);
+};
+
+
+## load multiple item Handel::Cart object and get items array on RETURNAS_LIST
+{
+    my $cart = Handel::Cart->load({
+        id => '11111111-1111-1111-1111-111111111111'
+    });
+    isa_ok($cart, 'Handel::Cart');
+    is($cart->id, '11111111-1111-1111-1111-111111111111');
+    is($cart->shopper, '11111111-1111-1111-1111-111111111111');
+    is($cart->type, CART_TYPE_TEMP);
+    is($cart->name, 'Cart 1');
+    is($cart->description, 'Test Temp Cart 1');
+    is($cart->count, 2);
+    is($cart->subtotal, 5.55);
+
+    my @items = $cart->items(undef, RETURNAS_LIST);
     is(scalar @items, $cart->count);
 
     my $item1 = $items[0];
