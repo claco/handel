@@ -72,6 +72,7 @@ foreach (@tests) {
     my ($ok, $response, $file) = comp_to_file($output, "$docroot/out/$_.out");
 
     if (!$ok) {
+        diag("Test: $_");
         diag("Error:\n" . $tt->error) if $tt->error;
         diag("Expected:\n", $file);
         diag("Received:\n", $response);
