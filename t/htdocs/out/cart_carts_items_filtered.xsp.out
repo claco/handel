@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<body>
+	<cart>
+		<count>2</count>
+		<description>My New Shopping Cart</description>
+		<id>F561E4BD-7CC5-4F85-9CEF-9EFB698EA0A3</id>
+		<name>New Cart</name>
+		<shopper>A2D4D3DE-F70F-41F0-8EEA-D006E96898D6</shopper>
+		<subtotal>11.10</subtotal>
+		<type>0</type>
+		<item>
+			<description>Description 1</description>
+			<id>93B9A497-9FEE-4C87-A204-C822A4959682</id>
+			<price>1.11</price>
+			<quantity>1</quantity>
+			<sku>FILTERSKU1</sku>
+			<total>1.11</total>
+		</item>
+		<item>
+			<description>Description 1</description>
+			<id>E484909D-BAD7-4EF9-BC76-AF9BB9AA64DB</id>
+			<price>3.33</price>
+			<quantity>3</quantity>
+			<sku>FILTERSKU2</sku>
+			<total>9.99</total>
+		</item>
+	</cart>
+	<cart>
+		<count>2</count>
+		<description>My New Shopping Cart 2</description>
+		<id>EBFE6680-901F-4A90-B1E8-5096F98625B2</id>
+		<name>New Cart 2</name>
+		<shopper>A2D4D3DE-F70F-41F0-8EEA-D006E96898D6</shopper>
+		<subtotal>57.72</subtotal>
+		<type>0</type>
+		<item>
+			<description>Description 4</description>
+			<id>07D7181B-70F4-4F2C-BF10-0C554D0F7A0C</id>
+			<price>4.44</price>
+			<quantity>4</quantity>
+			<sku>FILTERSKU3</sku>
+			<total>17.76</total>
+		</item>
+		<item>
+			<description>Description 4</description>
+			<id>AF63C51D-3736-4E09-A591-928F86446857</id>
+			<price>6.66</price>
+			<quantity>6</quantity>
+			<sku>FILTERSKU2</sku>
+			<total>39.96</total>
+		</item>
+	</cart>
+</body>
