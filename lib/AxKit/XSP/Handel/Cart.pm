@@ -1,4 +1,3 @@
-# $Id$
 package AxKit::XSP::Handel::Cart;
 use strict;
 use warnings;
@@ -638,6 +637,10 @@ __END__
 =head1 NAME
 
 AxKit::XSP::Handel::Cart - AxKit XSP Shopping Cart Taglib
+
+=head1 VERSION
+
+    $Id$
 
 =head1 SYNOPSIS
 
