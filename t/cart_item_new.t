@@ -12,12 +12,6 @@ BEGIN {
     use_ok('Handel::Exception', ':try');
 };
 
-SKIP: {
-    eval 'require UUID;';
-    eval 'require Data::UUID;' if $@;
-
-    skip 'UUID/Data::UUID not installed', 7 if $@;
-
 ## test for Handel::Exception::Argument where first param is not a hashref
 {
     try {
@@ -44,6 +38,4 @@ SKIP: {
     is($item->quantity, 2);
     is($item->description, 'My SKU');
     is($item->total, 2.46);
-};
-
 };
