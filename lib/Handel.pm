@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use vars qw($VERSION);
 
-$VERSION = '0.09';
+$VERSION = '0.10';
 
 1;
 __END__
@@ -85,6 +85,32 @@ C<Test::Pod::Coverage> 1.04 was made taint safe, and we run the tests with -wT
 like good girls and boys.
 
 =back
+
+=head1 CONFIGURATION
+
+Various Handel runtime options can be set via C<%ENV> variables, or using
+C<PerlSetVar> when running under C<mod_perl>.
+
+=head2 HandelMaxQuantity
+
+    PerlSetVar  HandelMaxQuantity   32
+    ...
+    $ENV{HandelMaxQuantity} = 32;
+
+If defined, this sets the maximum quantity allowed for each C<Handel::Cart::Item>
+in the shopping cart. By default, when the user request more than C<HandelMaxQuantity>,
+C<quantity> is reset to C<HandelMaxQuantity>. IF you would rather raise an
+C<Handel::Exception::Constraint> instead, see C<HandelMaxQuantityAction> below.
+
+=head2 HandelMaxQuantityAction (Adjust|Exception)
+
+This option defines what action should be taken when a cart items quantity is being set
+to something above C<HandelMaxQuantity>. When set to C<Adjust> the quantity qill simple
+be reset to C<HandelMaxQuantity> and no exception will be raised. This is the default
+action.
+
+When set to <Exception> and the quantity requested is greater than C<HandelMaxQuantity>,
+a C<Handel::Exception::Constraint> exception is thrown.
 
 =head1 SEE ALSO
 
