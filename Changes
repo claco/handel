@@ -1,5 +1,12 @@
 Revision history for Perl module Handel
 
+0.05 Sun Feb 20 15:37:23 2005
+    - Added RETURNAS constants
+    - Changed load/items to use RETRUNAS constants
+    - Added workaround to wantarray problems under TT2
+    - slight sytax change to Template::Plugin::Handel::Cart API
+    - Added Template::Plugin::Handel::Constants
+
 0.04 Thur Feb 17 22:11:35 2005
     - Added Template Toolkit Plugin for Handel::Cart
     - Added demo site for Template Toolkit 2
