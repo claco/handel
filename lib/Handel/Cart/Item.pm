@@ -93,15 +93,35 @@ You can create a new C<Handel::Cart::Item> object by call the C<new> method:
         quantity => 1
     });
 
+    $item->quantity(2);
+
+    print $item->total;
+
 This is a lazy operation. No actual item record is created until the item object
 is passed into the carts C<add> method.
 
 =head1 METHODS
 
+=head2 C<$item-E<gt>sku>
+
+Returns or sets the sku (stock keeping unit/part number) for the cart item.
+
+=head2 C<$item-E<gt>quantity>
+
+Returns or sets the quantity the cart item.
+
+=head2 C<$item-E<gt>price>
+
+Returns or sets the price for the cart item.
+
 =head2 C<$item-E<gt>total>
 
-Returns the total price for the cart item. This is really just quantity*total
-and is provided for convenience.
+Returns the total price for the cart item. This is really just
+quantity*total and is provided for convenience.
+
+=head2 C<$item-E<gt>description>
+
+Returns or sets the description for the cart item.
 
 =head1 SEE ALSO
 
@@ -113,6 +133,7 @@ L<Handel::Cart>
     CPAN ID: CLACO
     cpan@chrislaco.com
     http://today.icantfocus.com/blog/
+
 
 
 
