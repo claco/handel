@@ -10,7 +10,7 @@
 			<cart:id>7B1A38C8-36CA-4403-B3D4-C7D327131F37</cart:id>
 			<cart:name>New Cart</cart:name>
 			<cart:shopper>D7B1057E-6998-4813-9F97-702C405DFB9E</cart:shopper>
-			<cart:type>0</cart:type>
+			<cart:type>CART_TYPE_TEMP</cart:type>
 			<cart:results>
 				<cart>
 					<count><cart:count/></count>

@@ -10,7 +10,7 @@
 			<cart:id>BD40D1CB-7D85-4F47-867A-925E111EB2FC</cart:id>
 			<cart:name>New Cart</cart:name>
 			<cart:shopper>0CA564F1-EFBC-490F-8586-198FD14E97F8</cart:shopper>
-			<cart:type>0</cart:type>
+			<cart:type>CART_TYPE_TEMP</cart:type>
 			<cart:results>
 				<cart:add id="EF254990-53FB-46DA-8B8A-A287698D3E64" sku="SKU1" price="1.11" quantity="1" description="Description 1"/>
 				<cart:add id="52A5DFED-D018-409F-9E59-584ACA152725" sku="SKU2" price="2.22" quantity="2" description="Description 2"/>
@@ -20,7 +20,7 @@
 			</cart:no-results>
 		</cart:new>
 
-		<cart:cart type="0">
+		<cart:cart type="CART_TYPE_TEMP">
 			<cart:filter name="id">BD40D1CB-7D85-4F47-867A-925E111EB2FC</cart:filter>
 			<cart:results>
 				<cart>

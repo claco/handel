@@ -10,7 +10,7 @@
 			<cart:id>BFF4BE8A-2A06-4351-B680-A4A289D19B73</cart:id>
 			<cart:name>New Cart</cart:name>
 			<cart:shopper>A597E0ED-3E62-4077-A9CE-6A4BF7316037</cart:shopper>
-			<cart:type>0</cart:type>
+			<cart:type>CART_TYPE_TEMP</cart:type>
 			<cart:results>
 				<cart:add id="9108720A-7DD1-43E8-80F0-499205BBC0AD" sku="SKU1" price="1.11" quantity="1" description="Description 1"/>
 				<cart:add id="6DAF3A43-40BC-4BD2-8870-2634D70CBE19" sku="FILTERSKU1" price="2.22" quantity="2" description="Description 2"/>
@@ -24,7 +24,7 @@
 			<cart:id>5D70E53E-9028-4FDA-BE1E-7C3E79275F22</cart:id>
 			<cart:name>New Cart 2</cart:name>
 			<cart:shopper>A597E0ED-3E62-4077-A9CE-6A4BF7316037</cart:shopper>
-			<cart:type>0</cart:type>
+			<cart:type>CART_TYPE_TEMP</cart:type>
 			<cart:results>
 				<cart:add id="9D7FA3F4-14B4-4F8A-8B73-1ED8F4F73C59" sku="SKU3" price="3.33" quantity="3" description="Description 3"/>
 				<cart:add id="FEFFC372-1E72-4B68-BA28-2A9263496E7C" sku="FILTERSKU2" price="4.44" quantity="4" description="Description 4"/>

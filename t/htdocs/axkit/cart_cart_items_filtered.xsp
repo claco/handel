@@ -10,7 +10,7 @@
 			<cart:id>FBC4A843-2667-48ED-AA9F-EF4B52537E72</cart:id>
 			<cart:name>New Cart</cart:name>
 			<cart:shopper>FE816B07-7E3D-4A00-97D4-667FEA60F767</cart:shopper>
-			<cart:type>0</cart:type>
+			<cart:type>CART_TYPE_TEMP</cart:type>
 			<cart:results>
 				<cart:add id="8CB01B28-CF5A-4F4E-B7B7-CFF9F0ACA534" sku="NEWSKU1" price="1.11" quantity="1" description="Description 1"/>
 				<cart:add id="46C2D004-4694-4C66-B901-8E2CEE6CB9FD" sku="SKU2" price="2.22" quantity="2" description="Description 2"/>
@@ -21,7 +21,7 @@
 			</cart:no-results>
 		</cart:new>
 
-		<cart:cart type="0">
+		<cart:cart type="CART_TYPE_TEMP">
 			<cart:filter name="id">FBC4A843-2667-48ED-AA9F-EF4B52537E72</cart:filter>
 			<cart:results>
 				<cart>

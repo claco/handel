@@ -10,7 +10,7 @@
 			<cart:description>My First Shopping Cart</cart:description>
 			<cart:name>New Cart 1</cart:name>
 			<cart:shopper>563BD51D-A738-4F5A-8DA5-5A2979A1D377</cart:shopper>
-			<cart:type>1</cart:type>
+			<cart:type>CART_TYPE_SAVED</cart:type>
 			<cart:no-results><message>Error adding cart</message></cart:no-results>
 		</cart:new>
 		<cart:new>
@@ -18,7 +18,7 @@
 			<cart:description>My Second Shopping Cart</cart:description>
 			<cart:name>New Cart 2</cart:name>
 			<cart:shopper>563BD51D-A738-4F5A-8DA5-5A2979A1D377</cart:shopper>
-			<cart:type>1</cart:type>
+			<cart:type>CART_TYPE_SAVED</cart:type>
 			<cart:no-results><message>Error adding cart</message></cart:no-results>
 		</cart:new>
 

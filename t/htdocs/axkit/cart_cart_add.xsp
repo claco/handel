@@ -10,7 +10,7 @@
 			<cart:id>94FE4F12-4C1A-46E4-9DD5-3757555862A8</cart:id>
 			<cart:name>New Cart</cart:name>
 			<cart:shopper>B002A4CB-2D60-4743-B4E5-D54F999944E6</cart:shopper>
-			<cart:type>0</cart:type>
+			<cart:type>CART_TYPE_TEMP</cart:type>
 			<cart:results>
 				<cart>
 					<count><cart:count/></count>
@@ -27,7 +27,7 @@
 			</cart:no-results>
 		</cart:new>
 
-		<cart:cart type="0">
+		<cart:cart type="CART_TYPE_TEMP">
 			<cart:filter name="id">94FE4F12-4C1A-46E4-9DD5-3757555862A8</cart:filter>
 			<cart:results>
 				<cart:add>

@@ -10,7 +10,7 @@
 			<cart:id>C9327404-61D8-491A-8071-701573FEE4AE</cart:id>
 			<cart:name>New Cart</cart:name>
 			<cart:shopper>7A18720A-A68B-4175-8C6D-8F1B10693346</cart:shopper>
-			<cart:type>0</cart:type>
+			<cart:type>CART_TYPE_TEMP</cart:type>
 			<cart:results>
 				<cart>
 					<cart:add quantity="2" price="1.23">

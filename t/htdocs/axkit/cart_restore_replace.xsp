@@ -10,7 +10,7 @@
 			<cart:description>My First Shopping Cart</cart:description>
 			<cart:name>New Cart 1</cart:name>
 			<cart:shopper>B9E6EF4C-DC45-4DB5-836C-2AF3EE9CA256</cart:shopper>
-			<cart:type>1</cart:type>
+			<cart:type>CART_TYPE_SAVED</cart:type>
 			<cart:results>
 				<cart:add id="F3340759-790D-4287-9E96-9093DC677AAD" sku="SKU1" price="1.11" quantity="1" description="Description 1"/>
 				<cart:add id="D8A14B72-BDAE-4F80-BB15-A0C5233E53D9" sku="SKU2" price="2.22" quantity="2" description="Description 2"/>
@@ -22,7 +22,7 @@
 			<cart:description>My Second Shopping Cart</cart:description>
 			<cart:name>New Cart 2</cart:name>
 			<cart:shopper>052F614D-8129-483A-BC53-FCB8C7018A3E</cart:shopper>
-			<cart:type>1</cart:type>
+			<cart:type>CART_TYPE_SAVED</cart:type>
 			<cart:results>
 				<cart:add id="A319E30D-6B2D-4371-B498-24190BEB37FA" sku="SKU3" price="3.33" quantity="3" description="Description 3"/>
 				<cart:add id="7466A9D6-BF21-4D55-BAAE-5075353B4E1B" sku="SKU4" price="4.44" quantity="4" description="Description 4"/>
@@ -52,7 +52,7 @@
 							</item>
 						</cart:results>
 					</cart:items>
-					<cart:restore mode="CART_MODE_REPLACE" type="1">
+					<cart:restore mode="CART_MODE_REPLACE" type="CART_TYPE_SAVED">
 						<cart:filter name="id">8387244B-DB27-4E26-BAD0-F6CB72C37954</cart:filter>
 					</cart:restore>
 					<description><cart:description/></description>

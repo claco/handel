@@ -10,7 +10,7 @@
 			<cart:id>A4383057-CE2B-45BC-9DEA-8E45AB30BB4D</cart:id>
 			<cart:name>New Cart</cart:name>
 			<cart:shopper>FA007E69-F41C-4C8A-A287-C60F1F4591DD</cart:shopper>
-			<cart:type>0</cart:type>
+			<cart:type>CART_TYPE_TEMP</cart:type>
 			<cart:results>
 				<cart:add id="98D2FCE0-CEB6-4464-8CE4-FBC9D71AC4A4" sku="SKU1" price="1.11" quantity="1" description="Description 1"/>
 				<cart:add id="1A43BAF1-AFDF-4E92-AFA1-8C4EFE61B399" sku="FILTERSKU1" price="2.22" quantity="2" description="Description 2"/>

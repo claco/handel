@@ -10,7 +10,7 @@
 			<cart:id>89C8C2E3-3170-4E9D-81DC-9E572E102FB8</cart:id>
 			<cart:name>New Cart</cart:name>
 			<cart:shopper>73C7A602-C18D-4B22-BD57-FF383D2AA5ED</cart:shopper>
-			<cart:type>0</cart:type>
+			<cart:type>CART_TYPE_TEMP</cart:type>
 			<cart:results>
 				<cart:add id="A07077F7-C31D-44CD-B2E2-7AE7FA358C11" sku="SKU1" price="1.11" quantity="1" description="Description 1"/>
 				<cart:add id="E0E20484-A9EE-4CCA-BF02-6E3F3D27EA9A" sku="SKU2" price="2.22" quantity="2" description="Description 2"/>
@@ -20,7 +20,7 @@
 			</cart:no-results>
 		</cart:new>
 
-		<cart:cart type="0">
+		<cart:cart type="CART_TYPE_TEMP">
 			<cart:filter name="id">89C8C2E3-3170-4E9D-81DC-9E572E102FB8</cart:filter>
 			<cart:results>
 				<cart>
