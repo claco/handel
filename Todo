@@ -1,6 +1,5 @@
 TODO list for Perl module Handel
 
-    - clean up pod...it's getting nasty
     - enhance demo sites to use full feature set
     - slim Cart taglib code to remove repeated code blocks left for clarity
     - start work on Handel::Order part of framework

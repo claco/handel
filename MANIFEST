@@ -106,6 +106,7 @@ t/htdocs/axkit/cart_carts_items_update.xsp
 t/htdocs/axkit/cart_carts_no_results.xsp
 t/htdocs/axkit/cart_carts_save.xsp
 t/htdocs/axkit/cart_carts_update.xsp
+t/htdocs/axkit/cart_currency_format.xsp
 t/htdocs/axkit/cart_new.xsp
 t/htdocs/axkit/cart_new_and_add.xsp
 t/htdocs/axkit/cart_new_and_add_filtered.xsp
@@ -154,6 +155,7 @@ t/htdocs/axkit/out/cart_carts_items_update.xsp.out
 t/htdocs/axkit/out/cart_carts_no_results.xsp.out
 t/htdocs/axkit/out/cart_carts_save.xsp.out
 t/htdocs/axkit/out/cart_carts_update.xsp.out
+t/htdocs/axkit/out/cart_currency_format.xsp.out
 t/htdocs/axkit/out/cart_new.xsp.out
 t/htdocs/axkit/out/cart_new_and_add.xsp.out
 t/htdocs/axkit/out/cart_new_and_add_filtered.xsp.out

@@ -1,4 +1,11 @@
-Revision history for Perl module Handel
+Revision history for Perl module Handel v
+
+0.13 Sun Mar 06 16:42:23 2005
+    - Removed Test::More from PREREQ_PM. It's only needed for tests
+    - Added Makefile.PL test warnings for Test::More < 0.48
+    - Fixed META.yml format
+    - Added format/code/options attributes to price/subtotal/total in
+        AxKit::XSP::Handel::Cart taglib
 
 0.12 Thur Mar 03 21:43:23 2005
     - Added Hande::Currency to format price values
@@ -23,7 +30,7 @@ Revision history for Perl module Handel
 0.08 Sat Feb 26 18:23:17 2005
     - Added TT2 cart tests
     - Changed Handel::Cart::Item to autoupdate on every method
-      like Handel::Cart
+         like Handel::Cart
     - Moved TT2 tests to inline Template intead of Apache::Template
     - Added Handel::Constants into Template::PLugin::Handel::Cart
 
@@ -70,7 +77,7 @@ Revision history for Perl module Handel
     - Rewrite of Axit::XSP::Handel::Cart for new API in progress
     - slight Exporter refactoring in TestHelper.pm
     - Handel::DBI::uuid can now use UUID, Data::UUID, Win32::Guidgen,
-      or Win32API::GUID to create uuids
+          or Win32API::GUID to create uuids
 
 0.01_07 Mon Jan 10 21:17:45 2005
     - Added Axit::XSP::Handl::Cart tag reference pod
