@@ -3,15 +3,16 @@
 use strict;
 use warnings;
 use Test::More tests => 11;
+use utf8;
 
 BEGIN {
     use_ok('Handel::L10N', 'translate');
     use_ok('Handel::Exception', ':try');
 
-    if ($] > 5.007) {
-        require utf8;
-        utf8->import;
-    };
+    #if ($] > 5.007) {
+    #    require utf8;
+    #    utf8->import;
+    #};
 };
 
 
