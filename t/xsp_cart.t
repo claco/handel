@@ -60,6 +60,9 @@ my @tests = (
     'cart_carts_update.xsp',
     'cart_new_minimal.xsp',
     'cart_new_no_results_trigger.xsp',
+    'cart_restore_append.xsp',
+    'cart_restore_replace.xsp',
+    'cart_restore_merge.xsp'
 );
 
 use Apache::TestUtil;
