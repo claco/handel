@@ -4,36 +4,19 @@ use warnings;
 
 BEGIN {
     use base 'Class::DBI';
+    use Handel::ConfigReader;
     use Handel::Exception;
     use Handel::L10N qw(translate);
 
 };
 
-my $db_driver;
-my $db_host;
-my $db_port;
-my $db_name;
-my $db_user;
-my $db_pass;
-
-if ($ENV{MOD_PERL}) {
-    require Apache;
-    my $r = Apache->request;
-
-    $db_driver = $r->dir_config('db_driver') || '';
-    $db_host   = $r->dir_config('db_host')   || '';
-    $db_port   = $r->dir_config('db_port')   || '';
-    $db_name   = $r->dir_config('db_name')   || '';
-    $db_user   = $r->dir_config('db_user')   || '';
-    $db_pass   = $r->dir_config('db_pass')   || '';
-} else {
-    $db_driver = $ENV{'db_driver'} || '';
-    $db_host   = $ENV{'db_host'}   || '';
-    $db_port   = $ENV{'db_port'}   || '';
-    $db_name   = $ENV{'db_name'}   || '';
-    $db_user   = $ENV{'db_user'}   || '';
-    $db_pass   = $ENV{'db_pass'}   || '';
-};
+my $cfg = Handel::ConfigReader->new();
+my $db_driver = $cfg->get('db_driver');
+my $db_host   = $cfg->get('db_host');
+my $db_port   = $cfg->get('db_port');
+my $db_name   = $cfg->get('db_name');
+my $db_user   = $cfg->get('db_user');
+my $db_pass   = $cfg->get('db_pass');
 
 my $datasource = "dbi:$db_driver:dbname=$db_name";
 
