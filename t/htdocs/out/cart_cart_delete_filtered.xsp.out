@@ -3,7 +3,7 @@
 <body>
 	<cart>
 		<count>2</count>
-		<description>My New Shopping Cart/description>
+		<description>My New Shopping Cart</description>
 		<id>69B4404C-6346-4FFA-8D73-220F5D65A952</id>
 		<name>New Cart</name>
 		<shopper>126AA079-B6A9-440E-9B93-4C66CEBF37EB</shopper>
@@ -12,13 +12,13 @@
 	</cart>
 	<cart>
 		<count>2</count>
-		<description>My New Shopping Cart/description>
+		<description>My New Shopping Cart</description>
 		<id>69B4404C-6346-4FFA-8D73-220F5D65A952</id>
 		<name>New Cart</name>
 		<shopper>126AA079-B6A9-440E-9B93-4C66CEBF37EB</shopper>
 		<subtotal>3.47</subtotal>
 		<type>0</type>
 		<count>1</count>
-		<subtotal>1.23</subtotal>
+		<subtotal>2.46</subtotal>
 	</cart>
 </body>

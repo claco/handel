@@ -5,8 +5,8 @@
 		<item>
 			<description>My New Item</description>
 			<id>FF370272-BF75-4082-9E04-9FA5D302F3B4</id>
-			<quantity><cart:quantity/></quantity>
-			<price><cart:price/></price>
+			<price>1.23</price>
+			<quantity>2</quantity>
 			<sku>NEWSKU123</sku>
 			<total>2.46</total>
 		</item>
