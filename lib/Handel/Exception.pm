@@ -58,6 +58,20 @@ sub new {
         -text => 'The argument supplied is invalid or of the wrong type', @_ );
 };
 
+package Handel::Exception::Taglib;
+use strict;
+use warnings;
+
+BEGIN {
+    use base 'Handel::Exception';
+};
+
+sub new {
+    my $class = shift;
+    return $class->SUPER::new(
+        -text => 'The tag is out of scope or missing required child tags', @_ );
+};
+
 1;
 __END__
 
