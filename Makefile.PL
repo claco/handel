@@ -14,6 +14,18 @@ if (!$@) {
     Apache::TestMM::generate_script('t/TEST');
 };
 
+my %modules;
+
+if ($^O eq 'MSWin32') {
+    eval 'use UUID 0.02;';
+    eval 'use Win32::Guidgen 0.02;' if $@;
+    eval 'use Win32API::GUID 0.02;' if $@;
+
+    %modules = ('UUID' => 0.02) if $@;
+} else {
+    %modules = ('Data::UUID' => 0.10);
+};
+
 WriteMakefile(
     NAME         => 'Handel',
     VERSION_FROM => 'lib/Handel.pm',
@@ -24,7 +36,8 @@ WriteMakefile(
         'DBI'              => '1.36',
         'Test::More'       => '0.48',
         'Error'            => '0.14',
-        'Locale::Maketext' => '1.06'
+        'Locale::Maketext' => '1.06',
+        %modules
     },
     (ExtUtils::MakeMaker->VERSION >= 6.11) ?
     (NO_META      => 1) : (),
