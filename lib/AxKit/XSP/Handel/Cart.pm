@@ -2,7 +2,7 @@ package AxKit::XSP::Handel::Cart;
 use strict;
 use warnings;
 use vars qw($NS);
-use Handel::Constants qw(:cart);
+use Handel::Constants qw(:cart str_to_const);
 use Handel::Exception;
 use Handel::L10N qw(translate);
 use base 'Apache::AxKit::Language::XSP';
@@ -21,6 +21,10 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
         my $tag = $e->current_element();
 
         return unless length($text);
+
+        if ($tag eq 'type' && $text =~ /^[A-Z]{1}/) {
+            $text = str_to_const($text);
+        };
 
         if ($tag =~ /^(description|id|name|shopper|type)$/) {
             if ($context[$#context] eq 'new') {
@@ -50,6 +54,12 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
         my ($e, $tag, %attr) = @_;
 
         AxKit::Debug(5, "[Handel] parse_start [$tag] context: " . join('->', @context));
+
+        if (exists $attr{'type'}) {
+            if ($attr{'type'} =~ /^[A-Z]{1}/) {
+                $attr{'type'} = str_to_const($attr{'type'});
+            };
+        };
 
         ## cart:uuid
         if ($tag =~ /^(g|u)uid$/) {
@@ -81,12 +91,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
 
             push @context, $tag;
 
-            my $mode = $attr{'mode'} || 'CART_MODE_APPEND';
-            if (Handel::Constants->can($mode)) {
-                $mode = Handel::Constants->$mode;
-            } else {
-                $mode = CART_MODE_APPEND;
-            };
+            my $mode = str_to_const($attr{'mode'}) || CART_MODE_APPEND;
             delete $attr{'mode'};
 
             my $code .= scalar keys %attr ?
@@ -727,6 +732,21 @@ Add the namespace to your XSP file and use the tags:
 
 This tag library provides an interface to use L<Handel::Cart> inside of your
 AxKit XSP pages.
+
+=head1 CHANGES
+
+Starting in version C<0.09>, C<E<lt>cart:typeE<gt>>, the <type> attribute, and the C<mode>
+attribute in C<E<lt>cart:restore<gt>> now take the constants declared in C<Handel::Constants>:
+
+    <cart:type>CART_TYPE_SAVED</cart:type>
+
+    <cart:new type="CART_TYPE_SAVED">
+        ...
+    </cart:new>
+
+    <cart:restore mode="CART_MODE_APPEND">
+        ...
+    </cart:restore>
 
 =head1 TAG HIERARCHY
 
