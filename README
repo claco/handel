@@ -1,0 +1,72 @@
+NAME
+    Handel - Simple commerce framework with AxKit/TT2 support
+
+VERSION
+        $Id: Handel.pm 275 2005-03-02 02:22:31Z claco $
+
+DESCRIPTION
+    Handel is a quick and not-so-dirty ecommerce framework with AxKit taglib
+    support and TT2 (template Toolkit) support. It was started for the
+    conversion of an IIS/ASP based commerce site to Apache/ModPerl, but I
+    decided that is might be useful to others so here it is on CPAN.
+
+    For the curious, Handel is German for commerce.
+
+REQUIREMENTS
+  Prerequisites
+    The following modules are required for Handel to work properly. Older
+    versions may work fine. For now, these are the versions I have installed
+    and verified to work correctly.
+
+    Class::DBI 0.96+
+    DBI version 1.36+
+    Error 0.14+
+    Locale::Maketext 1.06+
+    UUID*/GUID
+        At least one of the following modules are required to create uuids:
+        UUID 0.02, Win32::Guidgen 0.04, Win32API::GUID 0.02, or Data::UUID
+        0.10.
+
+    Axit 1.6.2+
+        "AxKit" is only required if you plan on using "Handel" within XSP
+        using the supplied taglibs.
+
+  Optional Modules
+    The following modules are required for Handel to run, although some
+    features may be unavailable without the:
+
+    Locale::Currency::Format
+        When present, this module allows all prices to be formatted to
+        specific currency codes and formats.
+
+    The following modules are only required for the test suite:
+
+    Test::More 0.48+
+        The "Test::More" included with perl 5.8.4 and "Test::More" <= 0.48
+        have issues with ithreads that usually cause crashes in "Class::DBI"
+        tests.
+
+    Pod::Coverage 0.14+
+        The pod coverage tests may fail complaining about missing pod for
+        methods if Pod::Coverage < 0.14 is installed. This is due to certain
+        syntax variations of the pod with escaped gt/lt. I may just alter
+        the pod and bump this version down if there is enough feedback to do
+        so.
+
+    Test::Pod 1.00+
+        "Test::Pod" 1.00 added the "all_pod_files_ok()" method which makes
+        my life easier. :-)
+
+    Test::Pod::Coverage 1.04+
+        "Test::Pod::Coverage" 1.04 was made taint safe, and we run the tests
+        with -wT like good girls and boys.
+
+SEE ALSO
+    Handel::Cart
+
+AUTHOR
+        Christopher H. Laco
+        CPAN ID: CLACO
+        cpan@chrislaco.com
+        http://today.icantfocus.com/blog/
+

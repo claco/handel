@@ -1,5 +1,6 @@
 TODO list for Perl module Handel
 
+    - clean up pod...it's getting nasty
     - enhance demo sites to use full feature set
     - slim Cart taglib code to remove repeated code blocks left for clarity
     - start work on Handel::Order part of framework
@@ -7,5 +8,3 @@ TODO list for Perl module Handel
     - clean up cart test variable names
     - add additional cart restore w/filter tests for multiple saved carts
     - devise method for overriding constraints
-    - add format attribute to <cart:price/> and <cart:subtotal>
-        possibly using Locale::Currency::Format

@@ -1,7 +1,7 @@
 # http://module-build.sourceforge.net/META-spec.html
 #XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
 name:         Handel
-version:      0.11
+version:      0.12
 version_from: lib/Handel.pm
 installdirs:  site
 license:      perl
@@ -11,6 +11,12 @@ requires:
     Error:                         0.14
     Locale::Maketext:              1.06
     Test::More:                    0.48
-
+recommends:
+    AxKit                          1.62
+    Locale::Currency::Format       1.22
+    Test::More                     0.48
+    Pod::Coverage                  0.14
+    Test::Pod                      1.00
+    Test::Pod::Coverage            1.04
 distribution_type: module
 generated_by: ExtUtils::MakeMaker version 6.17
