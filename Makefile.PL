@@ -8,7 +8,21 @@ if (!$@) {
     require Apache::TestMM;
     Apache::TestMM->import(qw(test clean));
 
-    my @scripts = qw(t/TEST);
+    my @defines;
+
+    eval 'use Template';
+    if (!$@) {
+        push @defines, 'TT2';
+    };
+
+    ## for whatever reason, use AxKit causes issues
+    ## use-ing A::A::Exception doesn't
+    eval 'use Apache::AxKit::Exception';
+    if (!$@) {
+        push @defines, 'AXKIT';
+    };
+
+    push(@ARGV, '-defines', join(' ', @defines)) if scalar @defines;
 
     Apache::TestMM::filter_args();
     Apache::TestMM::generate_script('t/TEST');
