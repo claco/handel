@@ -5,4 +5,7 @@ TODO list for Perl module Handel
     - start work on Handel::Order part of framework
 	- add tests for L10N and find translation volunteer
 	- clean up cart test variable names
-	- finish cart->restore(\%filter) code and tests
+	- add additional cart restore w/filter tests for multiple saved carts
+	- figure out a centralized config scheme, possibly using XS/Handel.pm
+	- add max quantity check to cart constraint
+	- devise method for overriding constraints
