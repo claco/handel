@@ -7,7 +7,7 @@ AxKit and the following Taglibs:
 	AxKit::XSP::Cookie
 	AxKit::XSP::Param
 
-If you have DBD::SQLLite installed, simply run createdb.pl in this directory
+If you have DBD::SQLLite installed, simply run t/demo/createdb.pl
 to create the database used by default. If you would like use another database,
 you should be able to run t/sql/cart_create_table.sql against the database of
 your choosing to create the require schema. Make sure to change httpd.conf.include
