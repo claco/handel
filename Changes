@@ -1,5 +1,9 @@
 Revision history for Perl module Handel
 
+0.06 Sub Feb 20 20:15:36 2005
+    - Added cart:restore to AxKit::XSP::Handel::Cart
+    - Added cart:restore XSP tests
+
 0.05 Sun Feb 20 15:37:23 2005
     - Added RETURNAS constants
     - Changed load/items to use RETRUNAS constants
