@@ -2,17 +2,16 @@
 # $Id$
 use strict;
 use warnings;
-require Test::More;
+use Test::More;
 use lib 't/lib';
 use Handel::TestHelper qw(executesql comp_to_file);
 
-eval 'use Apache::Test 1.16';
-Test::More::plan(skip_all =>
-    'Apache::Test 1.16 not installed') if $@;
+eval 'use Template 2.08';
+    plan(skip_all => 'Template 2.08 not installed') if $@;
 
 eval 'use DBD::SQLite';
-Test::More::plan(skip_all =>
-    'DBD::SQLite not installed') if $@;
+    plan(skip_all => 'DBD::SQLite not installed') if $@;
+
 
 ## test new/add first so we can use them to test everything else
 ## convert these to TT2
@@ -66,18 +65,10 @@ my @tests = (
 #    'cart_restore_merge.xsp'
 );
 
-use Apache::TestUtil;
-Apache::TestRequest->import(qw(GET));
-Apache::Test::plan(tests => ((scalar @tests * 2) + 2),
-    need('Apache::Template', 'mod_perl', need_apache(1), need_lwp())
-);
-
-my $docroot = Apache::Test::vars('documentroot');
 
 ## Setup SQLite DB for tests
 {
-
-    my $dbfile  = "$docroot/cart.db";
+    my $dbfile  = "t/htdocs/cart.db";
     my $db      = "dbi:SQLite:dbname=$dbfile";
     my $create  = 't/sql/cart_create_table.sql';
     my $data    = 't/sql/cart_fake_data.sql';
@@ -86,20 +77,20 @@ my $docroot = Apache::Test::vars('documentroot');
     executesql($db, $create);
 };
 
-my $r = GET('/tt2/cart_uuid.tt2');
-ok($r->code == 200);
-ok($r->content =~ /(.*<p>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}<\/p>.*){2}/is);
+plan(tests => (scalar @tests) + 1);
+
+my $tt      = Template->new() || die 'Error creating Template';
+my $docroot = 't/htdocs/tt2';
+my $output  = '';
+
+## test uuid ouput format
+$tt->process("$docroot/cart_uuid.tt2", undef, \$output);
+ok($output =~ /(.*<p>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}<\/p>.*){2}/is);
 
 foreach (@tests) {
-    my $r = GET("/tt2/$_");
+    $tt->process("$docroot/$_", undef, \$output);
 
-    ok($r->code == 200);
-
-    my ($ok, $response, $file) = comp_to_file($r->content, "$docroot/out/tt2/$_.out");
-
-    t_debug("HTTP Status: " . $r->code);
-    t_debug("Expected:\n", $file);
-    t_debug("Received:\n", $response);
+    my ($ok, $response, $file) = comp_to_file($output, "$docroot/out/$_.out");
 
     ok($ok);
 };

@@ -10,7 +10,7 @@ if (!$@) {
 
     my @defines;
 
-    eval 'use Template';
+    eval 'use Apache::Template';
     if (!$@) {
         push @defines, 'TT2';
     };
