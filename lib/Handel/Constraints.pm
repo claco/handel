@@ -7,7 +7,7 @@ use vars qw(@EXPORT_OK %EXPORT_TAGS);
 BEGIN {
     use base 'Exporter';
     use Handel::ConfigReader;
-    use Handel::Constants qw(:cart);
+    use Handel::Constants qw(:cart :checkout);
     use Handel::Exception;
     use Handel::L10N qw(translate);
 };
@@ -17,6 +17,7 @@ BEGIN {
                 &constraint_uuid
                 &constraint_cart_type
                 &constraint_currency_code
+                &constraint_checkout_phase
 );
 
 %EXPORT_TAGS = (all => \@EXPORT_OK);
@@ -84,6 +85,19 @@ sub constraint_currency_code {
         return exists $codes{$value};
     };
 
+    return 1;
+};
+
+sub constraint_checkout_phase {
+    my $value = shift || 0;
+
+    return if $value !~ /[0-9]/;
+
+    if ($value != CHECKOUT_PHASE_INITIALIZE && $value != CHECKOUT_PHASE_VALIDATE &&
+        $value != CHECKOUT_PHASE_AUTHORIZE && $value != CHECKOUT_PHASE_DELIVER &&
+        $value != CHECKOUT_PHASE_ALL) {
+        return 0;
+    };
     return 1;
 };
 
