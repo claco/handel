@@ -60,10 +60,11 @@ WriteMakefile(
     AUTHOR       => 'Christopher H. Laco <claco@chrislaco.com>',
     ABSTRACT     => 'Simple ecommerce framework with AxKit support',
     PREREQ_PM    => {
-        'Class::DBI'       => '0.96',
-        'DBI'              => '1.36',
-        'Error'            => '0.14',
-        'Locale::Maketext' => '1.06',
+        'Class::DBI'        => '0.96',
+        'DBI'               => '1.36',
+        'Error'             => '0.14',
+        'Locale::Maketext'  => '1.06',
+        'Module::Pluggable' => '2.8',
         %modules
     },
     (ExtUtils::MakeMaker->VERSION >= 6.11) ?
