@@ -73,6 +73,34 @@ sub new {
         -text => 'The tag is out of scope or missing required child tags', @_ );
 };
 
+package Handel::Exception::Order;
+use strict;
+use warnings;
+
+BEGIN {
+    use base 'Handel::Exception';
+};
+
+sub new {
+    my $class = shift;
+    return $class->SUPER::new(
+        -text => 'An error occurred while while creating or validating the current order', @_ );
+};
+
+package Handel::Exception::Checkout;
+use strict;
+use warnings;
+
+BEGIN {
+    use base 'Handel::Exception';
+};
+
+sub new {
+    my $class = shift;
+    return $class->SUPER::new(
+        -text => 'An error occurred during the checkout process', @_ );
+};
+
 1;
 __END__
 

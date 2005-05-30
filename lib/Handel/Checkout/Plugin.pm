@@ -8,7 +8,6 @@ sub new {
     my $self = bless {}, ref $class || $class;
 
     $self->init();
-    $self->register($ctx);
 
     return $self;
 };

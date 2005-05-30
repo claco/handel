@@ -13,12 +13,12 @@ BEGIN {
 __PACKAGE__->table('cart_items');
 __PACKAGE__->autoupdate(1);
 __PACKAGE__->iterator_class('Handel::Iterator');
-__PACKAGE__->columns( All => qw(id cart sku quantity price description) );
-__PACKAGE__->columns( Essential => qw(id cart sku quantity price description) );
-__PACKAGE__->add_constraint( 'quantity', quantity => \&constraint_quantity );
-__PACKAGE__->add_constraint( 'price',    price    => \&constraint_price );
-__PACKAGE__->add_constraint( 'id',       id       => \&constraint_uuid );
-__PACKAGE__->add_constraint( 'cart',     cart     => \&constraint_uuid );
+__PACKAGE__->columns(All => qw(id cart sku quantity price description));
+__PACKAGE__->columns(Essential => qw(id cart sku quantity price description));
+__PACKAGE__->add_constraint('quantity', quantity => \&constraint_quantity);
+__PACKAGE__->add_constraint('price',    price    => \&constraint_price);
+__PACKAGE__->add_constraint('id',       id       => \&constraint_uuid);
+__PACKAGE__->add_constraint('cart',     cart     => \&constraint_uuid);
 
 sub new {
     my ($self, $data) = @_;
