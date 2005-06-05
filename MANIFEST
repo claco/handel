@@ -23,6 +23,8 @@ lib/AxKit/XSP/Handel/Cart.pm
 lib/Handel.pm
 lib/Handel/Cart.pm
 lib/Handel/Cart/Item.pm
+lib/Handel/Checkout.pm
+lib/Handel/Checkout/Plugin.pm
 lib/Handel/ConfigReader.pm
 lib/Handel/Constants.pm
 lib/Handel/Constraints.pm
@@ -33,6 +35,8 @@ lib/Handel/Iterator.pm
 lib/Handel/L10N.pm
 lib/Handel/L10N/en_us.pm
 lib/Handel/L10N/fr.pm
+lib/Handel/Order.pm
+lib/Handel/Order/Item.pm
 lib/Template/Plugin/Handel/Cart.pm
 lib/Template/Plugin/Handel/Constants.pm
 LICENSE
