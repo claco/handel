@@ -60,6 +60,12 @@ BEGIN {
     "Param 1 is not an ARRAY reference" =>
         "Le param 1 n'est pas une référence de RANGÉE",
 
+    "Param 1 is not a HASH reference, Handel::Order object, or order id" =>
+        "Le param 1 n'est pas une référence d'cInformations PARASITES, objet de Handel::Order, ou identification d'ordre",
+
+    "Param 1 is not a HASH reference, Handel::Order object, or order id" =>
+        "Le param 1 n'est pas une référence d'cInformations PARASITES, objet de Handel::Cart, ou identification de chariot",
+
     ## Taglib exceptions
     "Tag '[_1]' not valid inside of other Handel tags" =>
         "L'étiquette '[_1] 'peut intérieur inadmissible d'autres étiquettes de Handel",
