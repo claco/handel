@@ -166,6 +166,11 @@ conforms to:
 
     /^[A-Z]{3}$/
 
+=head2 constraint_checkout_phase
+
+Returns 1 if the value passed is one of the C<CHECKOUT_PHASE_*> constants,
+otherwise it returns C<undef>.
+
 =head1 EXPORT_TAGS
 
 =head2 :all
