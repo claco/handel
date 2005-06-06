@@ -264,8 +264,7 @@ Handel::Cart - Module for maintaining shopping cart contents
 =head1 DESCRIPTION
 
 C<Handel::Cart> is quick and dirty component for maintaining simple shopping
-cart
-data.
+cart data.
 
 While C<Handel::Cart> subclasses L<Class::DBI>, it is strongly recommended that
 you not use its methods unless it's absolutely necessary. Stick to the
@@ -543,7 +542,7 @@ shopper at any time.
 
 =head1 SEE ALSO
 
-L<Handel::Contstants>
+L<Handel::Constants>
 
 =head1 AUTHOR
 
