@@ -93,7 +93,7 @@ __END__
 
 =head1 NAME
 
-Handel::L10N::fr - French Language Pack for Handel
+Handel::L10N::fr - Handel Language Pack: French
 
 =head1 AUTHOR
 

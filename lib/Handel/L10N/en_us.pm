@@ -18,7 +18,7 @@ __END__
 
 =head1 NAME
 
-Handel::L10N::en_us - US English Language Pack for Handel
+Handel::L10N::en_us - Handel Language Pack: US English
 
 =head1 AUTHOR
 
