@@ -66,6 +66,7 @@ t/conf/extra.conf.in
 t/config.t
 t/constants.t
 t/constraints_cart_type.t
+t/constraints_checkout_phase.t
 t/constraints_currency_code.t
 t/constraints_price.t
 t/constraints_quantity.t
@@ -216,12 +217,14 @@ t/htdocs/tt2/out/cart_save.tt2.out
 t/htdocs/tt2/out/cart_update.tt2.out
 t/l10n.t
 t/lib/Handel/TestHelper.pm
+t/order_new.t
 t/pod_coverage.t
 t/pod_syntax.t
 t/strict.t
 t/SMOKE.PL
 t/sql/cart_create_table.sql
 t/sql/cart_fake_data.sql
+t/sql/order_create_table.sql
 t/TEST.PL
 t/tt2_cart.t
 t/warnings.t
