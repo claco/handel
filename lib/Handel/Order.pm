@@ -5,6 +5,7 @@ use warnings;
 
 BEGIN {
     use base 'Handel::DBI';
+    use Handel::Checkout;
     use Handel::Constants qw(:checkout :returnas :order);
     use Handel::Constraints qw(:all);
     use Handel::Currency;
@@ -12,7 +13,7 @@ BEGIN {
 };
 
 __PACKAGE__->autoupdate(0);
-__PACKAGE__->table('order');
+__PACKAGE__->table('orders');
 __PACKAGE__->iterator_class('Handel::Iterator');
 __PACKAGE__->columns(All => qw(id shopper type number created updated comments
     shipmethod shipping handling tax subtotal total
@@ -23,21 +24,21 @@ __PACKAGE__->columns(All => qw(id shopper type number created updated comments
     shiptocity shiptostate shiptozip shiptocountry shiptodayphone
     shiptonightphone shiptofax shiptoemail));
 
-__PACKAGE__->has_many(_items => 'Handel::Order::Item', 'order');
-__PACKAGE__->has_a(subtotal => 'Handel::Currency');
-__PACKAGE__->has_a(total => 'Handel::Currency');
-__PACKAGE__->has_a(shipping => 'Handel::Currency');
-__PACKAGE__->has_a(handling => 'Handel::Currency');
-__PACKAGE__->has_a(tax => 'Handel::Currency');
+__PACKAGE__->has_many(_items => 'Handel::Order::Item', 'orderid');
+__PACKAGE__->has_a(subtotal  => 'Handel::Currency');
+__PACKAGE__->has_a(total     => 'Handel::Currency');
+__PACKAGE__->has_a(shipping  => 'Handel::Currency');
+__PACKAGE__->has_a(handling  => 'Handel::Currency');
+__PACKAGE__->has_a(tax       => 'Handel::Currency');
 
 __PACKAGE__->add_constraint('id',       id       => \&constraint_uuid);
 __PACKAGE__->add_constraint('shopper',  shopper  => \&constraint_uuid);
 __PACKAGE__->add_constraint('type',     type     => \&constraint_cart_type);
-__PACKAGE__->add_constraint('shipping', shipping => \&constraint_price );
-__PACKAGE__->add_constraint('handling', handling => \&constraint_price );
-__PACKAGE__->add_constraint('subtotal', subtotal => \&constraint_price );
-__PACKAGE__->add_constraint('tax',      tax      => \&constraint_price );
-__PACKAGE__->add_constraint('total',    total    => \&constraint_price );
+__PACKAGE__->add_constraint('shipping', shipping => \&constraint_price);
+__PACKAGE__->add_constraint('handling', handling => \&constraint_price);
+__PACKAGE__->add_constraint('subtotal', subtotal => \&constraint_price);
+__PACKAGE__->add_constraint('tax',      tax      => \&constraint_price);
+__PACKAGE__->add_constraint('total',    total    => \&constraint_price);
 
 sub new {
     my ($self, $data) = @_;
@@ -60,24 +61,34 @@ sub new {
             'Could not create a new order because the supplied cart is empty') . '.') unless
                 $data->count > 0;
 
-    my $order = $self->create({type => ORDER_TYPE_TEMP});
+    my $order = $self->create({
+        id => $self->uuid,
+        type => ORDER_TYPE_TEMP
+    });
 
-    while (my $item = $data->items->next) {
-        my %copy = %{$data};
+    my $items = $data->items(undef, RETURNAS_ITERATOR);
+    while (my $item = $items->next) {
+        # this keeps lazy population on relationship records happy
+        my $total = $item->total;
+
+        my %copy = %{$item};
 
         $copy{'id'} = $self->uuid;
+        $copy{'orderid'} = $copy{'id'};
+        $copy{'total'} = $total;
+        delete $copy{'cart'};
 
         $order->add_to__items(\%copy);
     };
 
     my $checkout = Handel::Checkout->new();
 
-    $checkout->process($order, CHECKOUT_PHASE_INITIALIZE);
-
-    if ($checkout->status == CHECKOUT_STATUS_OK) {
+    my $status = $checkout->process($order, CHECKOUT_PHASE_INITIALIZE);
+    if ($status == CHECKOUT_STATUS_OK) {
         $checkout->order->update;
     } else {
         $order->delete;
+        undef $order;
     };
 
     return $order;
@@ -122,7 +133,7 @@ __END__
 
 =head1 NAME
 
-Handel::Order - Module to manipulate order records
+Handel::Order - Module for maintaining order contents
 
 =head1 SYNOPSIS
 
