@@ -2,10 +2,11 @@ NAME
     Handel - Simple commerce framework with AxKit/TT2 support
 
 DESCRIPTION
-    Handel is a quick and not-so-dirty ecommerce framework with AxKit taglib
-    support and TT2 (template Toolkit) support. It was started for the
-    conversion of an IIS/ASP based commerce site to Apache/ModPerl, but I
-    decided that is might be useful to others so here it is on CPAN.
+    Handel is a quick and not-so-dirty ecommerce framework with the AxKit
+    manpage taglib support and TT2 (template Toolkit) support. It was
+    started for the conversion of an IIS/ASP based commerce site to
+    Apache/ModPerl, but I decided that is might be useful to others so here
+    it is on CPAN.
 
     For the curious, Handel is German for commerce.
 
@@ -17,9 +18,9 @@ FEATURES
     Currency Formatting
     Basic Localization Support
     Multiple Database Support
-
 REQUIREMENTS
   Prerequisites
+
     The following modules are required for Handel to work properly. Older
     versions may work fine, but hese are the versions I have installed and
     verified to work correctly. IF you have older versious and all tests
@@ -42,6 +43,7 @@ REQUIREMENTS
         "Data::UUID" 0.10.
 
   Optional Modules
+
     The following modules are not required for Handel to run, although some
     features may be unavailable without them.
 
@@ -76,6 +78,7 @@ REQUIREMENTS
         using Handel within TT2 based websites.
 
   Build/Test Modules
+
     The following modules are only required for the test suite when running
     "make test".
 
@@ -115,7 +118,7 @@ REQUIREMENTS
         This keeps me honest and makes sure I always "use strict".
 
 SEE ALSO
-    Handel::Cart
+    the Handel::Cart manpage
 
 AUTHOR
         Christopher H. Laco
