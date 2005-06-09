@@ -15,6 +15,7 @@ __PACKAGE__->autoupdate(1);
 __PACKAGE__->iterator_class('Handel::Iterator');
 __PACKAGE__->columns(All => qw(id cart sku quantity price description));
 __PACKAGE__->columns(Essential => qw(id cart sku quantity price description));
+__PACKAGE__->has_a(price => 'Handel::Currency');
 __PACKAGE__->add_constraint('quantity', quantity => \&constraint_quantity);
 __PACKAGE__->add_constraint('price',    price    => \&constraint_price);
 __PACKAGE__->add_constraint('id',       id       => \&constraint_uuid);
@@ -32,17 +33,6 @@ sub new {
     };
 
     return $self->construct($data);
-};
-
-sub price {
-    my ($self, $price) = @_;
-
-    if (defined $price) {
-        $self->_price($price);
-        return undef;
-    } else {
-        return Handel::Currency->new($self->_price);
-    };
 };
 
 sub total {
