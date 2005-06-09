@@ -1,8 +1,20 @@
 Revision history for Perl module Handel v
 
+0.16_02 Wed Jun 08 17:55:23 2005
+    - Fixed t/l10n.t test failures when LANG != LANGUAGE
+        Thanks to imacat@mail.imacat.idv.tw for the find
+    - Added t/order_new.t tests
+    - Added count/items methods to Handel::Order
+    - Fixed object copy to use columns instead of hash as
+        as suggested on class-dbi list
+    - Fixed undef/regex errors in constraints
+    - Moved cart item price to inflated currency and removed
+    	_price accessor hack
+    - Changed Order::new API to better match Cart::new
+
 0.16_01 Sun Jun 05 20:12:36 2005
     - Added basic checkout/plugin framework
-    - Added basci order support
+    - Added basic order support
 
 0.16 Sun Mar 20 20:16:32 2005
     - General POD cleanup
