@@ -43,40 +43,53 @@ __PACKAGE__->add_constraint('total',    total    => \&constraint_price);
 sub new {
     my ($self, $data) = @_;
 
+    throw Handel::Exception::Argument(
+        -details => translate('Param 1 is not a HASH reference') . '.') unless
+            ref($data) eq 'HASH';
+
+    if (!defined($data->{'id'}) || !constraint_uuid($data->{'id'})) {
+        $data->{'id'} = $self->uuid;
+    };
+
+    if (!defined($data->{'type'})) {
+        $data->{'type'} = ORDER_TYPE_TEMP;
+    };
+
+    my $cart = $data->{'cart'};
+    delete $data->{'cart'};
+
     throw Handel::Exception::Argument( -details =>
       translate(
-          'Param 1 is not a HASH reference or Handel::Cart') . '.') unless
-              (ref($data) eq 'HASH' or $data->isa('Handel::Cart'));
+          'Cart reference is not a HASH reference or Handel::Cart') . '.') unless
+              (ref($cart) eq 'HASH' or UNIVERSAL::isa($cart, 'Handel::Cart'));
 
-    if (ref $data eq 'HASH') {
-        $data = Handel::Cart->load($data, RETURNAS_ITERATOR)->first;
+    if (ref $cart eq 'HASH') {
+        $cart = Handel::Cart->load($cart, RETURNAS_ITERATOR)->first;
 
         throw Handel::Exception::Order( -details =>
             translate(
-                'Could not find a cart matching the supplid search criteria') . '.') unless $data;
+                'Could not find a cart matching the supplid search criteria') . '.') unless $cart;
     };
 
     throw Handel::Exception::Order( -details =>
         translate(
             'Could not create a new order because the supplied cart is empty') . '.') unless
-                $data->count > 0;
+                $cart->count > 0;
 
-    my $order = $self->create({
-        id => $self->uuid,
-        type => ORDER_TYPE_TEMP
-    });
+    my $order = $self->create($data);
 
-    my $items = $data->items(undef, RETURNAS_ITERATOR);
+    my $items = $cart->items(undef, RETURNAS_ITERATOR);
     while (my $item = $items->next) {
-        # this keeps lazy population on relationship records happy
-        my $total = $item->total;
+        my %copy;
 
-        my %copy = %{$item};
+        foreach ($item->columns) {
+            next if $_ =~ /^(id|cart)$/i;
+            $copy{$_} = $item->$_;
+        };
 
-        $copy{'id'} = $self->uuid;
-        $copy{'orderid'} = $copy{'id'};
-        $copy{'total'} = $total;
-        delete $copy{'cart'};
+        $copy{'id'} = $self->uuid unless constraint_uuid($copy{'id'});
+        $copy{'orderid'} = $order->id;
+        $copy{'total'} = $copy{'quantity'}*$copy{'price'};
 
         $order->add_to__items(\%copy);
     };
@@ -92,6 +105,50 @@ sub new {
     };
 
     return $order;
+};
+
+sub count {
+    my $self  = shift;
+
+    return $self->_items->count || 0;
+};
+
+sub items {
+    my ($self, $filter, $wantiterator) = @_;
+
+    throw Handel::Exception::Argument( -details =>
+        translate('Param 1 is not a HASH reference') . '.') unless(
+            ref($filter) eq 'HASH' or !$filter);
+
+    $wantiterator ||= RETURNAS_AUTO;
+    $filter       ||= {};
+
+    my $wildcard = Handel::DBI::has_wildcard($filter);
+
+    ## If the filter as a wildcard, push it through a fresh search_like since it
+    ## doesn't appear to be available within a loaded object.
+    if ((wantarray && $wantiterator != RETURNAS_ITERATOR) || $wantiterator == RETURNAS_LIST) {
+        my @items = $wildcard ?
+            Handel::Order::Item->search_like(%{$filter}, orderid => $self->id) :
+            $self->_items(%{$filter});
+
+        return @items;
+    } elsif ($wantiterator == RETURNAS_ITERATOR) {
+        my $iterator = $wildcard ?
+            Handel::Order::Item->search_like(%{$filter}, orderid => $self->id) :
+            $self->_items(%{$filter});
+
+        return $iterator;
+    } else {
+        my $iterator = $wildcard ?
+            Handel::Order::Item->search_like(%{$filter}, orderid => $self->id) :
+            $self->_items(%{$filter});
+        if ($iterator->count == 1 && $wantiterator != RETURNAS_ITERATOR && $wantiterator != RETURNAS_LIST) {
+            return $iterator->next;
+        } else {
+            return $iterator;
+        };
+    };
 };
 
 sub load {
@@ -164,17 +221,18 @@ into C<new> containing all the required values needed to create a new order
 record or pass a hashref into C<load> containing the search criteria to use
 to load an existing order or set of orders.
 
-You may also pass an already existing Handel::Cart object into C<new> instead
-of a hash of search critera.
+B<NOTE:> The only required hash key is C<cart>. C<new> will copy the specified
+carts items inthe the order items. C<cart> can be an already existing
+Handel::Cart object, of a hash reference of search critera, or a cart id (uuid).
 
 =over
 
 =item C<Handel::Order-E<gt>new(\%data)>
-=item C<Handel::Order-E<gt>new(Handel::Cart)>
 
     my $order = Handel::Order->new({
         shopper => '10020400-E260-11CF-AE68-00AA004A34D5',
-        id => '111111111-2222-3333-4444-555566667777'
+        id => '111111111-2222-3333-4444-555566667777',
+        cart => $cartobject
     });
 
 =item C<Handel::Order-E<gt>load([\%filter, $wantiterator])>
@@ -203,6 +261,56 @@ A C<Handel::Exception::Argument> exception is thrown if the first parameter is
 not a hashref.
 
 =back
+
+=head1 METHODS
+
+=head2 items([\%filter, [$wantiterator])
+
+You can retrieve all or some of the items contained in the order via the C<items>
+method. In a scalar context, items returns an iterator object which can be used
+to cycle through items one at a time. In list context, it will return an array
+containing all items.
+
+    my $iterator = $order->items;
+    while (my $item = $iterator->next) {
+        print $item->sku;
+    };
+
+    my @items = $order->items;
+    ...
+    dosomething(\@items);
+
+When filtering the items in the order in scalar context, a
+C<Handel::Order::Item> object will be returned if there is only one result. If
+there are multiple results, a Handel::Iterator object will be returned
+instead. You can force C<items> to always return a C<Handel::Iterator> object
+even if only one item exists by setting the $wantiterator parameter to
+C<RETURNAS_ITERATOR>.
+
+    my $item = $order->items({sku => 'SKU1234'}, RETURNAS_ITERATOR);
+    if ($item->isa('Handel::Order::Item)) {
+        print $item->sku;
+    } else {
+        while ($item->next) {
+            print $_->sku;
+        };
+    };
+
+See the C<RETURNAS> constants in L<Handel::Constants> for other options.
+
+In list context, filtered items return an array of items just as when items is
+called without a filter specified.
+
+    my @items - $order->items((sku -> 'SKU1%'});
+
+A C<Handel::Exception::Argument> exception is thrown if parameter one isn't a
+hashref or undef.
+
+=head2 count
+
+Returns the number of items in the order object.
+
+    my $numitems = $order->count;
 
 =head1 AUTHOR
 
