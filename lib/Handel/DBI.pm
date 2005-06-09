@@ -55,14 +55,6 @@ sub _croak {
     return;
 };
 
-sub accessor_name {
-    my ($class, $column) = @_;
-
-    $column =~ s/^(price)$/_$1/;
-
-    return $column;
-}
-
 sub has_wildcard {
     my $filter = shift;
 
