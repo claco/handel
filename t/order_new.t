@@ -11,7 +11,7 @@ BEGIN {
     if($@) {
         plan skip_all => 'DBD::SQLite not installed';
     } else {
-        plan tests => 9;
+        plan tests => 18;
     };
 
     use_ok('Handel::Constants', qw(:order :checkout :returnas));
@@ -47,12 +47,10 @@ use_ok('Handel::Order');
     my $db           = "dbi:SQLite:dbname=$dbfile";
     my $createcart   = 't/sql/cart_create_table.sql';
     my $createorder  = 't/sql/order_create_table.sql';
-    #my $data    = 't/sql/order_fake_data.sql';
 
     unlink $dbfile;
     executesql($db, $createorder);
     executesql($db, $createcart);
-    #executesql($db, $data);
 
     local $^W = 0;
     Handel::DBI->connection($db);
@@ -70,11 +68,23 @@ use_ok('Handel::Order');
 };
 
 
-## test for Handel::Exception::Argument where first param is not a Handel::Cart object
+## test for Handel::Exception::Argument where cart key is not a hashref
+{
+    try {
+        my $order = Handel::Order->new({cart => '1234'});
+    } catch Handel::Exception::Argument with {
+        pass;
+    } otherwise {
+        fail;
+    };
+};
+
+
+## test for Handel::Exception::Argument where cart key is not a Handel::Cart object
 {
     try {
         my $fake = bless {}, 'MyObject::Foo';
-        my $order = Handel::Order->new($fake);
+        my $order = Handel::Order->new({cart => $fake});
     } catch Handel::Exception::Argument with {
         pass;
     } otherwise {
@@ -88,7 +98,7 @@ use_ok('Handel::Order');
     try {
         my $cart = Handel::Cart->construct({});
 
-        my $order = Handel::Order->new($cart);
+        my $order = Handel::Order->new({cart => $cart});
     } catch Handel::Exception::Order with {
         pass;
     } otherwise {
@@ -98,7 +108,7 @@ use_ok('Handel::Order');
 
 SKIP: {
     eval 'use Test::MockObject 0.07';
-    skip 'Test::MockObject not installed', 1 if $@;
+    skip 'Test::MockObject not installed', 9 if $@;
 
     my $cart = Handel::Cart->new({id=>'11111111-1111-1111-1111-111111111111', name=>'MyCart'});
     my $item = $cart->add({
@@ -109,6 +119,16 @@ SKIP: {
         description => 'My Item'
     });
 
-    my $order = Handel::Order->new($cart);
+    my $order = Handel::Order->new({cart => $cart});
     isa_ok($order, 'Handel::Order');
+    is($cart->count, $order->count);
+
+    my $orderitem = $order->items;
+    isa_ok($orderitem, 'Handel::Order::Item');
+    is($orderitem->sku, $item->sku);
+    is($orderitem->quantity, $item->quantity);
+    is($orderitem->price, $item->price);
+    is($orderitem->description, $item->description);
+    is($orderitem->total, $item->total);
+    is($orderitem->orderid, $order->id);
 };
