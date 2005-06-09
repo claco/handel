@@ -25,7 +25,8 @@ BEGIN {
 my %codes;
 
 sub constraint_quantity {
-    my ($value, $object, $column, $changing) = @_;
+    my $value = defined $_[0] ? shift : '';
+    my ($object, $column, $changing) = @_;
 
     my $cfg    = Handel::ConfigReader->new();
     my $max    = $cfg->{'HandelMaxQuantity'};
@@ -45,13 +46,13 @@ sub constraint_quantity {
 };
 
 sub constraint_price {
-    my $value = shift;
+    my $value = defined $_[0] ? shift : '';
 
     return ($value =~ /^\d{1,5}(\.\d{1,2})?$/ && $value > 0);
 };
 
 sub constraint_uuid {
-    my $value = shift;
+    my $value = defined $_[0] ? shift : '';
 
     return ($value =~ m/  ^[0-9a-f]{8}-
                            [0-9a-f]{4}-
@@ -62,7 +63,7 @@ sub constraint_uuid {
 };
 
 sub constraint_cart_type {
-    my $value = shift;
+    my $value = defined $_[0] ? shift : '';
 
     return if $value !~ /[0-9]/;
 
@@ -73,7 +74,7 @@ sub constraint_cart_type {
 };
 
 sub constraint_currency_code {
-    my $value = uc(shift);
+    my $value = defined $_[0] ? uc(shift) : '';
 
     return  unless ($value =~ /^[A-Z]{3}$/);
 
@@ -89,7 +90,7 @@ sub constraint_currency_code {
 };
 
 sub constraint_checkout_phase {
-    my $value = shift || 0;
+    my $value = defined $_[0] ? shift : '';
 
     return if $value !~ /[0-9]/;
 
