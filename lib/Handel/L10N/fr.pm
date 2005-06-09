@@ -39,7 +39,7 @@ BEGIN {
     "Param 1 is not a HASH reference" =>
         "Le param 1 n'est pas une référence d'cInformations PARASITES",
 
-    "Param 1 is not a HASH reference or Handel::Cart" =>
+    "Cart reference is not a HASH reference or Handel::Cart" =>
         "Le param 1 n'est pas une référence d'cInformations PARASITES ou un Handel::Cart",
 
     "Param 1 is not a HASH reference or Handel::Cart::Item" =>
