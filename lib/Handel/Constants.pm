@@ -16,7 +16,7 @@ use constant CART_TYPE_TEMP    => 0;
 use constant CART_TYPE_SAVED   => 1;
 
 use constant ORDER_TYPE_TEMP   => 0;
-use constant ORDER_TYPE_SAVED  => 0;
+use constant ORDER_TYPE_SAVED  => 1;
 
 use constant RETURNAS_AUTO     => 0;
 use constant RETURNAS_ITERATOR => 1;
