@@ -56,19 +56,26 @@ sub new {
     };
 
     my $cart = $data->{'cart'};
+    my $is_uuid = constraint_uuid($cart);
     delete $data->{'cart'};
 
     throw Handel::Exception::Argument( -details =>
       translate(
           'Cart reference is not a HASH reference or Handel::Cart') . '.') unless
-              (ref($cart) eq 'HASH' or UNIVERSAL::isa($cart, 'Handel::Cart'));
+              (ref($cart) eq 'HASH' or UNIVERSAL::isa($cart, 'Handel::Cart') or $is_uuid);
 
     if (ref $cart eq 'HASH') {
         $cart = Handel::Cart->load($cart, RETURNAS_ITERATOR)->first;
 
         throw Handel::Exception::Order( -details =>
             translate(
-                'Could not find a cart matching the supplid search criteria') . '.') unless $cart;
+                'Could not find a cart matching the supplied search criteria') . '.') unless $cart;
+    } elsif ($is_uuid) {
+        $cart = Handel::Cart->load({id => $cart}, RETURNAS_ITERATOR)->first;
+
+        throw Handel::Exception::Order( -details =>
+            translate(
+                'Could not find a cart matching the supplied search criteria') . '.') unless $cart;
     };
 
     throw Handel::Exception::Order( -details =>
@@ -77,7 +84,7 @@ sub new {
                 $cart->count > 0;
 
     my $order = $self->create($data);
-
+    my $subtotal = 0;
     my $items = $cart->items(undef, RETURNAS_ITERATOR);
     while (my $item = $items->next) {
         my %copy;
@@ -90,9 +97,12 @@ sub new {
         $copy{'id'} = $self->uuid unless constraint_uuid($copy{'id'});
         $copy{'orderid'} = $order->id;
         $copy{'total'} = $copy{'quantity'}*$copy{'price'};
+        $subtotal += $copy{'total'};
 
         $order->add_to__items(\%copy);
     };
+    $order->subtotal($subtotal);
+
 
     my $checkout = Handel::Checkout->new();
 
@@ -233,6 +243,21 @@ Handel::Cart object, of a hash reference of search critera, or a cart id (uuid).
         shopper => '10020400-E260-11CF-AE68-00AA004A34D5',
         id => '111111111-2222-3333-4444-555566667777',
         cart => $cartobject
+    });
+
+    my $order = Handel::Order->new({
+        shopper => '10020400-E260-11CF-AE68-00AA004A34D5',
+        id => '111111111-2222-3333-4444-555566667777',
+        cart => '11112222-3333-4444-5555-666677778888'
+    });
+
+    my $order = Handel::Order->new({
+        shopper => '10020400-E260-11CF-AE68-00AA004A34D5',
+        id => '111111111-2222-3333-4444-555566667777',
+        cart => {
+            id => '11112222-3333-4444-5555-666677778888',
+            type => CART_TYPE_TEMP
+        }
     });
 
 =item C<Handel::Order-E<gt>load([\%filter, $wantiterator])>
