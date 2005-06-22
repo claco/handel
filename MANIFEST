@@ -217,6 +217,8 @@ t/htdocs/tt2/out/cart_save.tt2.out
 t/htdocs/tt2/out/cart_update.tt2.out
 t/l10n.t
 t/lib/Handel/TestHelper.pm
+t/order_items.t
+t/order_load.t
 t/order_new.t
 t/pod_coverage.t
 t/pod_syntax.t
@@ -225,6 +227,7 @@ t/SMOKE.PL
 t/sql/cart_create_table.sql
 t/sql/cart_fake_data.sql
 t/sql/order_create_table.sql
+t/sql/order_fake_data.sql
 t/TEST.PL
 t/tt2_cart.t
 t/warnings.t
