@@ -7,7 +7,7 @@ use vars qw(@EXPORT_OK %EXPORT_TAGS);
 BEGIN {
     use base 'Exporter';
     use Handel::ConfigReader;
-    use Handel::Constants qw(:cart :checkout);
+    use Handel::Constants qw(:cart :checkout :order);
     use Handel::Exception;
     use Handel::L10N qw(translate);
 };
@@ -18,6 +18,7 @@ BEGIN {
                 &constraint_cart_type
                 &constraint_currency_code
                 &constraint_checkout_phase
+                &constraint_order_type
 );
 
 %EXPORT_TAGS = (all => \@EXPORT_OK);
@@ -101,6 +102,17 @@ sub constraint_checkout_phase {
     return 1;
 };
 
+sub constraint_order_type {
+    my $value = defined $_[0] ? shift : '';
+
+    return if $value !~ /[0-9]/;
+
+    if ($value != ORDER_TYPE_SAVED && $value != ORDER_TYPE_TEMP) {
+        return 0;
+    };
+    return 1;
+};
+
 1;
 __END__
 
@@ -170,6 +182,11 @@ conforms to:
 =head2 constraint_checkout_phase
 
 Returns 1 if the value passed is one of the C<CHECKOUT_PHASE_*> constants,
+otherwise it returns C<undef>.
+
+=head2 constraint_order_type
+
+Returns 1 if the value passed is C<ORDER_TYPE_SAVED> or C<ORDER_TYPE_TEMP>,
 otherwise it returns C<undef>.
 
 =head1 EXPORT_TAGS
