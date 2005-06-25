@@ -4,27 +4,37 @@ use strict;
 use warnings;
 
 BEGIN {
+    use Handel::ConfigReader;
     use Handel::Constants qw(:checkout :returnas);
     use Handel::Constraints qw(constraint_checkout_phase constraint_uuid);
     use Handel::Exception qw(:try);
     use Handel::L10N qw(translate);
-    use Module::Pluggable 2.8 instantiate => 'new';
+    use Module::Pluggable 2.8 instantiate => 'new', sub_name => '_plugins';
 };
 
 sub new {
     my $class = shift;
     my $self = bless {}, ref $class || $class;
-    my @plugins = $self->plugins($self);
+    my @plugins;
 
-    $self->{'plugins'} = \@plugins;
+    $self->_set_search_path;
 
-    foreach (@plugins) {
-        if (UNIVRSAL::isa($_, 'Handel::Checkout::Plugin')) {
+    foreach ($self->_plugins($self)) {
+        if (UNIVERSAL::isa($_, 'Handel::Checkout::Plugin')) {
             $_->register($self);
+            push @plugins, $_;
         };
     };
 
+    $self->{'plugins'} = \@plugins;
+
     return $self;
+};
+
+sub plugins {
+    my $self = shift;
+
+    return @{$self->{'plugins'}};
 };
 
 sub add_handler {
@@ -160,6 +170,28 @@ sub _teardown {
             warn $E->text;
         };
     };
+};
+
+sub _set_search_path {
+    my $self = shift;
+    my $config = Handel::ConfigReader->new;
+
+    if (my $path = $config->{'HandelPluginPaths'}) {
+        $self->search_path(new => _path_to_array($path));
+    } elsif ($path = $config->{'HandelAddPluginPaths'}) {
+        $self->search_path(new => 'Handel::Checkout::Plugin', _path_to_array($path));
+    };
+};
+
+sub _path_to_array {
+    my $path = shift or return '';
+
+    # ditch begin/end space, replace comma with space and
+    # split on space
+    $path =~ s/(^\s+|\s+$)//;
+    $path =~ s/,/ /g;
+
+    return split /\s+/, $path;
 };
 
 1;
@@ -349,6 +381,40 @@ Get/Set the phases active for the current checkout process.
 =head2 process([\@phases])
 
 Executes the current checkout process pipeline and returns CHECKOUT_STATUS_*.
+
+=head1 CONFIGURATION
+
+=head2 HandelPluginPaths
+
+This resets the checkout plugin search path to a namespace of your choosing,
+The default plugin search path is Handel::Checkout::Plugin::*
+
+    PerlSetVar HandelPluginPaths MyApp::Plugins
+
+In the example above, the checkout plugin search path will load all plugins
+in the MyApp::Plugins::* namespace (but not MyApp::Plugin itself). Any plugins
+in Handel::Checkout::Plugin::* will be ignored.
+
+You can also pass a comma or space seperate list of namespaces.
+
+    PerlSetVar HandelPluginPaths 'MyApp::Plugins, OtherApp::Plugins'
+
+Any plugin found in the search path that isn't a subclass of Handel::Checkout::Plugin
+will be ignored.
+
+=head2 HandelAddPluginPaths
+
+This adds an additional plugin search paths. This can be a comma or space
+seperated list of namespaces.
+
+    PerlSetVar HandelAddPluginPaths  'MyApp::Plugins, OtherApp::Plugins'
+
+In the example above, when a checkout process is loaded, it will load
+all plugins in the Handel::Checkout::Plugin::*, MyApp::Plugins::*, and
+OtherApp::Plugins namespaces.
+
+Any plugin found in the search path that isn't a subclass of Handel::Checkout::Plugin
+will be ignored.
 
 =head1 SEE ALSO
 
