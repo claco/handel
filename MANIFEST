@@ -62,12 +62,14 @@ t/cart_restore_merge_filter.t
 t/cart_restore_replace.t
 t/cart_restore_replace_filter.t
 t/cart_save.t
+t/checkout_plugins.t
 t/conf/extra.conf.in
 t/config.t
 t/constants.t
 t/constraints_cart_type.t
 t/constraints_checkout_phase.t
 t/constraints_currency_code.t
+t/constraints_order_type.t
 t/constraints_price.t
 t/constraints_quantity.t
 t/constraints_uuid.t
@@ -216,7 +218,11 @@ t/htdocs/tt2/out/cart_restore_replace.tt2.out
 t/htdocs/tt2/out/cart_save.tt2.out
 t/htdocs/tt2/out/cart_update.tt2.out
 t/l10n.t
+t/lib/Handel/Checkout/Plugin/TestPlugin.pm
+t/lib/Handel/Checkout/Plugin/TestBogusPlugin.pm
+t/lib/Handel/OtherTestPlugins/Second.pm
 t/lib/Handel/TestHelper.pm
+t/lib/Handel/TestPlugins/First.pm
 t/order_items.t
 t/order_load.t
 t/order_new.t
