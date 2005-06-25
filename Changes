@@ -1,11 +1,19 @@
-Revision history for Perl module Handel v
+Revision history for Perl module Handel
 
-0.16_03 Web Jun 22 19:45:25 2005
+0.16_04
+    - Added order type constraint tests
+    - Changed Order to use constraints_order_type
+    - Added checkout_plugins.t tests
+    - Plugin::init now received the checkout context from new
+    - Fixed Checkout::plugins so it always returns the same thing
+    	when called multiple times
+
+0.16_03 Wed Jun 22 19:45:25 2005
     - Added more order_new.t tests
     - Added order_load.t tests
     - Added order_item.t tests
     - Fixed ORDER_TYPE_SAVED value
-    - Addd missing cart load via uuid code in Order::new
+    - Added missing cart load via uuid code in Order::new
 
 0.16_02 Wed Jun 08 17:55:23 2005
     - Fixed t/l10n.t test failures when LANG != LANGUAGE
