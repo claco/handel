@@ -7,7 +7,7 @@ sub new {
     my ($class, $ctx) = @_;
     my $self = bless {}, ref $class || $class;
 
-    $self->init;
+    $self->init($ctx);
 
     return $self;
 };
