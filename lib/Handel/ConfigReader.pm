@@ -174,6 +174,38 @@ The user name used to connect to the server. Defaults to C<commerce>.
 
 The password used to connect to the server. Defaults to C<commerce>.
 
+=head2 HandelPluginPaths
+
+This resets the checkout plugin search path to a namespace of your choosing,
+The default plugin search path is Handel::Checkout::Plugin::*
+
+    PerlSetVar HandelPluginPaths MyApp::Plugins
+
+In the example above, the checkout plugin search path will load all plugins
+in the MyApp::Plugins::* namespace (but not MyApp::Plugin itself). Any plugins
+in Handel::Checkout::Plugin::* will be ignored.
+
+You can also pass a comma or space seperate list of namespaces.
+
+    PerlSetVar HandelPluginPaths 'MyApp::Plugins, OtherApp::Plugins'
+
+Any plugin found in the search path that isn't a subclass of Handel::Checkout::Plugin
+will be ignored.
+
+=head2 HandelAddPluginPaths
+
+This adds an additional plugin search paths. This can be a comma or space
+seperated list of namespaces.
+
+    PerlSetVar HandelAddPluginPaths  'MyApp::Plugins, OtherApp::Plugins'
+
+In the example above, when a checkout process is loaded, it will load
+all plugins in the Handel::Checkout::Plugin::*, MyApp::Plugins::*, and
+OtherApp::Plugins namespaces.
+
+Any plugin found in the search path that isn't a subclass of Handel::Checkout::Plugin
+will be ignored.
+
 =head1 AUTHOR
 
     Christopher H. Laco
