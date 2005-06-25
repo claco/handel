@@ -33,7 +33,7 @@ __PACKAGE__->has_a(tax       => 'Handel::Currency');
 
 __PACKAGE__->add_constraint('id',       id       => \&constraint_uuid);
 __PACKAGE__->add_constraint('shopper',  shopper  => \&constraint_uuid);
-__PACKAGE__->add_constraint('type',     type     => \&constraint_cart_type);
+__PACKAGE__->add_constraint('type',     type     => \&constraint_order_type);
 __PACKAGE__->add_constraint('shipping', shipping => \&constraint_price);
 __PACKAGE__->add_constraint('handling', handling => \&constraint_price);
 __PACKAGE__->add_constraint('subtotal', subtotal => \&constraint_price);
