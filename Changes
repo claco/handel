@@ -1,6 +1,6 @@
 Revision history for Perl module Handel
 
-0.16_04
+0.16_04 Sat Jun 25 20:57:15 2005
     - Added order type constraint tests
     - Changed Order to use constraints_order_type
     - Added checkout_plugins.t tests
