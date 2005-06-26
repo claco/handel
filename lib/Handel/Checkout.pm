@@ -14,19 +14,20 @@ BEGIN {
 
 sub new {
     my $class = shift;
-    my $self = bless {}, ref $class || $class;
-    my @plugins;
+    my $self = bless {
+        plugins => [],
+        handlers => {},
+        phases => []
+    }, ref $class || $class;
 
     $self->_set_search_path;
 
     foreach ($self->_plugins($self)) {
         if (UNIVERSAL::isa($_, 'Handel::Checkout::Plugin')) {
+            push @{$self->{'plugins'}}, $_;
             $_->register($self);
-            push @plugins, $_;
         };
     };
-
-    $self->{'plugins'} = \@plugins;
 
     return $self;
 };
