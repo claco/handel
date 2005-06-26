@@ -3,15 +3,17 @@
 use strict;
 use warnings;
 use lib 't/lib';
-use Test::More tests => 56;
+use Test::More tests => 59;
 
 BEGIN {
     use_ok('Handel::Checkout');
 };
 
 SKIP: {
-    eval 'use Module::Pluggable 2.8';
-    skip 'Module::Pluggable >= 2.9 not installed', 55 if $@;
+    diag "Waiting on Module::Pluggable 2.9 Taint Fixes";
+
+    eval 'use Module::Pluggable 2.9';
+    skip 'Module::Pluggable >= 2.9 not installed', 58 if $@;
 
     ## Load all plugins in a new path
     {
@@ -30,6 +32,11 @@ SKIP: {
         isa_ok($plugin, 'Handel::Checkout::Plugin');
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
+
+        isa_ok($checkout->{'handlers'}->{1}->[0]->[0], 'Handel::TestPlugins::First');
+        is(ref $checkout->{'handlers'}->{1}->[0]->[1], 'CODE');
+        $checkout->{'handlers'}->{1}->[0]->[1]->($plugin);
+        ok($plugin->{'handler_called'});
     };
 
 
@@ -48,6 +55,7 @@ SKIP: {
 
         foreach (qw(Handel::TestPlugins::First Handel::OtherTestPlugins::Second)) {
             my $plugin = $plugins{$_};
+
             isa_ok($plugin, 'Handel::Checkout::Plugin');
             ok($plugin->{'init_called'});
             ok($plugin->{'register_called'});
