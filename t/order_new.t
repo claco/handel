@@ -27,13 +27,14 @@ if (!$@) {
     $mock->fake_module('Handel::Checkout');
     $mock->fake_new('Handel::Checkout');
     $mock->mock(process => sub {
-        my ($self, $order) = @_;
-        $self->{'order'} = $order;
+        my ($self) = @_;
 
         return &CHECKOUT_STATUS_OK;
     });
     $mock->mock(order => sub {
-        my $self = shift;
+        my ($self, $order) = @_;
+
+        $self->{'order'} = $order if $order;
 
         return $self->{'order'};
     });
