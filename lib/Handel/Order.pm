@@ -239,9 +239,14 @@ B<NOTE:> The only required hash key is C<cart>. C<new> will copy the specified
 carts items inthe the order items. C<cart> can be an already existing
 Handel::Cart object, of a hash reference of search critera, or a cart id (uuid).
 
+When creating a new order from a cart, C<new> will automatically create a
+new Handel::Checkout process and process C<CHECKOUT_PHASE_INITIALIZE> on the
+new order. This can be disabled by passing any true value in the second option
+C<noprocess>.
+
 =over
 
-=item C<Handel::Order-E<gt>new(\%data)>
+=item C<Handel::Order-E<gt>new(\%data [, $noprocess])>
 
     my $order = Handel::Order->new({
         shopper => '10020400-E260-11CF-AE68-00AA004A34D5',
