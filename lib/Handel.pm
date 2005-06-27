@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use vars qw($VERSION);
 
-$VERSION = '0.16_04';
+$VERSION = '0.16_05';
 
 1;
 __END__
