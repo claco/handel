@@ -14,13 +14,14 @@ BEGIN {
 
 sub new {
     my $class = shift;
+    my $opts = shift || {};
     my $self = bless {
         plugins => [],
         handlers => {},
         phases => []
     }, ref $class || $class;
 
-    $self->_set_search_path;
+    $self->_set_search_path($opts);
 
     foreach ($self->_plugins($self)) {
         if (UNIVERSAL::isa($_, 'Handel::Checkout::Plugin')) {
@@ -28,6 +29,9 @@ sub new {
             $_->register($self);
         };
     };
+
+    $self->cart($opts->{'cart'}) if $opts->{'cart'};
+    $self->order($opts->{'order'}) if $opts->{'order'};
 
     return $self;
 };
@@ -64,16 +68,10 @@ sub cart {
     my ($self, $cart) = @_;
 
     if ($cart) {
-        if (ref $cart eq 'HASH') {
-            $self->order(Handel::Order->new($cart));
-        } elsif (UNIVERSAL::isa($cart, 'Handel::Cart')) {
-            $self->order(Handel::Order->new($cart));
-        } elsif (constaint_uuid($cart)) {
-            my $cart = Handel::Cart->new({id => $cart});
-
-            $self->order(Handel::Order->new($cart));
+        if (ref $cart eq 'HASH' || UNIVERSAL::isa($cart, 'Handel::Cart') || constraint_uuid($cart)) {
+            $self->order(Handel::Order->new({cart => $cart}, 1));
         } else {
-            throw Handel::Exception::Argument(
+            throw Handel::Exception::Argument( -details =>
                 translate('Param 1 is not a HASH reference, Handel::Cart object, or cart id') . '.');
         };
     };
@@ -84,11 +82,11 @@ sub order {
 
     if ($order) {
         if (ref $order eq 'HASH') {
-            $self->{'order'} = Handel::Order->load($order, RETURNAS_ITERATOR)->next;
+            $self->{'order'} = Handel::Order->load($order, RETURNAS_ITERATOR)->first;
         } elsif (UNIVERSAL::isa($order, 'Handel::Order')) {
             $self->{'order'} = $order;
-        } elsif (constaint_uuid($order)) {
-            $self->{'order'} = Handel::Order->load(id => $order);
+        } elsif (constraint_uuid($order)) {
+            $self->{'order'} = Handel::Order->load({id => $order});
         } else {
             throw Handel::Exception::Argument( -details =>
                 translate('Param 1 is not a HASH reference, Handel::Order object, or order id') . '.');
@@ -174,13 +172,21 @@ sub _teardown {
 };
 
 sub _set_search_path {
-    my $self = shift;
+    my ($self, $opts) = @_;
     my $config = Handel::ConfigReader->new;
 
-    if (my $path = $config->{'HandelPluginPaths'}) {
+    my $pluginpaths = ref $opts->{'pluginpaths'} eq 'ARRAY' ?
+        join(' ', @{$opts->{'pluginpaths'}}) : $opts->{'pluginpaths'} || '';
+
+    my $addpluginpaths = ref $opts->{'addpluginpaths'} eq 'ARRAY' ?
+        join(' ', @{$opts->{'addpluginpaths'}}) : $opts->{'addpluginpaths'} || '' ;
+
+    if ($pluginpaths) {
+        $self->search_path(new => _path_to_array($pluginpaths));
+    } elsif (my $path = $config->{'HandelPluginPaths'}) {
         $self->search_path(new => _path_to_array($path));
     } elsif ($path = $config->{'HandelAddPluginPaths'}) {
-        $self->search_path(new => 'Handel::Checkout::Plugin', _path_to_array($path));
+        $self->search_path(new => 'Handel::Checkout::Plugin', _path_to_array("$path $addpluginpaths"));
     };
 };
 
@@ -251,13 +257,39 @@ and associated with the new checkout process.
 See C<order> below for further details about the various values allowed
 to be passed.
 
-=item plugins
+=item pluginpaths
 
-An array reference containing the various namespaces of plugins to be loaded.
+An array reference or a comma (or space) seperated list containing the various
+namespaces of plugins to be loaded. This will override any settings in
+C<ENV> or F<httpd.conf> for the current checkout instance only.
 
     my $checkout = Handel::Checkout->new({
-        plugins => [MyNamespace::Plugins, Other::Plugin]
+        pluginpaths => [MyNamespace::Plugins, Other::Plugin]
     });
+
+    my $checkout = Handel::Checkout->new({
+        pluginpaths => 'MyNamespace::Plugins, Other::Plugin'
+    });
+
+See L<"HandelPluginPaths"> for more information about settings/resetting
+plugin search paths.
+
+=item addpluginpaths
+
+An array reference or a comma (or space) seperated list containing the various
+namespaces of plugin paths in addition to Handel::Checkout::Plugin to be loaded.
+If C<HandelAddPluginPaths> is also specified, the two will be combined.
+
+    my $checkout = Handel::Checkout->new({
+        addpluginpaths => [MyNamespace::Plugins, Other::Plugin]
+    });
+
+    my $checkout = Handel::Checkout->new({
+        addpluginpaths => 'MyNamespace::Plugins, Other::Plugin'
+    });
+
+See L<"HandelAddPluginPaths"> for more information about settings/resetting
+plugin search paths.
 
 =item phases
 
@@ -330,6 +362,17 @@ current checkout process.
     $checkout->cart('12345678-9098-7654-3212-345678909876');
 
 =back
+
+=head2 plugins
+
+Returns the plugins loaded for checkout instance
+
+    my $checkout = Handel::Checkout->new;
+    my @plugins = $checkout->plugins;
+
+    foreach (@plugins) {
+        $_->cleanup_or_something;
+    };
 
 =head2 order
 
