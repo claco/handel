@@ -249,6 +249,11 @@ process.
 See C<cart> below for further details about the various values allowed
 to be passed.
 
+B<Note>: When creating a new order via Handel::Order, C<new> will automatically
+create a checkout process and process the C<CHECKOUT_PHASE_INITIALIZE>.
+However, when a new order is created using C<cart> in Handel::Checkout, the
+automatic processing of C<CHECKOUT_PHASE_INITIALIZE> is disabled.
+
 =item order
 
 A HASH reference, Handel::Order object, or an order id. This will be loaded
