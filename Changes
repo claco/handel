@@ -1,5 +1,11 @@
 Revision history for Perl module Handel
 
+0.16_05 Mon Jun 27 07:32:35 2005
+    - Changed plugins option in Checkout::new to pluginpaths and
+        addpluginpaths to match global config settings
+    - Added checkout_order.t tests
+    - Added checkout_cart.t tests
+
 0.16_04 Sat Jun 25 20:57:15 2005
     - Added order type constraint tests
     - Changed Order to use constraints_order_type
