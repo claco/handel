@@ -41,7 +41,7 @@ __PACKAGE__->add_constraint('tax',      tax      => \&constraint_price);
 __PACKAGE__->add_constraint('total',    total    => \&constraint_price);
 
 sub new {
-    my ($self, $data) = @_;
+    my ($self, $data, $noprocess) = @_;
 
     throw Handel::Exception::Argument(
         -details => translate('Param 1 is not a HASH reference') . '.') unless
@@ -102,16 +102,20 @@ sub new {
         $order->add_to__items(\%copy);
     };
     $order->subtotal($subtotal);
+    $order->update;
 
+    unless ($noprocess) {
+        my $checkout = Handel::Checkout->new;
+        $checkout->order($order);
 
-    my $checkout = Handel::Checkout->new();
-
-    my $status = $checkout->process($order, CHECKOUT_PHASE_INITIALIZE);
-    if ($status == CHECKOUT_STATUS_OK) {
-        $checkout->order->update;
-    } else {
-        $order->delete;
-        undef $order;
+        my $status = $checkout->process([CHECKOUT_PHASE_INITIALIZE]);
+        if ($status == CHECKOUT_STATUS_OK) {
+            $checkout->order->update;
+        } else {
+            $order->delete;
+            undef $order;
+        };
+        undef $checkout;
     };
 
     return $order;
