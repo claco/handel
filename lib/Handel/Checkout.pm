@@ -8,6 +8,7 @@ BEGIN {
     use Handel::Constants qw(:checkout :returnas);
     use Handel::Constraints qw(constraint_checkout_phase constraint_uuid);
     use Handel::Exception qw(:try);
+    use Handel::Checkout::Message;
     use Handel::L10N qw(translate);
     use Module::Pluggable 2.8 instantiate => 'new', sub_name => '_plugins';
 };
@@ -18,7 +19,8 @@ sub new {
     my $self = bless {
         plugins => [],
         handlers => {},
-        phases => []
+        phases => [],
+        messages => []
     }, ref $class || $class;
 
     $self->_set_search_path($opts);
@@ -32,6 +34,7 @@ sub new {
 
     $self->cart($opts->{'cart'}) if $opts->{'cart'};
     $self->order($opts->{'order'}) if $opts->{'order'};
+    $self->phases($opts->{'phases'}) if $opts->{'phases'};
 
     return $self;
 };
@@ -64,6 +67,25 @@ sub add_handler {
     };
 };
 
+sub add_message {
+    my ($self, $message) = @_;
+    my ($package, $filename, $line) = caller;
+
+    if (ref $message && UNIVERSAL::isa($message, 'Handel::Checkout::Message')) {
+        $message->package($package) unless $message->package;
+        $message->filename($filename) unless $message->filename;
+        $message->line($line) unless $message->line;
+
+        push @{$self->{'messages'}}, $message;
+    } elsif (!ref $message) {
+        push @{$self->{'messages'}}, Handel::Checkout::Message->new(
+            text => $message, source => $package, filename => $filename, line => $line);
+    } else {
+        throw Handel::Exception::Argument( -details =>
+            translate('Param 1 is not a Handel::Checkout::Message object or text message') . '.');
+    };
+};
+
 sub cart {
     my ($self, $cart) = @_;
 
@@ -75,6 +97,12 @@ sub cart {
                 translate('Param 1 is not a HASH reference, Handel::Cart object, or cart id') . '.');
         };
     };
+};
+
+sub messages {
+    my $self = shift;
+
+    return $self->{'messages'};
 };
 
 sub order {
@@ -115,24 +143,26 @@ sub process {
     my $self = shift;
     my $phases = shift;
 
-    $self->_setup($self);
-
     if ($phases) {
         throw Handel::Exception::Argument( -details =>
             translate(
                 'Param 1 is not an ARRAY reference') . '.')
                 unless ref($phases) eq 'ARRAY';
-
-        $self->{'phases'} = $phases;
     } else {
         $phases = $self->{'phases'} || CHECKOUT_DEFAULT_PHASES;
     };
+
+    throw Handel::Exception::Checkout( -details =>
+        translate('No order is assocated with this checkout process') . '.')
+            unless $self->order;
+
+    $self->_setup($self);
 
     foreach my $phase (@{$phases}) {
         foreach my $handler (@{$self->{'handlers'}->{$phase}}) {
             my $status = $handler->[1]->($handler->[0], $self);
 
-            if ($status == CHECKOUT_HANDLER_ERROR) {
+            if ($status != CHECKOUT_HANDLER_OK && $status != CHECKOUT_HANDLER_DECLINE) {
                 $self->_teardown($self);
 
                 return CHECKOUT_STATUS_ERROR;
@@ -152,8 +182,7 @@ sub _setup {
         try {
             $_->setup($self);
         } otherwise {
-            my $E = shift;
-            warn $E->text;
+            warn shift->text;
         };
     };
 };
@@ -165,8 +194,7 @@ sub _teardown {
         try {
             $_->teardown($self);
         } otherwise {
-            my $E = shift;
-            warn $E->text;
+            warn shift->text;
         };
     };
 };
@@ -324,6 +352,24 @@ usually called within C<register> on the current checkout context:
         ...
     };
 
+=head2 add_message($message)
+
+Adds a new text message or Handel::Checkout::Message based object
+to the message stack so plugins can log their issues for later inspection.
+
+    sub handler {
+        my ($self, $ctx) = @_;
+        ...
+        $ctx->add_message('Skipping phase for countries other than US...');
+
+        return CHECKOUT_HANDLER_DECLINE;
+    };
+
+You can subclass Handel::Checkout::Message to add your own properties.
+If your adding a simple text message, a new Handel::Checkout::Message object
+will automatically be created and C<package>, C<filename>, and C<line>
+properties will be set.
+
 =head2 cart
 
 Creates a new Handel::Order object from the specified cart and associates
@@ -367,6 +413,15 @@ current checkout process.
     $checkout->cart('12345678-9098-7654-3212-345678909876');
 
 =back
+
+=head2 messages
+
+Returns a reference to an array of Handel::Checkout::Message object containing
+additional information about plugin and other checkout decisions and activities.
+
+    foreach (@{$checkout->messages}) {
+        warn $_->text, "\n";
+    };
 
 =head2 plugins
 
@@ -427,9 +482,30 @@ Get/Set the phases active for the current checkout process.
         CHECKOUT_PHASE_VALIDATION
     ]);
 
+No attempt is made to sanitize the array for duplicates or the order of the phases.
+This means you can do evil things like run a phase twice, or run the phases
+out of order.
+
 =head2 process([\@phases])
 
 Executes the current checkout process pipeline and returns CHECKOUT_STATUS_*.
+Any plugin handler that doesn't return CHECKOUT_HANDLER_OK or CHECKOUT_HANDLER_DECLINE
+is considered to be an error that the chekcout process is aborted.
+
+The call to C<process> will return on of the following constants:
+
+=over
+
+=item CHECKOUT_STATUS_OK
+
+All plugin handlers were called and returned CHECKOUT_HANDLER_OK or CHECKOUT_HANDLER_DECLINE
+
+=item CHECKOUT_STATUS_ERROR
+
+At least one plugin failed to return or an error occurred while processing
+the registered plugin handlers.
+
+=back
 
 =head1 CONFIGURATION
 
