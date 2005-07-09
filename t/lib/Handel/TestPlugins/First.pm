@@ -34,6 +34,8 @@ sub handler {
     my ($self, $ctx) = @_;
 
     $self->{'handler_called'}++;
+
+    return CHECKOUT_STATUS_OK;
 };
 
 1;

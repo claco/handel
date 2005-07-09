@@ -24,6 +24,7 @@ lib/Handel.pm
 lib/Handel/Cart.pm
 lib/Handel/Cart/Item.pm
 lib/Handel/Checkout.pm
+lib/Handel/Checkout/Message.pm
 lib/Handel/Checkout/Plugin.pm
 lib/Handel/ConfigReader.pm
 lib/Handel/Constants.pm
@@ -63,8 +64,11 @@ t/cart_restore_replace.t
 t/cart_restore_replace_filter.t
 t/cart_save.t
 t/checkout_cart.t
+t/checkout_messages.t
 t/checkout_order.t
+t/checkout_phases.t
 t/checkout_plugins.t
+t/checkout_process.t
 t/conf/extra.conf.in
 t/config.t
 t/constants.t
@@ -222,6 +226,7 @@ t/htdocs/tt2/out/cart_update.tt2.out
 t/l10n.t
 t/lib/Handel/Checkout/Plugin/TestPlugin.pm
 t/lib/Handel/Checkout/Plugin/TestBogusPlugin.pm
+t/lib/Handel/Checkout/TestMessage.pm
 t/lib/Handel/OtherTestPlugins/Second.pm
 t/lib/Handel/TestHelper.pm
 t/lib/Handel/TestPlugins/First.pm

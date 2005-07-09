@@ -1,5 +1,12 @@
 Revision history for Perl module Handel
 
+0.16_06
+    - Added checkout_process.t tests
+    - Added checkout_phases.t tests
+    - Added Handel::Checkout::Message for checkout plugin messaging
+    - Added checkout_messages.t tests
+    - Added missing constants docs in Handel::Constants
+
 0.16_05 Mon Jun 27 07:32:35 2005
     - Changed plugins option in Checkout::new to pluginpaths and
         addpluginpaths to match global config settings

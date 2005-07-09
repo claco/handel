@@ -1,8 +1,6 @@
 TODO list for Perl module Handel
 
-    - write tests for order/checkout framework
     - add sql schema and conversions using SQL::Translator
-    - add ConfigReader config for plugins namespace
     - write basic plugins
     - write TT2 plugins for order/checkout framework
     - write AxKit taglibs for order/checkout framework
