@@ -1,6 +1,10 @@
 Revision history for Perl module Handel
 
-0.16_06
+0.17 Sat Jul 09 12:11:47 2005
+    - Now requires Module::Pluggable 2.9
+    - Added checkout/order framework with plugin support
+
+0.16_06 Fri Jul 08 22:48:25 2005
     - Added checkout_process.t tests
     - Added checkout_phases.t tests
     - Added Handel::Checkout::Message for checkout plugin messaging
