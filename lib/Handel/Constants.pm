@@ -162,6 +162,51 @@ automatically reaped from the database during cleanup.
 Any cart with this type could be purged form the database during cleanup at any
 time.
 
+=head2 CHECKOUT_PHASE_INITIALIZE
+
+The phase run when first creating a new order.
+
+=head2 CHECKOUT_PHASE_VALIDATE
+
+The phase run to validate address, shipping, and other information about an order.
+
+=head2 CHECKOUT_PHASE_AUTHORIZE
+
+The phase run when ahtorizing or validating credit card or other payment information.
+
+=head2 CHECKOUT_PHASE_DELIVER
+
+The phase run to deliver the order request to the vendor and/or customer.
+
+=head2 CHECKOUT_DEFAULT_PHASES
+
+Contains the default set of phases run automatically. This is currently,
+VALIDATE, AUTHORIZE, and DELIVER.
+
+=head2 CHECKOUT_STATUS_OK
+
+All plugin handlers returned successully and the checkout process has completed.
+
+=head2 CHECKOUT_STATUS_ERROR
+
+One or more plugin handlers returned an error or the checkout process aborted
+with errors.
+
+=head2 CHECKOUT_HANDLER_OK
+
+Specifies that the plugin handler sub has completed its work without errors.
+
+=head2 CHECKOUT_HANDLER_DECLINE
+
+Specifies that the plugin handler sub has opted not to perform any work.
+If your plugin is going to decline, please add a message to the current context
+using L<Handel::Checkout/add_handler>
+
+=head2 CHECKOUT_HANDLER_ERROR
+
+Specifies that the plugin handler encountered errors and would like to abort
+the checkout process.
+
 =head2 RETURNAS_AUTO
 
 When calling C<load> or C<items> on C<Handel::Cart>, it will attempt to return
