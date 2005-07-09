@@ -66,6 +66,9 @@ BEGIN {
     "Param 1 is not a HASH reference, Handel::Order object, or order id" =>
         "Le param 1 n'est pas une référence d'cInformations PARASITES, objet de Handel::Cart, ou identification de chariot",
 
+    "Param 1 is not a Handel::Checkout::Message object or text message" =>
+        "Le param 1 n'est pas un message d'objet ou de textes de Handel::Checkout::Message",
+
     ## Taglib exceptions
     "Tag '[_1]' not valid inside of other Handel tags" =>
         "L'étiquette '[_1] 'peut intérieur inadmissible d'autres étiquettes de Handel",
@@ -86,6 +89,10 @@ BEGIN {
 
     "Could not create a new order because the supplied cart is empty" =>
         "Ne pourrait pas créer un nouvel ordre parce que le chariot fourni est vide",
+
+    ## Checkout exception
+    "No order is assocated with this checkout process" =>
+        "Aucun ordre n'est assocated avec ce procédé de contrôle",
 );
 
 1;
