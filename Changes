@@ -1,5 +1,9 @@
 Revision history for Perl module Handel
 
+0.17_01 Thur Jul 14 21:15:24 2005
+    - Added basic AxKit ORder Taglib support in
+        AxKit::XSP::Handel:Order
+
 0.17 Sat Jul 09 12:11:47 2005
     - Now requires Module::Pluggable 2.9
     - Added checkout/order framework with plugin support

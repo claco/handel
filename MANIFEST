@@ -20,6 +20,7 @@ demo/tt2/products.tt2
 demo/tt2/README
 demo/tt2/style/css/basic.css
 lib/AxKit/XSP/Handel/Cart.pm
+lib/AxKit/XSP/Handel/Order.pm
 lib/Handel.pm
 lib/Handel/Cart.pm
 lib/Handel/Cart/Item.pm
