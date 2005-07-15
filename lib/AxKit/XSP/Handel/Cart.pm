@@ -1205,7 +1205,7 @@ Loops through all items in the current cart:
                         <item>
                             <sku><cart:sku/></sku>
                             <description><cart:description/></cart:description>
-                            <sku><cart:sku/></sku>
+                            <name><cart:name/></name>
                             <quantity><cart:quantity/></quantity>
                             <price><cart:price/></price>
                             <total><cart:total/></total>
@@ -1506,6 +1506,10 @@ Saves the current cart by setting its type to C<CART_TYPE_SAVED>:
             <message>The cart requested could not be found.</message>
         </cart:no-results>
     </cart:cart>
+
+=head2 <cart:shopper>
+
+Context aware tag that gets or sets the shopper id for the current cart.
 
 =head2 <cart:sku>
 
