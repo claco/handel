@@ -121,10 +121,31 @@ sub new {
     return $order;
 };
 
+sub clear {
+    my $self = shift;
+
+    $self->_items->delete_all;
+
+    return undef;
+};
+
 sub count {
     my $self  = shift;
 
     return $self->_items->count || 0;
+};
+
+sub delete {
+    my ($self, $filter) = @_;
+
+    throw Handel::Exception::Argument( -details =>
+        translate('Param 1 is not a HASH reference') . '.') unless
+            ref($filter) eq 'HASH';
+
+    ## I'd much rather use $self->_items->search_like, but it doesn't work that
+    ## way yet. This should be fine as long as :weaken refs works.
+    return Handel::Cart::Item->search_like(%{$filter},
+        cart => $self->id)->delete_all;
 };
 
 sub items {
@@ -298,6 +319,21 @@ not a hashref.
 
 =head1 METHODS
 
+=head2 clear
+
+This method removes all items from the current cart object.
+
+    $cart->clear;
+
+=head2 delete(\%filter)
+
+This method deletes the cart item(s) matching the supplied filter values and
+returns the number of items deleted.
+
+    if ( $cart->delete({id => '8D4B0BE1-C02E-11D2-A33D-00A0C94B8D0E'}) ) {
+        print 'Item deleted';
+    };
+
 =head2 items([\%filter, [$wantiterator])
 
 You can retrieve all or some of the items contained in the order via the C<items>
@@ -340,11 +376,170 @@ called without a filter specified.
 A C<Handel::Exception::Argument> exception is thrown if parameter one isn't a
 hashref or undef.
 
+=head2 billtofirstname
+
+Gets/sets the bill to first name
+
+=head2 billtolastname
+
+Gets/sets the bill to last name
+
+=head2 billtoaddress1
+
+Gets/sets the bill to address line 1
+
+=head2 billtoaddress2
+
+Gets/sets the bill to address line 2
+
+=head2 billtoaddress3
+
+Gets/sets the bill to address line 3
+
+=head2 billtocity
+
+Gets/sets the bill to city
+
+=head2 billtostate
+
+Gets/sets the bill to state/province
+
+=head2 billtozip
+
+Gets/sets the bill to zip/postal code
+
+=head2 billtocountry
+
+Gets/sets the bill to country
+
+=head2 billtodayphone
+
+Gets/sets the bill to day phone number
+
+=head2 billtonightphone
+
+Gets/sets the bill to night phone number
+
+=head2 billtofax
+
+Gets/sets the bill to fax number
+
+=head2 billtoemail
+
+Gets/sets the bill to email address
+
+=head2 comments
+
+Gets/sets the comments for this order
+
 =head2 count
 
-Returns the number of items in the order object.
+Gets the number of items in the order
 
-    my $numitems = $order->count;
+=head2 created
+
+Gets/sets the created date of the order
+
+=head2 handling
+
+Gets/sets the handling charge
+
+=head2 id
+
+Gets/sets the record id
+
+=head2 number
+
+Gets/sets the order number
+
+=head2 shipmethod
+
+Gets/sets the shipping method
+
+=head2 shipping
+
+Gets/sets the shipping cost
+
+=head2 shiptosameasbillto
+
+Gets/sets the ship to same as bill to flag. When set, the ship to information
+will be copied from the bill to
+
+=head2 shiptofirstname
+
+Gets/sets the ship to first name
+
+=head2 shiptolastname
+
+Gets/sets the ship to last name
+
+=head2 shiptoaddress1
+
+Gets/sets the ship to address line 1
+
+=head2 shiptoaddress2
+
+Gets/sets the ship to address line 2
+
+=head2 shiptoaddress3
+
+Gets/sets the ship to address line 3
+
+=head2 shiptocity
+
+Gets/sets the ship to city
+
+=head2 shiptostate
+
+Gets/sets the ship to state
+
+=head2 shiptozip
+
+Gets/sets the ship to zip/postal code
+
+=head2 shiptocountry
+
+Gets/sets the ship to country
+
+=head2 shiptodayphone
+
+Gets/sets the ship to day phone number
+
+=head2 shiptonightphone
+
+Gets/sets the ship to night phone number
+
+=head2 shiptofax
+
+Gets/sets the ship to fax number
+
+=head2 shiptoemail
+
+Gets/sets the ship to email address
+
+=head2 shopper
+
+Gets/sets the shopper id
+
+=head2 subtotal
+
+Gets/sets the orders subtotal
+
+=head2 tax
+
+Gets/sets the orders tax
+
+=head2 total
+
+Gets/sets the orders total
+
+=head2 type
+
+Gets/sets the order type
+
+=head2 updated
+
+Gets/sets the last updated date of the order
 
 =head1 AUTHOR
 
