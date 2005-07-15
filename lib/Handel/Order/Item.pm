@@ -44,6 +44,32 @@ Handel::Order::Item - Module representing an indivudal order line item
         print $item->total;
     };
 
+=head1 METHOS
+
+=head2 description
+
+Gets/sets the item description
+
+=head2 id
+
+Gets/sets the item id
+
+=head2 price
+
+Gets/sets the item price
+
+=head2 quantity
+
+Gets/sets the item quantity
+
+=head2 sku
+
+Gets/sets the item sku
+
+=head2 total
+
+Gets/sets the item total
+
 =head1 AUTHOR
 
     Christopher H. Laco
