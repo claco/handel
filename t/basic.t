@@ -2,7 +2,7 @@
 # $Id$
 use strict;
 use warnings;
-use Test::More tests => 19;
+use Test::More tests => 20;
 
 BEGIN {
     use_ok('Handel');
@@ -31,6 +31,7 @@ BEGIN {
             no strict;
             no warnings;
             use_ok('AxKit::XSP::Handel::Cart');
+            use_ok('AxKit::XSP::Handel::Order');
         };
     };
 
