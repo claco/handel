@@ -11,7 +11,7 @@ BEGIN {
     if($@) {
         plan skip_all => 'DBD::SQLite not installed';
     } else {
-        plan tests => 7;
+        plan tests => 8;
     };
 
     use_ok('Handel::Cart');
@@ -42,6 +42,7 @@ BEGIN {
         id => '11111111-1111-1111-1111-111111111111'
     });
     isa_ok($cart, 'Handel::Cart');
+    ok($cart->count >= 1);
 
     $cart->clear;
     is($cart->count, 0);
