@@ -10,7 +10,7 @@ BEGIN {
     use Handel::Exception qw(:try);
     use Handel::Checkout::Message;
     use Handel::L10N qw(translate);
-    use Module::Pluggable 2.8 instantiate => 'new', sub_name => '_plugins';
+    use Module::Pluggable 2.9 instantiate => 'new', sub_name => '_plugins';
 };
 
 sub new {
@@ -213,9 +213,29 @@ sub _set_search_path {
         $self->search_path(new => _path_to_array($pluginpaths));
     } elsif (my $path = $config->{'HandelPluginPaths'}) {
         $self->search_path(new => _path_to_array($path));
-    } elsif ($path = $config->{'HandelAddPluginPaths'}) {
+    } elsif ($path = $config->{'HandelAddPluginPaths'} || $addpluginpaths) {
         $self->search_path(new => 'Handel::Checkout::Plugin', _path_to_array("$path $addpluginpaths"));
     };
+
+    ## reset these crazy things
+    $self->except([]);
+    $self->only([]);
+
+    my $ignore = $opts->{'ignoreplugins'} || $config->{'HandelIgnorePlugins'};
+    if (ref $ignore eq 'Regexp' || ref $ignore eq 'ARRAY') {
+        $self->except($ignore);
+    } elsif ($ignore) {
+        $self->except([_path_to_array($ignore)]);
+    };
+
+    my $only = $opts->{'loadplugins'} || $config->{'HandelLoadPlugins'};
+    if (ref $only eq 'Regexp' || ref $only eq 'ARRAY') {
+        $self->only($only);
+    } elsif ($only) {
+        $self->only([_path_to_array($only)]);
+    };
+
+    return undef;
 };
 
 sub _path_to_array {
@@ -540,6 +560,57 @@ OtherApp::Plugins namespaces.
 
 Any plugin found in the search path that isn't a subclass of Handel::Checkout::Plugin
 will be ignored.
+
+=head2 HandelIgnorePlugins
+
+This is a comma/space seperated list [or an anonymous array, or a regex outside of httpd.conf] of plugins to ignore when loading
+all available plugins in the given namespaces.
+
+    PerlSetVar HandelIgnorePlugins 'Handel::Checkout::Plugin::Initialize'
+
+    $ENV{'HandelIgnorePlugins'} = 'Handel::Checkout::Plugin::Initialize';
+    $ENV{'HandelIgnorePlugins'} = ['Handel::Checkout::Plugin::Initialize'];
+    $ENV{'HandelIgnorePlugins'} = qr/^Handel::Checkout::Plugin::(Initialize|Validate)$/;
+
+If the Handel::Checkout::Plugin namespace has the following modules:
+
+    Handel::Checkout::Plugin::Initialize
+    Handel::Checkout::Plugin::ValidateAddress
+    Handel::Checkout::Plugin::FaxDelivery
+    Handel::Checkout::Plugin::EmailDelivery
+
+all of the modules above will be loaded <b>except</b> Handel::Checkout::Plugin::Initialize.
+All plugins in any other configured namespaces will be loaded.
+
+If both HandelLoadPlugins and HandelIgnorePlugins are specified, only the plugins in
+HandelLoadPlugins will be loaded, unless they are also in HandelIgnorePlugins in which case
+they will be ignored.
+
+=head2 HandelLoadPlugins
+
+This is a comma or space seperated list [or an anonymous array, or a regex outside of httpd.conf] of plugins to be loaded from the available namespaces.
+
+    PerlSetVar HandelLoadPlugins 'Handel::Checkout::Plugin::ValidateAddress'
+
+    $ENV{'HandelLoadPlugins'} = 'Handel::Checkout::Plugin::ValidateAddress';
+    $ENV{'HandelLoadPlugins'} = ['Handel::Checkout::Plugin::ValidateAddress'];
+    $ENV{'HandelLoadPlugins'} = qr/^Handel::Checkout::Plugin::(ValidateAddress|Authorize)$/;
+
+If the following plugins are available in all configured namespaces:
+
+    Handel::Checkout::Plugin::Initialize
+    Handel::Checkout::Plugin::ValidateAddress
+    Handel::Checkout::Plugin::FaxDelivery
+    Handel::Checkout::Plugin::EmailDelivery
+    MyApp::Plugin::VerifiedByVisa
+    MyApp::Plugin::WarehouseUpdate
+
+only Handel::Checkout::Plugin::ValidateAddress will be loaded. All other plugins in all
+configured namespaces will be ignored.
+
+If both HandelLoadPlugins and HandelIgnorePlugins are specified, only the plugins in
+HandelLoadPlugins will be loaded, unless they are also in HandelIgnorePlugins in which case
+they will be ignored.
 
 =head1 SEE ALSO
 
