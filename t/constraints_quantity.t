@@ -26,6 +26,8 @@ ok(constraint_quantity(1),          'numeric quantity');
 
     try {
         constraint_quantity(6);
+
+        fail;
     } catch Handel::Exception::Constraint with {
         pass;
     } otherwise {
