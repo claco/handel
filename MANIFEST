@@ -20,6 +20,7 @@ demo/tt2/products.tt2
 demo/tt2/README
 demo/tt2/style/css/basic.css
 lib/AxKit/XSP/Handel/Cart.pm
+lib/AxKit/XSP/Handel/Checkout.pm
 lib/AxKit/XSP/Handel/Order.pm
 lib/Handel.pm
 lib/Handel/Cart.pm
@@ -133,6 +134,9 @@ t/htdocs/axkit/cart_restore_append.xsp
 t/htdocs/axkit/cart_restore_merge.xsp
 t/htdocs/axkit/cart_restore_replace.xsp
 t/htdocs/axkit/cart_uuid.xsp
+t/htdocs/axkit/order_new.xsp
+t/htdocs/axkit/order_new_filtered.xsp
+t/htdocs/axkit/order_uuid.xsp
 t/htdocs/axkit/out/cart_cart.xsp.out
 t/htdocs/axkit/out/cart_cart_add.xsp.out
 t/htdocs/axkit/out/cart_cart_add_filtered.xsp.out
@@ -181,6 +185,8 @@ t/htdocs/axkit/out/cart_new_no_results_trigger.xsp.out
 t/htdocs/axkit/out/cart_restore_append.xsp.out
 t/htdocs/axkit/out/cart_restore_merge.xsp.out
 t/htdocs/axkit/out/cart_restore_replace.xsp.out
+t/htdocs/axkit/out/order_new.xsp.out
+t/htdocs/axkit/out/order_new_filtered.xsp.out
 t/htdocs/tt2/cart_add.tt2
 t/htdocs/tt2/cart_clear.tt2
 t/htdocs/tt2/cart_create.tt2
@@ -231,6 +237,10 @@ t/lib/Handel/Checkout/TestMessage.pm
 t/lib/Handel/OtherTestPlugins/Second.pm
 t/lib/Handel/TestHelper.pm
 t/lib/Handel/TestPlugins/First.pm
+t/order_add.t
+t/order_clear.t
+t/order_delete.t
+t/order_item_new.t
 t/order_items.t
 t/order_load.t
 t/order_new.t
@@ -239,11 +249,14 @@ t/pod_syntax.t
 t/strict.t
 t/SMOKE.PL
 t/sql/cart_create_table.sql
+t/sql/cart_delete_data.sql
 t/sql/cart_fake_data.sql
 t/sql/order_create_table.sql
+t/sql/order_delete_data.sql
 t/sql/order_fake_data.sql
 t/TEST.PL
 t/tt2_cart.t
 t/warnings.t
 t/xsp_cart.t
+t/xsp_order.t
 Todo
