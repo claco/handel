@@ -24,7 +24,7 @@ BEGIN {
 
     SKIP: {
         eval 'use Apache::AxKit::Language::XSP';
-        skip 'AxKit not installed', 1 if $@;
+        skip 'AxKit not installed', 2 if $@;
 
         {
             ## squelch AxKit strict/warnings
