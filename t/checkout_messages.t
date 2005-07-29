@@ -25,6 +25,8 @@ BEGIN {
         my $checkout = Handel::Checkout->new({pluginpaths => 'Handel::LOADNOTHING'});
 
         $checkout->add_message([1, 2, 3]);
+
+        fail;
     } catch Handel::Exception::Argument with {
         pass;
     } otherwise {
@@ -40,6 +42,8 @@ BEGIN {
         my $checkout = Handel::Checkout->new({pluginpaths => 'Handel::LOADNOTHING'});
 
         $checkout->add_message($fake);
+
+        fail;
     } catch Handel::Exception::Argument with {
         pass;
     } otherwise {

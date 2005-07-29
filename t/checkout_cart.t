@@ -44,6 +44,8 @@ BEGIN {
         my $checkout = Handel::Checkout->new;
 
         $checkout->cart('1234');
+
+        fail;
     } catch Handel::Exception::Argument with {
         pass;
     } otherwise {
@@ -56,6 +58,8 @@ BEGIN {
 {
     try {
         my $checkout = Handel::Checkout->new({cart => '1234'});
+
+        fail;
     } catch Handel::Exception::Argument with {
         pass;
     } otherwise {
@@ -70,6 +74,8 @@ BEGIN {
         my $checkout = Handel::Checkout->new;
         my $fake = bless {}, 'MyObject::Foo';
         $checkout->cart($fake);
+
+        fail;
     } catch Handel::Exception::Argument with {
         pass;
     } otherwise {
@@ -83,6 +89,8 @@ BEGIN {
     try {
         my $fake = bless {}, 'MyObject::Foo';
         my $checkout = Handel::Checkout->new({cart => $fake});
+
+        fail;
     } catch Handel::Exception::Argument with {
         pass;
     } otherwise {

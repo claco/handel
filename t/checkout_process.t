@@ -45,6 +45,8 @@ BEGIN {
         my $checkout = Handel::Checkout->new;
 
         $checkout->process;
+
+        fail;
     } catch Handel::Exception::Checkout with {
         pass;
     } otherwise {
@@ -59,6 +61,8 @@ BEGIN {
         my $checkout = Handel::Checkout->new;
 
         $checkout->process('1234');
+
+        fail;
     } catch Handel::Exception::Argument with {
         pass;
     } otherwise {
