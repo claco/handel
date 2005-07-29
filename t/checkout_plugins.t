@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use lib 't/lib';
-use Test::More tests => 237;
+use Test::More tests => 416;
 
 BEGIN {
     use_ok('Handel::Checkout');
@@ -18,6 +18,8 @@ BEGIN {
         my $checkout = Handel::Checkout->new;
 
         $checkout->add_handler(42, sub{});
+
+        fail;
     } catch Handel::Exception::Argument with {
         pass;
     } otherwise {
@@ -32,6 +34,8 @@ BEGIN {
         my $checkout = Handel::Checkout->new;
 
         $checkout->add_handler(CHECKOUT_PHASE_INITIALIZE, 'foo');
+
+        fail;
     } catch Handel::Exception::Argument with {
         pass;
     } otherwise {
@@ -372,7 +376,6 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-
         foreach (@{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
@@ -405,7 +408,6 @@ BEGIN {
         isa_ok($plugin, 'Handel::Checkout::Plugin');
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
-
 
         foreach (@{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
@@ -440,7 +442,6 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-
         foreach (@{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
@@ -462,7 +463,7 @@ BEGIN {
     my $checkout = Handel::Checkout->new({addpluginpaths => ['Handel::OtherTestPlugins']});
     my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-    ok(scalar keys %plugins >= 2);
+    ok(scalar keys %plugins >= 3);
     ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
     ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
     ok(exists $plugins{'Handel::TestPlugins::First'});
@@ -476,6 +477,449 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
+        foreach (@{$checkout->{'handlers'}->{1}}) {
+            if (ref $_->[0] eq $package) {
+                isa_ok($_->[0], $package);
+                is(ref $_->[1], 'CODE');
+                $_->[1]->($plugin);
+                ok($plugin->{'handler_called'});
+
+                last;
+            };
+        };
+    };
+};
+
+
+## Load all plugins in multiple paths except for ones in HandelIgnorePlugins
+{
+    local $ENV{'HandelIgnorePlugins'} = 'Handel::OtherTestPlugins::Second';
+
+    my $checkout = Handel::Checkout->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins']});
+    my %plugins = map { ref $_ => $_ } $checkout->plugins;
+
+    ok(scalar keys %plugins >= 2);
+    ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
+    ok(exists $plugins{'Handel::TestPlugins::First'});
+    ok(!exists $plugins{'Handel::OtherTestPlugins::Second'});
+    ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+
+    foreach (qw(Handel::Checkout::Plugin::TestPlugin Handel::TestPlugins::First)) {
+        my $package = $_;
+        my $plugin = $plugins{$package};
+
+        isa_ok($plugin, 'Handel::Checkout::Plugin');
+        ok($plugin->{'init_called'});
+        ok($plugin->{'register_called'});
+
+        foreach (@{$checkout->{'handlers'}->{1}}) {
+            if (ref $_->[0] eq $package) {
+                isa_ok($_->[0], $package);
+                is(ref $_->[1], 'CODE');
+                $_->[1]->($plugin);
+                ok($plugin->{'handler_called'});
+
+                last;
+            };
+        };
+    };
+};
+
+
+## Load all plugins in multiple paths except for ones in HandelIgnorePlugins using array
+{
+    local $ENV{'HandelIgnorePlugins'} = ['Handel::OtherTestPlugins::Second'];
+
+    my $checkout = Handel::Checkout->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins']});
+    my %plugins = map { ref $_ => $_ } $checkout->plugins;
+
+    ok(scalar keys %plugins >= 2);
+    ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
+    ok(exists $plugins{'Handel::TestPlugins::First'});
+    ok(!exists $plugins{'Handel::OtherTestPlugins::Second'});
+    ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+
+    foreach (qw(Handel::Checkout::Plugin::TestPlugin Handel::TestPlugins::First)) {
+        my $package = $_;
+        my $plugin = $plugins{$package};
+
+        isa_ok($plugin, 'Handel::Checkout::Plugin');
+        ok($plugin->{'init_called'});
+        ok($plugin->{'register_called'});
+
+        foreach (@{$checkout->{'handlers'}->{1}}) {
+            if (ref $_->[0] eq $package) {
+                isa_ok($_->[0], $package);
+                is(ref $_->[1], 'CODE');
+                $_->[1]->($plugin);
+                ok($plugin->{'handler_called'});
+
+                last;
+            };
+        };
+    };
+};
+
+
+## Load all plugins in multiple paths except for ones in HandelIgnorePlugins using Regex
+{
+    local $ENV{'HandelIgnorePlugins'} = qr/^Handel::OtherTestPlugins::Second$/;
+
+    my $checkout = Handel::Checkout->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins']});
+    my %plugins = map { ref $_ => $_ } $checkout->plugins;
+
+    ok(scalar keys %plugins >= 2);
+    ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
+    ok(exists $plugins{'Handel::TestPlugins::First'});
+    ok(!exists $plugins{'Handel::OtherTestPlugins::Second'});
+    ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+
+    foreach (qw(Handel::Checkout::Plugin::TestPlugin Handel::TestPlugins::First)) {
+        my $package = $_;
+        my $plugin = $plugins{$package};
+
+        isa_ok($plugin, 'Handel::Checkout::Plugin');
+        ok($plugin->{'init_called'});
+        ok($plugin->{'register_called'});
+
+        foreach (@{$checkout->{'handlers'}->{1}}) {
+            if (ref $_->[0] eq $package) {
+                isa_ok($_->[0], $package);
+                is(ref $_->[1], 'CODE');
+                $_->[1]->($plugin);
+                ok($plugin->{'handler_called'});
+
+                last;
+            };
+        };
+    };
+};
+
+
+## Load all plugins in multiple paths except for ones in ignoreplugins new option as array
+{
+    my $checkout = Handel::Checkout->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins'], ignoreplugins => ['Handel::OtherTestPlugins::Second']});
+    my %plugins = map { ref $_ => $_ } $checkout->plugins;
+
+    ok(scalar keys %plugins >= 2);
+    ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
+    ok(exists $plugins{'Handel::TestPlugins::First'});
+    ok(!exists $plugins{'Handel::OtherTestPlugins::Second'});
+    ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+
+    foreach (qw(Handel::Checkout::Plugin::TestPlugin Handel::TestPlugins::First)) {
+        my $package = $_;
+        my $plugin = $plugins{$package};
+
+        isa_ok($plugin, 'Handel::Checkout::Plugin');
+        ok($plugin->{'init_called'});
+        ok($plugin->{'register_called'});
+
+        foreach (@{$checkout->{'handlers'}->{1}}) {
+            if (ref $_->[0] eq $package) {
+                isa_ok($_->[0], $package);
+                is(ref $_->[1], 'CODE');
+                $_->[1]->($plugin);
+                ok($plugin->{'handler_called'});
+
+                last;
+            };
+        };
+    };
+};
+
+
+## Load all plugins in multiple paths except for ones in ignoreplugins new option as string
+{
+    my $checkout = Handel::Checkout->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins'], ignoreplugins => 'Handel::OtherTestPlugins::Second'});
+    my %plugins = map { ref $_ => $_ } $checkout->plugins;
+
+    ok(scalar keys %plugins >= 2);
+    ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
+    ok(exists $plugins{'Handel::TestPlugins::First'});
+    ok(!exists $plugins{'Handel::OtherTestPlugins::Second'});
+    ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+
+    foreach (qw(Handel::Checkout::Plugin::TestPlugin Handel::TestPlugins::First)) {
+        my $package = $_;
+        my $plugin = $plugins{$package};
+
+        isa_ok($plugin, 'Handel::Checkout::Plugin');
+        ok($plugin->{'init_called'});
+        ok($plugin->{'register_called'});
+
+        foreach (@{$checkout->{'handlers'}->{1}}) {
+            if (ref $_->[0] eq $package) {
+                isa_ok($_->[0], $package);
+                is(ref $_->[1], 'CODE');
+                $_->[1]->($plugin);
+                ok($plugin->{'handler_called'});
+
+                last;
+            };
+        };
+    };
+};
+
+
+## Load all plugins in multiple paths except for ones in ignoreplugins new option as Regex
+{
+    my $checkout = Handel::Checkout->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins'], ignoreplugins => qr/^Handel::OtherTestPlugins::Second$/});
+    my %plugins = map { ref $_ => $_ } $checkout->plugins;
+
+    ok(scalar keys %plugins >= 2);
+    ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
+    ok(exists $plugins{'Handel::TestPlugins::First'});
+    ok(!exists $plugins{'Handel::OtherTestPlugins::Second'});
+    ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+
+    foreach (qw(Handel::Checkout::Plugin::TestPlugin Handel::TestPlugins::First)) {
+        my $package = $_;
+        my $plugin = $plugins{$package};
+
+        isa_ok($plugin, 'Handel::Checkout::Plugin');
+        ok($plugin->{'init_called'});
+        ok($plugin->{'register_called'});
+
+        foreach (@{$checkout->{'handlers'}->{1}}) {
+            if (ref $_->[0] eq $package) {
+                isa_ok($_->[0], $package);
+                is(ref $_->[1], 'CODE');
+                $_->[1]->($plugin);
+                ok($plugin->{'handler_called'});
+
+                last;
+            };
+        };
+    };
+};
+
+
+## Load only the plugins listed in HandelLoadPlugins
+{
+    local $ENV{'HandelLoadPlugins'} = 'Handel::OtherTestPlugins::Second';
+
+    my $checkout = Handel::Checkout->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins']});
+    my %plugins = map { ref $_ => $_ } $checkout->plugins;
+
+    is(scalar keys %plugins, 1);
+    ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
+    ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
+    ok(!exists $plugins{'Handel::TestPlugins::First'});
+    ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+
+    foreach (qw(Handel::OtherTestPlugins::Second)) {
+        my $package = $_;
+        my $plugin = $plugins{$package};
+
+        isa_ok($plugin, 'Handel::Checkout::Plugin');
+        ok($plugin->{'init_called'});
+        ok($plugin->{'register_called'});
+
+        foreach (@{$checkout->{'handlers'}->{1}}) {
+            if (ref $_->[0] eq $package) {
+                isa_ok($_->[0], $package);
+                is(ref $_->[1], 'CODE');
+                $_->[1]->($plugin);
+                ok($plugin->{'handler_called'});
+
+                last;
+            };
+        };
+    };
+};
+
+
+## Load only the plugins listed in HandelLoadPlugins using array
+{
+    local $ENV{'HandelLoadPlugins'} = ['Handel::OtherTestPlugins::Second'];
+
+    my $checkout = Handel::Checkout->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins']});
+    my %plugins = map { ref $_ => $_ } $checkout->plugins;
+
+    is(scalar keys %plugins, 1);
+    ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
+    ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
+    ok(!exists $plugins{'Handel::TestPlugins::First'});
+    ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+
+    foreach (qw(Handel::OtherTestPlugins::Second)) {
+        my $package = $_;
+        my $plugin = $plugins{$package};
+
+        isa_ok($plugin, 'Handel::Checkout::Plugin');
+        ok($plugin->{'init_called'});
+        ok($plugin->{'register_called'});
+
+        foreach (@{$checkout->{'handlers'}->{1}}) {
+            if (ref $_->[0] eq $package) {
+                isa_ok($_->[0], $package);
+                is(ref $_->[1], 'CODE');
+                $_->[1]->($plugin);
+                ok($plugin->{'handler_called'});
+
+                last;
+            };
+        };
+    };
+};
+
+
+## Load only the plugins listed in HandelLoadPlugins using Regex
+{
+    local $ENV{'HandelLoadPlugins'} = qr/^Handel::OtherTestPlugins::Second$/;
+
+    my $checkout = Handel::Checkout->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins']});
+    my %plugins = map { ref $_ => $_ } $checkout->plugins;
+
+    is(scalar keys %plugins, 1);
+    ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
+    ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
+    ok(!exists $plugins{'Handel::TestPlugins::First'});
+    ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+
+    foreach (qw(Handel::OtherTestPlugins::Second)) {
+        my $package = $_;
+        my $plugin = $plugins{$package};
+
+        isa_ok($plugin, 'Handel::Checkout::Plugin');
+        ok($plugin->{'init_called'});
+        ok($plugin->{'register_called'});
+
+        foreach (@{$checkout->{'handlers'}->{1}}) {
+            if (ref $_->[0] eq $package) {
+                isa_ok($_->[0], $package);
+                is(ref $_->[1], 'CODE');
+                $_->[1]->($plugin);
+                ok($plugin->{'handler_called'});
+
+                last;
+            };
+        };
+    };
+};
+
+
+## Load only the plugins listed in the loadplugins new option as array
+{
+    my $checkout = Handel::Checkout->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins'], loadplugins => ['Handel::OtherTestPlugins::Second']});
+    my %plugins = map { ref $_ => $_ } $checkout->plugins;
+
+    is(scalar keys %plugins, 1);
+    ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
+    ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
+    ok(!exists $plugins{'Handel::TestPlugins::First'});
+    ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+
+    foreach (qw(Handel::OtherTestPlugins::Second)) {
+        my $package = $_;
+        my $plugin = $plugins{$package};
+
+        isa_ok($plugin, 'Handel::Checkout::Plugin');
+        ok($plugin->{'init_called'});
+        ok($plugin->{'register_called'});
+
+        foreach (@{$checkout->{'handlers'}->{1}}) {
+            if (ref $_->[0] eq $package) {
+                isa_ok($_->[0], $package);
+                is(ref $_->[1], 'CODE');
+                $_->[1]->($plugin);
+                ok($plugin->{'handler_called'});
+
+                last;
+            };
+        };
+    };
+};
+
+
+## Load only the plugins listed in the loadplugins new option as string
+{
+    my $checkout = Handel::Checkout->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins'], loadplugins => 'Handel::OtherTestPlugins::Second'});
+    my %plugins = map { ref $_ => $_ } $checkout->plugins;
+
+    is(scalar keys %plugins, 1);
+    ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
+    ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
+    ok(!exists $plugins{'Handel::TestPlugins::First'});
+    ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+
+    foreach (qw(Handel::OtherTestPlugins::Second)) {
+        my $package = $_;
+        my $plugin = $plugins{$package};
+
+        isa_ok($plugin, 'Handel::Checkout::Plugin');
+        ok($plugin->{'init_called'});
+        ok($plugin->{'register_called'});
+
+        foreach (@{$checkout->{'handlers'}->{1}}) {
+            if (ref $_->[0] eq $package) {
+                isa_ok($_->[0], $package);
+                is(ref $_->[1], 'CODE');
+                $_->[1]->($plugin);
+                ok($plugin->{'handler_called'});
+
+                last;
+            };
+        };
+    };
+};
+
+
+## Load only the plugins listed in the loadplugins new option as Regex
+{
+    my $checkout = Handel::Checkout->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins'], loadplugins => qr/^Handel::OtherTestPlugins::Second$/});
+    my %plugins = map { ref $_ => $_ } $checkout->plugins;
+
+    is(scalar keys %plugins, 1);
+    ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
+    ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
+    ok(!exists $plugins{'Handel::TestPlugins::First'});
+    ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+
+    foreach (qw(Handel::OtherTestPlugins::Second)) {
+        my $package = $_;
+        my $plugin = $plugins{$package};
+
+        isa_ok($plugin, 'Handel::Checkout::Plugin');
+        ok($plugin->{'init_called'});
+        ok($plugin->{'register_called'});
+
+        foreach (@{$checkout->{'handlers'}->{1}}) {
+            if (ref $_->[0] eq $package) {
+                isa_ok($_->[0], $package);
+                is(ref $_->[1], 'CODE');
+                $_->[1]->($plugin);
+                ok($plugin->{'handler_called'});
+
+                last;
+            };
+        };
+    };
+};
+
+
+## Load only the plugins listed in the loadplugins new option
+{
+    my $checkout = Handel::Checkout->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins'],
+        loadplugins => ['Handel::OtherTestPlugins::Second', 'Handel::TestPlugins::First'],
+        ignoreplugins => ['Handel::OtherTestPlugins::Second']
+    });
+    my %plugins = map { ref $_ => $_ } $checkout->plugins;
+
+    is(scalar keys %plugins, 1);
+    ok(exists $plugins{'Handel::TestPlugins::First'});
+    ok(!exists $plugins{'Handel::OtherTestPlugins::Second'});
+    ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
+    ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+
+    foreach (qw(Handel::TestPlugins::First)) {
+        my $package = $_;
+        my $plugin = $plugins{$package};
+
+        isa_ok($plugin, 'Handel::Checkout::Plugin');
+        ok($plugin->{'init_called'});
+        ok($plugin->{'register_called'});
 
         foreach (@{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
