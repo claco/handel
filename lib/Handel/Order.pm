@@ -59,50 +59,56 @@ sub new {
     my $is_uuid = constraint_uuid($cart);
     delete $data->{'cart'};
 
-    throw Handel::Exception::Argument( -details =>
-      translate(
-          'Cart reference is not a HASH reference or Handel::Cart') . '.') unless
-              (ref($cart) eq 'HASH' or UNIVERSAL::isa($cart, 'Handel::Cart') or $is_uuid);
+    if (defined $cart) {
+        throw Handel::Exception::Argument( -details =>
+          translate(
+              'Cart reference is not a HASH reference or Handel::Cart') . '.') unless
+                  (ref($cart) eq 'HASH' or UNIVERSAL::isa($cart, 'Handel::Cart') or $is_uuid);
 
-    if (ref $cart eq 'HASH') {
-        $cart = Handel::Cart->load($cart, RETURNAS_ITERATOR)->first;
+        if (ref $cart eq 'HASH') {
+            $cart = Handel::Cart->load($cart, RETURNAS_ITERATOR)->first;
 
-        throw Handel::Exception::Order( -details =>
-            translate(
-                'Could not find a cart matching the supplied search criteria') . '.') unless $cart;
-    } elsif ($is_uuid) {
-        $cart = Handel::Cart->load({id => $cart}, RETURNAS_ITERATOR)->first;
+            throw Handel::Exception::Order( -details =>
+                translate(
+                    'Could not find a cart matching the supplied search criteria') . '.') unless $cart;
+        } elsif ($is_uuid) {
+            $cart = Handel::Cart->load({id => $cart}, RETURNAS_ITERATOR)->first;
 
-        throw Handel::Exception::Order( -details =>
-            translate(
-                'Could not find a cart matching the supplied search criteria') . '.') unless $cart;
-    };
-
-    throw Handel::Exception::Order( -details =>
-        translate(
-            'Could not create a new order because the supplied cart is empty') . '.') unless
-                $cart->count > 0;
-
-    my $order = $self->create($data);
-    my $subtotal = 0;
-    my $items = $cart->items(undef, RETURNAS_ITERATOR);
-    while (my $item = $items->next) {
-        my %copy;
-
-        foreach ($item->columns) {
-            next if $_ =~ /^(id|cart)$/i;
-            $copy{$_} = $item->$_;
+            throw Handel::Exception::Order( -details =>
+                translate(
+                    'Could not find a cart matching the supplied search criteria') . '.') unless $cart;
         };
 
-        $copy{'id'} = $self->uuid unless constraint_uuid($copy{'id'});
-        $copy{'orderid'} = $order->id;
-        $copy{'total'} = $copy{'quantity'}*$copy{'price'};
-        $subtotal += $copy{'total'};
-
-        $order->add_to__items(\%copy);
+        throw Handel::Exception::Order( -details =>
+            translate(
+                'Could not create a new order because the supplied cart is empty') . '.') unless
+                    $cart->count > 0;
     };
-    $order->subtotal($subtotal);
-    $order->update;
+
+    my $order = $self->create($data);
+
+    if (defined $cart) {
+        my $subtotal = 0;
+        my $items = $cart->items(undef, RETURNAS_ITERATOR);
+        while (my $item = $items->next) {
+            my %copy;
+
+            foreach ($item->columns) {
+                next if $_ =~ /^(id|cart)$/i;
+                $copy{$_} = $item->$_;
+            };
+
+            $copy{'id'} = $self->uuid unless constraint_uuid($copy{'id'});
+            $copy{'orderid'} = $order->id;
+            $copy{'total'} = $copy{'quantity'}*$copy{'price'};
+            $subtotal += $copy{'total'};
+
+            $order->add_to__items(\%copy);
+        };
+
+        $order->subtotal($subtotal);
+        $order->update;
+    };
 
     unless ($noprocess) {
         my $checkout = Handel::Checkout->new;
@@ -112,13 +118,44 @@ sub new {
         if ($status == CHECKOUT_STATUS_OK) {
             $checkout->order->update;
         } else {
-            $order->delete;
+            $order->SUPER::delete;
             undef $order;
         };
         undef $checkout;
     };
 
     return $order;
+};
+
+sub add {
+    my ($self, $data) = @_;
+
+    throw Handel::Exception::Argument( -details =>
+      translate(
+          'Param 1 is not a HASH reference, Handel::Cart::Item or Handel::Order::Item') . '.') unless
+              (ref($data) eq 'HASH' or $data->isa('Handel::Order::Item') or $data->isa('Handel::Cart::Item'));
+
+    if (ref($data) eq 'HASH') {
+        if (!defined($data->{'id'}) || !constraint_uuid($data->{'id'})) {
+            $data->{'id'} = $self->uuid;
+        };
+
+        return $self->add_to__items($data);
+    } else {
+        my %copy;
+
+        foreach ($data->columns) {
+            next if $_ =~ /^(id|orderid|cart)$/i;
+            $copy{$_} = $data->$_;
+        };
+        if (UNIVERSAL::isa($data, 'Handel::Cart::Item')) {
+            $copy{'total'} = $data->total;
+        };
+
+        $copy{'id'} = $self->uuid;
+
+        return $self->add_to__items(\%copy);
+    };
 };
 
 sub clear {
@@ -144,8 +181,8 @@ sub delete {
 
     ## I'd much rather use $self->_items->search_like, but it doesn't work that
     ## way yet. This should be fine as long as :weaken refs works.
-    return Handel::Cart::Item->search_like(%{$filter},
-        cart => $self->id)->delete_all;
+    return Handel::Order::Item->search_like(%{$filter},
+        orderid => $self->id)->delete_all;
 };
 
 sub items {
@@ -256,9 +293,19 @@ into C<new> containing all the required values needed to create a new order
 record or pass a hashref into C<load> containing the search criteria to use
 to load an existing order or set of orders.
 
-B<NOTE:> The only required hash key is C<cart>. C<new> will copy the specified
-carts items inthe the order items. C<cart> can be an already existing
+B<NOTE:> Starting in version 0.17_02, the cart is no longer required! You can
+create an order record that isn't associated with a current cart.
+
+B<NOTE:> As of version 0.17_02, Order::subtotal and Order::Item:: total are
+calculated once B<only> when creating an order from an existing cart. After that
+order is created, any changes to items price/wuantity/totals and the orders subtotals
+must be calculated manually and put into the database by the user though their methods.
+
+C<new> will copy the specified carts items into the order items.
+C<cart> can be an already existing
 Handel::Cart object, of a hash reference of search critera, or a cart id (uuid).
+
+
 
 When creating a new order from a cart, C<new> will automatically create a
 new Handel::Checkout process and process C<CHECKOUT_PHASE_INITIALIZE> on the
@@ -318,6 +365,42 @@ not a hashref.
 =back
 
 =head1 METHODS
+
+=head2 add(\%data)
+
+You can add items to the order by supplying a hashref containing the
+required name/values or by passing in a newly create Handel::Order::Item
+object. If successful, C<add> will return a L<Handel::Order::Item> object
+reference.
+
+Yes, I know. Why a hashref and not just a hash? So I can add new params
+later if need be. Oh yeah, and "Because I Can". :-P
+
+=over
+
+=item C<$cart-E<gt>add(\%data)>
+
+    my $item = $cart->add({
+        shopper  => '10020400-E260-11CF-AE68-00AA004A34D5',
+        sku      => 'SKU1234',
+        quantity => 1,
+        price    => 1.25
+    });
+
+=item C<$cart-E<gt>add($object)>
+
+    my $item = Handel::Cart::Item->new({
+        sku      => 'SKU1234',
+        quantity => 1,
+        price    => 1.25
+    });
+    ...
+    $cart->add($item);
+
+A C<Handel::Exception::Argument> exception is thrown if the first parameter
+isn't a hashref or a C<Handel::Cart::Item> object.
+
+=back
 
 =head2 clear
 
