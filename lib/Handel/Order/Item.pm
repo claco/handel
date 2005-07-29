@@ -23,6 +23,19 @@ __PACKAGE__->add_constraint('id',       id       => \&constraint_uuid);
 __PACKAGE__->add_constraint('orderid',  orderid  => \&constraint_uuid);
 __PACKAGE__->add_constraint('total',    total    => \&constraint_price);
 
+sub new {
+    my ($self, $data) = @_;
+
+    throw Handel::Exception::Argument( -details =>
+        translate('Param 1 is not a HASH reference') . '.') unless
+            ref($data) eq 'HASH';
+
+    if (!defined($data->{'id'}) || !constraint_uuid($data->{'id'})) {
+        $data->{'id'} = $self->uuid;
+    };
+
+    return $self->construct($data);
+};
 
 1;
 __END__
@@ -43,6 +56,26 @@ Handel::Order::Item - Module representing an indivudal order line item
         print $item->price;
         print $item->total;
     };
+
+=head1 CONSTRUCTOR
+
+=head2 new
+
+You can create a new C<Handel::Order::Item> object by calling the C<new> method:
+
+    my $item = Handel::Order::Item->new({
+        sku => '1234',
+        price => 1.23,
+        quantity => 1,
+        total => 1.23
+    });
+
+    $item->quantity(2);
+
+    print $item->total;
+
+This is a lazy operation. No actual item record is created until the item object
+is passed into the C<add> method of a C<Handel::Order> object.
 
 =head1 METHOS
 
