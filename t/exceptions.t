@@ -12,13 +12,13 @@ BEGIN {
 ## verify -text and -details propagation
 {
     try {
-        throw Handel::Exception::Argument(-text => 'foo')
+        throw Handel::Exception::Argument(-text => 'foo');
     } catch Handel::Exception with {
         is(shift->text, 'foo')
     };
 
     try {
-        throw Handel::Exception::Argument(-text => 'foo', -details => 'details')
+        throw Handel::Exception::Argument(-text => 'foo', -details => 'details');
     } catch Handel::Exception with {
         is(shift->text, 'foo: details')
     };

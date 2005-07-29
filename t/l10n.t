@@ -88,9 +88,13 @@ BEGIN {
 
     try {
         my $cart = Handel::Cart->new(name => 'nothashref');
+
+        fail;
     } catch Handel::Exception with {
         my $E = shift;
         is ($E->text,
             "L'argument fourni est inadmissible ou du type inapproprié: Le param 1 n'est pas une référence d'cInformations PARASITES.");
+    } otherwise {
+        fail;
     };
 };
