@@ -22,6 +22,8 @@ BEGIN {
 {
     try {
         Handel::Cart->restore(id => '1234');
+
+        fail;
     } catch Handel::Exception::Argument with {
         pass;
     } otherwise {
@@ -36,6 +38,8 @@ BEGIN {
     try {
         my $fakeitem = bless {}, 'FakeItem';
         Handel::Cart->restore($fakeitem);
+
+        fail;
     } catch Handel::Exception::Argument with {
         pass;
     } otherwise {

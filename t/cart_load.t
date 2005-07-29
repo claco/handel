@@ -40,6 +40,8 @@ BEGIN {
 {
     try {
         my $cart = Handel::Cart->load(id => '1234');
+
+        fail;
     } catch Handel::Exception::Argument with {
         pass;
     } otherwise {

@@ -41,22 +41,9 @@ BEGIN {
 {
     try {
         my $cart = Handel::Cart->new(sku => 'SKU1234');
-    } catch Handel::Exception::Argument with {
-        pass;
-    } otherwise {
+
         fail;
-    };
-};
-
-
-## test for Handel::Exception::Constraint during cart new for bogus id
-{
-    try {
-        my $cart = Handel::Cart->new({
-            id      => 'crap',
-            shopper => '33333333-3333-3333-3333-333333333333'
-        });
-    } catch Handel::Exception::Constraint with {
+    } catch Handel::Exception::Argument with {
         pass;
     } otherwise {
         fail;
@@ -71,6 +58,8 @@ BEGIN {
             id      => '11111111-1111-1111-1111-111111111111',
             shopper => 'crap'
         });
+
+        fail;
     } catch Handel::Exception::Constraint with {
         pass;
     } otherwise {
@@ -88,6 +77,8 @@ BEGIN {
             shopper => '33333333-3333-3333-3333-333333333333',
             type    => CART_TYPE_SAVED
         });
+
+        fail;
     } catch Handel::Exception::Constraint with {
         pass;
     } otherwise {
@@ -105,6 +96,8 @@ BEGIN {
 
     try {
         my $cart = Handel::Cart->new(\%data);
+
+        fail;
     } catch Handel::Exception::Constraint with {
         pass;
     } otherwise {
@@ -120,6 +113,8 @@ BEGIN {
             id      => '11111111-1111-1111-1111-111111111111',
             shopper => '11111111-1111-1111-1111-111111111111'
         });
+
+        fail;
     } catch Handel::Exception::Constraint with {
         pass;
     } otherwise {
