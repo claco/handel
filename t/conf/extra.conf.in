@@ -1,6 +1,6 @@
 # $Id$
 <IfModule mod_perl.c>
-	PerlSetVar db_name		@documentroot@/cart.db
+	PerlSetVar db_name		@documentroot@/xsp.db
 	PerlSetVar db_driver	"SQLite"
 
 	<IfDefine AXKIT>
@@ -11,6 +11,7 @@
 		AxStackTrace	On
 		AxAddProcessor	application/x-xsp .
 		AxAddXSPTaglib	AxKit::XSP::Handel::Cart
+		AxAddXSPTaglib	AxKit::XSP::Handel::Order
 
 		<Files *.xsp>
 			SetHandler	AxKit
