@@ -1,5 +1,6 @@
 TODO list for Perl module Handel
 
+    - add taglib test to check for bogus filter names
     - add sql schema and conversions using SQL::Translator
     - write basic plugins
     - write TT2 plugins for order/checkout framework
