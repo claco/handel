@@ -55,7 +55,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
     sub parse_start {
         my ($e, $tag, %attr) = @_;
 
-        AxKit::Debug(5, "[Handel] parse_start [$tag] context: " . join('->', @context));
+        AxKit::Debug(5, "[Handel] [Cart] parse_start [$tag] context: " . join('->', @context));
 
         if (exists $attr{'type'}) {
             if ($attr{'type'} =~ /^[A-Z]{1}/) {
@@ -253,7 +253,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
                     AxKit::Debug(5, "[Handel] [$tag] code=$code, format=$format, from=$from, to=$to");
 
                     if ($attr{'convert'}) {
-                        $e->append_to_script("\$_xsp_handel_cart_cart->$tag->convert('$from', '$to', '".$attr{'format'}."', '$format');\n");
+                        $e->append_to_script("\$_xsp_handel_cart_cart->$tag->convert('$from', '$to', '".($attr{'format'}||'')."', '$format');\n");
                     } elsif ($attr{'format'}) {
                         $e->append_to_script("\$_xsp_handel_cart_cart->$tag->format('$code', '$format');\n");
                     };
@@ -305,7 +305,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
                     AxKit::Debug(5, "[Handel] [$tag] code=$code, format=$format, from=$from, to=$to");
 
                     if ($attr{'convert'}) {
-                        $e->append_to_script("\$_xsp_handel_cart_item->$tag->convert('$from', '$to', '".$attr{'format'}."', '$format');\n");
+                        $e->append_to_script("\$_xsp_handel_cart_item->$tag->convert('$from', '$to', '".($attr{'format'}||'')."', '$format');\n");
                     } elsif ($attr{'format'}) {
                         $e->append_to_script("\$_xsp_handel_cart_item->$tag->format('$code', '$format');\n");
                     };
@@ -486,7 +486,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
     sub parse_end {
         my ($e, $tag) = @_;
 
-        AxKit::Debug(5, "[Handel] parse_end   [$tag] context: " . join('->', @context));
+        AxKit::Debug(5, "[Handel] [Cart] parse_end   [$tag] context: " . join('->', @context));
 
         ## cart:new
         if ($tag eq 'new') {
