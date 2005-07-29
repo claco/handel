@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id:$ -->
+<xsp:page
+	xmlns:xsp="http://apache.org/xsp/core/v1"
+	xmlns:order="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order"
+>
+	<body>
+		<p><order:uuid/></p>
+		<p><order:guid/></p>
+	</body>
+</xsp:page>
