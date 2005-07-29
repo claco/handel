@@ -328,7 +328,7 @@ required name/values or by passing in a newly create Handel::Cart::Item
 object. If successful, C<add> will return a L<Handel::Cart::Item> object
 reference.
 
-Yes, I know. Why a hashref and not just a hash? So I can adding new parms
+Yes, I know. Why a hashref and not just a hash? So I can add new params
 later if need be. Oh yeah, and "Because I Can". :-P
 
 =over
