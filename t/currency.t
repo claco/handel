@@ -42,6 +42,8 @@ SKIP: {
 
     try {
         $currency->convert('CRAP', 'CAD');
+
+        fail;
     } catch Handel::Exception::Argument with {
         pass;
     } otherwise {
@@ -50,6 +52,8 @@ SKIP: {
 
     try {
         $currency->convert('USD', 'JUNK');
+
+        fail;
     } catch Handel::Exception::Argument with {
         pass;
     } otherwise {
@@ -76,6 +80,8 @@ SKIP: {
 
     try {
         $currency->convert('ZZZ', 'CAD');
+
+        fail;
     } catch Handel::Exception::Argument with {
         pass;
     } otherwise {
@@ -84,6 +90,8 @@ SKIP: {
 
     try {
         $currency->convert('USD', 'ZZZ');
+
+        fail;
     } catch Handel::Exception::Argument with {
         pass;
     } otherwise {
