@@ -4,7 +4,7 @@ use strict;
 use warnings;
 require Test::More;
 use lib 't/lib';
-use Handel::TestHelper qw(executesql comp_to_file);
+use Handel::TestHelper qw(preparetables comp_to_file);
 
 eval 'use Apache::Test 1.16';
 Test::More::plan(skip_all =>
@@ -77,14 +77,10 @@ my $docroot = Apache::Test::vars('documentroot');
 
 ## Setup SQLite DB for tests
 {
-
-    my $dbfile  = "$docroot/cart.db";
+    my $dbfile  = "$docroot/xsp.db";
     my $db      = "dbi:SQLite:dbname=$dbfile";
-    my $create  = 't/sql/cart_create_table.sql';
-    my $data    = 't/sql/cart_fake_data.sql';
 
-    unlink $dbfile;
-    executesql($db, $create);
+    preparetables($db, [qw(cart)]);
 };
 
 my $r = GET('/axkit/cart_uuid.xsp');
