@@ -206,6 +206,57 @@ OtherApp::Plugins namespaces.
 Any plugin found in the search path that isn't a subclass of Handel::Checkout::Plugin
 will be ignored.
 
+=head2 HandelIgnorePlugins
+
+This is a comma/space seperated list [or an anonymous array, or a regex outside of httpd.conf] of plugins to ignore when loading
+all available plugins in the given namespaces.
+
+    PerlSetVar HandelIgnorePlugins 'Handel::Checkout::Plugin::Initialize'
+
+    $ENV{'HandelIgnorePlugins'} = 'Handel::Checkout::Plugin::Initialize';
+    $ENV{'HandelIgnorePlugins'} = ['Handel::Checkout::Plugin::Initialize'];
+    $ENV{'HandelIgnorePlugins'} = qr/^Handel::Checkout::Plugin::(Initialize|Validate)$/;
+
+If the Handel::Checkout::Plugin namespace has the following modules:
+
+    Handel::Checkout::Plugin::Initialize
+    Handel::Checkout::Plugin::ValidateAddress
+    Handel::Checkout::Plugin::FaxDelivery
+    Handel::Checkout::Plugin::EmailDelivery
+
+all of the modules above will be loaded <b>except</b> Handel::Checkout::Plugin::Initialize.
+All plugins in any other configured namespaces will be loaded.
+
+If both HandelLoadPlugins and HandelIgnorePlugins are specified, only the plugins in
+HandelLoadPlugins will be loaded, unless they are also in HandelIgnorePlugins in which case
+they will be ignored.
+
+=head2 HandelLoadPlugins
+
+This is a comma or space seperated list [or an anonymous array, or a regex outside of httpd.conf] of plugins to be loaded from the available namespaces.
+
+    PerlSetVar HandelLoadPlugins 'Handel::Checkout::Plugin::ValidateAddress'
+
+    $ENV{'HandelLoadPlugins'} = 'Handel::Checkout::Plugin::ValidateAddress';
+    $ENV{'HandelLoadPlugins'} = ['Handel::Checkout::Plugin::ValidateAddress'];
+    $ENV{'HandelLoadPlugins'} = qr/^Handel::Checkout::Plugin::(ValidateAddress|Authorize)$/;
+
+If the following plugins are available in all configured namespaces:
+
+    Handel::Checkout::Plugin::Initialize
+    Handel::Checkout::Plugin::ValidateAddress
+    Handel::Checkout::Plugin::FaxDelivery
+    Handel::Checkout::Plugin::EmailDelivery
+    MyApp::Plugin::VerifiedByVisa
+    MyApp::Plugin::WarehouseUpdate
+
+only Handel::Checkout::Plugin::ValidateAddress will be loaded. All other plugins in all
+configured namespaces will be ignored.
+
+If both HandelLoadPlugins and HandelIgnorePlugins are specified, only the plugins in
+HandelLoadPlugins will be loaded, unless they are also in HandelIgnorePlugins in which case
+they will be ignored.
+
 =head1 AUTHOR
 
     Christopher H. Laco
