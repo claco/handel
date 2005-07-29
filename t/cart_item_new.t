@@ -5,7 +5,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-    plan tests => 18;
+    plan tests => 19;
 
     use_ok('Handel::Cart::Item');
     use_ok('Handel::Constraints', 'constraint_uuid');
@@ -16,6 +16,8 @@ BEGIN {
 {
     try {
         my $item = Handel::Cart::Item->new(sku => 'FOO');
+
+        fail;
     } catch Handel::Exception::Argument with {
         pass;
     } otherwise {
@@ -34,8 +36,8 @@ BEGIN {
     });
     isa_ok($item, 'Handel::Cart::Item');
     ok(constraint_uuid($item->id));
+    is($item->sku, 'sku1234');
     is($item->price, 1.23);
-
     is($item->quantity, 2);
     is($item->description, 'My SKU');
     is($item->total, 2.46);
