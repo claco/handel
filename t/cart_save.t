@@ -45,6 +45,8 @@ BEGIN {
 
     try {
         $cart->type('abc');
+
+        fail;
     } catch Handel::Exception::Constraint with {
         pass;
     } otherwise {
