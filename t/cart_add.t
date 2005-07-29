@@ -41,6 +41,8 @@ BEGIN {
 {
     try {
         my $newitem = Handel::Cart->add(id => '1234');
+
+        fail;
     } catch Handel::Exception::Argument with {
         pass;
     } otherwise {
@@ -55,6 +57,8 @@ BEGIN {
     try {
         my $fakeitem = bless {}, 'FakeItem';
         my $newitem = Handel::Cart->add($fakeitem);
+
+        fail;
     } catch Handel::Exception::Argument with {
         pass;
     } otherwise {
