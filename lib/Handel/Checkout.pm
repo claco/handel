@@ -10,7 +10,7 @@ BEGIN {
     use Handel::Exception qw(:try);
     use Handel::Checkout::Message;
     use Handel::L10N qw(translate);
-    use Module::Pluggable 2.9 instantiate => 'new', sub_name => '_plugins';
+    use Module::Pluggable 2.95 instantiate => 'new', sub_name => '_plugins';
 };
 
 sub new {
