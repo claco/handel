@@ -64,7 +64,7 @@ WriteMakefile(
         'DBI'               => '1.36',
         'Error'             => '0.14',
         'Locale::Maketext'  => '1.06',
-        'Module::Pluggable' => '2.9',
+        'Module::Pluggable' => '2.95',
         %modules
     },
     (ExtUtils::MakeMaker->VERSION >= 6.11) ?
