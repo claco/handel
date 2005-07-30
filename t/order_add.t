@@ -11,10 +11,12 @@ BEGIN {
     if($@) {
         plan skip_all => 'DBD::SQLite not installed';
     } else {
-        plan tests => 44;
+        plan tests => 66;
     };
 
     use_ok('Handel::Order');
+    use_ok('Handel::Order::Item');
+    use_ok('Handel::Cart::Item');
     use_ok('Handel::Constants', ':order');
     use_ok('Handel::Exception', ':try');
 };
@@ -150,5 +152,49 @@ BEGIN {
     is($reitem->quantity, 1);
     is($reitem->price, 1.11);
     is($reitem->description, 'Line Item SKU 8');
+    is($reitem->total, 2.22);
+};
+
+
+## add a new item by passing a Handel::Cart::Item
+{
+    my $newitem = Handel::Cart::Item->new({
+        sku         => 'SKU9999',
+        quantity    => 2,
+        price       => 1.11,
+        description => 'Line Item SKU 9'
+    });
+    isa_ok($newitem, 'Handel::Cart::Item');
+
+    my $order = Handel::Order->load({
+        id => '22222222-2222-2222-2222-222222222222'
+    });
+    isa_ok($order, 'Handel::Order');
+
+    my $item = $order->add($newitem);
+    isa_ok($item, 'Handel::Order::Item');
+    is($item->orderid, $order->id);
+    is($item->sku, 'SKU9999');
+    is($item->quantity, 2);
+    is($item->price, 1.11);
+    is($item->description, 'Line Item SKU 9');
+    is($item->total, 2.22);
+
+    is($order->count, 3);
+    is($order->subtotal, 0);
+
+    my $reorder = Handel::Order->load({
+        id => '22222222-2222-2222-2222-222222222222'
+    });
+    isa_ok($reorder, 'Handel::Order');
+    is($reorder->count, 3);
+
+    my $reitem = $order->items({sku => 'SKU9999'});
+    isa_ok($reitem, 'Handel::Order::Item');
+    is($reitem->orderid, $reorder->id);
+    is($reitem->sku, 'SKU9999');
+    is($reitem->quantity, 2);
+    is($reitem->price, 1.11);
+    is($reitem->description, 'Line Item SKU 9');
     is($reitem->total, 2.22);
 };
