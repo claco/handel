@@ -258,5 +258,4 @@ t/TEST.PL
 t/tt2_cart.t
 t/warnings.t
 t/xsp_cart.t
-t/xsp_order.t
 Todo
