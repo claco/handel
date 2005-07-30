@@ -1,7 +1,27 @@
 Revision history for Perl module Handel
 
+0.17_02 Sat Jul 30 11:42:38 2005
+    - Added basic AxKit Checkout Taglib support in
+        AxKit::XSP::Handel:Checkout
+    - Fixed SKIP count in t/basic.t
+    - Order::subtotal and Order::Item::total are now only automatically
+        calculated when creating a new order from an existing cart.
+    - Order::new no longer requires the cart option
+    - Added Order::add to add items now that cart isn't required in Order::new
+    - Added t/order_add.t
+    - Added t/order_item_new.t
+    - Added t/order_iterator.t
+    - Added t/order_clear.t
+    - Added t/order_delete.t
+    - Fixed erroronous passing exception tests when no exception is thrown
+        and otherwise{fail;} is never called
+    - Added HandelIgnorePlugins and HandelLoadPlugins to control which
+        plugins are loaded
+    - Updated use Module::Pluggable version requirement to 2.95 in
+        Handel::Checkout
+
 0.17_01 Thur Jul 14 21:15:24 2005
-    - Added basic AxKit ORder Taglib support in
+    - Added basic AxKit Order Taglib support in
         AxKit::XSP::Handel:Order
 
 0.17 Sat Jul 09 12:11:47 2005
@@ -32,7 +52,7 @@ Revision history for Perl module Handel
 0.16_03 Wed Jun 22 19:45:25 2005
     - Added more order_new.t tests
     - Added order_load.t tests
-    - Added order_item.t tests
+    - Added order_items.t tests
     - Fixed ORDER_TYPE_SAVED value
     - Added missing cart load via uuid code in Order::new
 
@@ -192,3 +212,5 @@ Revision history for Perl module Handel
 
 0.01_01 Mon Dec 27 21:47:04 2004
     - Initial alpha release
+
+
