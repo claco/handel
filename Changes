@@ -1,5 +1,8 @@
 Revision history for Perl module Handel
 
+0.17_03 Sat Jul 30 12:19:24 2005
+    - Fixed Locale::Currency::Format detection errors in t/order_new.t
+
 0.17_02 Sat Jul 30 11:42:38 2005
     - Added basic AxKit Checkout Taglib support in
         AxKit::XSP::Handel:Checkout
