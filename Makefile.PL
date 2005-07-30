@@ -73,5 +73,5 @@ WriteMakefile(
     dist => {
         PREOP => 'pod2text lib/Handel.pm > $(DISTVNAME)/README',
     },
-    clean => { FILES => 'smoke-report-* t/cart*.db t/order*.db t/checkout*.db t/TEST t/SMOKE t/logs t/htdocs/xsp.db' }
+    clean => { FILES => 'smoke-report-* t/cart*.db t/order*.db t/checkout*.db t/TEST t/SMOKE t/logs t/htdocs/*.db' }
 );
