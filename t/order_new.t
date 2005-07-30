@@ -20,6 +20,10 @@ BEGIN {
     use_ok('Handel::Exception', ':try');
 };
 
+my $haslcf;
+eval 'use Locale::Currency::Format';
+if (!$@) {$haslcf = 1};
+
 
 eval 'use Test::MockObject 0.07';
 if (!$@) {
@@ -192,17 +196,16 @@ use_ok('Handel::Order');
     is($order->shopper, '77777777-7777-7777-7777-777777777777');
     is($order->type, ORDER_TYPE_TEMP);
     is($order->count, 0);
-
-    if ($@) {
-        is($order->subtotal->format, 0);
-        is($order->subtotal->format('CAD'), 0);
-        is($order->subtotal->format(undef, 'FMT_NAME'), 0);
-        is($order->subtotal->format('CAD', 'FMT_NAME'), 0);
-    } else {
+    if ($haslcf) {
         is($order->subtotal->format, '0.00 USD');
         is($order->subtotal->format('CAD'), '0.00 CAD');
         is($order->subtotal->format(undef, 'FMT_NAME'), '0.00 US Dollar');
         is($order->subtotal->format('CAD', 'FMT_NAME'), '0.00 Canadian Dollar');
+    } else {
+        is($order->subtotal->format, 0);
+        is($order->subtotal->format('CAD'), 0);
+        is($order->subtotal->format(undef, 'FMT_NAME'), 0);
+        is($order->subtotal->format('CAD', 'FMT_NAME'), 0);
     };
 };
 
@@ -261,68 +264,68 @@ use_ok('Handel::Order');
     is($order->comments, 'Rush Order Please');
     is($order->shipmethod, 'UPS Ground');
     is($order->shipping, 1.23);
-    if ($@) {
-        is($order->shipping->format, 1.23);
-        is($order->shipping->format('CAD'), 1.23);
-        is($order->shipping->format(undef, 'FMT_NAME'), 1.23);
-        is($order->shipping->format('CAD', 'FMT_NAME'), 1.23);
-    } else {
+    if ($haslcf) {
         is($order->shipping->format, '1.23 USD');
         is($order->shipping->format('CAD'), '1.23 CAD');
         is($order->shipping->format(undef, 'FMT_NAME'), '1.23 US Dollar');
         is($order->shipping->format('CAD', 'FMT_NAME'), '1.23 Canadian Dollar');
+    } else {
+        is($order->shipping->format, 1.23);
+        is($order->shipping->format('CAD'), 1.23);
+        is($order->shipping->format(undef, 'FMT_NAME'), 1.23);
+        is($order->shipping->format('CAD', 'FMT_NAME'), 1.23);
     };
 
     is($order->handling, 4.56);
-    if ($@) {
-        is($order->handling->format, 4.56);
-        is($order->handling->format('CAD'), 4.56);
-        is($order->handling->format(undef, 'FMT_NAME'), 4.56);
-        is($order->handling->format('CAD', 'FMT_NAME'), 4.56);
-    } else {
+    if ($haslcf) {
         is($order->handling->format, '4.56 USD');
         is($order->handling->format('CAD'), '4.56 CAD');
         is($order->handling->format(undef, 'FMT_NAME'), '4.56 US Dollar');
         is($order->handling->format('CAD', 'FMT_NAME'), '4.56 Canadian Dollar');
+    } else {
+        is($order->handling->format, 4.56);
+        is($order->handling->format('CAD'), 4.56);
+        is($order->handling->format(undef, 'FMT_NAME'), 4.56);
+        is($order->handling->format('CAD', 'FMT_NAME'), 4.56);
     };
 
     is($order->tax, 7.89);
-    if ($@) {
-        is($order->tax->format, 7.89);
-        is($order->tax->format('CAD'), 7.89);
-        is($order->tax->format(undef, 'FMT_NAME'), 7.89);
-        is($order->tax->format('CAD', 'FMT_NAME'), 7.89);
-    } else {
+    if ($haslcf) {
         is($order->tax->format, '7.89 USD');
         is($order->tax->format('CAD'), '7.89 CAD');
         is($order->tax->format(undef, 'FMT_NAME'), '7.89 US Dollar');
         is($order->tax->format('CAD', 'FMT_NAME'), '7.89 Canadian Dollar');
+    } else {
+        is($order->tax->format, 7.89);
+        is($order->tax->format('CAD'), 7.89);
+        is($order->tax->format(undef, 'FMT_NAME'), 7.89);
+        is($order->tax->format('CAD', 'FMT_NAME'), 7.89);
     };
 
     is($order->subtotal, 10.11);
-    if ($@) {
-        is($order->subtotal->format, 10.11);
-        is($order->subtotal->format('CAD'), 10.11);
-        is($order->subtotal->format(undef, 'FMT_NAME'), 10.11);
-        is($order->subtotal->format('CAD', 'FMT_NAME'), 10.11);
-    } else {
+    if ($haslcf) {
         is($order->subtotal->format, '10.11 USD');
         is($order->subtotal->format('CAD'), '10.11 CAD');
         is($order->subtotal->format(undef, 'FMT_NAME'), '10.11 US Dollar');
         is($order->subtotal->format('CAD', 'FMT_NAME'), '10.11 Canadian Dollar');
+    } else {
+        is($order->subtotal->format, 10.11);
+        is($order->subtotal->format('CAD'), 10.11);
+        is($order->subtotal->format(undef, 'FMT_NAME'), 10.11);
+        is($order->subtotal->format('CAD', 'FMT_NAME'), 10.11);
     };
 
     is($order->total, 12.13);
-    if ($@) {
-        is($order->total->format, 12.13);
-        is($order->total->format('CAD'), 12.13);
-        is($order->total->format(undef, 'FMT_NAME'), 12.13);
-        is($order->total->format('CAD', 'FMT_NAME'), 12.13);
-    } else {
+    if ($haslcf) {
         is($order->total->format, '12.13 USD');
         is($order->total->format('CAD'), '12.13 CAD');
         is($order->total->format(undef, 'FMT_NAME'), '12.13 US Dollar');
         is($order->total->format('CAD', 'FMT_NAME'), '12.13 Canadian Dollar');
+    } else {
+        is($order->total->format, 12.13);
+        is($order->total->format('CAD'), 12.13);
+        is($order->total->format(undef, 'FMT_NAME'), 12.13);
+        is($order->total->format('CAD', 'FMT_NAME'), 12.13);
     };
 
     is($order->billtofirstname, 'Christopher');
@@ -350,8 +353,6 @@ use_ok('Handel::Order');
     is($order->shiptonightphone, '5-555-555-5555');
     is($order->shiptofax, '6-666-666-6666');
     is($order->shiptoemail, 'chrislaco@hotmail.com');
-
-
 };
 
 
@@ -371,17 +372,16 @@ use_ok('Handel::Order');
     is($order->count, $cart->count);
     is($order->subtotal, $cart->subtotal);
 
-    eval 'use Locale::Currency::Format';
-    if ($@) {
-        is($order->subtotal->format, 2.22);
-        is($order->subtotal->format('CAD'), 2.22);
-        is($order->subtotal->format(undef, 'FMT_NAME'), 2.22);
-        is($order->subtotal->format('CAD', 'FMT_NAME'), 2.22);
-    } else {
+    if ($haslcf) {
         is($order->subtotal->format, '2.22 USD');
         is($order->subtotal->format('CAD'), '2.22 CAD');
         is($order->subtotal->format(undef, 'FMT_NAME'), '2.22 US Dollar');
         is($order->subtotal->format('CAD', 'FMT_NAME'), '2.22 Canadian Dollar');
+    } else {
+        is($order->subtotal->format, 2.22);
+        is($order->subtotal->format('CAD'), 2.22);
+        is($order->subtotal->format(undef, 'FMT_NAME'), 2.22);
+        is($order->subtotal->format('CAD', 'FMT_NAME'), 2.22);
     };
 
     my $orderitem = $order->items;
@@ -393,17 +393,7 @@ use_ok('Handel::Order');
     is($orderitem->total, $item->total);
     is($orderitem->orderid, $order->id);
 
-    eval 'use Locale::Currency::Format';
-    if ($@) {
-        is($orderitem->price->format, 1.11);
-        is($orderitem->price->format('CAD'), 1.11);
-        is($orderitem->price->format(undef, 'FMT_NAME'), 1.11);
-        is($orderitem->price->format('CAD', 'FMT_NAME'), 1.11);
-        is($orderitem->total->format, 2.22);
-        is($orderitem->total->format('CAD'), 2.22);
-        is($orderitem->total->format(undef, 'FMT_NAME'), 2.22);
-        is($orderitem->total->format('CAD', 'FMT_NAME'), 2.22);
-    } else {
+    if ($haslcf) {
         is($orderitem->price->format, '1.11 USD');
         is($orderitem->price->format('CAD'), '1.11 CAD');
         is($orderitem->price->format(undef, 'FMT_NAME'), '1.11 US Dollar');
@@ -412,6 +402,15 @@ use_ok('Handel::Order');
         is($orderitem->total->format('CAD'), '2.22 CAD');
         is($orderitem->total->format(undef, 'FMT_NAME'), '2.22 US Dollar');
         is($orderitem->total->format('CAD', 'FMT_NAME'), '2.22 Canadian Dollar');
+    } else {
+        is($orderitem->price->format, 1.11);
+        is($orderitem->price->format('CAD'), 1.11);
+        is($orderitem->price->format(undef, 'FMT_NAME'), 1.11);
+        is($orderitem->price->format('CAD', 'FMT_NAME'), 1.11);
+        is($orderitem->total->format, 2.22);
+        is($orderitem->total->format('CAD'), 2.22);
+        is($orderitem->total->format(undef, 'FMT_NAME'), 2.22);
+        is($orderitem->total->format('CAD', 'FMT_NAME'), 2.22);
     };
 };
 
