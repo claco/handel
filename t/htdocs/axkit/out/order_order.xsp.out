@@ -3,9 +3,9 @@
 <body>
 	<order>
 		<count>2</count>
-		<id>0C383BC4-4FB0-4DBD-B5FF-65A6D914E496</id>
-		<shopper>15B27423-D3F0-4506-AB90-67D1689BE932</shopper>
-		<type>1</type>
+		<id>7B1A38C8-36CA-4403-B3D4-C7D327131F37</id>
+		<shopper>D7B1057E-6998-4813-9F97-702C405DFB9E</shopper>
+		<type>0</type>
 		<billtofirstname>Christopher</billtofirstname>
 		<billtolastname>Laco</billtolastname>
 		<billtoaddress1>BillToAddress1</billtoaddress1>

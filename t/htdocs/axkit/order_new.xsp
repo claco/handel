@@ -5,7 +5,7 @@
 	xmlns:order="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order"
 >
 	<body>
-		<order:new noprocess="1">
+		<order:new>
 			<order:id>7B1A38C8-36CA-4403-B3D4-C7D327131F37</order:id>
 			<order:shopper>D7B1057E-6998-4813-9F97-702C405DFB9E</order:shopper>
 			<order:type>ORDER_TYPE_TEMP</order:type>

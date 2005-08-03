@@ -5,8 +5,10 @@
 	xmlns:order="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order"
 >
 	<body>
-		<order:new id="0C383BC4-4FB0-4DBD-B5FF-65A6D914E496" shopper="15B27423-D3F0-4506-AB90-67D1689BE932">
-			<order:type>ORDER_TYPE_SAVED</order:type>
+		<order:new>
+			<order:id>0CA692A7-0387-48AF-89B0-35F67BD3CF4E</order:id>
+			<order:shopper>2C98B811-B6EE-45A2-8ABD-DFBB5C308E4D</order:shopper>
+			<order:type>ORDER_TYPE_TEMP</order:type>
 			<order:cart type="CART_TYPE_TEMP">
 				<order:filter name="id">11111111-1111-1111-1111-111111111111</order:filter>
 			</order:cart>
@@ -48,6 +50,27 @@
 			<order:updated>20050716T201234Z</order:updated>
 			<order:results>
 				<order>
+					<order:add>
+						<order:description>My New Item</order:description>
+						<order:id>FF370272-BF75-4082-9E04-9FA5D302F3B4</order:id>
+						<order:price>1.23</order:price>
+						<order:quantity>2</order:quantity>
+						<order:sku>NEWSKU123</order:sku>
+						<order:total>2.46</order:total>
+						<order:results>
+							<item>
+								<description><order:description/></description>
+								<id><order:id/></id>
+								<price><order:price/></price>
+								<quantity><order:quantity/></quantity>
+								<sku><order:sku/></sku>
+								<total><order:total/></total>
+							</item>
+						</order:results>
+						<order:no-results>
+							<message>Error adding order item</message>
+						</order:no-results>
+					</order:add>
 					<count><order:count/></count>
 					<id><order:id/></id>
 					<shopper><order:shopper/></shopper>

@@ -5,11 +5,10 @@
 	xmlns:order="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order"
 >
 	<body>
-		<order:new id="0C383BC4-4FB0-4DBD-B5FF-65A6D914E496" shopper="15B27423-D3F0-4506-AB90-67D1689BE932">
-			<order:type>ORDER_TYPE_SAVED</order:type>
-			<order:cart type="CART_TYPE_TEMP">
-				<order:filter name="id">11111111-1111-1111-1111-111111111111</order:filter>
-			</order:cart>
+		<order:new>
+			<order:id>94FE4F12-4C1A-46E4-9DD5-3757555862A8</order:id>
+			<order:shopper>B002A4CB-2D60-4743-B4E5-D54F999944E6</order:shopper>
+			<order:type>ORDER_TYPE_TEMP</order:type>
 			<order:billtofirstname>Christopher</order:billtofirstname>
 			<order:billtolastname>Laco</order:billtolastname>
 			<order:billtoaddress1>BillToAddress1</order:billtoaddress1>
@@ -94,5 +93,77 @@
 				<message>Error creating order</message>
 			</order:no-results>
 		</order:new>
+
+		<order:order type="ORDER_TYPE_TEMP">
+			<order:filter name="id">94FE4F12-4C1A-46E4-9DD5-3757555862A8</order:filter>
+			<order:results>
+				<order:add>
+					<order:description>My New Item</order:description>
+					<order:id>9BE94446-ABB8-493D-9C8D-5177901B59D3</order:id>
+					<order:sku>NEWSKU456</order:sku>
+					<order:quantity>2</order:quantity>
+					<order:price>2.22</order:price>
+					<order:total>4.44</order:total>
+					<order:results>
+						<addeditem>
+							<description><order:description/></description>
+							<id><order:id/></id>
+							<price><order:price/></price>
+							<quantity><order:quantity/></quantity>
+							<sku><order:sku/></sku>
+							<total><order:total/></total>
+						</addeditem>
+					</order:results>
+					<order:no-results>
+						<message>New item not added</message>
+					</order:no-results>
+				</order:add>
+				<order>
+					<count><order:count/></count>
+					<id><order:id/></id>
+					<shopper><order:shopper/></shopper>
+					<type><order:type/></type>
+					<billtofirstname><order:billtofirstname/></billtofirstname>
+					<billtolastname><order:billtolastname/></billtolastname>
+					<billtoaddress1><order:billtoaddress1/></billtoaddress1>
+					<billtoaddress2><order:billtoaddress2/></billtoaddress2>
+					<billtoaddress3><order:billtoaddress3/></billtoaddress3>
+					<billtocity><order:billtocity/></billtocity>
+					<billtostate><order:billtostate/></billtostate>
+					<billtozip><order:billtozip/></billtozip>
+					<billtocountry><order:billtocountry/></billtocountry>
+					<billtodayphone><order:billtodayphone/></billtodayphone>
+					<billtonightphone><order:billtonightphone/></billtonightphone>
+					<billtofax><order:billtofax/></billtofax>
+					<billtoemail><order:billtoemail/></billtoemail>
+					<comments><order:comments/></comments>
+					<created><order:created/></created>
+					<handling><order:handling/></handling>
+					<number><order:number/></number>
+					<shipmethod><order:shipmethod/></shipmethod>
+					<shipping><order:shipping/></shipping>
+					<shiptosameasbillto><order:shiptosameasbillto/></shiptosameasbillto>
+					<shiptofirstname><order:shiptofirstname/></shiptofirstname>
+					<shiptolastname><order:shiptolastname/></shiptolastname>
+					<shiptoaddress1><order:shiptoaddress1/></shiptoaddress1>
+					<shiptoaddress2><order:shiptoaddress2/></shiptoaddress2>
+					<shiptoaddress3><order:shiptoaddress3/></shiptoaddress3>
+					<shiptocity><order:shiptocity/></shiptocity>
+					<shiptostate><order:shiptostate/></shiptostate>
+					<shiptozip><order:shiptozip/></shiptozip>
+					<shiptocountry><order:shiptocountry/></shiptocountry>
+					<shiptodayphone><order:shiptodayphone/></shiptodayphone>
+					<shiptonightphone><order:shiptonightphone/></shiptonightphone>
+					<shiptofax><order:shiptofax/></shiptofax>
+					<shiptoemail><order:shiptoemail/></shiptoemail>
+					<subtotal><order:subtotal/></subtotal>
+					<total><order:total/></total>
+					<updated><order:updated/></updated>
+				</order>
+			</order:results>
+			<order:no-results>
+				<message>Could not find order</message>
+			</order:no-results>
+		</order:order>
 	</body>
 </xsp:page>

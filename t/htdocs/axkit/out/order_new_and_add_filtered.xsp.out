@@ -2,10 +2,18 @@
 <!-- $Id$ -->
 <body>
 	<order>
-		<count>2</count>
-		<id>0C383BC4-4FB0-4DBD-B5FF-65A6D914E496</id>
-		<shopper>15B27423-D3F0-4506-AB90-67D1689BE932</shopper>
-		<type>1</type>
+		<item>
+			<description>My New Item</description>
+			<id>78F6AE28-55D3-4CB7-9D63-93EA608478FC</id>
+			<price>1.23</price>
+			<quantity>2</quantity>
+			<sku>NEWSKU123</sku>
+			<total>2.46</total>
+		</item>
+		<count>3</count>
+		<id>C9327404-61D8-491A-8071-701573FEE4AE</id>
+		<shopper>7A18720A-A68B-4175-8C6D-8F1B10693346</shopper>
+		<type>0</type>
 		<billtofirstname>Christopher</billtofirstname>
 		<billtolastname>Laco</billtolastname>
 		<billtoaddress1>BillToAddress1</billtoaddress1>
