@@ -16,7 +16,7 @@
 			</cart:no-results>
 		</cart:new>
 
-		<cart:cart type="1">
+		<cart:cart type="CART_TYPE_SAVED">
 			<cart:filter name="id">535FD0DD-A88E-42B0-B503-7FFB4384B4D6</cart:filter>
 			<cart:results>
 				<cart>
