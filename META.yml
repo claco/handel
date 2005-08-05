@@ -2,7 +2,7 @@
 name: Handel
 abstract: Simple commerce framework with AxKit/TT2 support
 author: Christopher H. Laco <claco@chrislaco.com>
-version: 0.17_03
+version: 0.17_04
 version_from: lib/Handel.pm
 installdirs: site
 license: perl
