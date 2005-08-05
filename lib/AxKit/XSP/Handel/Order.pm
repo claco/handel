@@ -253,7 +253,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         shiptofirstname|shiptolastname|shiptoaddress1|shiptoaddress2|shiptoaddress3|
         shiptocity|shiptostate|shiptozip|shiptocountry|
         shiptodayphone|shiptonightphone|shiptofax|shiptoemail|
-        subtotal|total|updated)$/x) {
+        subtotal|updated)$/x) {
             if ($context[$#context] eq 'new' && $tag !~ /^(count)$/) {
                 return "\n\$_xsp_handel_order_new_filter{$tag} = ''";
             } elsif ($context[$#context] eq 'add' && $tag =~ /^(id|description)$/) {
@@ -268,10 +268,10 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
                     my $from   = $attr{'from'}    || $cfg->{'HandelCurrencyCode'};
                     my $to     = $attr{'to'}      || $attr{'code'} || $cfg->{'HandelCurrencyCode'};
 
-                    AxKit::Debug(5, "[Handel] [$tag] code=$code, format=$format, from=$from, to=$to");
+                    AxKit::Debug(5, "[Handel] [Order] [$tag] code=$code, format=$format, from=$from, to=$to");
 
                     if ($attr{'convert'}) {
-                        $e->append_to_script("\$_xsp_handel_order_order->$tag->convert('$from', '$to', '".$attr{'format'}."', '$format');\n");
+                        $e->append_to_script("\$_xsp_handel_order_order->$tag->convert('$from', '$to', '".($attr{'format'}||'')."', '$format');\n");
                     } elsif ($attr{'format'}) {
                         $e->append_to_script("\$_xsp_handel_order_order->$tag->format('$code', '$format');\n");
                     };
@@ -305,12 +305,14 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         ## order item property tags
         ## order:sku, price, quantity, total
         } elsif ($tag =~ /^(sku|price|quantity|total)$/) {
-            if ($context[$#context] eq 'add' && $tag ne 'total') {
+            if ($context[$#context] eq 'new') {
+                return "\n\$_xsp_handel_order_new_filter{$tag} = ''";
+            } elsif ($context[$#context] eq 'add') {
                 return "\n\$_xsp_handel_order_add_filter{$tag} = ''";
             } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'add') {
                 $e->start_expr($tag);
                 $e->append_to_script("\$_xsp_handel_order_item->$tag;\n");
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] =~ /^item(s?)$/) {
+            } elsif ($context[$#context] eq 'results' && $context[$#context-1] =~ /^(new|order(s?)|item(s?))$/) {
                 $e->start_expr($tag);
 
                 if ($tag =~ /^(price|total)$/ && ($attr{'format'} || $attr{'convert'})) {
@@ -320,15 +322,27 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
                     my $from   = $attr{'from'}    || $cfg->{'HandelCurrencyCode'};
                     my $to     = $attr{'to'}      || $attr{'code'} || $cfg->{'HandelCurrencyCode'};
 
-                    AxKit::Debug(5, "[Handel] [$tag] code=$code, format=$format, from=$from, to=$to");
+                    AxKit::Debug(5, "[Handel] [Order] [$tag] code=$code, format=$format, from=$from, to=$to");
 
                     if ($attr{'convert'}) {
-                        $e->append_to_script("\$_xsp_handel_order_item->$tag->convert('$from', '$to', '".$attr{'format'}."', '$format');\n");
+                        if ($context[$#context-1] =~ /^(new|order(s?))$/) {
+                            $e->append_to_script("\$_xsp_handel_order_order->$tag->convert('$from', '$to', '".($attr{'format'}||'')."', '$format');\n");
+                        } else {
+                            $e->append_to_script("\$_xsp_handel_order_item->$tag->convert('$from', '$to', '".($attr{'format'}||'')."', '$format');\n");
+                        };
                     } elsif ($attr{'format'}) {
-                        $e->append_to_script("\$_xsp_handel_order_item->$tag->format('$code', '$format');\n");
+                        if ($context[$#context-1] =~ /^(new|order(s?))$/) {
+                            $e->append_to_script("\$_xsp_handel_order_order->$tag->format('$code', '$format');\n");
+                        } else {
+                            $e->append_to_script("\$_xsp_handel_order_item->$tag->format('$code', '$format');\n");
+                        };
                     };
                 } else {
-                    $e->append_to_script("\$_xsp_handel_order_item->$tag;\n");
+                    if ($context[$#context-1] =~ /^(new|order(s?))$/) {
+                        $e->append_to_script("\$_xsp_handel_order_order->$tag;\n");
+                    } else {
+                        $e->append_to_script("\$_xsp_handel_order_item->$tag;\n");
+                    };
                 };
             } elsif ($context[$#context] eq 'delete') {
                 return "\n\$_xsp_handel_order_delete_filter{$tag} = ''";
@@ -608,7 +622,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         shiptofirstname|shiptolastname|shiptoaddress1|shiptoaddress2|shiptoaddress3|
         shiptocity|shiptostate|shiptozip|shiptocountry|
         shiptodayphone|shiptonightphone|shiptofax|shiptoemail|
-        subtotal|total|updated)$/x) {
+        subtotal|updated)$/x) {
             if ($context[$#context] eq 'new' && $tag !~ /^(count)$/) {
                 return ";\n";
             } elsif ($context[$#context] eq 'add' && $tag !~ /^(count|subtotal)$/) {
@@ -629,13 +643,21 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         ## order item property tags
         ## order:sku, price, quantity
         } elsif ($tag =~ /^(sku|price|quantity|total)$/) {
-            if ($context[$#context] eq 'add' && $tag ne 'total') {
+            if ($context[$#context] eq 'add') {
                 return ";\n";
+            } elsif ($context[$#context] eq 'new') {
+                return ";\n";
+            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'new') {
+                $e->end_expr($tag);
             } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'add') {
                 $e->end_expr($tag);
             } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'item') {
                 $e->end_expr($tag);
             } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'items') {
+                $e->end_expr($tag);
+            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'order') {
+                $e->end_expr($tag);
+            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'ordera') {
                 $e->end_expr($tag);
             } elsif ($context[$#context] eq 'delete' && $tag !~ /^(count|subtotal)$/) {
                 return ";\n";
@@ -794,7 +816,7 @@ AxKit XSP pages.
 =head1 TAG HIERARCHY
 
     <order:uuid/>
-    <order:new noprocess="0|1" cart|id|shopper|type|number|created|updated|comments|shipmethod|
+    <order:new process="0|1" cart|id|shopper|type|number|created|updated|comments|shipmethod|
                shipping|handling|tax|subtotal|total|
                billtofirstname|billtolastname|billtoaddress1|billtoaddress2|
                billtoaddress3|billtocity|billtostate|billtozip|
@@ -1391,9 +1413,14 @@ Loops through all items in the current order:
 
 =head2 <order:new>
 
+B<BREAKING API CHANGE:> Starting in version 0.17_04, new no longer automatically
+creates a checkout process for C<CHECKOUT_PHASE_INITIALIZE>. The C<$noprocess>
+parameter has been renamed to C<$process>. The have the new order automatically
+run a checkout process, set $process to 1.
+
 Creates a new order using the supplied attributes and child tags:
 
-    <order:new noprocess="0|1" type="1">
+    <order:new process="0|1" type="1">
         <order:id>22222222-2222-2222-2222-222222222222</order:id>
         <order:shopper><request:shopper/></order:shopper>
         <order:name>New Cart</order:name>
@@ -1403,9 +1430,9 @@ The child tags take precedence over the attributes of the same name.
 C<new> B<must be a top level tag> within it's declared namespace.
 It will throw an C<Handel::Exception::Taglib> exception otherwise.
 
-When true, the C<noprocess> attribute forces new to bypass automatic
-checkout processing. See L<Handel::Order/"new"> for more informaiton
-on the noprocess flag.
+When true, the C<process> attribute forces new to automaticly create
+a checkout process and initialize the currecnt order.
+See L<Handel::Order/"new"> for more informaiton on the process flag.
 
 =head2 <order:number>
 
