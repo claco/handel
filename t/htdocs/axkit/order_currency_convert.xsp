@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<xsp:page
+	xmlns:xsp="http://apache.org/xsp/core/v1"
+	xmlns:order="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order"
+>
+	<body>
+		<order:new>
+			<order:id>BD40D1CB-7D85-4F47-867A-925E111EB2AA</order:id>
+			<order:shopper>0CA564F1-EFBC-490F-8586-198FD14E97AA</order:shopper>
+			<order:type>ORDER_TYPE_TEMP</order:type>
+			<order:results>
+				<order:add id="EF254990-53FB-46DA-8B8A-A287698D3EAA" sku="SKU1" price="1.11" quantity="2" description="Description 1" total="2.22"/>
+			</order:results>
+			<order:no-results>
+				<message>Error creating order</message>
+			</order:no-results>
+		</order:new>
+
+		<order:order type="ORDER_TYPE_TEMP">
+			<order:filter name="id">BD40D1CB-7D85-4F47-867A-925E111EB2AA</order:filter>
+			<order:results>
+				<order>
+					<count><order:count/></count>
+					<id><order:id/></id>
+					<shopper><order:shopper/></shopper>
+					<subtotal><order:subtotal/></subtotal>
+					<subtotal><order:subtotal format="1"/></subtotal>
+					<subtotal><order:subtotal format="1" code="CAD"/></subtotal>
+					<subtotal><order:subtotal format="1" options="FMT_HTML"/></subtotal>
+					<subtotal><order:subtotal format="1" code="CAD" options="FMT_NAME"/></subtotal>
+
+					<subtotal><order:subtotal convert="1" from="USD" to="CAD" /></subtotal>
+					<subtotal><order:subtotal convert="1" from="USD" to="CAD" format="1"/></subtotal>
+					<subtotal><order:subtotal convert="1" from="USD" format="1" code="CAD"/></subtotal>
+					<subtotal><order:subtotal convert="1" from="USD" to="CAD" format="1" /></subtotal>
+					<subtotal><order:subtotal convert="1" from="USD" to="CAD" format="1" options="FMT_HTML"/></subtotal>
+					<subtotal><order:subtotal convert="1" from="USD" code="CAD" format="1" options="FMT_HTML"/></subtotal>
+					<subtotal><order:subtotal convert="1" from="USD" to="CAD" format="1" code="CAD" options="FMT_NAME"/></subtotal>
+					<subtotal><order:subtotal convert="1" from="USD" format="1" code="CAD" options="FMT_NAME"/></subtotal>
+					<type><order:type/></type>
+					<order:item>
+						<order:results>
+							<item>
+								<id><order:id/></id>
+								<price><order:price/></price>
+								<price><order:price format="1"/></price>
+								<price><order:price format="1" code="CAD"/></price>
+								<price><order:price format="1" options="FMT_HTML"/></price>
+								<price><order:price format="1" code="CAD" options="FMT_NAME"/></price>
+
+								<price><order:price convert="1" from="USD" to="CAD" /></price>
+								<price><order:price convert="1" from="USD" to="CAD" format="1"/></price>
+								<price><order:price convert="1" from="USD" format="1" code="CAD"/></price>
+								<price><order:price convert="1" from="USD" to="CAD" format="1" /></price>
+								<price><order:price convert="1" from="USD" to="CAD" format="1" options="FMT_HTML"/></price>
+								<price><order:price convert="1" from="USD" code="CAD" format="1" options="FMT_HTML"/></price>
+								<price><order:price convert="1" from="USD" to="CAD" format="1" code="CAD" options="FMT_NAME"/></price>
+								<price><order:price convert="1" from="USD" format="1" code="CAD" options="FMT_NAME"/></price>
+
+								<quantity><order:quantity/></quantity>
+								<sku><order:sku/></sku>
+								<total><order:total/></total>
+								<total><order:total format="1"/></total>
+								<total><order:total format="1" code="CAD"/></total>
+								<total><order:total format="1" options="FMT_HTML"/></total>
+								<total><order:total format="1" code="CAD" options="FMT_NAME"/></total>
+
+								<total><order:total convert="1" from="USD" to="CAD" /></total>
+								<total><order:total convert="1" from="USD" to="CAD" format="1"/></total>
+								<total><order:total convert="1" from="USD" format="1" code="CAD"/></total>
+								<total><order:total convert="1" from="USD" to="CAD" format="1" /></total>
+								<total><order:total convert="1" from="USD" to="CAD" format="1" options="FMT_HTML"/></total>
+								<total><order:total convert="1" from="USD" code="CAD" format="1" options="FMT_HTML"/></total>
+								<total><order:total convert="1" from="USD" to="CAD" format="1" code="CAD" options="FMT_NAME"/></total>
+								<total><order:total convert="1" from="USD" format="1" code="CAD" options="FMT_NAME"/></total>
+							</item>
+						</order:results>
+						<order:no-results>
+							<message>Your order is empty</message>
+						</order:no-results>
+					</order:item>
+				</order>
+			</order:results>
+			<order:no-results>
+				<message>Could not find order</message>
+			</order:no-results>
+		</order:order>
+	</body>
+</xsp:page>
