@@ -91,7 +91,7 @@ sub cart {
 
     if ($cart) {
         if (ref $cart eq 'HASH' || UNIVERSAL::isa($cart, 'Handel::Cart') || constraint_uuid($cart)) {
-            $self->order(Handel::Order->new({cart => $cart}, 1));
+            $self->order(Handel::Order->new({cart => $cart}));
         } else {
             throw Handel::Exception::Argument( -details =>
                 translate('Param 1 is not a HASH reference, Handel::Cart object, or cart id') . '.');
@@ -158,17 +158,21 @@ sub process {
 
     $self->_setup($self);
 
+    $self->order->autoupdate(0);
+
     foreach my $phase (@{$phases}) {
         foreach my $handler (@{$self->{'handlers'}->{$phase}}) {
             my $status = $handler->[1]->($handler->[0], $self);
 
             if ($status != CHECKOUT_HANDLER_OK && $status != CHECKOUT_HANDLER_DECLINE) {
                 $self->_teardown($self);
-
+                $self->order->autoupdate(1);
                 return CHECKOUT_STATUS_ERROR;
             };
         };
     };
+
+    $self->order->autoupdate(1);
 
     $self->_teardown($self);
 
