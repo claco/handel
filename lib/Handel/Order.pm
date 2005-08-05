@@ -12,7 +12,7 @@ BEGIN {
     use Handel::L10N qw(translate);
 };
 
-__PACKAGE__->autoupdate(0);
+__PACKAGE__->autoupdate(1);
 __PACKAGE__->table('orders');
 __PACKAGE__->iterator_class('Handel::Iterator');
 __PACKAGE__->columns(All => qw(id shopper type number created updated comments
@@ -41,7 +41,7 @@ __PACKAGE__->add_constraint('tax',      tax      => \&constraint_price);
 __PACKAGE__->add_constraint('total',    total    => \&constraint_price);
 
 sub new {
-    my ($self, $data, $noprocess) = @_;
+    my ($self, $data, $process) = @_;
 
     throw Handel::Exception::Argument(
         -details => translate('Param 1 is not a HASH reference') . '.') unless
@@ -110,7 +110,7 @@ sub new {
         $order->update;
     };
 
-    unless ($noprocess) {
+    if ($process) {
         my $checkout = Handel::Checkout->new;
         $checkout->order($order);
 
@@ -293,6 +293,11 @@ into C<new> containing all the required values needed to create a new order
 record or pass a hashref into C<load> containing the search criteria to use
 to load an existing order or set of orders.
 
+B<BREAKING API CHANGE:> Starting in version 0.17_04, new no longer automatically
+creates a checkout process for C<CHECKOUT_PHASE_INITIALIZE>. The C<$noprocess>
+parameter has been renamed to C<$process>. The have the new order automatically
+run a checkout process, set $process to 1.
+
 B<NOTE:> Starting in version 0.17_02, the cart is no longer required! You can
 create an order record that isn't associated with a current cart.
 
@@ -301,20 +306,13 @@ calculated once B<only> when creating an order from an existing cart. After that
 order is created, any changes to items price/wuantity/totals and the orders subtotals
 must be calculated manually and put into the database by the user though their methods.
 
-C<new> will copy the specified carts items into the order items.
-C<cart> can be an already existing
-Handel::Cart object, of a hash reference of search critera, or a cart id (uuid).
-
-
-
-When creating a new order from a cart, C<new> will automatically create a
-new Handel::Checkout process and process C<CHECKOUT_PHASE_INITIALIZE> on the
-new order. This can be disabled by passing any true value in the second option
-C<noprocess>.
+If the cart key is passed, a new order record will be created from the specified
+carts contents. The cart key can be a cart id (uuid), a cart object, or a has reference
+contain the search criteria to load matching carts.
 
 =over
 
-=item C<Handel::Order-E<gt>new(\%data [, $noprocess])>
+=item C<Handel::Order-E<gt>new(\%data [, $process])>
 
     my $order = Handel::Order->new({
         shopper => '10020400-E260-11CF-AE68-00AA004A34D5',
@@ -357,7 +355,7 @@ setting the C<$wantiterator> parameter to C<RETURNAS_ITERATOR>.
         print $item->sku;
     };
 
-See L<Handel::Contstants> for the available C<RETURNAS> options.
+See L<Handel::Constants> for the available C<RETURNAS> options.
 
 A C<Handel::Exception::Argument> exception is thrown if the first parameter is
 not a hashref.
