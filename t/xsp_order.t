@@ -18,27 +18,26 @@ Test::More::plan(skip_all =>
 my @tests = (
     'order_new.xsp',
     'order_new_filtered.xsp',
-#    'cart_new_and_add.xsp',
-#    'cart_new_and_add_filtered.xsp',
-#    'cart_cart.xsp',
-#    'cart_cart_add.xsp',
-#    'cart_cart_add_filtered.xsp',
-#    'cart_cart_clear.xsp',
-#    'cart_cart_delete.xsp',
-#    'cart_cart_delete_filtered.xsp',
-#    'cart_cart_filtered.xsp',
-#    'cart_cart_filtered_no_results.xsp',
-#    'cart_cart_item.xsp',
-#    'cart_cart_item_filtered.xsp',
-#    'cart_cart_item_filtered_no_results.xsp',
-#    'cart_cart_item_update.xsp',
-#    'cart_cart_items.xsp',
-#    'cart_cart_items_filtered.xsp',
-#    'cart_cart_items_filtered_no_results.xsp',
-#    'cart_cart_items_update.xsp',
-#    'cart_cart_no_results.xsp',
-#    'cart_cart_save.xsp',
-#    'cart_cart_update.xsp',
+    'order_new_and_add.xsp',
+    'order_new_and_add_filtered.xsp',
+    'order_order.xsp',
+    'order_order_add.xsp',
+    'order_order_add_filtered.xsp',
+    'order_order_clear.xsp',
+    'order_order_delete.xsp',
+    'order_order_delete_filtered.xsp',
+    'order_order_filtered.xsp',
+    'order_order_filtered_no_results.xsp',
+    'order_order_item.xsp',
+    'order_order_item_filtered.xsp',
+    'order_order_item_filtered_no_results.xsp',
+    'order_order_item_update.xsp',
+    'order_order_items.xsp',
+    'order_order_items_filtered.xsp',
+    'order_order_items_filtered_no_results.xsp',
+    'order_order_items_update.xsp',
+    'order_order_no_results.xsp',
+    'order_order_update.xsp',
 #    'cart_carts.xsp',
 #    'cart_carts_add.xsp',
 #    'cart_carts_add_filtered.xsp',
@@ -80,7 +79,8 @@ my $docroot = Apache::Test::vars('documentroot');
     my $dbfile  = "$docroot/xsp.db";
     my $db      = "dbi:SQLite:dbname=$dbfile";
 
-    preparetables($db, [qw(cart order)], 1);
+    preparetables($db, ['cart'], 1);
+    preparetables($db, ['order']);
 };
 
 my $r = GET('/axkit/order_uuid.xsp');
