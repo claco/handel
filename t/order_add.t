@@ -92,7 +92,7 @@ BEGIN {
     is($item->total, 2.22);
 
     is($order->count, 3);
-    is($order->subtotal, 0);
+    is($order->subtotal, 5.55);
 
     my $reorder = Handel::Order->load({
         id => '11111111-1111-1111-1111-111111111111'
@@ -137,7 +137,7 @@ BEGIN {
     is($item->total, 2.22);
 
     is($order->count, 2);
-    is($order->subtotal, 0);
+    is($order->subtotal, 5.55);
 
     my $reorder = Handel::Order->load({
         id => '22222222-2222-2222-2222-222222222222'
@@ -181,7 +181,7 @@ BEGIN {
     is($item->total, 2.22);
 
     is($order->count, 3);
-    is($order->subtotal, 0);
+    is($order->subtotal, 5.55);
 
     my $reorder = Handel::Order->load({
         id => '22222222-2222-2222-2222-222222222222'

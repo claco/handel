@@ -153,7 +153,7 @@ use_ok('Handel::Order');
     my $order = Handel::Order->new({
         id      => '11111111-1111-1111-1111-111111111111',
         shopper => '11111111-1111-1111-1111-111111111111'
-    }, 1);
+    });
     isa_ok($order, 'Handel::Order');
 
     try {
@@ -175,7 +175,7 @@ use_ok('Handel::Order');
 {
     my $order = Handel::Order->new({
         shopper => '11111111-1111-1111-1111-111111111111'
-    }, 1);
+    });
     isa_ok($order, 'Handel::Order');
     ok(constraint_uuid($order->id));
     is($order->shopper, '11111111-1111-1111-1111-111111111111');
@@ -189,7 +189,7 @@ use_ok('Handel::Order');
     my $order = Handel::Order->new({
         id      => '77777777-7777-7777-7777-777777777777',
         shopper => '77777777-7777-7777-7777-777777777777'
-    }, 1);
+    });
     isa_ok($order, 'Handel::Order');
     ok(constraint_uuid($order->id));
     is($order->id, '77777777-7777-7777-7777-777777777777');
@@ -251,7 +251,7 @@ use_ok('Handel::Order');
         shiptonightphone   => '5-555-555-5555',
         shiptofax          => '6-666-666-6666',
         shiptoemail        => 'chrislaco@hotmail.com',
-    }, 1);
+    });
     isa_ok($order, 'Handel::Order');
     ok(constraint_uuid($order->id));
     is($order->id, '88888888-8888-8888-8888-888888888888');
@@ -367,7 +367,7 @@ use_ok('Handel::Order');
         description => 'My First Item'
     });
 
-    my $order = Handel::Order->new({cart => $cart}, 1);
+    my $order = Handel::Order->new({cart => $cart});
     isa_ok($order, 'Handel::Order');
     is($order->count, $cart->count);
     is($order->subtotal, $cart->subtotal);
@@ -426,7 +426,7 @@ use_ok('Handel::Order');
         description => 'My Second Item'
     });
 
-    my $order = Handel::Order->new({cart => {id => 'F00F8DE0-A39C-41e4-A906-D43DF55D93D8'}}, 1);
+    my $order = Handel::Order->new({cart => {id => 'F00F8DE0-A39C-41e4-A906-D43DF55D93D8'}});
     isa_ok($order, 'Handel::Order');
     is($order->count, $cart->count);
     is($order->subtotal, $cart->subtotal);
@@ -453,7 +453,7 @@ use_ok('Handel::Order');
         description => 'My Third Item'
     });
 
-    my $order = Handel::Order->new({cart => '99BE4783-2A16-4172-A5A8-415A7D984BCA'}, 1);
+    my $order = Handel::Order->new({cart => '99BE4783-2A16-4172-A5A8-415A7D984BCA'});
     isa_ok($order, 'Handel::Order');
     is($order->count, $cart->count);
     is($order->subtotal, $cart->subtotal);
@@ -471,7 +471,7 @@ use_ok('Handel::Order');
 
 ## check that when multiple carts are found that we only load the first one
 {
-    my $order = Handel::Order->new({cart => {name => '%Other%'}}, 1);
+    my $order = Handel::Order->new({cart => {name => '%Other%'}});
     isa_ok($order, 'Handel::Order');
     is($order->count, 1);
     is($order->subtotal, 6.66);
@@ -495,7 +495,7 @@ SKIP: {
     {
         my $order = Handel::Order->new({
             shopper => '11111111-1111-1111-1111-111111111111'
-        });
+        }, 1);
         isa_ok($order, 'Handel::Order');
         ok(constraint_uuid($order->id));
         is($order->shopper, '11111111-1111-1111-1111-111111111111');
@@ -508,7 +508,7 @@ SKIP: {
     {
         my $order = Handel::Order->new({
             shopper => '11111111-1111-1111-1111-111111111111'
-        });
+        }, 1);
         is($order, undef);
     };
 };

@@ -57,18 +57,18 @@ BEGIN {
     });
     isa_ok($order, 'Handel::Order');
     is($order->count, 1);
-    is($order->subtotal, 0);
+    is($order->subtotal, 5.55);
 
     is($order->delete({sku => 'SKU3333'}), 1);
     is($order->count, 0);
-    is($order->subtotal, 0);
+    is($order->subtotal, 5.55);
 
     my $reorder = Handel::Order->load({
         id => '22222222-2222-2222-2222-222222222222'
     });
     isa_ok($reorder, 'Handel::Order');
     is($reorder->count, 0);
-    is($reorder->subtotal, 0);
+    is($reorder->subtotal, 5.55);
 };
 
 
@@ -79,16 +79,16 @@ BEGIN {
     });
     isa_ok($order, 'Handel::Order');
     is($order->count, 2);
-    is($order->subtotal, 0);
+    is($order->subtotal, 5.55);
 
     ok($order->delete({sku => 'SKU%'}));
     is($order->count, 0);
-    is($order->subtotal, 0);
+    is($order->subtotal, 5.55);
 
     my $reorder = Handel::Order->load({
         id => '11111111-1111-1111-1111-111111111111'
     });
     isa_ok($reorder, 'Handel::Order');
     is($reorder->count, 0);
-    is($reorder->subtotal, 0);
+    is($reorder->subtotal, 5.55);
 };
