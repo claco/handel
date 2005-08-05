@@ -1,5 +1,14 @@
 Revision history for Perl module Handel
 
+0.17_04 Thur Aug 04 10:40:37 2005
+    - Breaking API Changes! Order::new no longer runs a new checkout
+        initialization phase automatically. The second param, $noprocess,
+        has been changed to $process. Normally API changes are bad, but
+        since no one is probably even using the checkout system in 0.17 yet,
+        now's the time to make the change.
+    - Added more order AxKit tests
+	- Added Goals/Is/Isn't items to Handel pod
+
 0.17_03 Sat Jul 30 12:19:24 2005
     - Fixed Locale::Currency::Format detection errors in t/order_new.t
 
