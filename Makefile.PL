@@ -16,6 +16,18 @@ if (Test::More->VERSION < 0.48) {
     sleep 5;
 };
 
+eval 'require Handel';
+if (!$@ && Handel->VERSION eq '0.17') {
+    print "\a\a\a\a\a";
+    print "----------------------------------------------------------\n";
+    print "BREAKING API CHANGES!!!!\n\n";
+    print "Handel::Order >= 0.18 is incompatable with Handel::Order\n";
+    print "version 0.17 only. Earlier versions of Handel without\n";
+    print "Handel::ORder arenot effected.\n";
+    print "----------------------------------------------------------\n";
+    sleep 5;
+};
+
 eval 'use Apache::Test 1.16';
 if (!$@) {
     require Apache::TestMM;
