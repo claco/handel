@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use vars qw($VERSION);
 
-$VERSION = '0.17_03';
+$VERSION = '0.17_04';
 
 1;
 __END__
@@ -21,6 +21,68 @@ of an IIS/ASP based commerce site to Apache/ModPerl, but I decided that is
 might be useful to others so here it is on CPAN.
 
 For the curious, Handel is German for commerce.
+
+=head1 GOALS
+
+=over
+
+=item Database agnostic. Thanks to Class::DBI and staying away from auto incrementing ids,
+Handel should run in any database that Class::DBI supports.
+
+=item Implementation agnostic. Handel should be able to be used from the command line,
+from a web page, from a SOAP service, or from a GUI application. It's simply a data access mechanism.
+Any interaction with forms, web pages, browser, cookies, etc is the responsibility of the consumer
+
+=item Checkout agnostic. A checkout process means different things to different people in
+different situations. The Handel checkout pipeline by itself does absolutely nothing with
+an order. It is instead a plugin manager that allows you to specifiy and build plugins to do
+various actions (payment autorization, address validation, fax delivery, etc). Each site, server, page,
+even process() call can have it's own uniquie order processing pipeline.
+
+=item Easy integration into AxKit using taglibs.
+
+=item Easy integration into TT2 using plugins.
+
+=item Easy intrgration into Catalyst using plugins.
+
+=item Easy integration into other systems using SOAP.
+
+=item Feature complete demo site in AxKit.
+
+=item Feature complete demo site in TT2.
+
+=item Feature complete demo site in Catalyst.
+
+=item Public Subversion repository.
+
+=item Public Wiki/Docs site.
+
+=item Get someone to actually use the damn thing. :-)
+
+=back
+
+=head1 WHAT HANDEL IS
+
+=over
+
+=item Simple cart and order record maintenance.
+
+=item Plugin based checkout pipeline processing framework.
+
+=back
+
+=head1 WHAT HANDEL ISN'T
+
+=over
+
+=item Intershop, Cart32, WebGUI, CMS, complete web commerce packageB<(1)>.
+Handel is a simple framework to load/upload cart/order data and shove that
+data through a plugin based pipeline.
+
+=item B<(1)> While it is not a complete web based commerce system, I do plan on having
+feature complete working demos sites so people can still quick-start their own projects.
+
+=back
 
 =head1 FEATURES
 
