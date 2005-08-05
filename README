@@ -9,6 +9,45 @@ DESCRIPTION
 
     For the curious, Handel is German for commerce.
 
+GOALS
+    Database agnostic. Thanks to Class::DBI and staying away from auto
+    incrementing ids, Handel should run in any database that Class::DBI
+    supports.
+    Implementation agnostic. Handel should be able to be used from the
+    command line, from a web page, from a SOAP service, or from a GUI
+    application. It's simply a data access mechanism. Any interaction with
+    forms, web pages, browser, cookies, etc is the responsibility of the
+    consumer
+    Checkout agnostic. A checkout process means different things to
+    different people in different situations. The Handel checkout pipeline
+    by itself does absolutely nothing with an order. It is instead a plugin
+    manager that allows you to specifiy and build plugins to do various
+    actions (payment autorization, address validation, fax delivery, etc).
+    Each site, server, page, even process() call can have it's own uniquie
+    order processing pipeline.
+    Easy integration into AxKit using taglibs.
+    Easy integration into TT2 using plugins.
+    Easy intrgration into Catalyst using plugins.
+    Easy integration into other systems using SOAP.
+    Feature complete demo site in AxKit.
+    Feature complete demo site in TT2.
+    Feature complete demo site in Catalyst.
+    Public Subversion repository.
+    Public Wiki/Docs site.
+    Get someone to actually use the damn thing. :-)
+
+WHAT HANDEL IS
+    Simple cart and order record maintenance.
+    Plugin based checkout pipeline processing framework.
+
+WHAT HANDEL ISN'T
+    Intershop, Cart32, WebGUI, CMS, complete web commerce package(1). Handel
+    is a simple framework to load/upload cart/order data and shove that data
+    through a plugin based pipeline.
+    (1) While it is not a complete web based commerce system, I do plan on
+    having feature complete working demos sites so people can still
+    quick-start their own projects.
+
 FEATURES
     Add/Update/Delete/Save/Restore Cart Contents
     Full AxKit XSP Taglib Support
