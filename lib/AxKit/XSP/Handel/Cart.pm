@@ -250,7 +250,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
                     my $from   = $attr{'from'}    || $cfg->{'HandelCurrencyCode'};
                     my $to     = $attr{'to'}      || $attr{'code'} || $cfg->{'HandelCurrencyCode'};
 
-                    AxKit::Debug(5, "[Handel] [$tag] code=$code, format=$format, from=$from, to=$to");
+                    AxKit::Debug(5, "[Handel] [Cart] [$tag] code=$code, format=$format, from=$from, to=$to");
 
                     if ($attr{'convert'}) {
                         $e->append_to_script("\$_xsp_handel_cart_cart->$tag->convert('$from', '$to', '".($attr{'format'}||'')."', '$format');\n");
@@ -302,7 +302,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
                     my $from   = $attr{'from'}    || $cfg->{'HandelCurrencyCode'};
                     my $to     = $attr{'to'}      || $attr{'code'} || $cfg->{'HandelCurrencyCode'};
 
-                    AxKit::Debug(5, "[Handel] [$tag] code=$code, format=$format, from=$from, to=$to");
+                    AxKit::Debug(5, "[Handel] [Cart] [$tag] code=$code, format=$format, from=$from, to=$to");
 
                     if ($attr{'convert'}) {
                         $e->append_to_script("\$_xsp_handel_cart_item->$tag->convert('$from', '$to', '".($attr{'format'}||'')."', '$format');\n");
