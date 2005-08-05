@@ -11,7 +11,7 @@ BEGIN {
 };
 
 __PACKAGE__->table('order_items');
-__PACKAGE__->autoupdate(0);
+__PACKAGE__->autoupdate(1);
 __PACKAGE__->iterator_class('Handel::Iterator');
 __PACKAGE__->columns(All => qw(id orderid sku quantity price description total));
 __PACKAGE__->columns(Essential => qw(id orderid sku quantity price description total));
