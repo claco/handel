@@ -128,7 +128,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
 
 
         ## order:orders
-        } elsif ($tag eq 'order') {
+        } elsif ($tag eq 'orders') {
             throw Handel::Exception::Taglib(
                 -text => translate("Tag '[_1]' not valid inside of other Handel tags", $tag)
             ) if ($context[$#context] ne 'root');
@@ -471,7 +471,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
                     };
                     if (!$_xsp_handel_order_order) {
                 ';
-            } elsif ($context[$#context-1] eq 'order') {
+            } elsif ($context[$#context-1] eq 'orders') {
                 return '
                     if (!$_xsp_handel_orders_called_load) {
                         @_xsp_handel_order_orders = (scalar keys %_xsp_handel_orders_load_filter) ?
@@ -551,7 +551,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
 
 
         ## order:orders
-        } elsif ($tag eq 'order') {
+        } elsif ($tag eq 'orders') {
             pop @context;
 
             return "\n};\n";
@@ -657,7 +657,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
                 $e->end_expr($tag);
             } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'order') {
                 $e->end_expr($tag);
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'ordera') {
+            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'orders') {
                 $e->end_expr($tag);
             } elsif ($context[$#context] eq 'delete' && $tag !~ /^(count|subtotal)$/) {
                 return ";\n";
