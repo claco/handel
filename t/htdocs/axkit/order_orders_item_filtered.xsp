@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<xsp:page
+	xmlns:xsp="http://apache.org/xsp/core/v1"
+	xmlns:order="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order"
+>
+	<body>
+		<order:new>
+			<order:id>A4383057-CE2B-45BC-9DEA-8E45AB30BB4D</order:id>
+			<order:shopper>FA007E69-F41C-4C8A-A287-C60F1F4591DD</order:shopper>
+			<order:type>ORDER_TYPE_TEMP</order:type>
+			<order:billtofirstname>Christopher</order:billtofirstname>
+			<order:billtolastname>Laco</order:billtolastname>
+			<order:billtoaddress1>BillToAddress1</order:billtoaddress1>
+			<order:billtoaddress2>BillToAddress2</order:billtoaddress2>
+			<order:billtoaddress3>BillToAddress3</order:billtoaddress3>
+			<order:billtocity>BillToCity</order:billtocity>
+			<order:billtostate>BillToState</order:billtostate>
+			<order:billtozip>BillToZip</order:billtozip>
+			<order:billtocountry>BillToCountry</order:billtocountry>
+			<order:billtodayphone>1-111-111-1111</order:billtodayphone>
+			<order:billtonightphone>2-222-222-2222</order:billtonightphone>
+			<order:billtofax>3-333-333-3333</order:billtofax>
+			<order:billtoemail>mendlefarg@gmail.com</order:billtoemail>
+			<order:comments>Comments</order:comments>
+			<order:created>20050715T201234Z</order:created>
+			<order:handling>8.95</order:handling>
+			<order:number>O123456789</order:number>
+			<order:shipmethod>UPS Ground</order:shipmethod>
+			<order:shipping>23.95</order:shipping>
+			<order:shiptosameasbillto>0</order:shiptosameasbillto>
+			<order:shiptofirstname>Christopher</order:shiptofirstname>
+			<order:shiptolastname>Laco</order:shiptolastname>
+			<order:shiptoaddress1>ShipToAddress1</order:shiptoaddress1>
+			<order:shiptoaddress2>ShipToAddress2</order:shiptoaddress2>
+			<order:shiptoaddress3>ShipToAddress3</order:shiptoaddress3>
+			<order:shiptocity>ShipToCity</order:shiptocity>
+			<order:shiptostate>ShipToState</order:shiptostate>
+			<order:shiptozip>ShipToZip</order:shiptozip>
+			<order:shiptocountry>ShipToCountry</order:shiptocountry>
+			<order:shiptodayphone>4-444-444-4444</order:shiptodayphone>
+			<order:shiptonightphone>5-555-555-5555</order:shiptonightphone>
+			<order:shiptofax>6-666-666-6666</order:shiptofax>
+			<order:shiptoemail>chrislaco@hotmail.com</order:shiptoemail>
+			<order:subtotal>37.95</order:subtotal>
+			<order:total>37.95</order:total>
+			<order:updated>20050716T201234Z</order:updated>
+			<order:results>
+				<order:add id="98D2FCE0-CEB6-4464-8CE4-FBC9D71AC4A4" sku="SKU1" price="1.11" quantity="1" description="Description 1" total="1.11"/>
+				<order:add id="1A43BAF1-AFDF-4E92-AFA1-8C4EFE61B399" sku="FILTERSKU1" price="2.22" quantity="2" description="Description 2" total="4.44"/>
+			</order:results>
+			<order:no-results>
+				<message>Error creating order</message>
+			</order:no-results>
+		</order:new>
+		<order:new>
+			<order:id>FC4A16DA-D335-4EB7-A7AD-7F282158589C</order:id>
+			<order:shopper>FA007E69-F41C-4C8A-A287-C60F1F4591DD</order:shopper>
+			<order:type>0</order:type>
+			<order:billtofirstname>Christopher</order:billtofirstname>
+			<order:billtolastname>Laco</order:billtolastname>
+			<order:billtoaddress1>BillToAddress1</order:billtoaddress1>
+			<order:billtoaddress2>BillToAddress2</order:billtoaddress2>
+			<order:billtoaddress3>BillToAddress3</order:billtoaddress3>
+			<order:billtocity>BillToCity</order:billtocity>
+			<order:billtostate>BillToState</order:billtostate>
+			<order:billtozip>BillToZip</order:billtozip>
+			<order:billtocountry>BillToCountry</order:billtocountry>
+			<order:billtodayphone>1-111-111-1111</order:billtodayphone>
+			<order:billtonightphone>2-222-222-2222</order:billtonightphone>
+			<order:billtofax>3-333-333-3333</order:billtofax>
+			<order:billtoemail>mendlefarg@gmail.com</order:billtoemail>
+			<order:comments>Comments</order:comments>
+			<order:created>20050715T201234Z</order:created>
+			<order:handling>8.95</order:handling>
+			<order:number>O123456789</order:number>
+			<order:shipmethod>UPS Ground</order:shipmethod>
+			<order:shipping>23.95</order:shipping>
+			<order:shiptosameasbillto>0</order:shiptosameasbillto>
+			<order:shiptofirstname>Christopher</order:shiptofirstname>
+			<order:shiptolastname>Laco</order:shiptolastname>
+			<order:shiptoaddress1>ShipToAddress1</order:shiptoaddress1>
+			<order:shiptoaddress2>ShipToAddress2</order:shiptoaddress2>
+			<order:shiptoaddress3>ShipToAddress3</order:shiptoaddress3>
+			<order:shiptocity>ShipToCity</order:shiptocity>
+			<order:shiptostate>ShipToState</order:shiptostate>
+			<order:shiptozip>ShipToZip</order:shiptozip>
+			<order:shiptocountry>ShipToCountry</order:shiptocountry>
+			<order:shiptodayphone>4-444-444-4444</order:shiptodayphone>
+			<order:shiptonightphone>5-555-555-5555</order:shiptonightphone>
+			<order:shiptofax>6-666-666-6666</order:shiptofax>
+			<order:shiptoemail>chrislaco@hotmail.com</order:shiptoemail>
+			<order:subtotal>37.95</order:subtotal>
+			<order:total>37.95</order:total>
+			<order:updated>20050716T201234Z</order:updated>
+			<order:results>
+				<order:add id="D454144C-0E1A-4BF5-BE6F-C3D26AE01EBE" sku="SKU3" price="3.33" quantity="3" description="Description 3" total="9.99"/>
+				<order:add id="6DE112DE-0EB6-49C3-B292-B522463B5E07" sku="FILTERSKU2" price="4.44" quantity="4" description="Description 4" total="16.61"/>
+			</order:results>
+			<order:no-results>
+				<message>Error creating order</message>
+			</order:no-results>
+		</order:new>
+
+		<order:orders>
+			<order:filter name="shopper">FA007E69-F41C-4C8A-A287-C60F1F4591DD</order:filter>
+			<order:results>
+				<order>
+					<count><order:count/></count>
+					<id><order:id/></id>
+					<shopper><order:shopper/></shopper>
+					<type><order:type/></type>
+					<billtofirstname><order:billtofirstname/></billtofirstname>
+					<billtolastname><order:billtolastname/></billtolastname>
+					<billtoaddress1><order:billtoaddress1/></billtoaddress1>
+					<billtoaddress2><order:billtoaddress2/></billtoaddress2>
+					<billtoaddress3><order:billtoaddress3/></billtoaddress3>
+					<billtocity><order:billtocity/></billtocity>
+					<billtostate><order:billtostate/></billtostate>
+					<billtozip><order:billtozip/></billtozip>
+					<billtocountry><order:billtocountry/></billtocountry>
+					<billtodayphone><order:billtodayphone/></billtodayphone>
+					<billtonightphone><order:billtonightphone/></billtonightphone>
+					<billtofax><order:billtofax/></billtofax>
+					<billtoemail><order:billtoemail/></billtoemail>
+					<comments><order:comments/></comments>
+					<created><order:created/></created>
+					<handling><order:handling/></handling>
+					<number><order:number/></number>
+					<shipmethod><order:shipmethod/></shipmethod>
+					<shipping><order:shipping/></shipping>
+					<shiptosameasbillto><order:shiptosameasbillto/></shiptosameasbillto>
+					<shiptofirstname><order:shiptofirstname/></shiptofirstname>
+					<shiptolastname><order:shiptolastname/></shiptolastname>
+					<shiptoaddress1><order:shiptoaddress1/></shiptoaddress1>
+					<shiptoaddress2><order:shiptoaddress2/></shiptoaddress2>
+					<shiptoaddress3><order:shiptoaddress3/></shiptoaddress3>
+					<shiptocity><order:shiptocity/></shiptocity>
+					<shiptostate><order:shiptostate/></shiptostate>
+					<shiptozip><order:shiptozip/></shiptozip>
+					<shiptocountry><order:shiptocountry/></shiptocountry>
+					<shiptodayphone><order:shiptodayphone/></shiptodayphone>
+					<shiptonightphone><order:shiptonightphone/></shiptonightphone>
+					<shiptofax><order:shiptofax/></shiptofax>
+					<shiptoemail><order:shiptoemail/></shiptoemail>
+					<subtotal><order:subtotal/></subtotal>
+					<total><order:total/></total>
+					<updated><order:updated/></updated>
+					<order:item>
+						<order:filter name="sku">FILTERSKU%</order:filter>
+						<order:results>
+							<item>
+								<description><order:description/></description>
+								<id><order:id/></id>
+								<price><order:price/></price>
+								<quantity><order:quantity/></quantity>
+								<sku><order:sku/></sku>
+								<total><order:total/></total>
+							</item>
+						</order:results>
+						<order:no-results>
+							<message>Your order is empty</message>
+						</order:no-results>
+					</order:item>
+				</order>
+			</order:results>
+			<order:no-results>
+				<message>Could not find order</message>
+			</order:no-results>
+		</order:orders>
+	</body>
+</xsp:page>
