@@ -36,7 +36,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         shiptofirstname|shiptolastname|shiptoaddress1|shiptoaddress2|shiptoaddress3|
         shiptocity|shiptostate|shiptozip|shiptocountry|
         shiptodayphone|shiptonightphone|shiptofax|shiptoemail|
-        subtotal|total||updated)$/x) {
+        tax|subtotal|total||updated)$/x) {
             if ($context[$#context] eq 'new') {
                 return ".q|$text|";
             } elsif ($context[$#context] eq 'add') {
@@ -245,7 +245,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         ## order property tags
         ## order:description, id, name, shopper, type, count, subtotal
         ## billtofirstname
-        } elsif ($tag =~ /^(description|id|name|shopper|type|count|subtotal|
+        } elsif ($tag =~ /^(description|id|name|shopper|type|count|
         billtofirstname|billtolastname|billtoaddress1|billtoaddress2|billtoaddress3|
         billtocity|billtostate|billtozip|billtocountry|
         billtodayphone|billtonightphone|billtofax|billtoemail|
@@ -253,7 +253,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         shiptofirstname|shiptolastname|shiptoaddress1|shiptoaddress2|shiptoaddress3|
         shiptocity|shiptostate|shiptozip|shiptocountry|
         shiptodayphone|shiptonightphone|shiptofax|shiptoemail|
-        subtotal|updated)$/x) {
+        tax|subtotal|updated)$/x) {
             if ($context[$#context] eq 'new' && $tag !~ /^(count)$/) {
                 return "\n\$_xsp_handel_order_new_filter{$tag} = ''";
             } elsif ($context[$#context] eq 'add' && $tag =~ /^(id|description)$/) {
@@ -261,7 +261,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
             } elsif ($context[$#context] eq 'results' && $context[$#context-1] =~ /^(new|order(s?))$/) {
                 $e->start_expr($tag);
 
-                if ($tag eq 'subtotal' && ($attr{'format'} || $attr{'convert'})) {
+                if ($tag =~ /^(subtotal|tax|handling|shipping)$/ && ($attr{'format'} || $attr{'convert'})) {
                     my $cfg = Handel::ConfigReader->new();
                     my $code   = $attr{'to'}      || $attr{'code'} || $cfg->{'HandelCurrencyCode'};
                     my $format = $attr{'options'} || $cfg->{'HandelCurrencyFormat'};
@@ -614,7 +614,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
 
         ## order propery tags
         ## order:description, id, name, shopper, type, count, subtotal
-        } elsif ($tag =~ /^(description|id|name|shopper|type|count|subtotal|
+        } elsif ($tag =~ /^(description|id|name|shopper|type|count|
         billtofirstname|billtolastname|billtoaddress1|billtoaddress2|billtoaddress3|
         billtocity|billtostate|billtozip|billtocountry|
         billtodayphone|billtonightphone|billtofax|billtoemail|
@@ -622,7 +622,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         shiptofirstname|shiptolastname|shiptoaddress1|shiptoaddress2|shiptoaddress3|
         shiptocity|shiptostate|shiptozip|shiptocountry|
         shiptodayphone|shiptonightphone|shiptofax|shiptoemail|
-        subtotal|updated)$/x) {
+        tax|subtotal|updated)$/x) {
             if ($context[$#context] eq 'new' && $tag !~ /^(count)$/) {
                 return ";\n";
             } elsif ($context[$#context] eq 'add' && $tag !~ /^(count|subtotal)$/) {
