@@ -1,5 +1,10 @@
 Revision history for Perl module Handel
 
+0.17_05 Sat Aug 06 20:14:39 2005
+    - Finished XSP order tests
+    - Added TT2 order plugin
+    - Added TT2 checkout plugin
+
 0.17_04 Thur Aug 04 10:40:37 2005
     - Breaking API Changes! Order::new no longer runs a new checkout
         initialization phase automatically. The second param, $noprocess,
