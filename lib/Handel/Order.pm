@@ -5,6 +5,7 @@ use warnings;
 
 BEGIN {
     use base 'Handel::DBI';
+    use Handel::Cart;
     use Handel::Checkout;
     use Handel::Constants qw(:checkout :returnas :order);
     use Handel::Constraints qw(:all);
