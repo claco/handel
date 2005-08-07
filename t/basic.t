@@ -24,22 +24,24 @@ BEGIN {
 
     SKIP: {
         eval 'use Apache::AxKit::Language::XSP';
-        skip 'AxKit not installed', 2 if $@;
+        skip 'AxKit not installed', 3 if $@;
 
         {
             ## squelch AxKit strict/warnings
             no strict;
             no warnings;
             use_ok('AxKit::XSP::Handel::Cart');
+            use_ok('AxKit::XSP::Handel::Checkout');
             use_ok('AxKit::XSP::Handel::Order');
         };
     };
 
     SKIP: {
         eval 'use Template 2.07';
-        skip 'Template Toolkit 2.07 not installed', 2 if $@;
+        skip 'Template Toolkit 2.07 not installed', 3 if $@;
 
         use_ok('Template::Plugin::Handel::Cart');
         use_ok('Template::Plugin::Handel::Constants');
+        use_ok('Template::Plugin::Handel::Order');
     };
 };
