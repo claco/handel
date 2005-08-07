@@ -73,7 +73,7 @@ Starting in version C<0.08>, C<Handel::Constants> are now imported into this
 module automatically. This removes the need to use
 C<Template::Plugin::Handel::Constants> seperately when working with carts.
 
-    [% USE hc = Handel.Order %]
+    [% USE hc = Handel.Constants %]
     [% cart = hc.create(...) %]
     [% cart.type(hc.ORDER_TYPE_TEMP) %]
 
@@ -100,7 +100,7 @@ you would use when calling C<Handel::Order> when calling C<create> and C<items>:
 
     [% order.method({name1=>val1, name2=>val2}, $wantiterator) %]
 
-Other issue is how C<Handel::Order> returns an iterator or an array based on its
+Another issue is how C<Handel::Order> returns an iterator or an array based on its
 inspection ot C<wantarray>. It appears that TT2 thwarts C<wantarray> in some
 manner.
 
@@ -145,7 +145,7 @@ Unlike using C<Handel::Order> to create a new order object using C<new> and
 C<load>, C<Template::Plugin::Handel::Order> takes a slightly different
 approach to order objects. Because C<USE>ing in TT2 calls C<new>, we first
 C<USE> or create a new C<Template::Plugin::Handel::Order> object then
-C<create> or C<load> to return a new order object, iterator, or array of carts.
+C<create> or C<load> to return a new order object, iterator, or array of orders.
 
 =head2 new
 
