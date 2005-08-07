@@ -41,6 +41,7 @@
 		<shiptoemail>chrislaco@hotmail.com</shiptoemail>
 		<subtotal>37.95</subtotal>
 		<total>37.95</total>
+		<tax>6.66</tax>
 		<updated>20050716T201234Z</updated>
 		<item>
 			<description>Description 1</description>

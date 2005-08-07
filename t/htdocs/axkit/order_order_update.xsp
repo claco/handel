@@ -44,6 +44,7 @@
 			<order:shiptoemail>chrislaco@hotmail.com</order:shiptoemail>
 			<order:subtotal>37.95</order:subtotal>
 			<order:total>37.95</order:total>
+			<order:tax>6.66</order:tax>
 			<order:updated>20050716T201234Z</order:updated>
 			<order:no-results>
 				<message>Error creating order</message>
@@ -93,6 +94,7 @@
 					<shiptoemail><order:shiptoemail/></shiptoemail>
 					<subtotal><order:subtotal/></subtotal>
 					<total><order:total/></total>
+					<tax><order:tax/></tax>
 					<updated><order:updated/></updated>
 				</order>
 				<order:update>
@@ -133,6 +135,7 @@
 					<order:shiptoemail>Uchrislaco@hotmail.com</order:shiptoemail>
 					<order:subtotal>37.96</order:subtotal>
 					<order:total>37.96</order:total>
+					<order:tax>6.67</order:tax>
 					<order:updated>U20050716T201234Z</order:updated>
 				</order:update>
 				<order>
@@ -175,6 +178,7 @@
 					<shiptoemail><order:shiptoemail/></shiptoemail>
 					<subtotal><order:subtotal/></subtotal>
 					<total><order:total/></total>
+					<tax><order:tax/></tax>
 					<updated><order:updated/></updated>
 				</order>
 			</order:results>

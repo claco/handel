@@ -41,6 +41,7 @@
 		<shiptoemail>chrislaco@hotmail.com</shiptoemail>
 		<subtotal>37.95</subtotal>
 		<total>37.95</total>
+		<tax>6.66</tax>
 		<updated>20050716T201234Z</updated>
 	</order>
 	<order>
@@ -83,6 +84,7 @@
 		<shiptoemail>Uchrislaco@hotmail.com</shiptoemail>
 		<subtotal>37.96</subtotal>
 		<total>37.96</total>
+		<tax>6.67</tax>
 		<updated>U20050716T201234Z</updated>
 	</order>
 </body>

@@ -44,6 +44,7 @@
 			<order:shiptoemail>chrislaco@hotmail.com</order:shiptoemail>
 			<order:subtotal>37.95</order:subtotal>
 			<order:total>37.95</order:total>
+			<order:tax>6.66</order:tax>
 			<order:updated>20050716T201234Z</order:updated>
 			<order:results>
 				<order:add id="A07077F7-C31D-44CD-B2E2-7AE7FA358C11" sku="SKU1" price="1.11" quantity="1" description="Description 1" total="1.11"/>
@@ -97,6 +98,7 @@
 					<shiptoemail><order:shiptoemail/></shiptoemail>
 					<subtotal><order:subtotal/></subtotal>
 					<total><order:total/></total>
+					<tax><order:tax/></tax>
 					<updated><order:updated/></updated>
 					<order:items>
 						<order:filter name="sku">FOO%</order:filter>

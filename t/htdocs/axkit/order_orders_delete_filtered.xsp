@@ -44,6 +44,7 @@
 			<order:shiptoemail>chrislaco@hotmail.com</order:shiptoemail>
 			<order:subtotal>37.95</order:subtotal>
 			<order:total>37.95</order:total>
+			<order:tax>6.66</order:tax>
 			<order:updated>20050716T201234Z</order:updated>
 			<order:results>
 				<order:add>
@@ -112,6 +113,7 @@
 			<order:shiptoemail>chrislaco@hotmail.com</order:shiptoemail>
 			<order:subtotal>37.95</order:subtotal>
 			<order:total>37.95</order:total>
+			<order:tax>6.66</order:tax>
 			<order:updated>20050716T201234Z</order:updated>
 			<order:results>
 				<order:add>
@@ -185,6 +187,7 @@
 					<shiptoemail><order:shiptoemail/></shiptoemail>
 					<subtotal><order:subtotal/></subtotal>
 					<total><order:total/></total>
+					<tax><order:tax/></tax>
 					<updated><order:updated/></updated>
 					<order:delete sku="NEWSKU123"/>
 					<count><order:count/></count>

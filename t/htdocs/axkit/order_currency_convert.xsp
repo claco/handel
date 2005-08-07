@@ -9,6 +9,11 @@
 			<order:id>BD40D1CB-7D85-4F47-867A-925E111EB2AA</order:id>
 			<order:shopper>0CA564F1-EFBC-490F-8586-198FD14E97AA</order:shopper>
 			<order:type>ORDER_TYPE_TEMP</order:type>
+			<order:total>1.00</order:total>
+			<order:subtotal>1.00</order:subtotal>
+			<order:shipping>1.00</order:shipping>
+			<order:handling>1.00</order:handling>
+			<order:tax>1.00</order:tax>
 			<order:results>
 				<order:add id="EF254990-53FB-46DA-8B8A-A287698D3EAA" sku="SKU1" price="1.11" quantity="2" description="Description 1" total="2.22"/>
 			</order:results>
@@ -38,6 +43,66 @@
 					<subtotal><order:subtotal convert="1" from="USD" code="CAD" format="1" options="FMT_HTML"/></subtotal>
 					<subtotal><order:subtotal convert="1" from="USD" to="CAD" format="1" code="CAD" options="FMT_NAME"/></subtotal>
 					<subtotal><order:subtotal convert="1" from="USD" format="1" code="CAD" options="FMT_NAME"/></subtotal>
+
+					<total><order:total/></total>
+					<total><order:total format="1"/></total>
+					<total><order:total format="1" code="CAD"/></total>
+					<total><order:total format="1" options="FMT_HTML"/></total>
+					<total><order:total format="1" code="CAD" options="FMT_NAME"/></total>
+
+					<total><order:total convert="1" from="USD" to="CAD" /></total>
+					<total><order:total convert="1" from="USD" to="CAD" format="1"/></total>
+					<total><order:total convert="1" from="USD" format="1" code="CAD"/></total>
+					<total><order:total convert="1" from="USD" to="CAD" format="1" /></total>
+					<total><order:total convert="1" from="USD" to="CAD" format="1" options="FMT_HTML"/></total>
+					<total><order:total convert="1" from="USD" code="CAD" format="1" options="FMT_HTML"/></total>
+					<total><order:total convert="1" from="USD" to="CAD" format="1" code="CAD" options="FMT_NAME"/></total>
+					<total><order:total convert="1" from="USD" format="1" code="CAD" options="FMT_NAME"/></total>
+
+					<handling><order:handling/></handling>
+					<handling><order:handling format="1"/></handling>
+					<handling><order:handling format="1" code="CAD"/></handling>
+					<handling><order:handling format="1" options="FMT_HTML"/></handling>
+					<handling><order:handling format="1" code="CAD" options="FMT_NAME"/></handling>
+
+					<handling><order:handling convert="1" from="USD" to="CAD" /></handling>
+					<handling><order:handling convert="1" from="USD" to="CAD" format="1"/></handling>
+					<handling><order:handling convert="1" from="USD" format="1" code="CAD"/></handling>
+					<handling><order:handling convert="1" from="USD" to="CAD" format="1" /></handling>
+					<handling><order:handling convert="1" from="USD" to="CAD" format="1" options="FMT_HTML"/></handling>
+					<handling><order:handling convert="1" from="USD" code="CAD" format="1" options="FMT_HTML"/></handling>
+					<handling><order:handling convert="1" from="USD" to="CAD" format="1" code="CAD" options="FMT_NAME"/></handling>
+					<handling><order:handling convert="1" from="USD" format="1" code="CAD" options="FMT_NAME"/></handling>
+
+					<shipping><order:shipping/></shipping>
+					<shipping><order:shipping format="1"/></shipping>
+					<shipping><order:shipping format="1" code="CAD"/></shipping>
+					<shipping><order:shipping format="1" options="FMT_HTML"/></shipping>
+					<shipping><order:shipping format="1" code="CAD" options="FMT_NAME"/></shipping>
+
+					<shipping><order:shipping convert="1" from="USD" to="CAD" /></shipping>
+					<shipping><order:shipping convert="1" from="USD" to="CAD" format="1"/></shipping>
+					<shipping><order:shipping convert="1" from="USD" format="1" code="CAD"/></shipping>
+					<shipping><order:shipping convert="1" from="USD" to="CAD" format="1" /></shipping>
+					<shipping><order:shipping convert="1" from="USD" to="CAD" format="1" options="FMT_HTML"/></shipping>
+					<shipping><order:shipping convert="1" from="USD" code="CAD" format="1" options="FMT_HTML"/></shipping>
+					<shipping><order:shipping convert="1" from="USD" to="CAD" format="1" code="CAD" options="FMT_NAME"/></shipping>
+					<shipping><order:shipping convert="1" from="USD" format="1" code="CAD" options="FMT_NAME"/></shipping>
+
+					<tax><order:tax/></tax>
+					<tax><order:tax format="1"/></tax>
+					<tax><order:tax format="1" code="CAD"/></tax>
+					<tax><order:tax format="1" options="FMT_HTML"/></tax>
+					<tax><order:tax format="1" code="CAD" options="FMT_NAME"/></tax>
+
+					<tax><order:tax convert="1" from="USD" to="CAD" /></tax>
+					<tax><order:tax convert="1" from="USD" to="CAD" format="1"/></tax>
+					<tax><order:tax convert="1" from="USD" format="1" code="CAD"/></tax>
+					<tax><order:tax convert="1" from="USD" to="CAD" format="1" /></tax>
+					<tax><order:tax convert="1" from="USD" to="CAD" format="1" options="FMT_HTML"/></tax>
+					<tax><order:tax convert="1" from="USD" code="CAD" format="1" options="FMT_HTML"/></tax>
+					<tax><order:tax convert="1" from="USD" to="CAD" format="1" code="CAD" options="FMT_NAME"/></tax>
+					<tax><order:tax convert="1" from="USD" format="1" code="CAD" options="FMT_NAME"/></tax>
 					<type><order:type/></type>
 					<order:item>
 						<order:results>

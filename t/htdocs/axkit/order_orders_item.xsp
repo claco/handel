@@ -44,6 +44,7 @@
 			<order:shiptoemail>chrislaco@hotmail.com</order:shiptoemail>
 			<order:subtotal>37.95</order:subtotal>
 			<order:total>37.95</order:total>
+			<order:tax>6.66</order:tax>
 			<order:updated>20050716T201234Z</order:updated>
 			<order:results>
 				<order:add id="F22226DF-8B5D-496D-95BC-5134B39ED797" sku="SKU1" price="1.11" quantity="1" description="Description 1" total="1.11"/>
@@ -92,6 +93,7 @@
 			<order:shiptoemail>chrislaco@hotmail.com</order:shiptoemail>
 			<order:subtotal>37.95</order:subtotal>
 			<order:total>37.95</order:total>
+			<order:tax>6.66</order:tax>
 			<order:updated>20050716T201234Z</order:updated>
 			<order:results>
 				<order:add id="E7C40FA5-5C34-4174-B63F-A9EF595E4AEF" sku="SKU3" price="3.33" quantity="3" description="Description 3" total="9.99"/>
@@ -145,6 +147,7 @@
 					<shiptoemail><order:shiptoemail/></shiptoemail>
 					<subtotal><order:subtotal/></subtotal>
 					<total><order:total/></total>
+					<tax><order:tax/></tax>
 					<updated><order:updated/></updated>
 					<order:item>
 						<order:results>

@@ -41,6 +41,7 @@
 		<shiptoemail>chrislaco@hotmail.com</shiptoemail>
 		<subtotal>37.95</subtotal>
 		<total>37.95</total>
+		<tax>6.66</tax>
 		<updated>20050716T201234Z</updated>
 	</order>
 	<order>
@@ -83,6 +84,7 @@
 		<shiptoemail>chrislaco@hotmail.com</shiptoemail>
 		<subtotal>37.95</subtotal>
 		<total>37.95</total>
+		<tax>6.66</tax>
 		<updated>20050716T201234Z</updated>
 		<count>0</count>
 		<id>B0462540-0564-4E27-B9FD-C3985A227C49</id>
@@ -123,6 +125,7 @@
 		<shiptoemail>chrislaco@hotmail.com</shiptoemail>
 		<subtotal>37.95</subtotal>
 		<total>37.95</total>
+		<tax>6.66</tax>
 		<updated>20050716T201234Z</updated>
 	</order>
 </body>
