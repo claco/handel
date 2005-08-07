@@ -59,6 +59,8 @@ even process() call can have it's own uniquie order processing pipeline.
 
 =item Get someone to actually use the damn thing. :-)
 
+=item abstract schema into SQL::Translator scripts
+
 =back
 
 =head1 WHAT HANDEL IS
