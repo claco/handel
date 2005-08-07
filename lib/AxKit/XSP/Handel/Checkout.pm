@@ -35,7 +35,7 @@ Add the namespace to your XSP file and use the tags:
     <xsp:page
          language="Perl"
          xmlns:xsp="http://apache.org/xsp/core/v1"
-         xmlns:order="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Checkout"
+         xmlns:checkout="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Checkout"
     >
 
 =head1 DESCRIPTION
