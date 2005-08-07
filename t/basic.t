@@ -2,7 +2,7 @@
 # $Id$
 use strict;
 use warnings;
-use Test::More tests => 20;
+use Test::More tests => 23;
 
 BEGIN {
     use_ok('Handel');
@@ -38,9 +38,10 @@ BEGIN {
 
     SKIP: {
         eval 'use Template 2.07';
-        skip 'Template Toolkit 2.07 not installed', 3 if $@;
+        skip 'Template Toolkit 2.07 not installed', 4 if $@;
 
         use_ok('Template::Plugin::Handel::Cart');
+        use_ok('Template::Plugin::Handel::Checkout');
         use_ok('Template::Plugin::Handel::Constants');
         use_ok('Template::Plugin::Handel::Order');
     };
