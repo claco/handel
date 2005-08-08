@@ -11,6 +11,7 @@
 		AxStackTrace	On
 		AxAddProcessor	application/x-xsp .
 		AxAddXSPTaglib	AxKit::XSP::Handel::Cart
+		AxAddXSPTaglib	AxKit::XSP::Handel::Checkout
 		AxAddXSPTaglib	AxKit::XSP::Handel::Order
 
 		<Files *.xsp>
