@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Test::More;
 use lib 't/lib';
-use Handel::TestHelper qw(executesql comp_to_file);
+use Handel::TestHelper qw(preparetables comp_to_file);
 use Handel::DBI;
 
 eval 'use Template 2.07';
@@ -40,16 +40,13 @@ my @tests = (
     'cart_restore_merge.tt2',
 );
 
-
 ## Setup SQLite DB for tests
 {
-    my $dbfile  = "t/htdocs/cart.db";
+    my $dbfile  = "t/htdocs/tt2.db";
     my $db      = "dbi:SQLite:dbname=$dbfile";
-    my $create  = 't/sql/cart_create_table.sql';
-    my $data    = 't/sql/cart_fake_data.sql';
 
     unlink $dbfile;
-    executesql($db, $create);
+    preparetables($db, ['cart']);
 
     local $^W = 0;
     Handel::DBI->connection($db);
