@@ -1,5 +1,8 @@
 Revision history for Perl module Handel
 
+0.17_06 Sun Aug 07 21:31:45 2005
+    - Added TT2 order tests
+
 0.17_05 Sat Aug 06 20:14:39 2005
     - Finished XSP order tests
     - Added TT2 order plugin
