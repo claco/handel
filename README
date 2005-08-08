@@ -35,6 +35,7 @@ GOALS
     Public Subversion repository.
     Public Wiki/Docs site.
     Get someone to actually use the damn thing. :-)
+    abstract schema into SQL::Translator scripts
 
 WHAT HANDEL IS
     Simple cart and order record maintenance.
