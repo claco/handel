@@ -1,5 +1,12 @@
 Revision history for Perl module Handel
 
+0.17_07 Tue Aug 09 21:34:21 2005
+    - Moved all ConfigReaders upstream into $Handel::Cfg
+    - Added transaction around Checkout:process
+    - Checkout::messages now returns a list if wantarray
+    - Handel::Checkout::Message now stringifies to text()
+    - Added additional process and message tests
+
 0.17_06 Sun Aug 07 21:31:45 2005
     - Added TT2 order tests
 
