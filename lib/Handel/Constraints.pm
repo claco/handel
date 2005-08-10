@@ -6,7 +6,7 @@ use vars qw(@EXPORT_OK %EXPORT_TAGS);
 
 BEGIN {
     use base 'Exporter';
-    use Handel::ConfigReader;
+    use Handel;
     use Handel::Constants qw(:cart :checkout :order);
     use Handel::Exception;
     use Handel::L10N qw(translate);
@@ -29,7 +29,7 @@ sub constraint_quantity {
     my $value = defined $_[0] ? shift : '';
     my ($object, $column, $changing) = @_;
 
-    my $cfg    = Handel::ConfigReader->new();
+    my $cfg    = $Handel::Cfg;
     my $max    = $cfg->{'HandelMaxQuantity'};
     my $action = $cfg->{'HandelMaxQuantityAction'};
 
