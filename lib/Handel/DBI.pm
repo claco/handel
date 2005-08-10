@@ -5,12 +5,12 @@ use warnings;
 
 BEGIN {
     use base 'Class::DBI';
-    use Handel::ConfigReader;
+    use Handel;
     use Handel::Exception;
     use Handel::L10N qw(translate);
 };
 
-my $cfg = Handel::ConfigReader->new();
+my $cfg = $Handel::Cfg;
 my $db_driver  = $cfg->{'HandelDBIDriver'}   || $cfg->{'db_driver'};
 my $db_host    = $cfg->{'HandelDBIHost'}     || $cfg->{'db_host'};
 my $db_port    = $cfg->{'HandelDBIPort'}     || $cfg->{'db_port'};
