@@ -35,7 +35,7 @@ sub handler {
 
     $self->{'handler_called'}++;
 
-    return CHECKOUT_STATUS_OK;
+    return CHECKOUT_HANDLER_OK;
 };
 
 1;
