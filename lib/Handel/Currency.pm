@@ -3,10 +3,9 @@ package Handel::Currency;
 use strict;
 use warnings;
 use overload '""' => \&stringify, fallback => 1;
-use Handel::ConfigReader;
 
 BEGIN {
-    use Handel::ConfigReader;
+    use Handel;
     use Handel::Constraints qw(:all);
     use Handel::Exception;
     use Handel::L10N qw(translate);
@@ -30,7 +29,7 @@ sub format {
     eval 'use Locale::Currency::Format';
     return $self->{'price'} if $@;
 
-    my $cfg = Handel::ConfigReader->new;
+    my $cfg = $Handel::Cfg;
 
     eval '$format = ' .  ($format || $cfg->{'HandelCurrencyFormat'});
     $code   ||= $cfg->{'HandelCurrencyCode'};
@@ -44,7 +43,7 @@ sub format {
 
 sub convert {
     my ($self, $from, $to, $format, $options) = @_;
-    my $cfg = Handel::ConfigReader->new;
+    my $cfg = $Handel::Cfg;
 
     $from ||= $cfg->{'HandelCurrencyCode'};
     $to   ||= $cfg->{'HandelCurrencyCode'};
