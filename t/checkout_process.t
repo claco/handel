@@ -11,7 +11,7 @@ BEGIN {
     if($@) {
         plan skip_all => 'DBD::SQLite not installed';
     } else {
-        plan tests => 13;
+        plan tests => 26;
     };
 
     use_ok('Handel::Checkout');
@@ -87,4 +87,79 @@ BEGIN {
         ok($_->{'handler_called'});
         ok($_->{'teardown_called'});
     };
+};
+
+
+## Run a successful test pipeline
+{
+    my $order = Handel::Order->new({});
+        $order->add({
+            sku      => 'SKU1',
+            quantity => 1,
+            price    => 1.11
+        });
+        $order->add({
+            sku      => 'SKU2',
+            quantity => 2,
+            price    => 2.22
+        });
+
+    my $checkout = Handel::Checkout->new({
+        pluginpaths => 'Handel::TestPipeline',
+        loadplugins => 'Handel::TestPipeline::InitializeTotals',
+        phases      => CHECKOUT_ALL_PHASES,
+        order       => $order
+    });
+
+    is($checkout->process, CHECKOUT_STATUS_OK);
+
+    my $items = $order->items;
+    is($order->subtotal, 5.55);
+    is($items->first->total, 1.11);
+    is($items->next->total, 4.44);
+
+    my @messages = $checkout->messages;
+    is(scalar @messages, 0);
+};
+
+
+## Run a failing test pipeline
+{
+    my $order = Handel::Order->new({
+        billtofirstname => 'BillToFirstName',
+        billtolastname  => 'BillToLastName'
+    });
+        $order->add({
+            sku      => 'SKU1',
+            quantity => 1,
+            price    => 1.11
+        });
+        $order->add({
+            sku      => 'SKU2',
+            quantity => 2,
+            price    => 2.22
+        });
+
+    my $checkout = Handel::Checkout->new({
+        pluginpaths => 'Handel::TestPipeline',
+        loadplugins => ['Handel::TestPipeline::InitializeTotals',
+                        'Handel::TestPipeline::ValidateError'
+                       ],
+        phases      => CHECKOUT_ALL_PHASES,
+        order       => $order
+    });
+
+    is($checkout->process, CHECKOUT_STATUS_ERROR);
+
+    is($checkout->order->billtofirstname, 'BillToFirstName');
+    is($checkout->order->billtolastname, 'BillToLastName');
+
+    my $items = $order->items;
+    is($order->subtotal, 0);
+    is($items->first->sku, 'SKU1');
+    is($items->next->sku, 'SKU2');
+
+    my @messages = $checkout->messages;
+    is(scalar @messages, 1);
+    ok($messages[0] =~ /ValidateError/);
 };
