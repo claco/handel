@@ -11,7 +11,7 @@ BEGIN {
     if($@) {
         plan skip_all => 'DBD::SQLite not installed';
     } else {
-        plan tests => 22;
+        plan tests => 43;
     };
 
     use_ok('Handel::Checkout');
@@ -118,4 +118,41 @@ BEGIN {
 
     ok($message->filename);
     ok($message->line);
+};
+
+
+## Check returns in list and scalar context
+{
+    my $checkout = Handel::Checkout->new({pluginpaths => 'Handel::LOADNOTHING'});
+
+    $checkout->add_message('Message1');
+    $checkout->add_message('Message2');
+
+    my @messages = @{$checkout->messages};
+    is(scalar @messages, 2);
+
+    isa_ok($messages[0], 'Handel::Checkout::Message');
+    is($messages[0]->text, 'Message1');
+    is($messages[0], 'Message1');
+    ok($messages[0]->filename);
+    ok($messages[0]->line);
+
+    isa_ok($messages[1], 'Handel::Checkout::Message');
+    is($messages[1]->text, 'Message2');
+    is($messages[1], 'Message2');
+    ok($messages[1]->filename);
+    ok($messages[1]->line);
+
+    my $messagesref = $checkout->messages;
+    isa_ok($messagesref, 'ARRAY');
+    isa_ok($messagesref->[0], 'Handel::Checkout::Message');
+    is($messagesref->[0]->text, 'Message1');
+    is($messagesref->[0], 'Message1');
+    ok($messagesref->[0]->filename);
+    ok($messagesref->[0]->line);
+
+    is($messagesref->[1]->text, 'Message2');
+    is($messagesref->[1], 'Message2');
+    ok($messagesref->[1]->filename);
+    ok($messagesref->[1]->line);
 };
