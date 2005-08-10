@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 BEGIN {
-    use Handel::ConfigReader;
+    use Handel;
     use Handel::Constants qw(:checkout :returnas);
     use Handel::Constraints qw(constraint_checkout_phase constraint_uuid);
     use Handel::Exception qw(:try);
@@ -102,7 +102,7 @@ sub cart {
 sub messages {
     my $self = shift;
 
-    return $self->{'messages'};
+    return wantarray ? @{$self->{'messages'}} : $self->{'messages'};
 };
 
 sub order {
@@ -158,21 +158,28 @@ sub process {
 
     $self->_setup($self);
 
-    $self->order->autoupdate(0);
+    {
+        local $self->order->db_Main->{AutoCommit};
 
-    foreach my $phase (@{$phases}) {
-        foreach my $handler (@{$self->{'handlers'}->{$phase}}) {
-            my $status = $handler->[1]->($handler->[0], $self);
+        foreach my $phase (@{$phases}) {
+            foreach my $handler (@{$self->{'handlers'}->{$phase}}) {
+                my $status = $handler->[1]->($handler->[0], $self);
 
-            if ($status != CHECKOUT_HANDLER_OK && $status != CHECKOUT_HANDLER_DECLINE) {
-                $self->_teardown($self);
-                $self->order->autoupdate(1);
-                return CHECKOUT_STATUS_ERROR;
+                if ($status != CHECKOUT_HANDLER_OK && $status != CHECKOUT_HANDLER_DECLINE) {
+                    $self->_teardown($self);
+
+                    eval {$self->order->dbi_rollback};
+                    if ($@) {
+                        throw Handel::Exception(-details => "Transaction aborted. Rollback failed: $@");
+                    };
+
+                    return CHECKOUT_STATUS_ERROR;
+                };
             };
         };
-    };
 
-    $self->order->autoupdate(1);
+        $self->order->dbi_commit;
+    };
 
     $self->_teardown($self);
 
@@ -205,7 +212,7 @@ sub _teardown {
 
 sub _set_search_path {
     my ($self, $opts) = @_;
-    my $config = Handel::ConfigReader->new;
+    my $config = $Handel::Cfg;
 
     my $pluginpaths = ref $opts->{'pluginpaths'} eq 'ARRAY' ?
         join(' ', @{$opts->{'pluginpaths'}}) : $opts->{'pluginpaths'} || '';
@@ -615,6 +622,21 @@ configured namespaces will be ignored.
 If both HandelLoadPlugins and HandelIgnorePlugins are specified, only the plugins in
 HandelLoadPlugins will be loaded, unless they are also in HandelIgnorePlugins in which case
 they will be ignored.
+
+=head1 CAVEATS
+
+[I think] Due to the localization of AutoCommit to coeerse disabling of autoupdates during process,
+Always access orders and order items from their checkout parent once they've been assigned to
+the checkout process, and not any available reference:
+
+    my $order = Handel::Order->new({billtofirstname => 'Chris'});
+    my $checkout = Handel::Checkout->new({order => $order});
+
+    # some plugin alters billtofirstname to 'Christopher'
+    $checkout->process;
+
+    $order->billtofirstname; #Chris
+    $checkout->order->billtofirstname; #Christopher
 
 =head1 SEE ALSO
 
