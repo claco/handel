@@ -3,12 +3,19 @@ package Handel::Checkout::Message;
 use strict;
 use warnings;
 use vars '$AUTOLOAD';
+use overload '""' => \&stringify, fallback => 1;
 
 sub new {
     my ($class, %args) = @_;
     my $self = bless \%args, ref $class || $class;
 
     return $self;
+};
+
+sub stringify {
+    my $self = shift;
+
+    return $self->text || $self;
 };
 
 sub AUTOLOAD {
