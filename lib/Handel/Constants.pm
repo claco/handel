@@ -30,6 +30,10 @@ use constant CHECKOUT_PHASE_DELIVER    => 8;
 use constant CHECKOUT_DEFAULT_PHASES   => [CHECKOUT_PHASE_VALIDATE,
                                            CHECKOUT_PHASE_AUTHORIZE,
                                            CHECKOUT_PHASE_DELIVER];
+use constant CHECKOUT_ALL_PHASES       => [CHECKOUT_PHASE_INITIALIZE,
+                                           CHECKOUT_PHASE_VALIDATE,
+                                           CHECKOUT_PHASE_AUTHORIZE,
+                                           CHECKOUT_PHASE_DELIVER];
 
 use constant CHECKOUT_STATUS_OK        => 1;
 use constant CHECKOUT_STATUS_ERROR     => 2;
@@ -54,6 +58,7 @@ use constant CHECKOUT_HANDLER_ERROR    => 4;
                 CHECKOUT_PHASE_AUTHORIZE
                 CHECKOUT_PHASE_DELIVER
                 CHECKOUT_DEFAULT_PHASES
+                CHECKOUT_ALL_PHASES
                 CHECKOUT_STATUS_OK
                 CHECKOUT_STATUS_ERROR
                 CHECKOUT_HANDLER_OK
@@ -83,6 +88,7 @@ use constant CHECKOUT_HANDLER_ERROR    => 4;
                          CHECKOUT_PHASE_AUTHORIZE
                          CHECKOUT_PHASE_DELIVER
                          CHECKOUT_DEFAULT_PHASES
+                         CHECKOUT_ALL_PHASES
                          CHECKOUT_STATUS_OK
                          CHECKOUT_STATUS_ERROR
                          CHECKOUT_HANDLER_OK
@@ -182,6 +188,10 @@ The phase run to deliver the order request to the vendor and/or customer.
 
 Contains the default set of phases run automatically. This is currently,
 VALIDATE, AUTHORIZE, and DELIVER.
+
+=head2 CHECKOUT_ALL_PHASES
+
+Contains all available phases.
 
 =head2 CHECKOUT_STATUS_OK
 
