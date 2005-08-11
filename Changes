@@ -1,8 +1,14 @@
 Revision history for Perl module Handel
 
+0.17_08 Wed Aug 10 21:30:48 2005
+    - Upstreamed uuid module inspection into BEGIN/Handel::newuuid
+    - Added stash to checkout context
+    - Checkout::plugins now returns a list if wantarray
+    - Checkout::phases now returns a list if wantarray
+
 0.17_07 Tue Aug 09 21:34:21 2005
     - Moved all ConfigReaders upstream into $Handel::Cfg
-    - Added transaction around Checkout:process
+    - Added transaction around Checkout::process
     - Checkout::messages now returns a list if wantarray
     - Handel::Checkout::Message now stringifies to text()
     - Added additional process and message tests
