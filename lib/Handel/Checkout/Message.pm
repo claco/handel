@@ -59,6 +59,8 @@ Handel::Checkout::Message is just a simple blessed hash to hold any and every
 property you throw at it. It is autoloaded, so any instance method simple loads
 or sets the corresponding key value in the hash.
 
+Handel::Checkout::Message stringifies to text() if available, otherwise it returns $self.
+
 =head1 CONSTRUCTOR
 
 =head2 new([%options])
