@@ -11,7 +11,7 @@ BEGIN {
     if($@) {
         plan skip_all => 'DBD::SQLite not installed';
     } else {
-        plan tests => 11;
+        plan tests => 17;
     };
 
     use_ok('Handel::Checkout');
@@ -73,4 +73,28 @@ BEGIN {
     isa_ok($phases, 'ARRAY');
     is(scalar @{$phases}, 1);
     is($phases->[0], CHECKOUT_PHASE_DELIVER);
+};
+
+
+## check scalar/list context returns on phases default
+{
+    my $checkout = Handel::Checkout->new;
+    my @phases = $checkout->phases;
+    ok(scalar @phases >= 1);
+
+    my $phases = $checkout->phases;
+    isa_ok($phases, 'ARRAY');
+    ok(scalar @{$phases} >= 1);
+};
+
+
+## check scalar/list context returns on set phases
+{
+    my $checkout = Handel::Checkout->new({phases => [CHECKOUT_PHASE_DELIVER, CHECKOUT_PHASE_INITIALIZE]});
+    my @phases = $checkout->phases;
+    ok(scalar @phases >= 1);
+
+    my $phases = $checkout->phases;
+    isa_ok($phases, 'ARRAY');
+    ok(scalar @{$phases} >= 1);
 };

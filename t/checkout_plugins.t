@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use lib 't/lib';
-use Test::More tests => 416;
+use Test::More tests => 419;
 
 BEGIN {
     use_ok('Handel::Checkout');
@@ -932,4 +932,21 @@ BEGIN {
             };
         };
     };
+};
+
+
+## load plugins and check list/scalar returns on plugins
+{
+    my $checkout = Handel::Checkout->new({
+        pluginpaths => 'Handel::TestPipeline',
+        loadplugins => ['Handel::TestPipeline::WriteToStash',
+                        'Handel::TestPipeline::ReadFromStash']
+    });
+
+    my @plugins = $checkout->plugins;
+    is(scalar @plugins, 2);
+
+    my $plugins = $checkout->plugins;
+    isa_ok($plugins, 'ARRAY');
+    is(scalar @{$plugins}, 2);
 };
