@@ -4,12 +4,49 @@ use strict;
 use warnings;
 use vars qw($VERSION);
 
-$VERSION = '0.17_07';
+$VERSION = '0.17_08';
 
 BEGIN {
     use Handel::ConfigReader;
 
     $Handel::Cfg = Handel::ConfigReader->new;
+
+    my $uuidsub;
+    if (eval{require UUID}) {
+        $uuidsub = sub {
+            my ($uuid, $uuidstring);
+            UUID::generate($uuid);
+            UUID::unparse($uuid, $uuidstring);
+
+            return $uuidstring;
+        };
+    } elsif (eval{require Data::UUID}) {
+        $uuidsub = sub {
+            my $ug = Data::UUID->new;
+            my $uuid = $ug->create;
+
+            return $ug->to_string($uuid);
+        };
+    } elsif (eval{
+            # for some reason 'no warnings' won't squelch
+            # the 'too late for INIT' warning in Win32::API::Type
+            local $^W = 0;
+            require Win32::Guidgen;
+        }) {
+        $uuidsub = sub {
+            return Win32::Guidgen::create();
+        };
+    } elsif (eval{require Win32API::GUID}) {
+        $uuidsub = sub {
+            return Win32API::GUID::CreateGuid();
+        };
+    } else {
+        throw Handel::Exception(
+            -text => 'Required modules not found',
+            -details => 'UUID/Data::UUID'
+        );
+    };
+    *Handel::newuuid = $uuidsub;
 };
 
 1;
