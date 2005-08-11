@@ -20,7 +20,8 @@ sub new {
         plugins => [],
         handlers => {},
         phases => [],
-        messages => []
+        messages => [],
+        stash => {}
     }, ref $class || $class;
 
     $self->_set_search_path($opts);
@@ -42,7 +43,7 @@ sub new {
 sub plugins {
     my $self = shift;
 
-    return @{$self->{'plugins'}};
+    return wantarray ? @{$self->{'plugins'}} : $self->{'plugins'};
 };
 
 sub add_handler {
@@ -135,7 +136,11 @@ sub phases {
 
         $self->{'phases'} = $phases;
     } else {
-        return $self->{'phases'} || CHECKOUT_DEFAULT_PHASES;
+        if (wantarray) {
+            return @{$self->{'phases'}} || @{&CHECKOUT_DEFAULT_PHASES};
+        } else {
+            return scalar @{$self->{'phases'}} ? $self->{'phases'} : &CHECKOUT_DEFAULT_PHASES;
+        };
     };
 };
 
@@ -161,6 +166,8 @@ sub process {
     {
         local $self->order->db_Main->{AutoCommit};
 
+        %{$self->{'stash'}} = ();
+
         foreach my $phase (@{$phases}) {
             foreach my $handler (@{$self->{'handlers'}->{$phase}}) {
                 my $status = $handler->[1]->($handler->[0], $self);
@@ -184,6 +191,12 @@ sub process {
     $self->_teardown($self);
 
     return CHECKOUT_STATUS_OK;
+};
+
+sub stash {
+    my $self = shift;
+
+    return $self->{'stash'};
 };
 
 sub _setup {
@@ -355,6 +368,23 @@ If C<HandelAddPluginPaths> is also specified, the two will be combined.
 See L<"HandelAddPluginPaths"> for more information about settings/resetting
 plugin search paths.
 
+=item loadplugins
+
+An array reference or a comma (or space) seperated list containing the
+names of the specific plugins to load in the current plugin paths.
+
+See L<"HandelLoadPlugins"> for more information about loading specific
+plugins.
+
+=item ignoreplugins
+
+An array reference or a comma (or space) seperated list containing the
+names of the specific plugins to be ignored (not loaded)
+in the current plugin paths.
+
+See L<"HandelIgnorePlugins"> for more information about ignore specific
+plugins.
+
 =item phases
 
 An array reference containing the various phases to be executed.
@@ -447,16 +477,17 @@ current checkout process.
 
 =head2 messages
 
-Returns a reference to an array of Handel::Checkout::Message object containing
-additional information about plugin and other checkout decisions and activities.
+Returns a reference to an array in list context of Handel::Checkout::Message
+objects containing additional information about plugin and other checkout
+decisions and activities. Returns a list in list context.
 
-    foreach (@{$checkout->messages}) {
+    foreach ($checkout->messages) {
         warn $_->text, "\n";
     };
 
 =head2 plugins
 
-Returns the plugins loaded for checkout instance
+Returns a list plugins loaded for checkout instance in list context:
 
     my $checkout = Handel::Checkout->new;
     my @plugins = $checkout->plugins;
@@ -464,6 +495,8 @@ Returns the plugins loaded for checkout instance
     foreach (@plugins) {
         $_->cleanup_or_something;
     };
+
+Returns an array reference in scalar context.
 
 =head2 order
 
@@ -515,7 +548,7 @@ Get/Set the phases active for the current checkout process.
 
 No attempt is made to sanitize the array for duplicates or the order of the phases.
 This means you can do evil things like run a phase twice, or run the phases
-out of order.
+out of order. Returns a list in list context and an array reference in scalar context.
 
 =head2 process([\@phases])
 
@@ -537,6 +570,15 @@ At least one plugin failed to return or an error occurred while processing
 the registered plugin handlers.
 
 =back
+
+=head2 stash
+
+Returns a hash collection of information shared by all plugins in the current context.
+
+    # plugin handler
+    my ($self, $ctx) = @_;
+
+    $ctx->stash->{'template'} = 'template.tt';
 
 =head1 CONFIGURATION
 
