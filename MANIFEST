@@ -360,6 +360,8 @@ t/lib/Handel/OtherTestPlugins/Second.pm
 t/lib/Handel/TestHelper.pm
 t/lib/Handel/TestPipeline/InitializeTotals.pm
 t/lib/Handel/TestPipeline/ValidateError.pm
+t/lib/Handel/TestPipeline/ReadFromStash.pm
+t/lib/Handel/TestPipeline/WriteToStash.pm
 t/lib/Handel/TestPlugins/First.pm
 t/order_add.t
 t/order_clear.t
