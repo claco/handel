@@ -5,11 +5,13 @@ use warnings;
 
 BEGIN {
     use Handel;
+    use Handel::Cart;
     use Handel::Constants qw(:checkout :returnas);
     use Handel::Constraints qw(constraint_checkout_phase constraint_uuid);
     use Handel::Exception qw(:try);
     use Handel::Checkout::Message;
     use Handel::L10N qw(translate);
+    use Handel::Order;
     use Module::Pluggable 2.95 instantiate => 'new', sub_name => '_plugins';
 };
 
@@ -43,7 +45,7 @@ sub new {
 sub plugins {
     my $self = shift;
 
-    return wantarray ? @{$self->{'plugins'}} : $self->{'plugins'};
+    return wantarray ? sort @{$self->{'plugins'}} : $self->{'plugins'};
 };
 
 sub add_handler {
