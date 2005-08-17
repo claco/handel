@@ -85,10 +85,10 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
 
             push @context, $tag;
 
-            my $noprocess = $attr{'noprocess'} || 0;
-            delete $attr{'noprocess'};
+            my $process = $attr{'process'} || 0;
+            delete $attr{'process'};
 
-            my $code = "my \$_xsp_handel_order_new_noprocess = $noprocess;my \$_xsp_handel_order_order;\nmy \$_xsp_handel_order_called_new;\n";
+            my $code = "my \$_xsp_handel_order_new_process = $process;my \$_xsp_handel_order_order;\nmy \$_xsp_handel_order_called_new;\n";
             $code .= scalar keys %attr ?
                 'my %_xsp_handel_order_new_filter = ("' . join('", "', %attr) . '");' :
                 'my %_xsp_handel_order_new_filter;' ;
@@ -383,7 +383,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
             if ($context[$#context-1] eq 'new') {
                 return '
                     if (!$_xsp_handel_order_called_new && scalar keys %_xsp_handel_order_new_filter) {
-                        $_xsp_handel_order_order = Handel::Order->new(\%_xsp_handel_order_new_filter, $_xsp_handel_order_new_noprocess);
+                        $_xsp_handel_order_order = Handel::Order->new(\%_xsp_handel_order_new_filter, $_xsp_handel_order_new_process);
                         $_xsp_handel_order_called_new = 1;
                     };
                     if ($_xsp_handel_order_order) {
@@ -456,7 +456,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
             if ($context[$#context-1] eq 'new') {
                 return '
                     if (!$_xsp_handel_order_called_new && scalar keys %_xsp_handel_order_new_filter) {
-                        $_xsp_handel_order_order = Handel::Order->new(\%_xsp_handel_order_new_filter, $_xsp_handel_order_new_noprocess);
+                        $_xsp_handel_order_order = Handel::Order->new(\%_xsp_handel_order_new_filter, $_xsp_handel_order_new_process);
                         $_xsp_handel_order_called_new = 1;
                     };
                     if (!$_xsp_handel_order_order) {
