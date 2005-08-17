@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<xsp:page
+	xmlns:xsp="http://apache.org/xsp/core/v1"
+	xmlns:checkout="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Checkout"
+>
+	<body>
+		<checkout:new pluginpaths="Handel::TestPlugins">
+			<plugins>
+				<checkout:plugins>
+					<plugin><checkout:plugin/></plugin>
+				</checkout:plugins>
+			</plugins>
+		</checkout:new>
+		<checkout:new pluginpaths="Handel::OtherTestPlugins">
+			<plugins>
+				<checkout:plugins>
+					<plugin><checkout:plugin/></plugin>
+				</checkout:plugins>
+			</plugins>
+		</checkout:new>
+		<checkout:new pluginpaths="Handel::TestPlugins, Handel::OtherTestPlugins">
+			<plugins>
+				<checkout:plugins>
+					<plugin><checkout:plugin/></plugin>
+				</checkout:plugins>
+			</plugins>
+		</checkout:new>
+		<checkout:new pluginpaths="Handel::TestPlugins, Handel::OtherTestPlugins, Handel::TestPipeline">
+			<plugins>
+				<checkout:plugins>
+					<plugin><checkout:plugin/></plugin>
+				</checkout:plugins>
+			</plugins>
+		</checkout:new>
+		<checkout:new pluginpaths="Handel::TestPlugins, Handel::OtherTestPlugins, Handel::TestPipeline" ignoreplugins="Handel::TestPipeline::ValidateError">
+			<plugins>
+				<checkout:plugins>
+					<plugin><checkout:plugin/></plugin>
+				</checkout:plugins>
+			</plugins>
+		</checkout:new>
+		<checkout:new pluginpaths="Handel::TestPlugins, Handel::OtherTestPlugins, Handel::TestPipeline" loadplugins="Handel::TestPipeline::ValidateError">
+			<plugins>
+				<checkout:plugins>
+					<plugin><checkout:plugin/></plugin>
+				</checkout:plugins>
+			</plugins>
+		</checkout:new>
+		<checkout:new pluginpaths="Handel::TestPlugins, Handel::OtherTestPlugins, Handel::TestPipeline"
+			loadplugins="Handel::TestPipeline::WriteToStash, Handel::TestPipeline::ReadFromStash"
+			ignoreplugins="Handel::TestPipeline::WriteToStash"
+		>
+			<plugins>
+				<checkout:plugins>
+					<plugin><checkout:plugin/></plugin>
+				</checkout:plugins>
+			</plugins>
+		</checkout:new>
+	</body>
+</xsp:page>

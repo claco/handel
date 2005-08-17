@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<xsp:page
+	xmlns:xsp="http://apache.org/xsp/core/v1"
+	xmlns:checkout="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Checkout"
+>
+	<body>
+		<checkout:new>
+			<checkout:addmessage property1="foo" property2="bar">mytext</checkout:addmessage>
+			<messages>
+				<checkout:messages>
+					<message><checkout:message/></message>
+					<message><checkout:message-property1/></message>
+					<message><checkout:message-property2/></message>
+				</checkout:messages>
+			</messages>
+		</checkout:new>
+		<checkout:new>
+			<checkout:addmessage property3="foo" property4="bar"/>
+			<messages>
+				<checkout:messages>
+					<message><checkout:message-property3/></message>
+					<message><checkout:message-property4/></message>
+				</checkout:messages>
+			</messages>
+		</checkout:new>
+		<checkout:new>
+			<checkout:addmessage>new test message</checkout:addmessage>
+			<messages>
+				<checkout:messages>
+					<message><checkout:message/></message>
+					<message><checkout:message-text/></message>
+				</checkout:messages>
+			</messages>
+		</checkout:new>
+		<checkout:new>
+			<checkout:addmessage text="foo">bar</checkout:addmessage>
+			<messages>
+				<checkout:messages>
+					<message><checkout:message/></message>
+					<message><checkout:message-text/></message>
+				</checkout:messages>
+			</messages>
+		</checkout:new>
+	</body>
+</xsp:page>
