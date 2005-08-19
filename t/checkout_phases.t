@@ -11,7 +11,7 @@ BEGIN {
     if($@) {
         plan skip_all => 'DBD::SQLite not installed';
     } else {
-        plan tests => 17;
+        plan tests => 39;
     };
 
     use_ok('Handel::Checkout');
@@ -26,7 +26,7 @@ BEGIN {
     try {
         my $checkout = Handel::Checkout->new;
 
-        $checkout->phases('1234');
+        $checkout->phases({'1234' => 1});
 
         fail;
     } catch Handel::Exception::Argument with {
@@ -42,7 +42,7 @@ BEGIN {
 ## than an array reference in news' phases option
 {
     try {
-        my $checkout = Handel::Checkout->new({phases => '1234'});
+        my $checkout = Handel::Checkout->new({phases => {'1234' => 1}});
 
         fail;
     } catch Handel::Exception::Argument with {
@@ -92,9 +92,86 @@ BEGIN {
 {
     my $checkout = Handel::Checkout->new({phases => [CHECKOUT_PHASE_DELIVER, CHECKOUT_PHASE_INITIALIZE]});
     my @phases = $checkout->phases;
-    ok(scalar @phases >= 1);
+    is(scalar @phases, 2);
 
     my $phases = $checkout->phases;
     isa_ok($phases, 'ARRAY');
-    ok(scalar @{$phases} >= 1);
+    is(scalar @{$phases}, 2);
+};
+
+
+## Set the phases using a string and make sure they stick
+{
+    my $checkout = Handel::Checkout->new;
+
+    $checkout->phases('CHECKOUT_PHASE_AUTHORIZE');
+
+    my $phases = $checkout->phases;
+    isa_ok($phases, 'ARRAY');
+    is(scalar @{$phases}, 1);
+    is($phases->[0], CHECKOUT_PHASE_AUTHORIZE);
+};
+
+
+## Set the phases using a comma seperated string and make sure they stick
+{
+    my $checkout = Handel::Checkout->new;
+
+    $checkout->phases('CHECKOUT_PHASE_AUTHORIZE, CHECKOUT_PHASE_DELIVER');
+
+    my $phases = $checkout->phases;
+    isa_ok($phases, 'ARRAY');
+    is(scalar @{$phases}, 2);
+    is($phases->[0], CHECKOUT_PHASE_AUTHORIZE);
+    is($phases->[1], CHECKOUT_PHASE_DELIVER);
+};
+
+
+## Set the phases using a space seperated string and make sure they stick
+{
+    my $checkout = Handel::Checkout->new;
+
+    $checkout->phases('CHECKOUT_PHASE_AUTHORIZE CHECKOUT_PHASE_DELIVER');
+
+    my $phases = $checkout->phases;
+    isa_ok($phases, 'ARRAY');
+    is(scalar @{$phases}, 2);
+    is($phases->[0], CHECKOUT_PHASE_AUTHORIZE);
+    is($phases->[1], CHECKOUT_PHASE_DELIVER);
+};
+
+
+## Set the phases using news' phases option as string and make sure they stick
+{
+    my $checkout = Handel::Checkout->new({phases => 'CHECKOUT_PHASE_DELIVER'});
+    my $phases = $checkout->phases;
+    isa_ok($phases, 'ARRAY');
+    is(scalar @{$phases}, 1);
+    is($phases->[0], CHECKOUT_PHASE_DELIVER);
+};
+
+
+## Set the phases using news' phases option as comma seperated string and make
+## sure they stick
+{
+    my $checkout = Handel::Checkout->new({phases => 'CHECKOUT_PHASE_AUTHORIZE,
+    CHECKOUT_PHASE_DELIVER'});
+    my $phases = $checkout->phases;
+    isa_ok($phases, 'ARRAY');
+    is(scalar @{$phases}, 2);
+    is($phases->[0], CHECKOUT_PHASE_AUTHORIZE);
+    is($phases->[1], CHECKOUT_PHASE_DELIVER);
+};
+
+
+## Set the phases using news' space option as comma seperated string and make
+## sure they stick
+{
+    my $checkout = Handel::Checkout->new({phases => 'CHECKOUT_PHASE_AUTHORIZE
+    CHECKOUT_PHASE_DELIVER'});
+    my $phases = $checkout->phases;
+    isa_ok($phases, 'ARRAY');
+    is(scalar @{$phases}, 2);
+    is($phases->[0], CHECKOUT_PHASE_AUTHORIZE);
+    is($phases->[1], CHECKOUT_PHASE_DELIVER);
 };
