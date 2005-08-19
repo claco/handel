@@ -36,7 +36,7 @@ sub FETCH {
         require Apache;
         my $r = Apache->request;
 
-        $value = $r->dir_config($key) || $default;
+        $value = $r->dir_config($key) || $ENV{$key} || $default;
     };
 
     if (!$value) {
