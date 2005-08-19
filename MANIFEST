@@ -136,6 +136,10 @@ t/htdocs/axkit/cart_restore_append.xsp
 t/htdocs/axkit/cart_restore_merge.xsp
 t/htdocs/axkit/cart_restore_replace.xsp
 t/htdocs/axkit/cart_uuid.xsp
+t/htdocs/axkit/checkout_messages.xsp
+t/htdocs/axkit/checkout_phases.xsp
+t/htdocs/axkit/checkout_plugins.xsp
+t/htdocs/axkit/checkout_process.xsp
 t/htdocs/axkit/order_new.xsp
 t/htdocs/axkit/order_new_filtered.xsp
 t/htdocs/axkit/order_uuid.xsp
@@ -229,6 +233,10 @@ t/htdocs/axkit/out/cart_new_no_results_trigger.xsp.out
 t/htdocs/axkit/out/cart_restore_append.xsp.out
 t/htdocs/axkit/out/cart_restore_merge.xsp.out
 t/htdocs/axkit/out/cart_restore_replace.xsp.out
+t/htdocs/axkit/out/checkout_messages.xsp.out
+t/htdocs/axkit/out/checkout_phases.xsp.out
+t/htdocs/axkit/out/checkout_plugins.xsp.out
+t/htdocs/axkit/out/checkout_process.xsp.out
 t/htdocs/axkit/out/order_new.xsp.out
 t/htdocs/axkit/out/order_new_filtered.xsp.out
 t/htdocs/axkit/out/order_new_and_add.xsp.out
@@ -385,5 +393,6 @@ t/tt2_cart.t
 t/tt2_order.t
 t/warnings.t
 t/xsp_cart.t
+t/xsp_checkout.t
 t/xsp_order.t
 Todo
