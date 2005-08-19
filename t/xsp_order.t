@@ -75,8 +75,8 @@ my $docroot = Apache::Test::vars('documentroot');
     my $dbfile  = "$docroot/xsp.db";
     my $db      = "dbi:SQLite:dbname=$dbfile";
 
+    preparetables($db, [qw(cart order)]);
     preparetables($db, ['cart'], 1);
-    preparetables($db, ['order']);
 };
 
 my $r = GET('/axkit/order_uuid.xsp');
