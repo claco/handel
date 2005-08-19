@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<xsp:page
+	xmlns:xsp="http://apache.org/xsp/core/v1"
+	xmlns:checkout="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Checkout"
+>
+	<body>
+		<checkout:new
+			pluginpaths="Handel::TestPipeline"
+			loadplugins="Handel::TestPipeline::ReadFromStash, Handel::Testpipeline::WriteFromStash"
+			cart="11111111-1111-1111-1111-111111111111"
+		>
+			<checkout>
+				<checkout:process>
+					<checkout:ok>
+						<ok>Order processing completed successfully!</ok>
+					</checkout:ok>
+					<checkout:success>
+						<success>Order processing completed successfully!</success>
+					</checkout:success>
+					<checkout:successful>
+						<successful>Order processing completed successfully!</successful>
+					</checkout:successful>
+					<checkout:error>
+						<error>Error processing order!</error>
+						<checkout:messages>
+							<message><checkout:message/></message>
+						</checkout:messages>
+					</checkout:error>
+					<checkout:fail>
+						<fail>Error processing order!</fail>
+						<checkout:messages>
+							<message><checkout:message/></message>
+						</checkout:messages>
+					</checkout:fail>
+					<checkout:failure>
+						<failure>Error processing order!</failure>
+						<checkout:messages>
+							<message><checkout:message/></message>
+						</checkout:messages>
+					</checkout:failure>
+				</checkout:process>
+			</checkout>
+		</checkout:new>
+		<checkout:new
+			pluginpaths="Handel::TestPipeline"
+			loadplugins="Handel::TestPipeline::ReadFromStash, Handel::Testpipeline::WriteFromStash"
+			order="11111111-1111-1111-1111-111111111111"
+		>
+			<checkout>
+				<checkout:process>
+					<checkout:ok>
+						<ok>Order processing completed successfully!</ok>
+					</checkout:ok>
+					<checkout:success>
+						<success>Order processing completed successfully!</success>
+					</checkout:success>
+					<checkout:successful>
+						<successful>Order processing completed successfully!</successful>
+					</checkout:successful>
+					<checkout:error>
+						<error>Error processing order!</error>
+						<checkout:messages>
+							<message><checkout:message/></message>
+						</checkout:messages>
+					</checkout:error>
+					<checkout:fail>
+						<fail>Error processing order!</fail>
+						<checkout:messages>
+							<message><checkout:message/></message>
+						</checkout:messages>
+					</checkout:fail>
+					<checkout:failure>
+						<failure>Error processing order!</failure>
+						<checkout:messages>
+							<message><checkout:message/></message>
+						</checkout:messages>
+					</checkout:failure>
+				</checkout:process>
+			</checkout>
+		</checkout:new>
+		<checkout:new
+			pluginpaths="Handel::TestPipeline"
+			loadplugins="Handel::TestPipeline::ReadFromStash, Handel::Testpipeline::WriteFromStash"
+		>
+			<checkout:loadorder>11111111-1111-1111-1111-111111111111</checkout:loadorder>
+			<checkout>
+				<checkout:process>
+					<checkout:ok>
+						<ok>Order processing completed successfully!</ok>
+					</checkout:ok>
+					<checkout:success>
+						<success>Order processing completed successfully!</success>
+					</checkout:success>
+					<checkout:successful>
+						<successful>Order processing completed successfully!</successful>
+					</checkout:successful>
+					<checkout:error>
+						<error>Error processing order!</error>
+						<checkout:messages>
+							<message><checkout:message/></message>
+						</checkout:messages>
+					</checkout:error>
+					<checkout:fail>
+						<fail>Error processing order!</fail>
+						<checkout:messages>
+							<message><checkout:message/></message>
+						</checkout:messages>
+					</checkout:fail>
+					<checkout:failure>
+						<failure>Error processing order!</failure>
+						<checkout:messages>
+							<message><checkout:message/></message>
+						</checkout:messages>
+					</checkout:failure>
+				</checkout:process>
+			</checkout>
+		</checkout:new>
+		<checkout:new
+			pluginpaths="Handel::TestPipeline"
+			loadplugins="Handel::TestPipeline::ReadFromStash, Handel::Testpipeline::WriteFromStash"
+		>
+			<checkout:loadcart>11111111-1111-1111-1111-111111111111</checkout:loadcart>
+			<checkout>
+				<checkout:process>
+					<checkout:ok>
+						<ok>Order processing completed successfully!</ok>
+					</checkout:ok>
+					<checkout:success>
+						<success>Order processing completed successfully!</success>
+					</checkout:success>
+					<checkout:successful>
+						<successful>Order processing completed successfully!</successful>
+					</checkout:successful>
+					<checkout:error>
+						<error>Error processing order!</error>
+						<checkout:messages>
+							<message><checkout:message/></message>
+						</checkout:messages>
+					</checkout:error>
+					<checkout:fail>
+						<fail>Error processing order!</fail>
+						<checkout:messages>
+							<message><checkout:message/></message>
+						</checkout:messages>
+					</checkout:fail>
+					<checkout:failure>
+						<failure>Error processing order!</failure>
+						<checkout:messages>
+							<message><checkout:message/></message>
+						</checkout:messages>
+					</checkout:failure>
+				</checkout:process>
+			</checkout>
+		</checkout:new>
+		<checkout:new
+			pluginpaths="Handel::TestPipeline"
+			loadplugins="Handel::TestPipeline::InitializeTotals, Handel::TestPipeline::ValidateError"
+			order="11111111-1111-1111-1111-111111111111"
+			phases="CHECKOUT_PHASES_INITIALIZE, CHECKOUT_PHASE_VALIDATE"
+		>
+			<checkout>
+				<checkout:process>
+					<checkout:ok>
+						<ok>Order processing completed successfully!</ok>
+					</checkout:ok>
+					<checkout:success>
+						<success>Order processing completed successfully!</success>
+					</checkout:success>
+					<checkout:successful>
+						<successful>Order processing completed successfully!</successful>
+					</checkout:successful>
+					<checkout:error>
+						<error>Error processing order!</error>
+						<checkout:messages>
+							<message>hasmessage</message>
+						</checkout:messages>
+					</checkout:error>
+					<checkout:fail>
+						<fail>Error processing order!</fail>
+						<checkout:messages>
+							<message>hasmessage</message>
+						</checkout:messages>
+					</checkout:fail>
+					<checkout:failure>
+						<failure>Error processing order!</failure>
+						<checkout:messages>
+							<message>hasmessage</message>
+						</checkout:messages>
+					</checkout:failure>
+				</checkout:process>
+			</checkout>
+		</checkout:new>
+	</body>
+</xsp:page>

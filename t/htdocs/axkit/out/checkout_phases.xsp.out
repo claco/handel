@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<body>
+	<phases>
+		<phase>2</phase>
+		<phase>4</phase>
+		<phase>8</phase>
+	</phases>
+	<phases>
+		<phase>4</phase>
+		<phase>8</phase>
+	</phases>
+</body>

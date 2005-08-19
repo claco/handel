@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<body>
+	<checkout>
+		<ok>Order processing completed successfully!</ok>
+		<success>Order processing completed successfully!</success>
+		<successful>Order processing completed successfully!</successful>
+	</checkout>
+	<checkout>
+		<ok>Order processing completed successfully!</ok>
+		<success>Order processing completed successfully!</success>
+		<successful>Order processing completed successfully!</successful>
+	</checkout>
+	<checkout>
+		<ok>Order processing completed successfully!</ok>
+		<success>Order processing completed successfully!</success>
+		<successful>Order processing completed successfully!</successful>
+	</checkout>
+	<checkout>
+		<ok>Order processing completed successfully!</ok>
+		<success>Order processing completed successfully!</success>
+		<successful>Order processing completed successfully!</successful>
+	</checkout>
+	<checkout>
+		<error>Error processing order!</error>
+		<message>hasmessage</message>
+		<fail>Error processing order!</fail>
+		<message>hasmessage</message>
+		<failure>Error processing order!</failure>
+		<message>hasmessage</message>
+	</checkout>
+</body>
