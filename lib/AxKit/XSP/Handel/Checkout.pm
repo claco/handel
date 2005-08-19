@@ -15,8 +15,9 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Checkout';
     my @context = 'root';
 
     sub start_document {
-        return "use Handel::Checkout;\n";
+        return "use Handel::Checkout;\nuse Handel::Constants qw(:checkout);\n";
     };
+
 
     sub parse_char {
         my ($e, $text) = @_;
@@ -26,6 +27,8 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Checkout';
 
         if ($tag eq 'addmessage') {
             return "\n\$_xsp_handel_checkout_addmessage_hash{'text'} = q|" . $text . "|;\n";
+        } elsif ($tag =~ /^load(order|cart)$/) {
+            return ".q|$text|";
         };
 
         return '';
@@ -43,7 +46,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Checkout';
 
             push @context, $tag;
 
-            my $code = "my \$_xsp_handel_checkout;my \$_xsp_handel_checkout_new_options;my \$_xsp_handel_checkout_new_called;\n";
+            my $code = "my \$_xsp_handel_checkout;my \$_xsp_handel_checkout_status;my \$_xsp_handel_checkout_new_options;my \$_xsp_handel_checkout_new_called;\n";
             $code .= scalar keys %attr ?
                 'my %_xsp_handel_checkout_new_filter = ("' . join('", "', %attr) . '");' :
                 'my %_xsp_handel_checkout_new_filter;' ;
@@ -116,6 +119,78 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Checkout';
                 'my %_xsp_handel_checkout_addmessage_hash;' ;
 
             return "\n{\n$code\n";
+        } elsif ($tag eq 'phases') {
+            push @context, $tag;
+
+            my $code = '
+                if (!$_xsp_handel_checkout_new_called) {
+                    $_xsp_handel_checkout = Handel::Checkout->new(\%_xsp_handel_checkout_new_filter);
+                    $_xsp_handel_checkout_new_called++;
+                };
+                foreach my $_xsp_handel_checkout_phase ($_xsp_handel_checkout->phases) {
+            ';
+
+            return $code;
+        } elsif ($tag eq 'phase') {
+            throw Handel::Exception::Taglib(
+                -text => translate("Tag '[_1]' not valid inside of tag '" . $context[$#context] . "'", $tag)
+            ) if ($context[$#context] ne 'phases');
+
+            push @context, $tag;
+
+            $e->start_expr($tag);
+            $e->append_to_script("\$_xsp_handel_checkout_phase;\n");
+            $e->end_expr($tag);
+        } elsif ($tag eq 'process') {
+            push @context, $tag;
+
+            my $code = '
+                if (!$_xsp_handel_checkout_new_called) {
+                    $_xsp_handel_checkout = Handel::Checkout->new(\%_xsp_handel_checkout_new_filter);
+                    $_xsp_handel_checkout_new_called++;
+                };
+                $_xsp_handel_checkout_status = $_xsp_handel_checkout->process;
+            ';
+
+            return $code;
+        } elsif ($tag =~ /^(ok|success(ful)?)$/) {
+            push @context, $tag;
+
+            my $code = '
+                if ($_xsp_handel_checkout_status == CHECKOUT_STATUS_OK) {
+            ';
+
+            return $code;
+        } elsif ($tag =~ /^(error|fail(ure)?)$/) {
+            push @context, $tag;
+
+            my $code = '
+                if ($_xsp_handel_checkout_status != CHECKOUT_STATUS_OK) {
+            ';
+
+            return $code;
+        } elsif ($tag eq 'loadorder') {
+            push @context, $tag;
+
+            my $code = '
+                if (!$_xsp_handel_checkout_new_called) {
+                    $_xsp_handel_checkout = Handel::Checkout->new(\%_xsp_handel_checkout_new_filter);
+                    $_xsp_handel_checkout_new_called++;
+                };
+                $_xsp_handel_checkout->order(\'\'';
+
+            return $code;
+        } elsif ($tag eq 'loadcart') {
+            push @context, $tag;
+
+            my $code = '
+                if (!$_xsp_handel_checkout_new_called) {
+                    $_xsp_handel_checkout = Handel::Checkout->new(\%_xsp_handel_checkout_new_filter);
+                    $_xsp_handel_checkout_new_called++;
+                };
+                $_xsp_handel_checkout->cart(\'\'';
+
+            return $code;
         };
 
         return '';
@@ -151,6 +226,46 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Checkout';
                     $_xsp_handel_checkout->add_message(Handel::Checkout::Message->new(%_xsp_handel_checkout_addmessage_hash));
                 };
             ';
+        } elsif ($tag eq 'phases') {
+            pop @context;
+
+            return '
+                };
+            ';
+        } elsif ($tag eq 'phase') {
+            pop @context;
+        } elsif ($tag eq 'process') {
+            pop @context;
+        } elsif ($tag =~ /^(ok|success(ful)?)$/) {
+            pop @context;
+
+            my $code = '
+                };
+            ';
+
+            return $code;
+        } elsif ($tag =~ /^(error|fail(ure)?)$/) {
+            pop @context;
+
+            my $code = '
+                };
+            ';
+
+            return $code;
+        } elsif ($tag eq 'loadorder') {
+            pop @context;
+
+            my $code = ');
+            ';
+
+            return $code;
+        } elsif ($tag eq 'loadcart') {
+            pop @context;
+
+            my $code = ');
+            ';
+
+            return $code;
         };
 
         return '';
