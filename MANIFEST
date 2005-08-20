@@ -137,6 +137,7 @@ t/htdocs/axkit/cart_restore_merge.xsp
 t/htdocs/axkit/cart_restore_replace.xsp
 t/htdocs/axkit/cart_uuid.xsp
 t/htdocs/axkit/checkout_messages.xsp
+t/htdocs/axkit/checkout_order.xsp
 t/htdocs/axkit/checkout_phases.xsp
 t/htdocs/axkit/checkout_plugins.xsp
 t/htdocs/axkit/checkout_process.xsp
@@ -234,6 +235,7 @@ t/htdocs/axkit/out/cart_restore_append.xsp.out
 t/htdocs/axkit/out/cart_restore_merge.xsp.out
 t/htdocs/axkit/out/cart_restore_replace.xsp.out
 t/htdocs/axkit/out/checkout_messages.xsp.out
+t/htdocs/axkit/out/checkout_order.xsp.out
 t/htdocs/axkit/out/checkout_phases.xsp.out
 t/htdocs/axkit/out/checkout_plugins.xsp.out
 t/htdocs/axkit/out/checkout_process.xsp.out
