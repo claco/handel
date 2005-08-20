@@ -59,11 +59,16 @@ Handel - Simple commerce framework with AxKit/TT2 support
 =head1 DESCRIPTION
 
 Handel is a quick and not-so-dirty ecommerce framework with L<AxKit> taglib
-support and TT2 (template Toolkit) support. It was started for the conversion
+support and TT2 (Template Toolkit) support. It was started for the conversion
 of an IIS/ASP based commerce site to Apache/ModPerl, but I decided that is
 might be useful to others so here it is on CPAN.
 
 For the curious, Handel is German for commerce.
+
+=head1 MAILING LIST
+
+Join the mailing list at http://lists.rawmode.org/cgi-bin/mailman/listinfo/handel.
+Big thanks to gabb@#catalyst for the list space.
 
 =head1 GOALS
 
