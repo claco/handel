@@ -304,6 +304,11 @@ t/htdocs/tt2/cart_restore_replace.tt2
 t/htdocs/tt2/cart_save.tt2
 t/htdocs/tt2/cart_update.tt2
 t/htdocs/tt2/cart_uuid.tt2
+t/htdocs/tt2/checkout_messages.tt2
+t/htdocs/tt2/checkout_order.tt2
+t/htdocs/tt2/checkout_phases.tt2
+t/htdocs/tt2/checkout_plugins.tt2
+t/htdocs/tt2/checkout_process.tt2
 t/htdocs/tt2/order_add.tt2
 t/htdocs/tt2/order_clear.tt2
 t/htdocs/tt2/order_create.tt2
@@ -344,6 +349,11 @@ t/htdocs/tt2/out/cart_restore_merge.tt2.out
 t/htdocs/tt2/out/cart_restore_replace.tt2.out
 t/htdocs/tt2/out/cart_save.tt2.out
 t/htdocs/tt2/out/cart_update.tt2.out
+t/htdocs/tt2/out/checkout_messages.tt2.out
+t/htdocs/tt2/out/checkout_order.tt2.out
+t/htdocs/tt2/out/checkout_phases.tt2.out
+t/htdocs/tt2/out/checkout_plugins.tt2.out
+t/htdocs/tt2/out/checkout_process.tt2.out
 t/htdocs/tt2/out/order_add.tt2.out
 t/htdocs/tt2/out/order_clear.tt2.out
 t/htdocs/tt2/out/order_create.tt2.out
@@ -392,6 +402,7 @@ t/sql/order_delete_data.sql
 t/sql/order_fake_data.sql
 t/TEST.PL
 t/tt2_cart.t
+t/tt2_checkout.t
 t/tt2_order.t
 t/warnings.t
 t/xsp_cart.t
