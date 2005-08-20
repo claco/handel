@@ -1,0 +1,19 @@
+<!-- $Id$ -->
+<body>
+	<checkout>
+		<ok>Order processing completed successfully!</ok>
+	</checkout>
+	<checkout>
+		<ok>Order processing completed successfully!</ok>
+	</checkout>
+	<checkout>
+		<ok>Order processing completed successfully!</ok>
+	</checkout>
+	<checkout>
+		<ok>Order processing completed successfully!</ok>
+	</checkout>
+	<checkout>
+		<error>Error processing order!</error>
+		<message>hasmessage</message>
+	</checkout>
+</body>

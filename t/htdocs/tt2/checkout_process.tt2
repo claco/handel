@@ -1,0 +1,93 @@
+[%# $Id$ %]
+[% USE hcheckout = Handel.Checkout %]
+
+<body>
+
+	[% IF (checkout = hcheckout.create({
+		pluginpaths => 'Handel::TestPipeline',
+		loadplugins => 'Handel::TestPipeline::ReadFromStash, Handel::Testpipeline::WriteFromStash',
+		cart => '11111111-1111-1111-1111-111111111111'
+	})) %]
+		<checkout>
+			[% IF (checkout.process == hcheckout.CHECKOUT_STATUS_OK) %]
+				<ok>Order processing completed successfully!</ok>
+			[% ELSE %]
+				<error>Error processing order!</error>
+				[% FOREACH message = checkout.messages %]
+					<message>[% message %]</message>
+				[% END %]
+			[% END %]
+		</checkout>
+	[% END %]
+
+	[% IF (checkout = hcheckout.create({
+		pluginpaths => 'Handel::TestPipeline',
+		loadplugins => 'Handel::TestPipeline::ReadFromStash, Handel::Testpipeline::WriteFromStash',
+		order => '11111111-1111-1111-1111-111111111111'
+	})) %]
+		<checkout>
+			[% IF (checkout.process == hcheckout.CHECKOUT_STATUS_OK) %]
+				<ok>Order processing completed successfully!</ok>
+			[% ELSE %]
+				<error>Error processing order!</error>
+				[% FOREACH message = checkout.messages %]
+					<message>[% message %]</message>
+				[% END %]
+			[% END %]
+		</checkout>
+	[% END %]
+
+	[% IF (checkout = hcheckout.create({
+		pluginpaths => 'Handel::TestPipeline',
+		loadplugins => 'Handel::TestPipeline::ReadFromStash, Handel::Testpipeline::WriteFromStash'
+	})) %]
+		[% CALL checkout.order('11111111-1111-1111-1111-111111111111') %]
+		<checkout>
+			[% IF (checkout.process == hcheckout.CHECKOUT_STATUS_OK) %]
+				<ok>Order processing completed successfully!</ok>
+			[% ELSE %]
+				<error>Error processing order!</error>
+				[% FOREACH message = checkout.messages %]
+					<message>[% message %]</message>
+				[% END %]
+			[% END %]
+		</checkout>
+	[% END %]
+
+	[% IF (checkout = hcheckout.create({
+		pluginpaths => 'Handel::TestPipeline',
+		loadplugins => 'Handel::TestPipeline::ReadFromStash, Handel::Testpipeline::WriteFromStash'
+	})) %]
+		[% CALL checkout.cart('11111111-1111-1111-1111-111111111111') %]
+		<checkout>
+			[% IF (checkout.process == hcheckout.CHECKOUT_STATUS_OK) %]
+				<ok>Order processing completed successfully!</ok>
+			[% ELSE %]
+				<error>Error processing order!</error>
+				[% FOREACH message = checkout.messages %]
+					<message>[% message %]</message>
+				[% END %]
+			[% END %]
+		</checkout>
+	[% END %]
+
+
+	[% IF (checkout = hcheckout.create({
+		pluginpaths => 'Handel::TestPipeline',
+		loadplugins => 'Handel::TestPipeline::InitializeTotals, Handel::TestPipeline::ValidateError',
+		order => '11111111-1111-1111-1111-111111111111',
+		phases => 'CHECKOUT_PHASES_INITIALIZE, CHECKOUT_PHASE_VALIDATE'
+	})) %]
+		<checkout>
+			[% IF (checkout.process == hcheckout.CHECKOUT_STATUS_OK) %]
+				<ok>Order processing completed successfully!</ok>
+			[% ELSE %]
+				<error>Error processing order!</error>
+				[% FOREACH message = checkout.messages %]
+					<message>hasmessage</message>
+				[% END %]
+			[% END %]
+		</checkout>
+	[% END %]
+
+</body>

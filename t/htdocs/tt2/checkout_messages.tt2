@@ -1,0 +1,15 @@
+[%# $Id$ %]
+[% USE hcheckout = Handel.Checkout %]
+
+<body>
+
+	[% IF (checkout = hcheckout.create) %]
+		[% CALL checkout.add_message('This is a new message') %]
+		<messages>
+			[% FOREACH message = checkout.messages %]
+				<message>[% message %]</message>
+			[% END %]
+		</messages>
+	[% END %]
+
+</body>

@@ -1,0 +1,20 @@
+[%# $Id$ %]
+[% USE hcheckout = Handel.Checkout %]
+
+<body>
+	[% IF (checkout = hcheckout.create) %]
+		<phases>
+			[% FOREACH phase = checkout.phases %]
+				<phase>[% phase %]</phase>
+			[% END %]
+		</phases>
+	[% END %]
+
+	[% IF (checkout = hcheckout.create({phases => 'CHECKOUT_PHASE_AUTHORIZE CHECKOUT_PHASE_DELIVER'})) %]
+		<phases>
+			[% FOREACH phase = checkout.phases %]
+				<phase>[% phase %]</phase>
+			[% END %]
+		</phases>
+	[% END %]
+</body>

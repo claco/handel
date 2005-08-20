@@ -1,0 +1,71 @@
+[%# $Id$ %]
+[% USE hcheckout = Handel.Checkout %]
+
+<body>
+	[% IF (checkout = hcheckout.create({pluginpaths => 'Handel::TestPlugins'})) %]
+		<plugins>
+			[% FOREACH plugin = checkout.plugins %]
+				<plugin>[% plugin.name %]</plugin>
+			[% END %]
+		</plugins>
+	[% END %]
+
+	[% IF (checkout = hcheckout.create({pluginpaths => 'Handel::OtherTestPlugins'})) %]
+		<plugins>
+			[% FOREACH plugin = checkout.plugins %]
+				<plugin>[% plugin.name %]</plugin>
+			[% END %]
+		</plugins>
+	[% END %]
+
+	[% IF (checkout = hcheckout.create({pluginpaths => 'Handel::TestPlugins, Handel::OtherTestPlugins'})) %]
+		<plugins>
+			[% FOREACH plugin = checkout.plugins %]
+				<plugin>[% plugin.name %]</plugin>
+			[% END %]
+		</plugins>
+	[% END %]
+
+	[% IF (checkout = hcheckout.create({pluginpaths => 'Handel::TestPlugins, Handel::OtherTestPlugins, Handel::TestPipeline'})) %]
+		<plugins>
+			[% FOREACH plugin = checkout.plugins %]
+				<plugin>[% plugin.name %]</plugin>
+			[% END %]
+		</plugins>
+	[% END %]
+
+	[% IF (checkout = hcheckout.create({
+		pluginpaths => 'Handel::TestPlugins, Handel::OtherTestPlugins, Handel::TestPipeline',
+		ignoreplugins => 'Handel::TestPipeline::ValidateError'
+	})) %]
+		<plugins>
+			[% FOREACH plugin = checkout.plugins %]
+				<plugin>[% plugin.name %]</plugin>
+			[% END %]
+		</plugins>
+	[% END %]
+
+
+	[% IF (checkout = hcheckout.create({
+		pluginpaths => 'Handel::TestPlugins, Handel::OtherTestPlugins, Handel::TestPipeline',
+		loadplugins => 'Handel::TestPipeline::ValidateError'
+	})) %]
+		<plugins>
+			[% FOREACH plugin = checkout.plugins %]
+				<plugin>[% plugin.name %]</plugin>
+			[% END %]
+		</plugins>
+	[% END %]
+
+	[% IF (checkout = hcheckout.create({
+		pluginpaths => 'Handel::TestPlugins, Handel::OtherTestPlugins, Handel::TestPipeline',
+		loadplugins => 'Handel::TestPipeline::WriteToStash, Handel::TestPipeline::ReadFromStash',
+		ignoreplugins => 'Handel::TestPipeline::WriteToStash'
+	})) %]
+		<plugins>
+			[% FOREACH plugin = checkout.plugins %]
+				<plugin>[% plugin.name %]</plugin>
+			[% END %]
+		</plugins>
+	[% END %]
+</body>

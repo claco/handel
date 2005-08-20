@@ -1,0 +1,34 @@
+<!-- $Id$ -->
+<body>
+	<plugins>
+		<plugin>Handel::TestPlugins::First</plugin>
+	</plugins>
+	<plugins>
+		<plugin>Handel::OtherTestPlugins::Second</plugin>
+	</plugins>
+	<plugins>
+		<plugin>Handel::OtherTestPlugins::Second</plugin>
+		<plugin>Handel::TestPlugins::First</plugin>
+	</plugins>
+	<plugins>
+		<plugin>Handel::OtherTestPlugins::Second</plugin>
+		<plugin>Handel::TestPipeline::InitializeTotals</plugin>
+		<plugin>Handel::TestPipeline::ReadFromStash</plugin>
+		<plugin>Handel::TestPipeline::ValidateError</plugin>
+		<plugin>Handel::TestPipeline::WriteToStash</plugin>
+		<plugin>Handel::TestPlugins::First</plugin>
+	</plugins>
+	<plugins>
+		<plugin>Handel::OtherTestPlugins::Second</plugin>
+		<plugin>Handel::TestPipeline::InitializeTotals</plugin>
+		<plugin>Handel::TestPipeline::ReadFromStash</plugin>
+		<plugin>Handel::TestPipeline::WriteToStash</plugin>
+		<plugin>Handel::TestPlugins::First</plugin>
+	</plugins>
+	<plugins>
+		<plugin>Handel::TestPipeline::ValidateError</plugin>
+	</plugins>
+	<plugins>
+		<plugin>Handel::TestPipeline::ReadFromStash</plugin>
+	</plugins>
+</body>
