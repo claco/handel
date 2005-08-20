@@ -28,6 +28,12 @@ sub register {
     warn "Attempt to register plugin that hasn't defined 'register'!";
 };
 
+sub name {
+    my $self = shift;
+
+    return ref $self || $self;
+};
+
 1;
 __END__
 
@@ -109,6 +115,10 @@ necessary preperation before its registered handler subs are called.
 Each time a checkout pipeline is finished being processed, the
 C<teardown> method is called on all registered plugins to allow each plugin
 to performa any cleanup it may need to do.
+
+=head2 name
+
+Returns the name of the current instance.
 
 =head1 SEE ALSO
 
