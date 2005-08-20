@@ -18,7 +18,8 @@ my @tests = (
     'checkout_plugins.xsp',
     'checkout_messages.xsp',
     'checkout_phases.xsp',
-    'checkout_process.xsp'
+    'checkout_process.xsp',
+    'checkout_order.xsp'
 );
 
 require Apache::TestUtil;
