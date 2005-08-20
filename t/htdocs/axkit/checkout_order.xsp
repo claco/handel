@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<xsp:page
+	xmlns:xsp="http://apache.org/xsp/core/v1"
+	xmlns:checkout="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Checkout"
+	xmlns:order="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order"
+>
+	<body>
+		<checkout:new order="11111111-1111-1111-1111-111111111111">
+			<checkout:order>
+				<order>
+					<count><order:count/></count>
+					<id><order:id/></id>
+					<shopper><order:shopper/></shopper>
+					<type><order:type/></type>
+					<billtofirstname><order:billtofirstname/></billtofirstname>
+					<billtolastname><order:billtolastname/></billtolastname>
+					<billtoaddress1><order:billtoaddress1/></billtoaddress1>
+					<billtoaddress2><order:billtoaddress2/></billtoaddress2>
+					<billtoaddress3><order:billtoaddress3/></billtoaddress3>
+					<billtocity><order:billtocity/></billtocity>
+					<billtostate><order:billtostate/></billtostate>
+					<billtozip><order:billtozip/></billtozip>
+					<billtocountry><order:billtocountry/></billtocountry>
+					<billtodayphone><order:billtodayphone/></billtodayphone>
+					<billtonightphone><order:billtonightphone/></billtonightphone>
+					<billtofax><order:billtofax/></billtofax>
+					<billtoemail><order:billtoemail/></billtoemail>
+					<comments><order:comments/></comments>
+					<created><order:created/></created>
+					<handling><order:handling/></handling>
+					<number><order:number/></number>
+					<shipmethod><order:shipmethod/></shipmethod>
+					<shipping><order:shipping/></shipping>
+					<shiptosameasbillto><order:shiptosameasbillto/></shiptosameasbillto>
+					<shiptofirstname><order:shiptofirstname/></shiptofirstname>
+					<shiptolastname><order:shiptolastname/></shiptolastname>
+					<shiptoaddress1><order:shiptoaddress1/></shiptoaddress1>
+					<shiptoaddress2><order:shiptoaddress2/></shiptoaddress2>
+					<shiptoaddress3><order:shiptoaddress3/></shiptoaddress3>
+					<shiptocity><order:shiptocity/></shiptocity>
+					<shiptostate><order:shiptostate/></shiptostate>
+					<shiptozip><order:shiptozip/></shiptozip>
+					<shiptocountry><order:shiptocountry/></shiptocountry>
+					<shiptodayphone><order:shiptodayphone/></shiptodayphone>
+					<shiptonightphone><order:shiptonightphone/></shiptonightphone>
+					<shiptofax><order:shiptofax/></shiptofax>
+					<shiptoemail><order:shiptoemail/></shiptoemail>
+					<subtotal><order:subtotal/></subtotal>
+					<total><order:total/></total>
+					<tax><order:tax/></tax>
+					<updated><order:updated/></updated>
+					<order:items>
+						<order:results>
+							<item>
+								<description><order:description/></description>
+								<id><order:id/></id>
+								<price><order:price/></price>
+								<quantity><order:quantity/></quantity>
+								<sku><order:sku/></sku>
+								<total><order:total/></total>
+							</item>
+						</order:results>
+						<order:no-results>
+							<message>Your order is empty</message>
+						</order:no-results>
+					</order:items>
+				</order>
+			</checkout:order>
+		</checkout:new>
+	</body>
+</xsp:page>
