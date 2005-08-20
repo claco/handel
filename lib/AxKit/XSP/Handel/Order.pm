@@ -11,8 +11,21 @@ use base 'Apache::AxKit::Language::XSP';
 
 $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
 
-{
+#{
     my @context = 'root';
+
+    sub push_context {
+        my @nodes = @_;
+        push @context, @nodes;
+    };
+
+    sub pop_context {
+        my $count = shift;
+
+        foreach (1..$count) {
+            pop @context;
+        };
+    };
 
     sub start_document {
         return "use Handel::Order;\n";
@@ -749,7 +762,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
 
         return '';
     };
-};
+#};
 
 1;
 __END__
