@@ -7,11 +7,12 @@ use Handel::ConfigReader;
 use Handel::Constants qw(:checkout str_to_const);
 use Handel::Exception;
 use Handel::L10N qw(translate);
+use AxKit::XSP::Handel::Order;
 use base 'Apache::AxKit::Language::XSP';
 
 $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Checkout';
 
-{
+#{
     my @context = 'root';
 
     sub start_document {
@@ -191,6 +192,21 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Checkout';
                 $_xsp_handel_checkout->cart(\'\'';
 
             return $code;
+        } elsif ($tag eq 'order') {
+            push @context, $tag;
+
+            AxKit::XSP::Handel::Order::push_context(qw(order results));
+
+            my $code = '
+                if (!$_xsp_handel_checkout_new_called) {
+                    $_xsp_handel_checkout = Handel::Checkout->new(\%_xsp_handel_checkout_new_filter);
+                    $_xsp_handel_checkout_new_called++;
+                };
+                my $_xsp_handel_order_order = $_xsp_handel_checkout->order;
+                if ($_xsp_handel_order_order) {
+            ';
+
+            return $code;
         };
 
         return '';
@@ -266,11 +282,21 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Checkout';
             ';
 
             return $code;
+        } elsif ($tag eq 'order') {
+            pop @context;
+
+            AxKit::XSP::Handel::Order::pop_context(2);
+
+            my $code = '
+                };
+            ';
+
+            return $code;
         };
 
         return '';
     };
-};
+#};
 
 1;
 __END__
@@ -293,6 +319,28 @@ Add the namespace to your XSP file and use the tags:
          xmlns:checkout="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Checkout"
     >
 
+    <checkout:new phases="CHECKOUT_PHASE_AUTHORIZE">
+        <checkout:loadcart>11111111-1111-1111-1111-111111111111</checkout:loadcart>
+        <checkout:process>
+            <checkout:ok>
+                <ok>Your order has be charged!</ok>
+                <checkout:order>
+                    <number><order:number/></number>
+                    <total><order:total/></total>
+                    ...
+                </checkout:order>
+            </checkout:ok>
+            <checkout:error>
+                <messages>
+                    <message>Bad things happened!</message>
+                    <checkout:messages>
+                        <message><checkout:message/></message>
+                    </checkout:messages>
+                </messages>
+            </checkout:error>
+        </checkout:process>
+    </checkout:new>
+
 =head1 DESCRIPTION
 
 This tag library provides an interface to use C<Handel::Checkout> inside of your
@@ -300,9 +348,193 @@ AxKit XSP pages.
 
 =head1 TAG HIERARCHY
 
-    <checkout:new pluginpaths|addpluginpaths|loadplugins|ignoreplugins|order|cart|="value"...>
+    <checkout:new pluginpaths|addpluginpaths|loadplugins|ignoreplugins|order|cart|phases="value"...>
+        <checkout:addmessage></checkout:addmessage>
+        <checkout:loadorder></checkout:loadorder>
+        <checkout:loadcart></checkout:loadcart>
+        <checkout:plugins>
+            <checkout:plugin/>
+        </checkout:plugins>
+        <checkout:phases>
+            <checkout:phase/>
+        </checkout:phases>
+        <checkout:process phases="">
+            <checkout:ok>
+                ...
+            </checkout:ok>
+            <checkoout:error>
+                ...
+            </checkout:error>
+        </checkout:process>
+        <checkout:messages>
+            <checkout:message/>
+            <checkout:message-property/>
+        </checkout:messages>
+        <checkout:order>
+            <order:*/>
+        </checkout:order>
+    </checkout:new>
+
+=head1 TAG REFERENCE
+
+=head2 <checkout:addmessage>
+
+Adds a message to the current checkouts messages collection:
+
+    <checkout:new>
+        <checkout:addmessage>My new message...</checkout:addmessage>
+    </checkout:new>
+
+=head2 <checkout:error>
+
+If process fails, anything in the error block is run:
+
+    <checkout:new>
+        <checkout:process>
+            <checkout:error>
+                <error>Something bad happened!</error>
+            </checkout:error>
+        </checkout:process>
+    </checkout:new>
+
+You may also use fail and failure in addition to ok.
+
+=head2 <checkout:loadcart>
+
+Loads the specified cart into the current checkout process. It currently accepts
+the carts uuid value:
+
+    <checkout:new>
+        <checkout:loadcart>11111111-1111-1111-1111-11111111</checkout:loadcart>
+    </checkout:new>
+
+=head2 <checkout:loadorder>
+
+Loads the specified order into the current checkout process. IT currently accepts
+the orders uuid value:
+
+    <checkout:new>
+        <checkout:loadorder>11111111-1111-1111-1111-11111111</checkout:loadorder>
+    </checkout:new>
+
+=head2 <checkout:ok>
+
+If process suceeds, anything in the ok block is run:
+
+    <checkout:new>
+        <checkout:process>
+            <checkout:ok>
+                <error>Your order is complete!</error>
+            </checkout:ok>
+        </checkout:process>
+    </checkout:new>
+
+You may also use success and successful in addition to ok.
+
+=head2 <checkout:message>
+
+Returns the current message text. You may also access additional message properties
+by append -propertyname to the message tag:
+
+    <checkout:messages>
+        <message>
+            <text><checkout:message/></text>
+            <line><checkout:message-line/></line>
+            <package><checkout:message-package/></package>
+        </message>
+
+    </checkout:messages>
+
+=head2 <checkout:messages>
+
+Returns the messages associated to this checkout process; usually containing failure
+information.
+
+=head2 <checkout:new>
+
+Creates a new checkout process.
+
+    <checkout:new order='11111111-1111-1111-1111-111111111111'>
 
     </checkout:new>
+
+See L<Handel::Checkout> for the available options.
+
+=head2 <checkout:order>
+
+Returns the order currently associated with this checkout process.
+If you also load the Order taglib, all order properties are available:
+
+    <xsp:page
+         language="Perl"
+         xmlns:xsp="http://apache.org/xsp/core/v1"
+         xmlns:order="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order"
+         xmlns:checkout="http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Checkout"
+    >
+
+    <checkout:new order="11111111-1111-1111-1111-111111111111">
+        <checkout:process>
+            <checkout:order>
+                <order>
+                    <number><order:number/></number>
+                    <total><order:total/></total>
+                    <items>
+                        <order:items>
+                            ...
+                        </order:items>
+                    </items>
+                </order>
+            </checkout:order>
+        </checkout:process>
+    </checkout:new>
+
+=head2 <checkout:phase>
+
+Returns the current phase value in the list of phases:
+
+    <checkout:phases>
+        <phase><checkout:phase></phase>
+    </checkout:phases>
+
+=head2 <checkout:phases>
+
+Loops though the list of phases for the current checkout process:
+
+    <checkout:new phases="CHECKOUT_PHASE_INITIALIZE, CHECKOUT_PHASE_VALIDATE">
+        <checkout:phases>
+            <phase><checkout:phase></phase>
+        </checkout:phases>
+    </checkout:new>
+
+=head2 <checkout:plugin>
+
+Returns the current plugin name in the list of loaded plugins:
+
+    <checkout:plugins>
+        <plugin><checkout:plugin/></plugin>
+    </checkout:plugins>
+
+=head2 <checkout:plugins>
+
+Loops through the list of loaded plugins for the current checkout process:
+
+    <checkout:new pluginpaths="MyApp::Plugins">
+        <checkout:plugins>
+            <plugin><checkout:plugins/></plugin>
+        </checkout:plugins>
+    </checkout:new>
+
+=head2 <checkout:process>
+
+Runs the current checkout process and sets ok/error:
+
+    <checkout:new>
+        <checkout:process>
+
+        </checkout:process>
+    </checkout:new>
+
+See L<Handel::Checkout> for the available options to process.
 
 =head1 AUTHOR
 
