@@ -1,5 +1,16 @@
 Revision history for Perl module Handel
 
+0.17_09 Sat Aug 20 18:57:11 2005
+    - Finished AxKit::XSP::Handel::Checkout
+    - Checkout::plugins now returns a sorted list in list context
+    - Added t/xsp_checkout.t AxKit tests
+    - Added t/tt2_checkout.t TT tests
+    - Fixed noprocess->process taglib option in Order::new
+    - Checkout::new phases option takes space/comma seperated list
+    - Fixed Checkout::phases return in list context
+    - ConfigReader now checks dir_config, then ENV under mod_perl
+    - Fixed warning during Checkout::process when $phase was undef
+
 0.17_08 Wed Aug 10 21:30:48 2005
     - Upstreamed uuid module inspection into BEGIN/Handel::newuuid
     - Added stash to checkout context
