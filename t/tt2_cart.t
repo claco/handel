@@ -62,14 +62,14 @@ my $output  = '';
 $tt->process("$docroot/cart_uuid.tt2", undef, \$output);
 ok($output =~ /(.*<p>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}<\/p>.*){2}/is);
 
-foreach (@tests) {
+foreach my $test (@tests) {
     my $output = '';
-    $tt->process("$docroot/$_", undef, \$output);
+    $tt->process("$docroot/$test", undef, \$output);
 
-    my ($ok, $response, $file) = comp_to_file($output, "$docroot/out/$_.out");
+    my ($ok, $response, $file) = comp_to_file($output, "$docroot/out/$test.out");
 
     if (!$ok) {
-        diag("Test: $_");
+        diag("Test: $test");
         diag("Error:\n" . $tt->error) if $tt->error;
         diag("Expected:\n", $file);
         diag("Received:\n", $response);

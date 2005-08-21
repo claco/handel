@@ -42,14 +42,14 @@ my $tt      = Template->new() || die 'Error creating Template';
 my $docroot = 't/htdocs/tt2';
 my $output  = '';
 
-foreach (@tests) {
+foreach my $test (@tests) {
     my $output = '';
-    $tt->process("$docroot/$_", undef, \$output);
+    $tt->process("$docroot/$test", undef, \$output);
 
-    my ($ok, $response, $file) = comp_to_file($output, "$docroot/out/$_.out");
+    my ($ok, $response, $file) = comp_to_file($output, "$docroot/out/$test.out");
 
     if (!$ok) {
-        diag("Test: $_");
+        diag("Test: $test");
         diag("Error:\n" . $tt->error) if $tt->error;
         diag("Expected:\n", $file);
         diag("Received:\n", $response);
