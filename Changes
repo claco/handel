@@ -1,5 +1,10 @@
 Revision history for Perl module Handel
 
+0.18 Mon Aug 22 19:55:13 2005
+    - Checkout/Orders code is finished. Handel is now considered
+    	feature complete: for now. :-)
+    - ConfigReader now untaints config values from $ENV
+
 0.17_09 Sat Aug 20 18:57:11 2005
     - Finished AxKit::XSP::Handel::Checkout
     - Checkout::plugins now returns a sorted list in list context
@@ -256,5 +261,6 @@ Revision history for Perl module Handel
 
 0.01_01 Mon Dec 27 21:47:04 2004
     - Initial alpha release
+
 
 
