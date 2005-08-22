@@ -43,6 +43,11 @@ sub FETCH {
         $value = $ENV{$key} || $default;
     };
 
+    # quick untaint for now
+    if ($value =~ /^(.*)$/) {
+        $value = $1;
+    };
+
     return $value;
 };
 
