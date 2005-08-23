@@ -43,8 +43,8 @@ sub FETCH {
         $value = $ENV{$key} || $default;
     };
 
-    # quick untaint for now
-    if ($value =~ /^(.*)$/) {
+    # quick untaint for now. Assuming we'll mever get a ref from system os ENV
+    if (! ref $value && $value =~ /^(.*)$/g) {
         $value = $1;
     };
 
