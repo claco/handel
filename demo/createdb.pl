@@ -5,8 +5,10 @@ use warnings;
 use lib '../t/lib';
 use Handel::TestHelper qw(executesql);
 
-my $dbfile  = 'cart.db';
+my $dbfile  = 'handel.db';
 my $db      = "dbi:SQLite:dbname=$dbfile";
-my $create  = '../t/sql/cart_create_table.sql';
+my $cart    = '../t/sql/cart_create_table.sql';
+my $order   = '../t/sql/order_create_table.sql';
 
-executesql($db, $create);
+executesql($db, $cart);
+executesql($db, $order);
