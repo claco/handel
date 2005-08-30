@@ -433,7 +433,7 @@ __productspage__
 
 <h2>Flimblebot 98</h2>
 <p>
-    The most advances flimble-based bot response software ever!
+    The most advanced flimble-based bot response software ever! Google-compatible!
 </p>
 <form action="/cart/add" method="post">
     <input type="hidden" name="sku" value="FB98">
