@@ -1,5 +1,8 @@
 Revision history for Perl module Handel
 
+0.18_01 Mon Aug 29 20:24:17 2005
+    - Added basic Catalyst scaffold support
+
 0.18 Mon Aug 22 19:55:13 2005
     - Checkout/Orders code is finished. Handel is now considered
     	feature complete: for now. :-)
