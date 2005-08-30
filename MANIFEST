@@ -22,6 +22,7 @@ demo/tt2/style/css/basic.css
 lib/AxKit/XSP/Handel/Cart.pm
 lib/AxKit/XSP/Handel/Checkout.pm
 lib/AxKit/XSP/Handel/Order.pm
+lib/Catalyst/Helper/Handel/Scaffold.pm
 lib/Handel.pm
 lib/Handel/Cart.pm
 lib/Handel/Cart/Item.pm
