@@ -18,87 +18,84 @@ BEGIN {
         "Une erreur non spécifiée s'est produite",
 
     "The supplied field(s) failed database constraints" =>
-        "Le field(s) assuré a échoué des contraintes de base de données",
+        "Le champ recu n'a pas satisfait aux contraintes de base de données",
 
     "The argument supplied is invalid or of the wrong type" =>
-        "L'argument fourni est inadmissible ou du type inapproprié",
+        "L'argument fourni est invalide ou du type inapproprié",
 
     "Required modules not found" =>
         "Modules requis non trouvés",
 
     "The quantity requested ([_1]) is greater than the maximum quantity allowed ([_2])" =>
-        "La quantité a demandé ([_1]) est plus grande que la quantité maximum a permis ([_2])",
+        "La quantité demandé ([_1]) est plus grande que la quantité maximale permise ([_2])",
 
     "An error occurred while while creating or validating the current order" =>
-        "Une erreur s'est produite tandis que tout en créant ou validant l'ordre courant",
+        "Une erreur s'est produite lors de la validation ou de la creation de la commande en cours",
 
     "An error occurred during the checkout process" =>
-        "Une erreur s'est produite pendant le procédé de contrôle",
+        "Une erreur s'est produite pendant le processus de paiement",
 
     ## param 1 violations
     "Param 1 is not a HASH reference" =>
-        "Le param 1 n'est pas une référence d'cInformations PARASITES",
+        "Le parametre 1 n'est pas une reference a un tableau associatif (HASH)",
 
     "Cart reference is not a HASH reference or Handel::Cart" =>
-        "Le param 1 n'est pas une référence d'cInformations PARASITES ou un Handel::Cart",
+        "La reference au panier (Cart) n'est pas une reference a un tableau associatif (HASH) ou un Handel::Cart",
 
     "Param 1 is not a HASH reference or Handel::Cart::Item" =>
-        "Le param 1 n'est pas une référence d'cInformations PARASITES ou un Handel::Cart::Item",
+        "Le parametre 1 n'est pas une reference a un tableau associatif (HASH) ou a un Handel::Cart::Item",
 
     "Param 1 is not a HASH reference, Handel::Order::Item or Handel::Cart::Item" =>
-        "Le param 1 n'est pas une référence d'cInformations PARASITES, Handel::Order::Item ou un Handel::Cart::Item",
+        "Le parametre 1 n'est pas une reference a un tableau associatif (HASH) ou a un Handel::Order::Item ou un Handel::Cart::Item",
 
     "Unknown restore mode" =>
         "Mode inconnu de restauration",
 
     "Currency code '[_1]' is invalid or malformed" =>
-        "Le code '[_1]' de devise est inadmissible ou mal formé",
+        "Le code de devise '[_1]' est invalide ou mal formé",
 
     "Param 1 is not a a valid CHECKOUT_PHASE_* value" =>
-        "Le param 1 n'est pas une valeur valide de CHECKOUT_PHASE_*",
+        "Le parametre 1 n'est pas une valeur valide de CHECKOUT_PHASE_*",
 
     "Param 1 is not a CODE reference" =>
-        "Le param 1 n'est pas une référence de CODE",
+        "Le parametre 1 n'est pas une référence de CODE",
 
     "Param 1 is not an ARRAY reference" =>
-        "Le param 1 n'est pas une référence de RANGÉE",
+        "Le parametre 1 n'est pas une référence de TABLEAU",
 
     "Param 1 is not an ARRAY reference or string" =>
-        "Le param 1 n'est pas une référence ou une corde de RANGÉE",
+        "Le parametre 1 n'est pas une référence de TABLEAU ou de chaine de caracteresE",
 
     "Param 1 is not a HASH reference, Handel::Order object, or order id" =>
-        "Le param 1 n'est pas une référence d'cInformations PARASITES, objet de Handel::Order, ou identification d'ordre",
-
-    "Param 1 is not a HASH reference, Handel::Order object, or order id" =>
-        "Le param 1 n'est pas une référence d'cInformations PARASITES, objet de Handel::Cart, ou identification de chariot",
+        "Le parametre 1 n'est pas une référence a un tableau associatif (HASH), un objet de Handel::Cart, ou un identifiant de commande",
 
     "Param 1 is not a Handel::Checkout::Message object or text message" =>
-        "Le param 1 n'est pas un message d'objet ou de textes de Handel::Checkout::Message",
+        "Le parametre 1 n'est pas un message de texte ni un objet de Handel::Checkout::Message",
 
     ## Taglib exceptions
     "Tag '[_1]' not valid inside of other Handel tags" =>
-        "L'étiquette '[_1] 'peut intérieur inadmissible d'autres étiquettes de Handel",
+        "L'étiquette '[_1] 'ne peut resider a l'interieur d'autres étiquettes de Handel",
 
     "Tag '[_1]' not valid here" =>
-        "Étiquette '[_1]' inadmissible ici",
+        "Étiquette '[_1]' nvalide ici",
 
     ## naughty bits
     "has invalid value" =>
-        "a la valeur inadmissible",
+        "a une valeur invalide",
 
     "[_1] value already exists" =>
-        "[_1] la valeur existe déjà",
+        "la valeur [_1] existe déjà",
 
     ## Order exceptions
     "Could not find a cart matching the supplid search criteria" =>
-        "N'a pas pu trouver un chariot assortir les critères de recherche de supplid",
+        "N'a pas pu trouver un panier correspondant aux critères de recherche fournis",
 
     "Could not create a new order because the supplied cart is empty" =>
-        "Ne pourrait pas créer un nouvel ordre parce que le chariot fourni est vide",
+        "Impossible de créer une nouvelle commande parce que le panier fourni est vide",
 
     ## Checkout exception
     "No order is assocated with this checkout process" =>
-        "Aucun ordre n'est assocated avec ce procédé de contrôle",
+        "Aucune commande n'est associee a ce processus de paiement",
 );
 
 1;
