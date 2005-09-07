@@ -54,17 +54,17 @@ Catalyst::Helper::Model::Handel::Cart - Helper for Handel::Cart Models
 
 =head1 DESCRIPTION
 
-A Helper for creating models based on Handel::Order objects.
+A Helper for creating models based on Handel::Cart objects.
 
 =head1 METHODS
 
 =head2 mk_compclass
 
-Makes a Handel::Order Model class for you.
+Makes a Handel::Cart Model class for you.
 
 =head2 mk_comptest
 
-Makes a Handel::Order Model test for you.
+Makes a Handel::Cart Model test for you.
 
 =head1 SEE ALSO
 

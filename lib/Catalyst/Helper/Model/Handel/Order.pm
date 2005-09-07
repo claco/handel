@@ -68,7 +68,7 @@ Makes a Handel::Order Model test for you.
 
 =head1 SEE ALSO
 
-L<Catalyst::Manual>, L<Catalyst::Helper>, L<Handel::Cart>
+L<Catalyst::Manual>, L<Catalyst::Helper>, L<Handel::Order>
 
 =head1 AUTHOR
 
