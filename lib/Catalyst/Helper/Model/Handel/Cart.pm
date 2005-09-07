@@ -6,17 +6,16 @@ use warnings;
 sub mk_compclass {
     my ($self, $helper, $dsn, $user, $pass) = @_;
     my $file = $helper->{file};
-    $helper->{dsn}  = $dsn  || '';
-    $helper->{user} = $user || '';
-    $helper->{pass} = $pass || '';
+    $helper->{'dsn'}  = $dsn  || '';
+    $helper->{'user'} = $user || '';
+    $helper->{'pass'} = $pass || '';
 
     $helper->render_file('model', $file);
 };
 
 sub mk_comptest {
     my ($self, $helper) = @_;
-    my $test = $helper->{test};
-    my $name = $helper->{name};
+    my $test = $helper->{'test'};
 
     $helper->render_file('test', $test);
 };
