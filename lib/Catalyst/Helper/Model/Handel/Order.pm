@@ -49,7 +49,8 @@ Catalyst::Helper::Model::Handel::Order - Helper for Handel::Order Models
 
 =head1 SYNOPSIS
 
-    script/create.pl model Order Handel::Order dsn user password
+    script/create.pl model <newclass> Handel::Order <dsn> [<username> <password>]
+    script/create.pl model Order Handel::Order dbi:mysql:dbname=handel.db myuser mysecret
 
 =head1 DESCRIPTION
 

@@ -49,7 +49,8 @@ Catalyst::Helper::Model::Handel::Cart - Helper for Handel::Cart Models
 
 =head1 SYNOPSIS
 
-    script/create.pl model Cart Handel::Cart dsn user password
+    script/create.pl model <newclass> Handel::Cart <dsn> [<username> <password>]
+    script/create.pl model Cart Handel::Cart dbi:mysql:dbname=handel.db myuser mysecret
 
 =head1 DESCRIPTION
 
