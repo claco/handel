@@ -19,7 +19,7 @@ Listen 9001
 	AxLogDeclines	On
 	AxDebugLevel	10
 	AxStackTrace	On
-	PerlSetVar		HandelDBIName		C:\Development\CPAN\Handel\demo\cart.db
+	PerlSetVar		HandelDBIName		C:\Development\CPAN\Handel\demo\handel.db
 	PerlSetVar		HandelDBIDriver		"SQLite"
 
 	AxAddProcessor	application/x-xsp	.
