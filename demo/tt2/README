@@ -1,10 +1,11 @@
-This is a quick little demo using the Teamplte::Plugin::Handel::Cart taglib
-within TT2 to create, add to, update, and delete from a shopping cart.
+This is a quick little demo using the Template::Plugin::Handel::Cart plugin
+within Template Toolkit to create, add to, update, and delete from a shopping
+cart.
 
-To run this demo, you will need to have already installed DBD::SQlite and
+To run this demo, you will need to have already installed DBD::SQLite and
 Apache::Template.
 
-If you have DBD::SQLLite installed, simply run t/demo/createdb.pl
+If you have DBD::SQLite installed, simply run demo/createdb.pl
 to create the database used by default. If you would like use another database,
 you should be able to run t/sql/cart_create_table.sql against the database of
 your choosing to create the require schema. Make sure to change

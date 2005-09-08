@@ -7,12 +7,12 @@ AxKit and the following Taglibs:
 	AxKit::XSP::Cookie
 	AxKit::XSP::Param
 
-If you have DBD::SQLLite installed, simply run t/demo/createdb.pl
+If you have DBD::SQLite installed, simply run t/demo/createdb.pl
 to create the database used by default. If you would like use another database,
 you should be able to run t/sql/cart_create_table.sql against the database of
-your choosing to create the require schema. Make sure to change httpd.conf.include
-to reflect the correct db_name, db_driver, etc. See the Handel::DBI docs for
-all of the database connection variables available.
+your choosing to create the require schema. Make sure to change
+httpd.conf.include to reflect the correct db_name, db_driver, etc. See the
+Handel::DBI docs for all of the database connection variables available.
 
 To setup the Handel shopping cart demo, just include httpd.conf.include
 in your existing httpd.conf file like so:
@@ -21,3 +21,5 @@ in your existing httpd.conf file like so:
 
 Don't forget to change DocumentRoot, ErrorLog, db_name and 'use lib' to
 match your system configuration and the installation of Handel.
+
+
