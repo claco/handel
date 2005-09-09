@@ -2,6 +2,12 @@ Revision history for Perl module Handel
 
 0.18_01 Mon Aug 29 20:24:17 2005
     - Added basic Catalyst scaffold support
+    - Added ; to end of sql statements in sql scripts that makes
+        some versions of sqlite unhappy. Found by shenme#catalyst
+    - Updated French lexicon with more human-friendly translations sent
+        from Bernard FRIT
+    - Various README fixes patched by Uwe Voelker
+    - Added Cart::destroy method to actually delete cart record
 
 0.18 Mon Aug 22 19:55:13 2005
     - Checkout/Orders code is finished. Handel is now considered
