@@ -15,6 +15,7 @@ sub mk_compclass {
     $helper->mk_dir($dir);
     $helper->render_file('controller', $file);
     $helper->render_file('view', file($dir, 'view.tt'));
+    $helper->render_file('list', file($dir, 'list.tt'));
 };
 
 sub mk_comptest {
@@ -36,26 +37,26 @@ use base 'Catalyst::Base';
 sub begin : Private {
     my ($self, $c) = @_;
 
-    if (!$c->req->cookie('cartid')) {
-        $c->stash->{'cartid'} = [% model %]->uuid;
-        $c->res->cookies->{'cartid'} = {value => $c->stash->{'cartid'}, path => '/'};
+    if (!$c->req->cookie('shopperid')) {
+        $c->stash->{'shopperid'} = [% model %]->uuid;
+        $c->res->cookies->{'shopperid'} = {value => $c->stash->{'shopperid'}, path => '/'};
 
         $c->stash->{'cart'} = [% model %]->new({
-            id   => $c->stash->{'cartid'},
-            type => 0
+            shopper => $c->stash->{'shopperid'},
+            type    => CART_TYPE_TEMP
         });
     } else {
-        $c->stash->{'cartid'} = $c->req->cookie('cartid')->value;
+        $c->stash->{'shopperid'} = $c->req->cookie('shopperid')->value;
 
         $c->stash->{'cart'} = [% model %]->load({
-            id   => $c->stash->{'cartid'},
-            type => 0
-        });
+            shopper => $c->stash->{'shopperid'},
+            type    => CART_TYPE_TEMP
+        }, RETURNAS_ITERATOR)->first;
 
         if (!$c->stash->{'cart'}) {
             $c->stash->{'cart'} = [% model %]->new({
-                id   => $c->stash->{'cartid'},
-                type => CART_TYPE_TEMP
+                shopper => $c->stash->{'shopperid'},
+                type    => CART_TYPE_TEMP
             });
         };
     };
@@ -149,6 +150,55 @@ sub empty : Local {
     $c->forward('clear');
 };
 
+sub list : Local {
+    my ($self, $c) = @_;
+
+    $c->stash->{'carts'} = [% model %]->load({
+        shopper => $c->stash->{'shopperid'},
+        type    => CART_TYPE_SAVED
+    }, RETURNAS_ITERATOR);
+
+    $c->stash->{'template'} = '[% uri %]/list.tt';
+};
+
+sub save : Local {
+    my ($self, $c) = @_;
+    my $name = $c->req->param('name') || 'My Saved Cart';
+
+    if ($c->req->method eq 'POST') {
+        $c->stash->{'cart'}->name($name);
+        $c->stash->{'cart'}->save;
+
+        $c->res->redirect($c->req->base . '[% uri %]/list/');
+    } else {
+        $c->res->redirect($c->req->base . '[% uri %]/');
+    };
+};
+
+sub restore : Local {
+    my ($self, $c) = @_;
+    my $id   = $c->req->param('id');
+    my $mode = $c->req->param('mode') || CART_MODE_APPEND;
+
+    if ($id && $c->req->method eq 'POST') {
+        $c->stash->{'cart'}->restore({id => $id}, $mode);
+    };
+
+    $c->res->redirect($c->req->base . '[% uri %]/');
+};
+
+sub destroy : Local {
+    my ($self, $c) = @_;
+    my $id = $c->req->param('id');
+
+    if ($id && $c->req->method eq 'POST') {
+        [% model %]->destroy({
+            id => $id
+        });
+    };
+
+    $c->res->redirect($c->req->base . '[% uri %]/list/');
+};
 1;
 __test__
 use Test::More tests => 2;
@@ -160,6 +210,10 @@ use_ok('[% class %]');
 __view__
 [% TAGS [- -] %]
 <h1>Your Shopping Cart</h1>
+<p>
+    <a href="[% base _ '[- uri -]/' %]">View Cart</a> |
+    <a href="[% base _ '[- uri -]/list/' %]">View Saved Carts</a>
+</p>
 [% IF cart.count %]
     <table border="0" cellpadding="3" cellspacing="5">
         <tr>
@@ -208,8 +262,53 @@ __view__
             </td>
         </tr>
     </table>
+    <form action="[% base _ '[- uri -]/save/' %]" method="post">
+        <input type="text" name="name">
+        <input type="submit" value="Save Cart">
+    </form>
 [% ELSE %]
     <p>Your shopping cart is empty.</p>
+[% END %]
+__list__
+[% TAGS [- -] %]
+<h1>Your Saved Shopping Carts</h1>
+<p>
+    <a href="[% base _ '[- uri -]/' %]">View Cart</a> |
+    <a href="[% base _ '[- uri -]/list/' %]">View Saved Carts</a>
+</p>
+[% IF carts.count %]
+    <table border="0" cellpadding="3" cellspacing="5">
+        <tr>
+            <th align="left">Name</th>
+            <th align="right">Restore Mode</th>
+            <td></td>
+        </tr>
+    [% WHILE (cart = carts.next) %]
+        <tr>
+            <td align="left">[% cart.name %]</td>
+            <td>
+                <form action="[% base _ '[- uri -]/restore/' %]" method="POST">
+                    <input type="hidden" name="id" value="[% cart.id %]">
+                    <select name="mode">
+                        [% USE hc = Handel.Constants %]
+                        <option value="[% hc.CART_MODE_APPEND %]">Append</option>
+                        <option value="[% hc.CART_MODE_MERGE %]">Merge</option>
+                        <option value="[% hc.CART_MODE_REPLACE %]">Replace</option>
+                    </select>
+                    <input type="submit" value="Restore Cart">
+                </form>
+            </td>
+            <td>
+                <form action="[% base _ '[- uri -]/destroy/' %]" method="POST">
+                    <input type="hidden" name="id" value="[% cart.id %]">
+                    <input type="submit" value="Delete">
+                </form>
+            </td>
+        </tr>
+    [% END %]
+    </table>
+[% ELSE %]
+    <p>You have no saved shopping carts.</p>
 [% END %]
 __END__
 
