@@ -281,7 +281,7 @@ __list__
         <tr>
             <th align="left">Name</th>
             <th align="right">Restore Mode</th>
-            <td></td>
+            <th></th>
         </tr>
     [% WHILE (cart = carts.next) %]
         <tr>
