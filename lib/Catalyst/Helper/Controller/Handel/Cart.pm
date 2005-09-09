@@ -323,7 +323,8 @@ Catalyst::Helper::Controller::Handel::Cart - Helper for Handel::Cart Controllers
 
 =head1 DESCRIPTION
 
-A Helper for creating controllers based on Handel::Cart objects.
+A Helper for creating controllers based on Handel::Cart objects. If no modelclass
+is specified, ::M::Cart is assumed.
 
 =head1 METHODS
 
