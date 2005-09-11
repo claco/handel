@@ -13,7 +13,7 @@ sub mk_compclass {
                          $helper->{'app'} . '::M::Orders';
 
     $helper->mk_dir($dir);
-    $helper->mk_component($helper->{'app'}, 'view', 'TT', 'TT');
+    #$helper->mk_component($helper->{'app'}, 'view', 'TT', 'TT');
     $helper->render_file('controller', $file);
     $helper->render_file('list', file($dir, 'list.tt'));
     $helper->render_file('view', file($dir, 'view.tt'));
