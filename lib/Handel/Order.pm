@@ -23,7 +23,9 @@ __PACKAGE__->columns(All => qw(id shopper type number created updated comments
     billtonightphone billtofax billtoemail shiptosameasbillto
     shiptofirstname shiptolastname shiptoaddress1 shiptoaddress2 shiptoaddress3
     shiptocity shiptostate shiptozip shiptocountry shiptodayphone
-    shiptonightphone shiptofax shiptoemail),
+    shiptonightphone shiptofax shiptoemail)
+);
+__PACKAGE__->columns(
     TEMP => qw(ccn cctype ccm ccy ccvn ccname)
 );
 
@@ -94,7 +96,9 @@ sub new {
     if (defined $cart) {
         my $subtotal = 0;
         my $items = $cart->items(undef, RETURNAS_ITERATOR);
-        $order->shopper($cart->shopper);
+        if ($cart->shopper && !$order->shopper) {
+            $order->shopper($cart->shopper);
+        };
         while (my $item = $items->next) {
             my %copy;
 
