@@ -5,15 +5,19 @@ use warnings;
 use Path::Class;
 
 sub mk_compclass {
-    my ($self, $helper, $model) = @_;
+    my ($self, $helper, $model, $checkout) = @_;
     my $file = $helper->{'file'};
     my $dir  = dir($helper->{'base'}, 'root', $helper->{'uri'});
 
     $helper->{'model'} = $model ? $helper->{'app'} . '::M::' . $model :
                          $helper->{'app'} . '::M::Cart';
 
+    my $couri = $checkout =~ /^(.*::M(odel)?::)?(.*)$/i ? lc($3) : 'checkout';
+    $couri =~ s/::/\//;
+    $helper->{'couri'} = $couri;
+
     $helper->mk_dir($dir);
-    $helper->mk_component($helper->{'app'}, 'view', 'TT', 'TT');
+    #$helper->mk_component($helper->{'app'}, 'view', 'TT', 'TT');
     $helper->render_file('controller', $file);
     $helper->render_file('view', file($dir, 'view.tt'));
     $helper->render_file('list', file($dir, 'list.tt'));
@@ -257,7 +261,7 @@ __view__
                 <form action="[% base _ '[- uri -]/empty/' %]" method="post">
                     <input type="submit" value="Empty Cart">
                 </form>
-                <form action="[% base %]checkout/" method="get">
+                <form action="[% base  _ '/[- couri -]/' %]" method="get">
                     <input type="submit" value="Checkout">
                 </form>
             </td>
@@ -319,8 +323,8 @@ Catalyst::Helper::Controller::Handel::Cart - Helper for Handel::Cart Controllers
 
 =head1 SYNOPSIS
 
-    script/create.pl controller <newclass> Handel::Cart [<modelclass>]
-    script/create.pl controller Cart       Handel::Cart Cart
+    script/create.pl controller <newclass> Handel::Cart [<modelclass> <checkoutcontroller>]
+    script/create.pl controller Cart       Handel::Cart Cart Checkout
 
 =head1 DESCRIPTION
 
