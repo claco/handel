@@ -35,6 +35,17 @@ use warnings;
 use Handel::Constants qw(:returnas :order);
 use base 'Catalyst::Base';
 
+sub begin : Private {
+    my ($self, $c) = @_;
+    my $shopperid = $c->req->cookie('shopperid')->value;
+
+    if (!$shopperid) {
+        $c->res->redirect($c->req->base . 'cart/');
+    } else {
+        $c->stash->{'shopperid'} = $shopperid;
+    };
+};
+
 sub end : Private {
     my ($self, $c) = @_;
 
@@ -80,6 +91,7 @@ use_ok(Catalyst::Test, '[% app %]');
 use_ok('[% class %]');
 __list__
 [% TAGS [- -] %]
+[% USE HTML %]
 <h1>Your Previous Orders</h1>
 <p>
     <a href="[% base _ '[- uri -]/' %]">View Order List</a>
@@ -93,10 +105,10 @@ __list__
     [% WHILE (order = orders.next) %]
         <tr>
             <td align="left">
-                <a href="[% base _ '[- uri -]/view/' _ order.id _ '/' %]">[% order.number %]</a>
+                <a href="[% base _ '[- uri -]/view/' _ order.id _ '/' %]">[% HTML.escape(order.number) %]</a>
             </td>
             <td>
-                [% order.updated %]
+                [% HTML.escape(order.updated) %]
             </td>
         </tr>
     [% END %]
@@ -106,12 +118,13 @@ __list__
 [% END %]
 __view__
 [% TAGS [- -] %]
+[% USE HTML %]
 [% IF order %]
-    <h1>Order# [% order.number %]</h1>
+    <h1>Order# [% HTML.escape(order.number) %]</h1>
     <p>
         <a href="[% base _ '[- uri -]/' %]">View Order List</a>
     </p>
-    <table border="0" csllpadding="3" cellspacing="5">
+    <table border="0" cellpadding="3" cellspacing="5">
         <tr>
             <th colspan="2" align="left">Billing</th>
             <th width="50"></th>
@@ -121,98 +134,118 @@ __view__
             <td colspan="5" height="5">&nbsp;</td>
         </tr>
         <tr>
+            <td align="right">Order Number:</td>
+            <td align="left">[% HTML.escape(order.number) %]</td>
+            <td colspan="3"></td>
+        </tr>
+        <tr>
+            <td align="right">Order Created:</td>
+            <td align="left">[% HTML.escape(order.updated) %]</td>
+            <td colspan="3"></td>
+        </tr>
+        <tr>
+            <td colspan="5" height="5">&nbsp;</td>
+        </tr>
+        <tr>
             <td align="right">First Name:</td>
-            <td align="left">[% order.billtofirstname %]</td>
+            <td align="left">[% HTML.escape(order.billtofirstname) %]</td>
             <td></td>
             <td align="right">First Name:</td>
-            <td align="left">[% order.shiptofirstname %]</td>
+            <td align="left">[% HTML.escape(order.shiptofirstname) %]</td>
         </tr>
         <tr>
             <td align="right">Last Name:</td>
-            <td align="left">[% order.billtolastname %]</td>
+            <td align="left">[% HTML.escape(order.billtolastname) %]</td>
             <td></td>
             <td align="right">Last Name:</td>
-            <td align="left">[% order.shiptolastname %]</td>
+            <td align="left">[% HTML.escape(order.shiptolastname) %]</td>
         </tr>
         <tr>
             <td colspan="5" height="5">&nbsp;</td>
         </tr>
         <tr>
             <td align="right">Address:</td>
-            <td align="left">[% order.billtoaddress1 %]</td>
+            <td align="left">[% HTML.escape(order.billtoaddress1) %]</td>
             <td></td>
             <td align="right">Address:</td>
-            <td align="left">[% order.shiptoaddress1 %]</td>
+            <td align="left">[% HTML.escape(order.shiptoaddress1) %]</td>
         </tr>
         <tr>
             <td align="right"></td>
-            <td align="left">[% order.billtoaddress2 %]</td>
+            <td align="left">[% HTML.escape(order.billtoaddress2) %]</td>
             <td></td>
             <td align="right"></td>
-            <td align="left">[% order.shiptoaddress2 %]</td>
+            <td align="left">[% HTML.escape(order.shiptoaddress2) %]</td>
         </tr>
         <tr>
             <td align="right"></td>
-            <td align="left">[% order.billtoaddress3 %]</td>
+            <td align="left">[% HTML.escape(order.billtoaddress3) %]</td>
             <td></td>
             <td align="right"></td>
-            <td align="left">[% order.shiptoaddress3 %]</td>
+            <td align="left">[% HTML.escape(order.shiptoaddress3) %]</td>
         </tr>
         <tr>
             <td align="right">City:</td>
-            <td align="left">[% order.billtocity %]</td>
+            <td align="left">[% HTML.escape(order.billtocity) %]</td>
             <td></td>
             <td align="right">City:</td>
-            <td align="left">[% order.shiptocity %]</td>
+            <td align="left">[% HTML.escape(order.shiptocity) %]</td>
         </tr>
         <tr>
             <td align="right">State/Province:</td>
-            <td align="left">[% order.billtostate %]</td>
+            <td align="left">[% HTML.escape(order.billtostate) %]</td>
             <td></td>
             <td align="right">State/Province:</td>
-            <td align="left">[% order.shiptostate %]</td>
+            <td align="left">[% HTML.escape(order.shiptostate) %]</td>
         </tr>
         <tr>
             <td align="right">Zip/Postal Code:</td>
-            <td align="left">[% order.billtozip %]</td>
+            <td align="left">[% HTML.escape(order.billtozip) %]</td>
             <td></td>
             <td align="right">Zip/Postal Code:</td>
-            <td align="left">[% order.shiptozip %]</td>
+            <td align="left">[% HTML.escape(order.shiptozip) %]</td>
         </tr>
         <tr>
             <td align="right">Country:</td>
-            <td align="left">[% order.billtocountry %]</td>
+            <td align="left">[% HTML.escape(order.billtocountry) %]</td>
             <td></td>
             <td align="right">Country:</td>
-            <td align="left">[% order.shiptocountry %]</td>
+            <td align="left">[% HTML.escape(order.shiptocountry) %]</td>
         </tr>
         <tr>
             <td align="right">Day Phone:</td>
-            <td align="left">[% order.billtodayphone %]</td>
+            <td align="left">[% HTML.escape(order.billtodayphone) %]</td>
             <td></td>
             <td align="right">Day Phone:</td>
-            <td align="left">[% order.shiptodayphone %]</td>
+            <td align="left">[% HTML.escape(order.shiptodayphone) %]</td>
         </tr>
         <tr>
             <td align="right">Night Phone:</td>
-            <td align="left">[% order.billtonightphone %]</td>
+            <td align="left">[% HTML.escape(order.billtonightphone) %]</td>
             <td></td>
             <td align="right">Night Phone:</td>
-            <td align="left">[% order.shiptonightphone %]</td>
+            <td align="left">[% HTML.escape(order.shiptonightphone) %]</td>
         </tr>
         <tr>
             <td align="right">Fax:</td>
-            <td align="left">[% order.billtofax %]</td>
+            <td align="left">[% HTML.escape(order.billtofax) %]</td>
             <td></td>
             <td align="right">Fax:</td>
-            <td align="left">[% order.shiptofax %]</td>
+            <td align="left">[% HTML.escape(order.shiptofax) %]</td>
         </tr>
         <tr>
             <td align="right">Email:</td>
-            <td align="left">[% order.billtoemail %]</td>
+            <td align="left">[% HTML.escape(order.billtoemail) %]</td>
             <td></td>
             <td align="right">Email:</td>
-            <td align="left">[% order.shiptoemail %]</td>
+            <td align="left">[% HTML.escape(order.shiptoemail) %]</td>
+        </tr>
+        <tr>
+            <td colspan="5" height="5">&nbsp;</td>
+        </tr>
+        <tr>
+            <td align="right" valign="top">Comments:</td>
+            <td colspan="4" valign="top">[% HTML.escape(order.comments) %]</td>
         </tr>
         <tr>
             <td colspan="5" height="5">&nbsp;</td>
@@ -229,28 +262,32 @@ __view__
                     </tr>
                 [% FOREACH item = order.items %]
                     <tr>
-                            <td align="left">[% item.sku %]</td>
-                            <td align="left">[% item.description %]</td>
-                            <td align="right">[% item.price.format(undef, 'FMT_SYMBOL') %]</td>
-                            <td align="center">[% item.quantity %]</td>
-                            <td align="right">[% item.total.format(undef, 'FMT_SYMBOL') %]</td>
+                            <td align="left">[% HTML.escape(item.sku) %]</td>
+                            <td align="left">[% HTML.escape(item.description) %]</td>
+                            <td align="right">[% HTML.escape(item.price.format(undef, 'FMT_SYMBOL')) %]</td>
+                            <td align="center">[% HTML.escape(item.quantity) %]</td>
+                            <td align="right">[% HTML.escape(item.total.format(undef, 'FMT_SYMBOL')) %]</td>
                     </tr>
                 [% END %]
                     <tr>
+                            <td align="right" colspan="4">Subtotal:</td>
+                            <td align="right">[% HTML.escape(order.subtotal.format(undef, 'FMT_SYMBOL')) %]</td>
+                    </tr>
+                    <tr>
                             <td align="right" colspan="4">Tax:</td>
-                            <td align="right">[% order.tax.format(undef, 'FMT_SYMBOL') %]</td>
+                            <td align="right">[% HTML.escape(order.tax.format(undef, 'FMT_SYMBOL')) %]</td>
                     </tr>
                     <tr>
                             <td align="right" colspan="4">Shipping:</td>
-                            <td align="right">[% order.shipping.format(undef, 'FMT_SYMBOL') %]</td>
+                            <td align="right">[% HTML.escape(order.shipping.format(undef, 'FMT_SYMBOL')) %]</td>
                     </tr>
                     <tr>
                             <td align="right" colspan="4">Handling:</td>
-                            <td align="right">[% order.handling.format(undef, 'FMT_SYMBOL') %]</td>
+                            <td align="right">[% HTML.escape(order.handling.format(undef, 'FMT_SYMBOL')) %]</td>
                     </tr>
                     <tr>
                             <td align="right" colspan="4">Total:</td>
-                            <td align="right">[% order.total.format(undef, 'FMT_SYMBOL') %]</td>
+                            <td align="right">[% HTML.escape(order.total.format(undef, 'FMT_SYMBOL')) %]</td>
                     </tr>
                 </table>
             </td>
