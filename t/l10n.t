@@ -41,7 +41,7 @@ BEGIN {
     } catch Handel::Exception with {
         my $E = shift;
         is($E->text,
-            "Le field(s) assuré a échoué des contraintes de base de données");
+            "Le champ recu n'a pas satisfait aux contraintes de base de données");
     };
 
     try {
@@ -49,7 +49,7 @@ BEGIN {
     } catch Handel::Exception with {
         my $E = shift;
         is($E->text,
-            "L'argument fourni est inadmissible ou du type inapproprié");
+            "L'argument fourni est invalide ou du type inapproprié");
     };
 
     ## check translations when -details are included
@@ -66,7 +66,7 @@ BEGIN {
     } catch Handel::Exception with {
         my $E = shift;
         is($E->text,
-            "Le field(s) assuré a échoué des contraintes de base de données: crap happens");
+            "Le champ recu n'a pas satisfait aux contraintes de base de données: crap happens");
     };
 
     try {
@@ -74,7 +74,7 @@ BEGIN {
     } catch Handel::Exception with {
         my $E = shift;
         is($E->text,
-            "L'argument fourni est inadmissible ou du type inapproprié: crap happens");
+            "L'argument fourni est invalide ou du type inapproprié: crap happens");
     };
 };
 
@@ -93,7 +93,7 @@ BEGIN {
     } catch Handel::Exception with {
         my $E = shift;
         is ($E->text,
-            "L'argument fourni est inadmissible ou du type inapproprié: Le param 1 n'est pas une référence d'cInformations PARASITES.");
+            "L'argument fourni est invalide ou du type inapproprié: Le parametre 1 n'est pas une reference a un tableau associatif (HASH).");
     } otherwise {
         fail;
     };
