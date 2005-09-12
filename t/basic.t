@@ -2,7 +2,7 @@
 # $Id$
 use strict;
 use warnings;
-use Test::More tests => 23;
+use Test::More tests => 29;
 
 BEGIN {
     use_ok('Handel');
@@ -44,5 +44,17 @@ BEGIN {
         use_ok('Template::Plugin::Handel::Checkout');
         use_ok('Template::Plugin::Handel::Constants');
         use_ok('Template::Plugin::Handel::Order');
+    };
+
+    SKIP: {
+        eval 'use Catalyst 5.0';
+        skip 'Catalyst 5.0 not installed', 6 if $@;
+
+        use_ok('Catalyst::Helper::Handel::Scaffold');
+        use_ok('Catalyst::Helper::Controller::Handel::Cart');
+        use_ok('Catalyst::Helper::Controller::Handel::Checkout');
+        use_ok('Catalyst::Helper::Controller::Handel::Order');
+        use_ok('Catalyst::Helper::Model::Handel::Cart');
+        use_ok('Catalyst::Helper::Model::Handel::Order');
     };
 };
