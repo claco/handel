@@ -26,13 +26,16 @@ use constant RETURNAS_ARRAY    => 2;
 use constant CHECKOUT_PHASE_INITIALIZE => 1;
 use constant CHECKOUT_PHASE_VALIDATE   => 2;
 use constant CHECKOUT_PHASE_AUTHORIZE  => 4;
-use constant CHECKOUT_PHASE_DELIVER    => 8;
+use constant CHECKOUT_PHASE_FINALIZE   => 8;
+use constant CHECKOUT_PHASE_DELIVER    => 16;
 use constant CHECKOUT_DEFAULT_PHASES   => [CHECKOUT_PHASE_VALIDATE,
                                            CHECKOUT_PHASE_AUTHORIZE,
+                                           CHECKOUT_PHASE_FINALIZE,
                                            CHECKOUT_PHASE_DELIVER];
 use constant CHECKOUT_ALL_PHASES       => [CHECKOUT_PHASE_INITIALIZE,
                                            CHECKOUT_PHASE_VALIDATE,
                                            CHECKOUT_PHASE_AUTHORIZE,
+                                           CHECKOUT_PHASE_FINALIZE,
                                            CHECKOUT_PHASE_DELIVER];
 
 use constant CHECKOUT_STATUS_OK        => 1;
@@ -56,6 +59,7 @@ use constant CHECKOUT_HANDLER_ERROR    => 4;
                 CHECKOUT_PHASE_INITIALIZE
                 CHECKOUT_PHASE_VALIDATE
                 CHECKOUT_PHASE_AUTHORIZE
+                CHECKOUT_PHASE_FINALIZE
                 CHECKOUT_PHASE_DELIVER
                 CHECKOUT_DEFAULT_PHASES
                 CHECKOUT_ALL_PHASES
@@ -86,6 +90,7 @@ use constant CHECKOUT_HANDLER_ERROR    => 4;
         checkout => [ qw(CHECKOUT_PHASE_INITIALIZE
                          CHECKOUT_PHASE_VALIDATE
                          CHECKOUT_PHASE_AUTHORIZE
+                         CHECKOUT_PHASE_FINALIZE
                          CHECKOUT_PHASE_DELIVER
                          CHECKOUT_DEFAULT_PHASES
                          CHECKOUT_ALL_PHASES
@@ -179,6 +184,11 @@ The phase run to validate address, shipping, and other information about an orde
 =head2 CHECKOUT_PHASE_AUTHORIZE
 
 The phase run when ahtorizing or validating credit card or other payment information.
+
+=head2 CHECKOUT_PHASE_FINALIZE
+
+The phase to run and post authorization order cleanup, like setting order number, before
+order delivery/confirmation.
 
 =head2 CHECKOUT_PHASE_DELIVER
 
