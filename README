@@ -9,6 +9,10 @@ DESCRIPTION
 
     For the curious, Handel is German for commerce.
 
+WEBSITE
+    You can get the latest news, source, documentation and wiki help at
+    http://handelframework.com/.
+
 MAILING LIST
     Join the mailing list at
     http://lists.rawmode.org/cgi-bin/mailman/listinfo/handel. Big thanks to
@@ -40,7 +44,7 @@ GOALS
     Public Subversion repository.
     Public Wiki/Docs site.
     Get someone to actually use the damn thing. :-)
-    abstract schema into SQL::Translator scripts
+    Abstract schema into SQL::Translator scripts
 
 WHAT HANDEL IS
     Simple cart and order record maintenance.

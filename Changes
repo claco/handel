@@ -1,14 +1,22 @@
 Revision history for Perl module Handel
 
-0.18_01 --
-    - Added basic Catalyst scaffold support
+0.18_01 Sun Sept 11 22:23:07 2005
+    - Added Catalyst Helpers/Scaffold support
     - Added ; to end of sql statements in sql scripts that makes
         some versions of sqlite unhappy. Found by shenme#catalyst
+    - Added handel.sql SQL Create Script
     - Updated French lexicon with more human-friendly translations sent
         from Bernard FRIT
     - Various README fixes patched by Uwe Voelker
     - Added Cart::destroy method to actually delete cart record
     - Started modularization of Catalyst scaffold
+    - Order::new now copies shopper id from cart when creating a new
+        order from an existing shopping cart when no order shopper is specified
+    - Added temp credit card fields to orders: ccn cctype ccm ccy ccvn ccname
+    - Added CHECKOUT_PHASE_FINALIZE to checkout phases.
+    - Added MArkOrderSaved and AssignOrderNumber checkout plugins
+    - Added Order::reconcile to keep cart items and order items synced
+    - Added SQLite schema sql script and directory
 
 0.18 Mon Aug 22 19:55:13 2005
     - Checkout/Orders code is finished. Handel is now considered
