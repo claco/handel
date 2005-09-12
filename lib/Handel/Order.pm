@@ -266,6 +266,47 @@ sub load {
     };
 };
 
+sub reconcile {
+    my ($self, $cart) = @_;
+
+    my $is_uuid = constraint_uuid($cart);
+
+    if (defined $cart) {
+        throw Handel::Exception::Argument( -details =>
+          translate(
+              'Cart reference is not a HASH reference or Handel::Cart') . '.') unless
+                  (ref($cart) eq 'HASH' or UNIVERSAL::isa($cart, 'Handel::Cart') or $is_uuid);
+
+        if (ref $cart eq 'HASH') {
+            $cart = Handel::Cart->load($cart, RETURNAS_ITERATOR)->first;
+
+            throw Handel::Exception::Order( -details =>
+                translate(
+                    'Could not find a cart matching the supplied search criteria') . '.') unless $cart;
+        } elsif ($is_uuid) {
+            $cart = Handel::Cart->load({id => $cart}, RETURNAS_ITERATOR)->first;
+
+            throw Handel::Exception::Order( -details =>
+                translate(
+                    'Could not find a cart matching the supplied search criteria') . '.') unless $cart;
+        };
+
+        throw Handel::Exception::Order( -details =>
+            translate(
+                'Could not create a new order because the supplied cart is empty') . '.') unless
+                    $cart->count > 0;
+    };
+
+    if ($self->subtotal != $cart->subtotal || $self->count != $cart->count) {
+        $self->clear;
+        my @citems = $cart->items;
+        foreach my $item (@citems) {
+            $self->add($item);
+        };
+        $self->subtotal($cart->subtotal);
+    };
+};
+
 1;
 __END__
 
@@ -465,6 +506,14 @@ called without a filter specified.
 
 A C<Handel::Exception::Argument> exception is thrown if parameter one isn't a
 hashref or undef.
+
+=head2 reconcile($cart)
+
+This method copies the specified carts items into the order only if the item
+count or the subtotal differ.
+
+The cart key can be a cart id (uuid), a cart object, or a hash reference
+contain the search criteria to load matching carts.
 
 =head2 billtofirstname
 
