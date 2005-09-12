@@ -23,12 +23,19 @@ lib/AxKit/XSP/Handel/Cart.pm
 lib/AxKit/XSP/Handel/Checkout.pm
 lib/AxKit/XSP/Handel/Order.pm
 lib/Catalyst/Helper/Handel/Scaffold.pm
+lib/Catalyst/Helper/Controller/Handel/Cart.pm
+lib/Catalyst/Helper/Controller/Handel/Checkout.pm
+lib/Catalyst/Helper/Controller/Handel/Order.pm
+lib/Catalyst/Helper/Model/Handel/Cart.pm
+lib/Catalyst/Helper/Model/Handel/Order.pm
 lib/Handel.pm
 lib/Handel/Cart.pm
 lib/Handel/Cart/Item.pm
 lib/Handel/Checkout.pm
 lib/Handel/Checkout/Message.pm
 lib/Handel/Checkout/Plugin.pm
+lib/Handel/Checkout/Plugin/AssignOrderNumber.pm
+lib/Handel/Checkout/Plugin/MarkOrderSaved.pm
 lib/Handel/ConfigReader.pm
 lib/Handel/Constants.pm
 lib/Handel/Constraints.pm
@@ -51,6 +58,7 @@ MANIFEST
 MANIFEST.SKIP
 META.yml
 README
+sql/handel.sqlite.sql
 t/basic.t
 t/cart_add.t
 t/cart_clear.t
