@@ -214,6 +214,7 @@ use_ok(Catalyst::Test, '[% app %]');
 use_ok('[% class %]');
 __view__
 [% TAGS [- -] %]
+[% USE HTML %]
 <h1>Your Shopping Cart</h1>
 <p>
     <a href="[% base _ '[- uri -]/' %]">View Cart</a> |
@@ -232,16 +233,16 @@ __view__
     [% FOREACH item = cart.items %]
         <tr>
             <form action="[% base _ '[- uri -]/update/' %]" method="post">
-                <input type="hidden" name="id" value="[% item.id %]">
-                <td align="left">[% item.sku %]</td>
-                <td align="left">[% item.description %]</td>
-                <td align="right">[% item.price.format(undef, 'FMT_SYMBOL') %]</td>
-                <td align="center"><input style="text-align: center;" type="text" size="3" name="quantity" value="[% item.quantity %]"></td>
-                <td align="right">[% item.total.format(undef, 'FMT_SYMBOL') %]</td>
+                <input type="hidden" name="id" value="[% HTML.escape(item.id) %]">
+                <td align="left">[% HTML.escape(item.sku) %]</td>
+                <td align="left">[% HTML.escape(item.description) %]</td>
+                <td align="right">[% HTML.escape(item.price.format(undef, 'FMT_SYMBOL')) %]</td>
+                <td align="center"><input style="text-align: center;" type="text" size="3" name="quantity" value="[% HTML.escape(item.quantity) %]"></td>
+                <td align="right">[% HTML.escape(item.total.format(undef, 'FMT_SYMBOL')) %]</td>
                 <td><input type="submit" value="Update"></td>
             </form>
             <form action="[% base _ '[- uri -]/delete/' %]" method="post">
-                <input type="hidden" name="id" value="[% item.id %]">
+                <input type="hidden" name="id" value="[% HTML.escape(item.id) %]">
                 <td>
                     <input type="submit" value="Delete">
                 </td>
@@ -253,7 +254,7 @@ __view__
         </tr>
         <tr>
             <th colspan="4" align="right">Subtotal:</th>
-            <td align="right">[% cart.subtotal.format(undef, 'FMT_SYMBOL') %]</td>
+            <td align="right">[% HTML.escape(cart.subtotal.format(undef, 'FMT_SYMBOL')) %]</td>
             <td colspan="2"></td>
         </tr>
         <tr>
@@ -261,7 +262,7 @@ __view__
                 <form action="[% base _ '[- uri -]/empty/' %]" method="post">
                     <input type="submit" value="Empty Cart">
                 </form>
-                <form action="[% base  _ '/[- couri -]/' %]" method="get">
+                <form action="[% base  _ '[- couri -]/' %]" method="get">
                     <input type="submit" value="Checkout">
                 </form>
             </td>
@@ -276,6 +277,7 @@ __view__
 [% END %]
 __list__
 [% TAGS [- -] %]
+[% USE HTML %]
 <h1>Your Saved Shopping Carts</h1>
 <p>
     <a href="[% base _ '[- uri -]/' %]">View Cart</a> |
@@ -290,22 +292,22 @@ __list__
         </tr>
     [% WHILE (cart = carts.next) %]
         <tr>
-            <td align="left">[% cart.name %]</td>
+            <td align="left">[% HTML.escape(cart.name) %]</td>
             <td>
                 <form action="[% base _ '[- uri -]/restore/' %]" method="POST">
-                    <input type="hidden" name="id" value="[% cart.id %]">
+                    <input type="hidden" name="id" value="[% HTML.escape(cart.id) %]">
                     <select name="mode">
                         [% USE hc = Handel.Constants %]
-                        <option value="[% hc.CART_MODE_APPEND %]">Append</option>
-                        <option value="[% hc.CART_MODE_MERGE %]">Merge</option>
-                        <option value="[% hc.CART_MODE_REPLACE %]">Replace</option>
+                        <option value="[% HTML.escape(hc.CART_MODE_APPEND) %]">Append</option>
+                        <option value="[% HTML.escape(hc.CART_MODE_MERGE) %]">Merge</option>
+                        <option value="[% HTML.escape(hc.CART_MODE_REPLACE) %]">Replace</option>
                     </select>
                     <input type="submit" value="Restore Cart">
                 </form>
             </td>
             <td>
                 <form action="[% base _ '[- uri -]/destroy/' %]" method="POST">
-                    <input type="hidden" name="id" value="[% cart.id %]">
+                    <input type="hidden" name="id" value="[% HTML.escape(cart.id) %]">
                     <input type="submit" value="Delete">
                 </form>
             </td>
