@@ -12,10 +12,12 @@ requires:
   Error: 0.14
   Locale::Maketext: 1.06
   Module::Pluggable: 2.95
+  Path::Class : 0
 build_requires:
   Test::More: 0.48
 recommends:
   AxKit: 1.61
+  Catalyst: 5.33
   Finance-Currency-Convert-WebserviceX: 0.03
   Locale::Currency::Format: 1.22
   Locale::Currency: 2.07
