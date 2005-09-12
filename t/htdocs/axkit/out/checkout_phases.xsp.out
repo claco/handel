@@ -5,9 +5,10 @@
 		<phase>2</phase>
 		<phase>4</phase>
 		<phase>8</phase>
+		<phase>16</phase>
 	</phases>
 	<phases>
 		<phase>4</phase>
-		<phase>8</phase>
+		<phase>16</phase>
 	</phases>
 </body>
