@@ -2,7 +2,7 @@
 name: Handel
 abstract: Simple commerce framework with AxKit/TT2 support
 author: Christopher H. Laco <claco@chrislaco.com>
-version: 0.18_01
+version: 0.19
 version_from: lib/Handel.pm
 installdirs: site
 license: perl
@@ -12,7 +12,8 @@ requires:
   Error: 0.14
   Locale::Maketext: 1.06
   Module::Pluggable: 2.95
-  Path::Class : 0
+  Path::Class: 0
+  File::Find::Rule: 0
 build_requires:
   Test::More: 0.48
 recommends:

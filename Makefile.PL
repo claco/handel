@@ -78,6 +78,7 @@ WriteMakefile(
         'Locale::Maketext'  => '1.06',
         'Module::Pluggable' => '2.95',
         'Path::Class'       => '0',
+        'File::Find::Rule'  => '0'
         %modules
     },
     (ExtUtils::MakeMaker->VERSION >= 6.11) ?
