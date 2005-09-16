@@ -119,7 +119,9 @@ use_ok('Handel::Order');
 ## test for Handel::Exception::Order when Handel::Cart is empty
 {
     try {
-        my $cart = Handel::Cart->construct({});
+        my $cart = Handel::Cart->construct({
+            id => '00000000-0000-0000-0000-000000000000'
+        });
         my $order = Handel::Order->new({cart => $cart});
 
         fail;
