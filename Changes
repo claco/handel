@@ -1,5 +1,10 @@
 Revision history for Perl module Handel
 
+x.xx xxx xxx xx xx:xx:xx xxxx
+    - Catalyst controllers now [starting to] use Data::FormValidator along with
+        better error handling.
+    - Tested with Class::DBI 3.0.5
+
 0.19 Mon Sept 12 21:24:38 2005
     - Added Path::Class/File::Find::Rule PREREQ
     - First official release with Catalyst support
@@ -8,7 +13,7 @@ Revision history for Perl module Handel
     - Added Catalyst Helpers/Scaffold support
     - Added ; to end of sql statements in sql scripts that makes
         some versions of sqlite unhappy. Found by shenme#catalyst
-    - Added handel.sql SQL Create Script
+    - Added handel.sqlite.sql SQL Create Script
     - Updated French lexicon with more human-friendly translations sent
         from Bernard FRIT
     - Various README fixes patched by Uwe Voelker
@@ -18,7 +23,7 @@ Revision history for Perl module Handel
         order from an existing shopping cart when no order shopper is specified
     - Added temp credit card fields to orders: ccn cctype ccm ccy ccvn ccname
     - Added CHECKOUT_PHASE_FINALIZE to checkout phases.
-    - Added MArkOrderSaved and AssignOrderNumber checkout plugins
+    - Added MarkOrderSaved and AssignOrderNumber checkout plugins
     - Added Order::reconcile to keep cart items and order items synced
     - Added SQLite schema sql script and directory
 
