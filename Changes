@@ -3,7 +3,7 @@ Revision history for Perl module Handel
 x.xx xxx xxx xx xx:xx:xx xxxx
     - Catalyst controllers now [starting to] use Data::FormValidator along with
         better error handling.
-    - Tested with Class::DBI 3.0.5
+    - Tested with Class::DBI 3.0.6
 
 0.19 Mon Sept 12 21:24:38 2005
     - Added Path::Class/File::Find::Rule PREREQ
