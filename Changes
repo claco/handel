@@ -1,11 +1,16 @@
 Revision history for Perl module Handel
 
 x.xx xxx xxx xx xx:xx:xx xxxx
-    - Catalyst controllers now uses Data::FormValidator along with
+    - Catalyst controllers now use Data::FormValidator along with
         better error handling
-    - Catalyst Chackout contoller now uses HTML::FillInForm to maintain form
-        state after a POST and there are Data::FormValidator/other errors
-    - Tested with Class::DBI 3.0.6
+    - Catalyst Checkout contoller now uses HTML::FillInForm to maintain form
+        state after a POST when there are Data::FormValidator/other errors
+    - Tested with Class::DBI 3.0.7
+    - Added add_columns to Handel::DBI to add custom columns to
+        Cart/Items/Order/Items
+    - Added item_class to Cart/Order classes to specify the item class
+        to be returned from add/items during subclassing
+    - Added HandelDBIDSN config variable
 
 0.19 Mon Sept 12 21:24:38 2005
     - Added Path::Class/File::Find::Rule PREREQ
@@ -290,6 +295,7 @@ x.xx xxx xxx xx xx:xx:xx xxxx
 
 0.01_01 Mon Dec 27 21:47:04 2004
     - Initial alpha release
+
 
 
 
