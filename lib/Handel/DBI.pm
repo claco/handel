@@ -8,26 +8,27 @@ BEGIN {
     use Handel;
     use Handel::Exception;
     use Handel::L10N qw(translate);
+
+    my $cfg = $Handel::Cfg;
+    my $db_driver  = $cfg->{'HandelDBIDriver'}   || $cfg->{'db_driver'};
+    my $db_host    = $cfg->{'HandelDBIHost'}     || $cfg->{'db_host'};
+    my $db_port    = $cfg->{'HandelDBIPort'}     || $cfg->{'db_port'};
+    my $db_name    = $cfg->{'HandelDBIName'}     || $cfg->{'db_name'};
+    my $db_user    = $cfg->{'HandelDBIUser'}     || $cfg->{'db_user'};
+    my $db_pass    = $cfg->{'HandelDBIPassword'} || $cfg->{'db_pass'};
+    my $db_dsn     = $cfg->{'HandelDBIDSN'}      || $cfg->{'db_dsn'};
+    my $datasource = $db_dsn || "dbi:$db_driver:dbname=$db_name";
+
+    if ($db_host && !$db_dsn) {
+        $datasource .= ";host=$db_host";
+    };
+
+    if ($db_port && !$db_dsn) {
+        $datasource .= ";port=$db_port";
+    };
+
+    __PACKAGE__->connection($datasource, $db_user, $db_pass);
 };
-
-my $cfg = $Handel::Cfg;
-my $db_driver  = $cfg->{'HandelDBIDriver'}   || $cfg->{'db_driver'};
-my $db_host    = $cfg->{'HandelDBIHost'}     || $cfg->{'db_host'};
-my $db_port    = $cfg->{'HandelDBIPort'}     || $cfg->{'db_port'};
-my $db_name    = $cfg->{'HandelDBIName'}     || $cfg->{'db_name'};
-my $db_user    = $cfg->{'HandelDBIUser'}     || $cfg->{'db_user'};
-my $db_pass    = $cfg->{'HandelDBIPassword'} || $cfg->{'db_pass'};
-my $datasource = "dbi:$db_driver:dbname=$db_name";
-
-if ($db_host) {
-    $datasource .= ";host=$db_host";
-};
-
-if ($db_port) {
-    $datasource .= ";port=$db_port";
-};
-
-__PACKAGE__->connection($datasource, $db_user, $db_pass);
 
 sub _croak {
     my ($self, $message, %info) = @_;
@@ -53,6 +54,12 @@ sub _croak {
     };
 
     return;
+};
+
+sub add_columns {
+    my ($class, @columns) = @_;
+
+    $class->columns(All => $class->columns, @columns);
 };
 
 sub has_wildcard {
@@ -95,6 +102,24 @@ Handel::DBI - Base DBI class used by cart/order objects
 
 This is the main base class for Handel objects that access the database. There
 shouldn't be any reason to use this module directly for now.
+
+=head1 METHODS
+
+=head2 add_columns(@columns)
+
+Adds columns to the current objects database schema. This is used to add
+custom fields when subclassing Cart/Items and Order/Items.
+
+    package CustomCart;
+    use base 'Handel::Cart';
+
+    __PACKAGE__->add_columns(qw/created lastskuadded/);
+
+In addition to id/shopper/type/name and description, CustomCart now has create and
+lastskuadded fields.
+
+B<NOTE:> Make sure to alter your database schema to include these
+new fields.
 
 =head1 FUNCTIONS
 
