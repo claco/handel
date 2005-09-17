@@ -1,8 +1,10 @@
 Revision history for Perl module Handel
 
 x.xx xxx xxx xx xx:xx:xx xxxx
-    - Catalyst controllers now [starting to] use Data::FormValidator along with
-        better error handling.
+    - Catalyst controllers now uses Data::FormValidator along with
+        better error handling
+    - Catalyst Chackout contoller now uses HTML::FillInForm to maintain form
+        state after a POST and there are Data::FormValidator/other errors
     - Tested with Class::DBI 3.0.6
 
 0.19 Mon Sept 12 21:24:38 2005
