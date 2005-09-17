@@ -50,6 +50,7 @@ use Handel::Constants qw(:returnas :order :cart :checkout);
 use base 'Catalyst::Base';
 
 our $DFV;
+our $FIF;
 
 # Until this patch [hopefully] get's dumped into DFV 4.03, apply it and
 # update FormValidator.pm verison to 4.03 to make this controller work with
@@ -69,6 +70,11 @@ our $DFV;
 #    }
 
 BEGIN {
+    eval 'use HTML::FillInForm';
+    if (!$@) {
+        $FIF = HTML::FillInForm->new;
+    };
+
     eval 'use Data::FormValidator 4.03';
     if (!$@) {
         $DFV = Data::FormValidator->new({
@@ -209,6 +215,15 @@ sub end : Private {
     my ($self, $c) = @_;
 
     $c->forward('[% app %]::V::TT') unless $c->res->output;
+
+    if ($c->req->method eq 'POST' && $c->stash->{'messages'} && $FIF) {
+        $c->res->output(
+            $FIF->fill(
+                scalarref => \$c->response->{body},
+                fdat => $c->request->parameters
+            )
+        );
+    };
 };
 
 sub default : Local {
