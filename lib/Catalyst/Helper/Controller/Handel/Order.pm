@@ -35,6 +35,46 @@ use warnings;
 use Handel::Constants qw(:returnas :order);
 use base 'Catalyst::Base';
 
+our $DFV;
+
+# Until this patch [hopefully] get's dumped into DFV 4.03, apply it and
+# update FormValidator.pm verison to 4.03 to make this controller work with
+# Data::FormValidator
+#
+#--- Results.pm.orig Wed Aug 31 22:27:27 2005
+#+++ Results.pm  Wed Sep 14 17:40:28 2005
+#@@ -584,7 +584,9 @@
+#    if ($self->has_missing) {
+#        my $missing = $self->missing;
+#        for my $m (@$missing) {
+#-           $msgs{$m} = _error_msg_fmt($profile{format},$profile{missing});
+#+            $msgs{$m} = _error_msg_fmt($profile{format},
+#+                (ref $profile{missing} eq 'HASH' ?
+#+                    ($profile{missing}->{$m} || $profile{missing}->{default} || 'Missing') : $profile{missing}));
+#        }
+#    }
+
+BEGIN {
+    eval 'use Data::FormValidator 4.03';
+    if (!$@) {
+        $DFV = Data::FormValidator->new({
+            orders_view    => {
+                required => [qw/id/],
+                field_filters => {
+                    id => ['trim']
+                },
+                msgs => {
+                    missing => {
+                        default => 'Field is blank!',
+                        id      => 'The order id is required to view an order'
+                    },
+                    format => '%s'
+                }
+            }
+        });
+    };
+};
+
 sub begin : Private {
     my ($self, $c) = @_;
     my $shopperid = $c->req->cookie('shopperid')->value;
@@ -60,12 +100,35 @@ sub default : Private {
 
 sub view : Local {
     my ($self, $c, $id) = @_;
+    my @messages;
+    my $results;
 
-    $c->stash->{'order'} = [% model %]->load({
-        shopper => $c->stash->{'shopperid'},
-        type    => ORDER_TYPE_SAVED,
-        id      => $id
-    }, RETURNAS_ITERATOR)->first;
+    if ($DFV) {
+        $results = $DFV->check({id => $id}, 'orders_view');
+    };
+
+    if ($results || !$DFV) {
+        if ($results) {
+            $id = $results->valid('id');
+        };
+
+        eval {
+            $c->stash->{'order'} = [% model %]->load({
+                shopper => $c->stash->{'shopperid'},
+                type    => ORDER_TYPE_SAVED,
+                id      => $id
+            }, RETURNAS_ITERATOR)->first;
+        };
+        if ($@) {
+            push @messages, $@;
+        };
+    } else {
+        push @messages, map {$_} values %{$results->msgs};
+    };
+
+    if (scalar @messages) {
+        $c->stash->{'messages'} = \@messages;
+    };
 
     $c->stash->{'template'} = '[% uri %]/view.tt';
 };
@@ -96,6 +159,13 @@ __list__
 <p>
     <a href="[% base _ '[- uri -]/' %]">View Order List</a>
 </p>
+[% IF messages %]
+    <ul>
+        [% FOREACH message IN messages %]
+            <li>[% message %]</li>
+        [% END %]
+    </ul>
+[% END %]
 [% IF orders.count %]
     <table border="0" cellpadding="3" cellspacing="5">
         <tr>
@@ -298,6 +368,13 @@ __view__
     <p>
         <a href="[% base _ '[- uri -]/' %]">View Order List</a>
     </p>
+    [% IF messages %]
+        <ul>
+            [% FOREACH message IN messages %]
+                <li>[% message %]</li>
+            [% END %]
+        </ul>
+    [% END %]
     <p>The order requested could not be found.</p>
 [% END %]
 __END__

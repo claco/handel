@@ -62,7 +62,7 @@ BEGIN {
     eval 'use Data::FormValidator 4.03';
     if (!$@) {
         $DFV = Data::FormValidator->new({
-            cart_add    => {
+            cart_add => {
                 required => [qw/sku quantity/],
                 optional => [qw/price description/],
                 field_filters => {

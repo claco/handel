@@ -49,6 +49,114 @@ use Handel::Checkout;
 use Handel::Constants qw(:returnas :order :cart :checkout);
 use base 'Catalyst::Base';
 
+our $DFV;
+
+# Until this patch [hopefully] get's dumped into DFV 4.03, apply it and
+# update FormValidator.pm verison to 4.03 to make this controller work with
+# Data::FormValidator
+#
+#--- Results.pm.orig Wed Aug 31 22:27:27 2005
+#+++ Results.pm  Wed Sep 14 17:40:28 2005
+#@@ -584,7 +584,9 @@
+#    if ($self->has_missing) {
+#        my $missing = $self->missing;
+#        for my $m (@$missing) {
+#-           $msgs{$m} = _error_msg_fmt($profile{format},$profile{missing});
+#+            $msgs{$m} = _error_msg_fmt($profile{format},
+#+                (ref $profile{missing} eq 'HASH' ?
+#+                    ($profile{missing}->{$m} || $profile{missing}->{default} || 'Missing') : $profile{missing}));
+#        }
+#    }
+
+BEGIN {
+    eval 'use Data::FormValidator 4.03';
+    if (!$@) {
+        $DFV = Data::FormValidator->new({
+            checkout_update => {
+                required => [qw/billtofirstname
+                                billtolastname
+                                billtoaddress1
+                                billtocity
+                                billtostate
+                                billtozip
+                                billtocountry
+                                billtoemail
+                                shiptofirstname
+                                shiptolastname
+                                shiptoaddress1
+                                shiptocity
+                                shiptostate
+                                shiptozip
+                                shiptocountry
+                                shiptoemail/],
+                field_filters => {
+                    billtofirstname => ['trim'],
+                    billtolastname  => ['trim'],
+                    billtoaddress1  => ['trim'],
+                    billtocity      => ['trim'],
+                    billtostate     => ['trim'],
+                    billtozip       => ['trim'],
+                    billtocountry   => ['trim'],
+                    billtoemail     => ['trim'],
+                    shiptofirstname => ['trim'],
+                    shiptolastname  => ['trim'],
+                    shiptoaddress1  => ['trim'],
+                    shiptocity      => ['trim'],
+                    shiptostate     => ['trim'],
+                    shiptozip       => ['trim'],
+                    shiptocountry   => ['trim'],
+                    shiptoemail     => ['trim'],
+                },
+                msgs => {
+                    missing => {
+                        default => 'Field is blank!',
+                        billtofirstname => 'The bill to first name field is required',
+                        billtolastname  => 'The bill to last name field is required',
+                        billtoaddress1  => 'The bill to address line 1 field is required',
+                        billtocity      => 'The bill to city field is required',
+                        billtostate     => 'The bill to state field is required',
+                        billtozip       => 'The bill to zip field is required',
+                        billtocountry   => 'The bill to country field is required',
+                        billtoemail     => 'The bill to email field is required',
+                        shiptofirstname => 'The ship to first name field is required',
+                        shiptolastname  => 'The ship to last name field is required',
+                        shiptoaddress1  => 'The ship to address line field is required',
+                        shiptocity      => 'The ship to city field is required',
+                        shiptostate     => 'The ship to state field is required',
+                        shiptozip       => 'The ship to zip field is required',
+                        shiptocountry   => 'The ship to country field is required',
+                        shiptoemail     => 'The ship to email field is required',
+                    },
+                    format => '%s'
+                }
+            },
+            checkout_payment => {
+                required => [qw/ccname cctype ccn ccm ccy/],
+                field_filters => {
+                    ccname => ['trim'],
+                    cctype => ['trim'],
+                    ccn    => ['trim'],
+                    ccm    => ['digit'],
+                    ccy    => ['digit'],
+                    ccvn   => ['digit'],
+                },
+                msgs => {
+                    missing => {
+                        default => 'Field is blank!',
+                        ccname  => 'The credit card name field is required',
+                        cctype  => 'The credit card type field is required',
+                        ccn     => 'The credit card number is required',
+                        ccm     => 'The credit card expiration month field is required',
+                        ccy     => 'The credit card expiration year is required',
+                        ccvn    => 'THe credit card verification number is required'
+                    },
+                    format => '%s'
+                }
+            }
+        });
+    };
+};
+
 sub begin : Private {
     my ($self, $c) = @_;
     my $shopperid = $c->req->cookie('shopperid')->value;
@@ -117,34 +225,56 @@ sub edit : Local {
 
 sub update : Local {
     my ($self, $c) = @_;
+    my @messages;
 
     if ($c->req->method eq 'POST') {
-        my $order = $c->stash->{'order'};
-        if (!$order) {
-            $c->res->redirect($c->req->base . '[% curi %]/');
-        } else {
-            foreach my $param ($c->req->param) {
-                $order->autoupdate(0);
-                if ($order->can($param)) {
-                    if (($order->$param || '') ne ($c->req->param($param || ''))) {
-                        $order->$param($c->req->param($param));
+        my $results;
+
+        if ($DFV) {
+            $results = $DFV->check($c->req->parameters, 'checkout_update');
+        };
+
+        if ($results || !$DFV) {
+            eval {
+                my $order = $c->stash->{'order'};
+                if (!$order) {
+                    $c->res->redirect($c->req->base . '[% curi %]/');
+                } else {
+                    foreach my $param ($c->req->param) {
+                        $order->autoupdate(0);
+                        if ($order->can($param)) {
+                            if (($order->$param || '') ne ($c->req->param($param || ''))) {
+                                $order->$param($c->req->param($param));
+                            };
+                        };
+                        $order->autoupdate(1);
+                        $order->update;
+                    };
+
+                    my $checkout = Handel::Checkout->new({
+                        order  => $order,
+                        phases => 'CHECKOUT_PHASE_VALIDATE'
+                    });
+
+                    if ($checkout->process == CHECKOUT_STATUS_OK) {
+
+                    } else {
+                        push @messages, 'Failed to update your bill to/ship to address!';
+                        push @messages, @{$checkout->messages};
                     };
                 };
-                $order->autoupdate(1);
-                $order->update;
             };
-
-            my $checkout = Handel::Checkout->new({
-                order  => $order,
-                phases => 'CHECKOUT_PHASE_VALIDATE'
-            });
-
-            if ($checkout->process == CHECKOUT_STATUS_OK) {
-                $c->res->redirect($c->req->base . '[% uri %]/preview/');
-            } else {
-                $c->stash->{'messages'} = $checkout->messages;
-                $c->stash->{'template'} = '[% uri %]/edit.tt';
+            if ($@) {
+                push @messages, $@;
             };
+        } else {
+            push @messages, map {$_} values %{$results->msgs};
+        };
+        if (scalar @messages) {
+            $c->stash->{'template'} = '[% uri %]/edit.tt';
+            $c->stash->{'messages'} = \@messages;
+        } else {
+            $c->res->redirect($c->req->base . '[% uri %]/preview/');
         };
     };
 };
@@ -157,37 +287,58 @@ sub preview : Local {
 
 sub payment : Local {
     my ($self, $c) = @_;
+    my @messages;
 
     $c->stash->{'template'} = '[% uri %]/payment.tt';
 
     if ($c->req->method eq 'POST') {
-        my $order = $c->stash->{'order'};
-        if (!$order) {
-            $c->res->redirect($c->req->base . '[% curi %]/');
-        } else {
-            foreach my $param ($c->req->param) {
-                if ($order->can($param)) {
-                    if (($order->$param || '') ne ($c->req->param($param || ''))) {
-                        $order->$param($c->req->param($param));
+        my $results;
+
+        if ($DFV) {
+            $results = $DFV->check($c->req->parameters, 'checkout_payment');
+        };
+
+        if ($results || !$DFV) {
+            eval {
+                my $order = $c->stash->{'order'};
+                if (!$order) {
+                    $c->res->redirect($c->req->base . '[% curi %]/');
+                } else {
+                    foreach my $param ($c->req->param) {
+                        if ($order->can($param)) {
+                            if (($order->$param || '') ne ($c->req->param($param || ''))) {
+                                $order->$param($c->req->param($param));
+                            };
+                        };
+                    };
+
+                    my $checkout = Handel::Checkout->new({
+                        order  => $order,
+                        phases => 'CHECKOUT_PHASE_AUTHORIZE, CHECKOUT_PHASE_FINALIZE, CHECKOUT_PHASE_DELIVERY'
+                    });
+
+                    if ($checkout->process == CHECKOUT_STATUS_OK) {
+                        eval {
+                            [% cmodel %]->destroy({
+                                shopper => $c->stash->{'shopperid'},
+                                type      => CART_TYPE_TEMP
+                            });
+                        };
+                        $c->forward('complete');
+                    } else {
+                        push @messages, @{$checkout->messages};
                     };
                 };
             };
-
-            my $checkout = Handel::Checkout->new({
-                order  => $order,
-                phases => 'CHECKOUT_PHASE_AUTHORIZE, CHECKOUT_PHASE_FINALIZE, CHECKOUT_PHASE_DELIVERY'
-            });
-
-            if ($checkout->process == CHECKOUT_STATUS_OK) {
-                [% cmodel %]->destroy({
-                    shopper => $c->stash->{'shopperid'},
-                    type      => CART_TYPE_TEMP
-                });
-                $c->forward('complete');
-            } else {
-                $c->stash->{'messages'} = $checkout->messages;
+            if ($@) {
+                push @messages, $@;
             };
+        } else {
+            push @messages, map {$_} values %{$results->msgs};
         };
+    };
+    if (scalar @messages) {
+        $c->stash->{'messages'} = \@messages;
     };
 };
 
@@ -329,14 +480,14 @@ __edit__
         <tr>
             <td align="right" valign="top">Comments:</td>
             <td colspan="4" valign="top">
-                <textarea name="comments" cols="45" rows="10">[% HTML.escape(order.comments) %]</textarea>
+                <textarea name="comments" cols="45" rows="10" tabindex="27">[% HTML.escape(order.comments) %]</textarea>
             </td>
         </tr>
         <tr>
             <td colspan="5" height="10">&nbsp;</td>
         </tr>
         <tr>
-            <td colspan="5" align="right"><input type="submit" value="Continue" tabindex="27"></td>
+            <td colspan="5" align="right"><input type="submit" value="Continue" tabindex="28"></td>
         </tr>
     </table>
 </form>
@@ -348,7 +499,13 @@ __preview__
     <a href="[% base _ '[- curi -]/' %]">View Cart</a> |
     <a href="[% base _ '[- uri -]/edit/' %]">Edit Billing/Shipping</a>
 </p>
-
+[% IF messages %]
+    <ul>
+        [% FOREACH message IN messages %]
+            <li>[% message %]</li>
+        [% END %]
+    </ul>
+[% END %]
 <table border="0" cellpadding="3" cellspacing="5">
     <tr>
         <th colspan="2" align="left">Billing</th>
@@ -537,6 +694,17 @@ __payment__
             <td align="left"><input type="text" name="ccname" value=""></td>
         </tr>
         <tr>
+            <td align="right">Credit Card Type:</td>
+            <td align="left">
+                <select name="cctype">
+                    <option>Visa</option>
+                    <option>Mastercard</option>
+                    <option>American Express</option>
+                    <option>Discover</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
             <td align="right">Credit Card Number:</td>
             <td align="left"><input type="text" name="ccn" value=""></td>
         </tr>
@@ -560,6 +728,13 @@ __complete__
 <p>
     <a href="[% base _ '[- ouri -]/list/' %]">View Orders</a>
 </p>
+[% IF messages %]
+    <ul>
+        [% FOREACH message IN messages %]
+            <li>[% message %]</li>
+        [% END %]
+    </ul>
+[% END %]
 <table border="0" cellpadding="3" cellspacing="5">
     <tr>
         <th colspan="2" align="left">Billing</th>
