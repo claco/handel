@@ -195,6 +195,12 @@ The user name used to connect to the server. Defaults to C<commerce>.
 
 The password used to connect to the server. Defaults to C<commerce>.
 
+=head2 HandelDBIDSN
+
+The full data source to the connect to the database. If a dsn is supplied
+the driver/host/port and name are ignored. IF no dsn is supplied, one will
+will be constructed from driver/host/port and name.
+
 =head1 SEE ALSO
 
 L<UUID>, L<Data::UUID>, L<Win32::Guidgen>, L<Win32API::GUID>
