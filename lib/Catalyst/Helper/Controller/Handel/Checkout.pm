@@ -217,10 +217,21 @@ sub end : Private {
     $c->forward('[% app %]::V::TT') unless $c->res->output;
 
     if ($c->req->method eq 'POST' && $c->stash->{'messages'} && $FIF) {
+        ## Merge (erase) DFV Missing/Invalid fields from params before formfill
+        my %missing = ();
+        my %invalid = ();
+        my $results = $c->stash->{'_dfv_results'};
+        if (ref $results) {
+            %missing = map {$_ => ''} ($results->missing);
+            %invalid = map {$_ => ''} ($results->invalid);
+        };
+
+        my %parameters = (%{$c->req->parameters}, %missing, %invalid);
+
         $c->res->output(
             $FIF->fill(
                 scalarref => \$c->response->{body},
-                fdat => $c->request->parameters
+                fdat => \%parameters
             )
         );
     };
@@ -283,6 +294,7 @@ sub update : Local {
                 push @messages, $@;
             };
         } else {
+            $c->stash->{'_dfv_results'} = $results;
             push @messages, map {$_} values %{$results->msgs};
         };
         if (scalar @messages) {
@@ -349,6 +361,7 @@ sub payment : Local {
                 push @messages, $@;
             };
         } else {
+            $c->stash->{'_dfv_results'} = $results;
             push @messages, map {$_} values %{$results->msgs};
         };
     };
