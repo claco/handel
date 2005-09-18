@@ -1,6 +1,6 @@
 Revision history for Perl module Handel
 
-x.xx xxx xxx xx xx:xx:xx xxxx
+0.20 Sat Sept 17 20:56:23 2005
     - Catalyst controllers now use Data::FormValidator along with
         better error handling
     - Catalyst Checkout contoller now uses HTML::FillInForm to maintain form
