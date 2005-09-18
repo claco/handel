@@ -29,8 +29,7 @@ __END__
 
 =head1 NAME
 
-Template::Plugin::Handel::Constants - Template Toolkit plugin for Handel
-constants
+Template::Plugin::Handel::Constants - Template Toolkit plugin for constants
 
 =head1 SYNOPSIS
 
