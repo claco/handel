@@ -2,7 +2,7 @@
 name: Handel
 abstract: Simple commerce framework with AxKit/TT2 support
 author: Christopher H. Laco <claco@chrislaco.com>
-version: 0.19
+version: 0.20
 version_from: lib/Handel.pm
 installdirs: site
 license: perl
@@ -27,5 +27,9 @@ recommends:
   Test::Pod: 1.00
   Test::Pod::Coverage: 1.04
   Test:Strict: 0.05
+no_index:
+  dir:
+    - demo
+    - sql
 distribution_type: module
 generated_by: ExtUtils::MakeMaker version 6.17
