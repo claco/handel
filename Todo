@@ -1,15 +1,10 @@
 TODO list for Perl module Handel (in no particular order):
 
-    - added data valid/fillin form support to Catalyst scaffold
-    - added sprintf formatting to prices when Locale::Currency::Format isn't
-        installed
     - create sql from SQL::Translator schema scripts
     - add taglib test to check for bogus filter names
     - add sql schema and conversions using SQL::Translator
-    - write basic plugins
     - enhance demo sites to use full feature set
-    - add Catalyst demo site
-    - slim Cart taglib code to remove repeated code blocks left for clarity
+    - slim taglib code to remove repeated code blocks left for clarity
     - find translation volunteer other than Google translate
     - clean up cart test variable names
     - add additional cart restore w/filter tests for multiple saved carts
