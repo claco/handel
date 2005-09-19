@@ -1,5 +1,5 @@
 NAME
-    Handel - Simple commerce framework with AxKit/TT2 support
+    Handel - Simple commerce framework with AxKit/TT/Catalyst support
 
 DESCRIPTION
     Handel is a quick and not-so-dirty ecommerce framework with AxKit taglib
