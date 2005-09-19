@@ -1,6 +1,11 @@
 Revision history for Perl module Handel
 
-0.20 Sat Sept 17 20:56:23 2005
+0.21 Mond Sep 19 18:15:23 2005
+    - Fixed proflem with helpers not working on *nix due to CRLF
+        Thanks to Andy Grundman and Bernard FRIT for the help tracking this down
+    - Changed eol-style=LF
+
+0.20 Sat Sep 17 20:56:23 2005
     - Catalyst controllers now use Data::FormValidator along with
         better error handling
     - Catalyst Checkout contoller now uses HTML::FillInForm to maintain form
@@ -12,11 +17,11 @@ Revision history for Perl module Handel
         to be returned from add/items during subclassing
     - Added HandelDBIDSN config variable
 
-0.19 Mon Sept 12 21:24:38 2005
+0.19 Mon Sep 12 21:24:38 2005
     - Added Path::Class/File::Find::Rule PREREQ
     - First official release with Catalyst support
 
-0.18_01 Sun Sept 11 22:23:07 2005
+0.18_01 Sun Sep 11 22:23:07 2005
     - Added Catalyst Helpers/Scaffold support
     - Added ; to end of sql statements in sql scripts that makes
         some versions of sqlite unhappy. Found by shenme#catalyst

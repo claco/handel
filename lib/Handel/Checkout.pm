@@ -289,7 +289,7 @@ __END__
 
 =head1 NAME
 
-Handel::Checkout - Checkout Pipeline Process
+Handel::Checkout - Checkout Pipeline Processor
 
 =head1 SYNOPSIS
 

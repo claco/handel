@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use vars qw($VERSION);
 
-$VERSION = '0.20';
+$VERSION = '0.21';
 
 BEGIN {
     use Handel::ConfigReader;
@@ -54,7 +54,7 @@ __END__
 
 =head1 NAME
 
-Handel - Simple commerce framework with AxKit/TT2 support
+Handel - Simple commerce framework with AxKit/TT/Catalyst support
 
 =head1 DESCRIPTION
 

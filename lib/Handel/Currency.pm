@@ -93,7 +93,7 @@ __END__
 
 =head1 NAME
 
-Handel::Currency - Price container to do currency formatting
+Handel::Currency - Price container to do currency conversion/formatting
 
 =head1 SYNOPSIS
 

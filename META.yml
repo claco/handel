@@ -1,8 +1,8 @@
 --- #YAML:1.0
 name: Handel
-abstract: Simple commerce framework with AxKit/TT2 support
+abstract: Simple commerce framework with AxKit/TT/Catalyst support
 author: Christopher H. Laco <claco@chrislaco.com>
-version: 0.20
+version: 0.21
 version_from: lib/Handel.pm
 installdirs: site
 license: perl
@@ -29,7 +29,7 @@ recommends:
   Test:Strict: 0.05
 no_index:
   dir:
-    - demo
-    - sql
+    - demo/*
+    - sql/*
 distribution_type: module
 generated_by: ExtUtils::MakeMaker version 6.17

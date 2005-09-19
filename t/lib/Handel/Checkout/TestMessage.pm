@@ -1,4 +1,4 @@
-# $Id:$
+# $Id$
 package Handel::Checkout::TestMessage;
 use strict;
 use warnings;

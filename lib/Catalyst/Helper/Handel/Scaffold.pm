@@ -27,7 +27,7 @@ __END__
 
 =head1 NAME
 
-Catalyst::Helper::Handel::Scaffold - Helper for create Handel frameework scaffolding
+Catalyst::Helper::Handel::Scaffold - Helper for creating Handel framework scaffolding
 
 =head1 SYNOPSIS
 
