@@ -3,7 +3,6 @@ package Catalyst::Helper::Handel::Scaffold;
 use strict;
 use warnings;
 use Path::Class;
-use File::Find::Rule;
 
 sub mk_stuff {
     my ($self, $helper, $dsn, $user, $pass, $cart, $order, $checkout) = @_;
