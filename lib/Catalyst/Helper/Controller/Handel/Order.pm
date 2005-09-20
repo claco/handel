@@ -54,7 +54,7 @@ our $DFV;
 #    }
 
 BEGIN {
-    eval 'use Data::FormValidator';
+    eval 'use Data::FormValidator 4.00';
     if (!$@) {
         #############################################################
         # This is here until the patch makes it to release

@@ -58,7 +58,7 @@ our $DFV;
 #    }
 
 BEGIN {
-    eval 'use Data::FormValidator';
+    eval 'use Data::FormValidator 4.00';
     if (!$@) {
         #############################################################
         # This is here until the patch makes it to release
@@ -434,7 +434,7 @@ sub list : Local {
     my @messages;
 
     eval {
-        $c->stash->{'carts'} = MyApp::M::Cart->load({
+        $c->stash->{'carts'} = [% model %]->load({
             shopper => $c->stash->{'shopperid'},
             type    => CART_TYPE_SAVED
         }, RETURNAS_ITERATOR);
@@ -544,7 +544,7 @@ sub destroy : Local {
             };
 
             eval {
-                MyApp::M::Cart->destroy({
+                [% model %]->destroy({
                     id => $id
                 });
             };

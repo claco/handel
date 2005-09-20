@@ -20,7 +20,7 @@ sub mk_compclass {
     $helper->{'curi'} = $curi;
 
     my $ouri = $helper->{'omodel'} =~ /^.*::M(odel)?::(.*)$/i ? lc($2) : 'orders';
-    $curi =~ s/::/\//;
+    $ouri =~ s/::/\//;
     $helper->{'ouri'} = $ouri;
 
     $helper->mk_dir($dir);
@@ -69,7 +69,7 @@ our $FIF;
 #    }
 
 BEGIN {
-    eval 'use HTML::FillInForm';
+    eval 'use HTML::FillInForm 4.00';
     if (!$@) {
         $FIF = HTML::FillInForm->new;
     };
@@ -256,7 +256,7 @@ sub begin : Private {
             }, RETURNAS_ITERATOR)->first;
 
             if (!$order) {
-                $order = MyApp::M::Orders->new({
+                $order = [% omodel %]->new({
                     shopper => $shopperid,
                     cart    => $cart
                 });
