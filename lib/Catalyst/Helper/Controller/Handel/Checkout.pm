@@ -21,11 +21,11 @@ sub mk_compclass {
     $helper->{'omodel'} = $helper->{'app'} . '::M::' . $omodel;
 
     my $curi = $ccontroller =~ /^(.*::C(ontroller)?::)?(.*)$/i ? lc($3) : 'cart';
-    $curi =~ s/::/\//;
+    $curi =~ s/::/\//g;
     $helper->{'curi'} = $curi;
 
     my $ouri = $ocontroller =~ /^(.*::C(ontroller)?::)?(.*)$/i ? lc($3) : 'orders';
-    $ouri =~ s/::/\//;
+    $ouri =~ s/::/\//g;
     $helper->{'ouri'} = $ouri;
 
     $helper->mk_dir($dir);
