@@ -1,5 +1,9 @@
 Revision history for Perl module Handel
 
+0.23 Tue Sep 20 21:17:15 2005
+    - Fixed case where Catalyst helpers weren't replacing :: globally
+        when creating uri in templates
+
 0.22 Tue Sep 20 20:47:36 2005
     - Removed leftover hardcoded MyApp::M calls in Catalyst controllers
     - Catalyst controller helpers now require Data::FormValidator 4.00+
