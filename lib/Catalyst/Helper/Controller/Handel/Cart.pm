@@ -10,7 +10,7 @@ sub mk_compclass {
     my $dir  = dir($helper->{'base'}, 'root', $helper->{'uri'});
 
     $model     ||= 'Cart';
-    $checkout ||= 'Checkout';
+    $checkout  ||= 'Checkout';
 
     $model = $model =~ /^(.*::M(odel)?::)?(.*)$/i ? $3 : 'Cart';
     $helper->{'model'} = $helper->{'app'} . '::M::' . $model;

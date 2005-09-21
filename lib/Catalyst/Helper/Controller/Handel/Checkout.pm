@@ -53,7 +53,7 @@ use warnings;
 use Handel::Checkout;
 use Handel::Constants qw(:returnas :order :cart :checkout);
 use Data::FormValidator 4.00;
-use HTML::FillInForm 1.04
+use HTML::FillInForm 1.04;
 use base 'Catalyst::Base';
 
 our $DFV;
