@@ -2,7 +2,7 @@
 name: Handel
 abstract: Simple commerce framework with AxKit/TT/Catalyst support
 author: Christopher H. Laco <claco@chrislaco.com>
-version: 0.21
+version: 0.22
 version_from: lib/Handel.pm
 installdirs: site
 license: perl
@@ -18,6 +18,8 @@ build_requires:
 recommends:
   AxKit: 1.61
   Catalyst: 5.33
+  Data::FormValidator: 4.00
+  HTML::FillInForm: 1.04
   Finance-Currency-Convert-WebserviceX: 0.03
   Locale::Currency::Format: 1.22
   Locale::Currency: 2.07
@@ -27,8 +29,8 @@ recommends:
   Test::Pod::Coverage: 1.04
   Test:Strict: 0.05
 no_index:
-  dir:
-    - demo/*
-    - sql/*
+  directory:
+    - demo
+    - sql
 distribution_type: module
 generated_by: ExtUtils::MakeMaker version 6.17
