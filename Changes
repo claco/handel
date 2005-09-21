@@ -1,6 +1,6 @@
 Revision history for Perl module Handel
 
-0.22
+0.22 Tue Sep 20 20:47:36 2005
     - Removed leftover hardcoded MyApp::M calls in Catalyst controllers
     - Catalyst controller helpers now require Data::FormValidator 4.00+
     - Tested with Class::DBI 3.0.8
