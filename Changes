@@ -1,5 +1,12 @@
 Revision history for Perl module Handel
 
+0.22
+    - Removed leftover hardcoded MyApp::M calls in Catalyst controllers
+    - Catalyst controller helpers now require Data::FormValidator 4.00+
+    - Tested with Class::DBI 3.0.8
+    - Catalyst helpers are smarter about doing the right thing with
+        MyApp::M(odel)::Cart vs. Cart in arguments
+
 0.21 Mon Sep 19 18:15:23 2005
     - Fixed problem with helpers not working on *nix due to CRLF
         Thanks to Andy Grundman and Bernard FRIT for the help tracking this down
