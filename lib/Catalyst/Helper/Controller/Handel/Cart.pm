@@ -9,11 +9,14 @@ sub mk_compclass {
     my $file = $helper->{'file'};
     my $dir  = dir($helper->{'base'}, 'root', $helper->{'uri'});
 
-    $helper->{'model'} = $model ? $helper->{'app'} . '::M::' . $model :
-                         $helper->{'app'} . '::M::Cart';
+    $model     ||= 'Cart';
+    $checkout ||= 'Checkout';
 
-    my $couri = $checkout =~ /^(.*::M(odel)?::)?(.*)$/i ? lc($3) : 'checkout';
-    $couri =~ s/::/\//;
+    $model = $model =~ /^(.*::M(odel)?::)?(.*)$/i ? $3 : 'Cart';
+    $helper->{'model'} = $helper->{'app'} . '::M::' . $model;
+
+    my $couri = $checkout =~ /^(.*::C(ontroller)?::)?(.*)$/i ? lc($3) : 'checkout';
+    $couri =~ s/::/\//g;
     $helper->{'couri'} = $couri;
 
     $helper->mk_dir($dir);
@@ -37,6 +40,7 @@ package [% class %];
 use strict;
 use warnings;
 use Handel::Constants qw(:returnas :cart);
+use Data::FormValidator 4.00;
 use base 'Catalyst::Base';
 
 our $DFV;
@@ -706,6 +710,19 @@ Catalyst::Helper::Controller::Handel::Cart - Helper for Handel::Cart Controllers
 
 A Helper for creating controllers based on Handel::Cart objects. If no modelclass
 is specified, ::M::Cart is assumed.
+
+Both the modelclass and checkoutcontroller arguments try to do the right thing with the
+names given to them.
+
+For example, you can pass the shortened class name without the MyApp::M/C, or pass the fully
+qualified package name:
+
+    MyApp::M::CartModel
+    MyApp::Model::CartModel
+    CartModel
+
+In all three cases everything before M{odel)|C(ontroller) will be stripped and the class CartModel
+will be used.
 
 =head1 METHODS
 

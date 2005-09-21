@@ -9,8 +9,9 @@ sub mk_compclass {
     my $file = $helper->{'file'};
     my $dir  = dir($helper->{'base'}, 'root', $helper->{'uri'});
 
-    $helper->{'model'} = $model ? $helper->{'app'} . '::M::' . $model :
-                         $helper->{'app'} . '::M::Orders';
+    $model ||= 'Orders';
+    $model = $model =~ /^(.*::M(odel)?::)?(.*)$/i ? $3 : 'Orders';
+    $helper->{'model'} = $helper->{'app'} . '::M::' . $model;
 
     $helper->mk_dir($dir);
     #$helper->mk_component($helper->{'app'}, 'view', 'TT', 'TT');
@@ -33,6 +34,7 @@ package [% class %];
 use strict;
 use warnings;
 use Handel::Constants qw(:returnas :order);
+use Data::FormValidator 4.00;
 use base 'Catalyst::Base';
 
 our $DFV;
@@ -463,6 +465,17 @@ Catalyst::Helper::Controller::Handel::Order - Helper for Handel::Order Controlle
 A Helper for creating controllers based on Handel::Order objects. If no modelclass
 is specified, ::M::Orders is assumed.
 
+The modelclass argument tries to do the right thing with the names given to it.
+
+For example, you can pass the shortened class name without the MyApp::M/C, or pass the fully
+qualified package name:
+
+    MyApp::M::OrderModel
+    MyApp::Model::OrderModel
+    OrderModel
+
+In all three cases everything before M{odel)|C(ontroller) will be stripped and the class OrderModel
+will be used.
 
 =head1 METHODS
 
