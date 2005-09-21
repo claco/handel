@@ -76,12 +76,12 @@ our $FIF;
 #    }
 
 BEGIN {
-    eval 'use HTML::FillInForm 4.00';
+    eval 'use HTML::FillInForm 1.04';
     if (!$@) {
         $FIF = HTML::FillInForm->new;
     };
 
-    eval 'use Data::FormValidator';
+    eval 'use Data::FormValidator 4.00';
     if (!$@) {
         #############################################################
         # This is here until the patch makes it to release
