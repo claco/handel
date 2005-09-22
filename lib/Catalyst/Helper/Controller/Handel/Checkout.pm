@@ -850,6 +850,19 @@ __complete__
         <td colspan="5" height="5">&nbsp;</td>
     </tr>
     <tr>
+        <td align="right">Order Number:</td>
+        <td align="left">[% HTML.escape(order.number) %]</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+        <td align="right">Order Created:</td>
+        <td align="left">[% HTML.escape(order.updated) %]</td>
+        <td colspan="3"></td>
+    </tr>
+    <tr>
+        <td colspan="5" height="5">&nbsp;</td>
+    </tr>
+    <tr>
         <td align="right">First Name:</td>
         <td align="left">[% HTML.escape(order.billtofirstname) %]</td>
         <td></td>
