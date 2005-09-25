@@ -31,6 +31,8 @@ sub wanted {
     my $name = $File::Find::name;
     my $file = fileparse($name);
 
+    return if $name =~ /TestApp/;
+
     if ($name =~ /\.(pm|pl|t)$/i && !exists($trusted{$file})) {
         push @files, $name;
     };
