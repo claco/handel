@@ -76,6 +76,9 @@ t/cart_restore_merge_filter.t
 t/cart_restore_replace.t
 t/cart_restore_replace_filter.t
 t/cart_save.t
+t/catalyst_helpers_controller_cart.t
+t/catalyst_helpers_model_cart.t
+t/catalyst_helpers_model_order.t
 t/checkout_cart.t
 t/checkout_messages.t
 t/checkout_order.t
