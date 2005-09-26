@@ -28,32 +28,6 @@ if (!$@ && Handel->VERSION eq '0.17') {
     sleep 5;
 };
 
-eval 'use Apache::Test 1.16';
-if (!$@) {
-    require Apache::TestMM;
-    Apache::TestMM->import(qw(test clean));
-
-    my @defines;
-
-    eval 'use Apache::Template';
-    if (!$@) {
-        push @defines, 'TT2';
-    };
-
-    ## for whatever reason, use AxKit causes issues
-    ## use-ing A::A::Exception doesn't
-    eval 'use Apache::AxKit::Exception';
-    if (!$@) {
-        push @defines, 'AXKIT';
-    };
-
-    push(@ARGV, '-defines', join(' ', @defines)) if scalar @defines;
-
-    Apache::TestMM::filter_args();
-    Apache::TestMM::generate_script('t/TEST');
-    Apache::TestMM::generate_script('t/SMOKE');
-};
-
 my %modules;
 
 if ($^O eq 'MSWin32') {
@@ -86,5 +60,49 @@ WriteMakefile(
     dist => {
         PREOP => 'pod2text lib/Handel.pm > $(DISTVNAME)/README',
     },
-    clean => { FILES => 'smoke-report-* t/cart*.db t/order*.db t/checkout*.db t/TEST t/SMOKE t/logs t/htdocs/*.db t/TestApp' }
+    clean => { FILES => 'smoke-report-* t/cart*.db t/order*.db t/checkout*.db t/TEST t/SMOKE t/logs t/htdocs/*.db t/TestApp' },
+    test  => { TESTS => join ' ', (glob("t/*.t"))}
 );
+
+package MY;
+sub test {
+    my $self = shift;
+
+    eval 'use Apache::Test 1.16';
+    if (!$@) {
+        require Apache::TestMM;
+        Apache::TestMM->import(qw(test clean));
+
+        my @defines;
+
+        eval 'use Apache::Template';
+        if (!$@) {
+            push @defines, 'TT2';
+        };
+
+        ## for whatever reason, use AxKit causes issues
+        ## use-ing A::A::Exception doesn't
+        eval 'use Apache::AxKit::Exception';
+        if (!$@) {
+            push @defines, 'AXKIT';
+        };
+
+        push(@ARGV, '-defines', join(' ', @defines)) if scalar @defines;
+
+        Apache::TestMM::filter_args();
+        Apache::TestMM::generate_script('t/TEST');
+        Apache::TestMM::generate_script('t/SMOKE');
+
+        my $at = Apache::TestMM->test;
+        my $tests = $self->{'test'} ? $self->{'test'}->{'TESTS'} : '';
+        if ($tests && Apache::Test->VERSION <= 1.26) {
+            $at =~ s/TEST_FILES\s+=/TEST_FILES = $tests\n/;
+        };
+
+        return $at;
+    } else {
+        return $self->SUPER::test;
+    };
+};
+
+1;
