@@ -1,5 +1,8 @@
 Revision history for Perl module Handel
 
+    - Removed -T from Catalyst helpers tests to keep older
+        versions of File::Path/IO::File happy
+
 0.24 Mon Sep 26 20:28:13 2005
     - Added Catalyst Helper tests
 	- Added pod notes about Data::FormValidator/HTML::FillInForm in helpers
