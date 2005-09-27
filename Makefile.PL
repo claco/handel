@@ -40,6 +40,24 @@ if ($^O eq 'MSWin32') {
     %modules = ('Data::UUID' => 0.10);
 };
 
+my @clean = qw(
+    smoke-report-*
+    t/cart*.db
+    t/order*.db
+    t/checkout*.db
+    t/TEST
+    t/SMOKE
+    t/logs
+    t/htdocs/*.db
+    t/TestApp
+    t/conf/apache_test_config.pm
+    t/conf/extra.conf
+    t/conf/httpd.conf
+    t/conf/modperl_inc.pl
+    t/conf/modperl_startup.pl
+    t/htdocs/index.html
+);
+
 WriteMakefile(
     NAME         => 'Handel',
     VERSION_FROM => 'lib/Handel.pm',
@@ -60,7 +78,7 @@ WriteMakefile(
     dist => {
         PREOP => 'pod2text lib/Handel.pm > $(DISTVNAME)/README',
     },
-    clean => { FILES => 'smoke-report-* t/cart*.db t/order*.db t/checkout*.db t/TEST t/SMOKE t/logs t/htdocs/*.db t/TestApp' },
+    clean => { FILES => join ' ', @clean },
     test  => { TESTS => join ' ', (glob("t/*.t"))}
 );
 
