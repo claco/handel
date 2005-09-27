@@ -1,5 +1,9 @@
 Revision history for Perl module Handel
 
+0.24 Mon Sep 26 20:28:13 2005
+    - Added Catalyst Helper tests
+	- Added pod notes about Data::FormValidator/HTML::FillInForm in helpers
+
 0.23 Tue Sep 20 21:17:15 2005
     - Fixed case where Catalyst helpers weren't replacing :: globally
         when creating uri in templates
