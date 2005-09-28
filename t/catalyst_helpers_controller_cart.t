@@ -34,7 +34,7 @@ my $app = 'TestApp';
     chdir('t');
     rmtree('TestApp');
     $helper->mk_app($app);
-    $FindBin::Bin = catdir(cwd, $app, 'bogusdir');
+    $FindBin::Bin = catdir(cwd, $app, 'lib');
 };
 
 
