@@ -32,11 +32,29 @@ sub FETCH {
     my $default = $Defaults{$key} || '';
     my $value   = '';
 
-    if ($ENV{MOD_PERL}) {
-        require Apache;
-        my $r = Apache->request;
+    if (exists $ENV{MOD_PERL_API_VERSION} && $ENV{MOD_PERL_API_VERSION} == 2) {
+        require Apache2::RequestRec;
+        require Apache2::RequestUtil;
+        require Apache2::RequestIO;
+        require Apache2::ServerUtil;
 
-        $value = $r->dir_config($key) || $ENV{$key} || $default;
+        my $c = eval {
+            Apache2::RequestUtil->request || Apache2::ServerUtil->server;
+        };
+
+        if ($c) {
+            $value = $c->dir_config($key) || $ENV{$key} || $default;
+        };
+    } elsif ($ENV{MOD_PERL}) {
+        require Apache;
+
+        my $c = eval {
+            Apache->request || Apache->server;
+        };
+
+        if ($c) {
+            $value = $c->dir_config($key) || $ENV{$key} || $default;
+        };
     };
 
     if (!$value) {
