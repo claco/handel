@@ -149,11 +149,12 @@ BEGIN {
 
 sub begin : Private {
     my ($self, $c) = @_;
-    my $shopperid = $c->req->cookie('shopperid')->value;
+    my $shopperid = $c->req->cookie('shopperid');
 
-    if (!$shopperid) {
+    if (!$shopperid || !$shopperid->value) {
         $c->res->redirect($c->req->base . 'cart/');
     } else {
+        $shopperid = $shopperid->value;
         $c->stash->{'shopperid'} = $shopperid;
     };
 };
