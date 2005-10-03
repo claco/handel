@@ -12,7 +12,12 @@ BEGIN {
     $Handel::Cfg = Handel::ConfigReader->new;
 
     my $uuidsub;
-    if (eval{require UUID}) {
+
+    if (eval{require APR::UUID}) {
+        $uuidsub = sub {
+            return APR::UUID->new->format;
+        };
+    } elsif (eval{require UUID}) {
         $uuidsub = sub {
             my ($uuid, $uuidstring);
             UUID::generate($uuid);
