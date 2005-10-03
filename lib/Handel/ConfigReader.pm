@@ -2,15 +2,33 @@
 package Handel::ConfigReader;
 use strict;
 use warnings;
-use vars qw(%Defaults);
-use Tie::Hash;
-use base 'Tie::StdHash';
+use vars qw(%Defaults $MOD_PERL);
 
 %Defaults = (
     HandelMaxQuantityAction => 'Adjust',
     HandelCurrencyCode      => 'USD',
     HandelCurrencyFormat    => 'FMT_STANDARD'
 );
+
+BEGIN {
+    use Tie::Hash;
+    use base 'Tie::StdHash';
+
+    if (exists $ENV{MOD_PERL_API_VERSION} && $ENV{MOD_PERL_API_VERSION} == 2) {
+        require Apache2::RequestRec;
+        require Apache2::RequestUtil;
+        require Apache2::RequestIO;
+        require Apache2::ServerUtil;
+
+        $MOD_PERL = 2;
+    } elsif ($ENV{MOD_PERL}) {
+        require Apache;
+
+        $MOD_PERL = 1;
+    } else {
+        $MOD_PERL = 0;
+    };
+};
 
 sub new {
     my $class = shift;
@@ -32,22 +50,15 @@ sub FETCH {
     my $default = $Defaults{$key} || '';
     my $value   = '';
 
-    if (exists $ENV{MOD_PERL_API_VERSION} && $ENV{MOD_PERL_API_VERSION} == 2) {
-        require Apache2::RequestRec;
-        require Apache2::RequestUtil;
-        require Apache2::RequestIO;
-        require Apache2::ServerUtil;
-
+    if ($MOD_PERL == 2) {
         my $c = eval {
             Apache2::RequestUtil->request || Apache2::ServerUtil->server;
         };
 
         if ($c) {
-            $value = $c->dir_config($key) || $ENV{$key} || $default;
+            $value = eval{$c->dir_config($key)} || $ENV{$key} || $default;
         };
-    } elsif ($ENV{MOD_PERL}) {
-        require Apache;
-
+    } elsif ($MOD_PERL == 1) {
         my $c = eval {
             Apache->request || Apache->server;
         };
