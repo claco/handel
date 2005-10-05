@@ -1,5 +1,9 @@
 Revision history for Perl module Handel
 
+0.26 Tue Oct 4 20:12:56 2005
+    - Fixed Exception creation after triggers under Class::DBI 3.0.9
+    - Handel::DBI no uses Class::DBI->insert in Class::DBI 3.0.9+
+
 0.25 Sun Oct 3 20:15:35 2005
     - Removed -T from Catalyst helpers tests to keep older
         versions of File::Path/IO::File happy
