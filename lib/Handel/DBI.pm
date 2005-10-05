@@ -40,7 +40,7 @@ sub _croak {
             -details =>
             join(' ' . translate('has invalid value') . ', ', keys %$data)
         );
-    } elsif ($method eq 'create') {
+    } elsif ($method =~ /(create|insert)/i) {
         my $details;
 
         if ($message =~ /insert new.*column\s+(.*)\s+is not unique/) {
@@ -70,6 +70,16 @@ sub has_wildcard {
     };
 
     return undef;
+};
+
+sub insert {
+    my ($self, $data) = @_;
+
+    if (Class::DBI->can('insert')) {
+        return $self->SUPER::insert($data);
+    } else {
+        return $self->SUPER::create($data);
+    };
 };
 
 sub uuid {
