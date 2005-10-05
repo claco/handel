@@ -90,7 +90,7 @@ sub new {
                     $cart->count > 0;
     };
 
-    my $order = $self->create($data);
+    my $order = $self->insert($data);
 
     if (defined $cart) {
         my $subtotal = 0;

@@ -35,7 +35,7 @@ sub new {
         $data->{'type'} = CART_TYPE_TEMP;
     };
 
-    return $self->create($data);
+    return $self->insert($data);
 };
 
 sub add {
