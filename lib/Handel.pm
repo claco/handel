@@ -290,6 +290,16 @@ This keeps me honest and makes sure I always C<use strict>.
 
 =back
 
+=head1 CAVEATS
+
+When using item_class to specify the item class returned from add/items in your
+subclass under Class::DBI < 3.0.8, the item_class specified will be returned from
+all cart classes, including Handel::Cart itself. In most cases, people are only
+using one subclass of Handel::Cart so this won't effect them.
+
+If you plan on using multiple subclasses of Handel::Cart that may or may not
+return custom items, upgrade your Class::DBI to version 3.0.8 or greater.
+
 =head1 SEE ALSO
 
 L<Handel::Cart>
