@@ -196,9 +196,13 @@ sub delete {
 sub item_class {
     my ($class, $item_class) = @_;
 
-    undef(*_items);
-    undef(*add_to__items);
-    __PACKAGE__->has_many(_items => $item_class, 'orderid');
+    if (Class::DBI->VERSION < 3.000008) {
+        undef(*_items);
+        undef(*add_to__items);
+        __PACKAGE__->has_many(_items => $item_class, 'orderid');
+    } else {
+        $class->has_many(_items => $item_class, 'orderid');
+    };
 };
 
 sub items {
