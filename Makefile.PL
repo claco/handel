@@ -45,6 +45,7 @@ my @clean = qw(
     t/cart*.db
     t/order*.db
     t/checkout*.db
+    t/subclassing.db
     t/TEST
     t/SMOKE
     t/logs
