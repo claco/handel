@@ -391,6 +391,9 @@ t/lib/Handel/Checkout/Plugin/TestPlugin.pm
 t/lib/Handel/Checkout/Plugin/TestBogusPlugin.pm
 t/lib/Handel/Checkout/TestMessage.pm
 t/lib/Handel/OtherTestPlugins/Second.pm
+t/lib/Handel/Subclassing/Cart.pm
+t/lib/Handel/Subclassing/CartOnly.pm
+t/lib/Handel/Subclassing/Item.pm
 t/lib/Handel/TestHelper.pm
 t/lib/Handel/TestPipeline/InitializeTotals.pm
 t/lib/Handel/TestPipeline/ValidateError.pm
@@ -414,6 +417,7 @@ t/sql/cart_fake_data.sql
 t/sql/order_create_table.sql
 t/sql/order_delete_data.sql
 t/sql/order_fake_data.sql
+t/subclassing.t
 t/TEST.PL
 t/tt2_cart.t
 t/tt2_checkout.t
