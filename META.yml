@@ -18,6 +18,7 @@ build_requires:
 recommends:
   AxKit: 1.61
   Catalyst: 5.33
+  Class::DBI: 3.0.8
   Data::FormValidator: 4.00
   HTML::FillInForm: 1.04
   Finance-Currency-Convert-WebserviceX: 0.03
