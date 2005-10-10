@@ -11,7 +11,7 @@ if (Test::More->VERSION < 0.48) {
     print "Test::More < 0.48 sometimes causes test failures with\n";
     print "Class::DBI/IMA::DBI. Please consider updating Test::More\n";
     print "to version 0.48 or greater if you experience test failures\n";
-    print "with 'attemt to free unreferenced scalar' errors.\n";
+    print "with 'attempt to free unreferenced scalar' errors.\n";
     print "----------------------------------------------------------\n";
     sleep 5;
 };
@@ -23,7 +23,7 @@ if (!$@ && Handel->VERSION eq '0.17') {
     print "BREAKING API CHANGES!!!!\n\n";
     print "Handel::Order >= 0.18 is incompatable with Handel::Order\n";
     print "version 0.17 only. Earlier versions of Handel without\n";
-    print "Handel::ORder arenot effected.\n";
+    print "Handel::Order are not effected.\n";
     print "----------------------------------------------------------\n";
     sleep 5;
 };
