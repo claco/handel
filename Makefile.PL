@@ -39,6 +39,33 @@ if ($^O eq 'MSWin32') {
 } else {
     %modules = ('Data::UUID' => 0.10);
 };
+if (eval {require APR::UUID}) {
+    %modules = ();
+};
+
+eval 'use Apache::Test 1.27';
+if (!$@) {
+    require Apache::TestMM;
+    Apache::TestMM->import(qw(test clean));
+
+    my @defines;
+    eval 'use Apache::Template';
+    if (!$@) {
+        push @defines, 'TT2';
+    };
+
+    ## for whatever reason, use AxKit causes issues
+    ## use-ing A::A::Exception doesn't
+    eval 'use Apache::AxKit::Exception';
+    if (!$@) {
+        push @defines, 'AXKIT';
+    };
+
+    push(@ARGV, '-defines', join(' ', @defines)) if scalar @defines;
+    Apache::TestMM::filter_args();
+    Apache::TestMM::generate_script('t/TEST');
+    Apache::TestMM::generate_script('t/SMOKE');
+};
 
 my @clean = qw(
     smoke-report-*
@@ -82,46 +109,3 @@ WriteMakefile(
     clean => { FILES => join ' ', @clean },
     test  => { TESTS => join ' ', (glob("t/*.t"))}
 );
-
-package MY;
-sub test {
-    my $self = shift;
-
-    eval 'use Apache::Test 1.16';
-    if (!$@) {
-        require Apache::TestMM;
-        Apache::TestMM->import(qw(test clean));
-
-        my @defines;
-
-        eval 'use Apache::Template';
-        if (!$@) {
-            push @defines, 'TT2';
-        };
-
-        ## for whatever reason, use AxKit causes issues
-        ## use-ing A::A::Exception doesn't
-        eval 'use Apache::AxKit::Exception';
-        if (!$@) {
-            push @defines, 'AXKIT';
-        };
-
-        push(@ARGV, '-defines', join(' ', @defines)) if scalar @defines;
-
-        Apache::TestMM::filter_args();
-        Apache::TestMM::generate_script('t/TEST');
-        Apache::TestMM::generate_script('t/SMOKE');
-
-        my $at = Apache::TestMM->test;
-        my $tests = $self->{'test'} ? $self->{'test'}->{'TESTS'} : '';
-        if ($tests && Apache::Test->VERSION <= 1.26) {
-            $at =~ s/TEST_FILES\s+=/TEST_FILES = $tests\n/;
-        };
-
-        return $at;
-    } else {
-        return $self->SUPER::test;
-    };
-};
-
-1;
