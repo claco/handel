@@ -25,7 +25,7 @@ BEGIN {
     use_ok('Catalyst::Helper');
 };
 
-my $helper = Catalyst::Helper->new;
+my $helper = Catalyst::Helper->new({short => 1});
 my $app = 'TestApp';
 
 
