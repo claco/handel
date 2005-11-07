@@ -8,7 +8,7 @@ use File::Path;
 use File::Spec::Functions;
 
 BEGIN {
-    eval 'use Catalyst';
+    eval 'use Catalyst 5';
     plan(skip_all =>
         'Catalyst 5 not installed') if $@;
 
