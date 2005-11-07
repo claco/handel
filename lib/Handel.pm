@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use vars qw($VERSION);
 
-$VERSION = '0.26';
+$VERSION = '0.27';
 
 BEGIN {
     use Handel::ConfigReader;
