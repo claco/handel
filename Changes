@@ -1,5 +1,12 @@
 Revision history for Perl module Handel
 
+0.27 SUn Nov 13 12:08:38 2005
+    - Tested with Class::DBI 3.0.12
+    - Require Apache-Test 1.27
+    - Added IfDefine APACHE1 block to ignore AxKit under Apache2
+    - Catalyst helper tests now use short => 1 under Catalyst 5.5
+    - Added Traditional Chinese L10N by Kang-min Liu
+
 0.26 Wed Oct 5 21:12:56 2005
     - Tested with Class::DBI 3.0.9
     - Fixed Exception creation after triggers under Class::DBI 3.0.9
