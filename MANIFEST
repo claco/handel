@@ -46,6 +46,7 @@ lib/Handel/Iterator.pm
 lib/Handel/L10N.pm
 lib/Handel/L10N/en_us.pm
 lib/Handel/L10N/fr.pm
+lib/Handel/L10N/zh_tw.pm
 lib/Handel/Order.pm
 lib/Handel/Order/Item.pm
 lib/Template/Plugin/Handel/Cart.pm
