@@ -1,6 +1,10 @@
 Revision history for Perl module Handel
 
-0.27 SUn Nov 13 12:08:38 2005
+0.28
+    - Added pod_spelling.t tests which don't run by default
+    - Corrected a boatload of spelling errors :-)
+
+0.27 Sun Nov 13 12:08:38 2005
     - Tested with Class::DBI 3.0.12
     - Require Apache-Test 1.27
     - Added IfDefine APACHE1 block to ignore AxKit under Apache2
