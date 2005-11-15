@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use vars qw($VERSION);
 
-$VERSION = '0.27';
+$VERSION = '0.28';
 
 BEGIN {
     use Handel::ConfigReader;
@@ -92,15 +92,15 @@ Any interaction with forms, web pages, browser, cookies, etc is the responsibili
 
 =item Checkout agnostic. A checkout process means different things to different people in
 different situations. The Handel checkout pipeline by itself does absolutely nothing with
-an order. It is instead a plugin manager that allows you to specifiy and build plugins to do
-various actions (payment autorization, address validation, fax delivery, etc). Each site, server, page,
-even process() call can have it's own uniquie order processing pipeline.
+an order. It is instead a plugin manager that allows you to specify and build plugins to do
+various actions (payment authorization, address validation, fax delivery, etc). Each site, server, page,
+even process() call can have it's own unique order processing pipeline.
 
 =item Easy integration into AxKit using taglibs.
 
 =item Easy integration into TT2 using plugins.
 
-=item Easy intrgration into Catalyst using plugins.
+=item Easy integration into Catalyst using plugins.
 
 =item Easy integration into other systems using SOAP.
 
@@ -168,8 +168,8 @@ feature complete working demos sites so people can still quick-start their own p
 =head2 Prerequisites
 
 The following modules are required for Handel to work properly. Older versions
-may work fine, but hese are the versions I have installed and verified to
-work correctly. IF you have older versious and all tests pass, send me an email
+may work fine, but these are the versions I have installed and verified to
+work correctly. If you have older versions and all tests pass, send me an email
 and I'll lower the version requirements.
 
 =over
@@ -256,7 +256,7 @@ C<Test::More> version 0.48 or greater.
 The C<Test::More> included with perl 5.8.4 and C<Test::More> <= 0.48 have issues
 with ithreads that usually cause crashes in tests that use C<Class::DBI> or
 C<DBIx:ContextualFetch>. The errors usual mention
-"attempt to free unreferenced scalar". If you reveive these during C<make test>,
+"attempt to free unreferenced scalar". If you receive these during C<make test>,
 try upgrading C<Test::More>.
 
 =item Pod::Coverage
