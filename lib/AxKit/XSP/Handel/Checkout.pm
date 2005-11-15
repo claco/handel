@@ -419,7 +419,7 @@ the orders uuid value:
 
 =head2 <checkout:ok>
 
-If process suceeds, anything in the ok block is run:
+If process succeeds, anything in the ok block is run:
 
     <checkout:new>
         <checkout:process>

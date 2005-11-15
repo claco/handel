@@ -108,13 +108,13 @@ A plugin can register any number of methods with any number of phases.
 
 Each time a checkout pipeline is processed, the C<setup> method is called
 on all registered plugins to allow each plugin to perform any
-necessary preperation before its registered handler subs are called.
+necessary preparation before its registered handler subs are called.
 
 =head2 teardown
 
 Each time a checkout pipeline is finished being processed, the
 C<teardown> method is called on all registered plugins to allow each plugin
-to performa any cleanup it may need to do.
+to perform any cleanup it may need to do.
 
 =head2 name
 

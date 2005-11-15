@@ -137,7 +137,7 @@ unexpected things happen.
 =head2 Handel::Exception
 
 This is the base exception thrown in C<Handel>. All other exceptions subclass
-C<Handel::Exception> so it's possibl to catch all Handel generated exceptions
+C<Handel::Exception> so it's possible to catch all Handel generated exceptions
 with a single C<catch> statement.
 
     try {

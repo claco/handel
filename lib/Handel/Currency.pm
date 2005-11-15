@@ -110,7 +110,7 @@ Handel::Currency - Price container to do currency conversion/formatting
 =head1 DESCRIPTION
 
 The C<Handel::Currency> module provides basic currency formatting within
-Handel. It can be used seperately to format any number into a more friendly
+Handel. It can be used separately to format any number into a more friendly
 format:
 
     my $price = 1.23;
@@ -134,7 +134,7 @@ based price.
 =head2 new
 
 The create a new Handel::Currency instance, simply call C<new> and pass in the
-price to be formated:
+price to be formatted:
 
     my $currency = Handel::Currency->new(10.23);
 
@@ -142,10 +142,10 @@ price to be formated:
 
 =head2 format([$code, $options])
 
-The C<format> method returns the freshly formated price in a currency and
+The C<format> method returns the freshly formatted price in a currency and
 format declared in C<Locale::Currency::Format>. If no currency code or
 format are specified, the defaults values from C<Handel::ConfigReader> are
-used. Currencly those defaults are C<USD> and C<FMT_STANDARD>.
+used. Currently those defaults are C<USD> and C<FMT_STANDARD>.
 
 It is also acceptable to specify different default values.
 See L</"CONFIGURATION"> and C<Handel::ConfigReader> for further details.

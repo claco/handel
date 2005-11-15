@@ -118,7 +118,7 @@ the same:
     my $setting = $cfg->get('Setting');
     my $setting = $cfg->{'Setting'};
 
-Thie latter is the preferred usage in anticipation of als integrating
+The latter is the preferred usage in anticipation of also integrating
 Apache::ModuleConfig and custom directives which use the same hash syntax.
 
 =head1 CONSTRUCTOR
@@ -164,7 +164,7 @@ C<HandelMaxQuantityAction> below.
 =head2 HandelMaxQuantityAction (Adjust|Exception)
 
 This option defines what action should be taken when a cart items quantity is being set
-to something above C<HandelMaxQuantity>. When set to C<Adjust> the quantity qill simple
+to something above C<HandelMaxQuantity>. When set to C<Adjust> the quantity will simply
 be reset to C<HandelMaxQuantity> and no exception will be raised. This is the default
 action.
 
@@ -225,7 +225,7 @@ In the example above, the checkout plugin search path will load all plugins
 in the MyApp::Plugins::* namespace (but not MyApp::Plugin itself). Any plugins
 in Handel::Checkout::Plugin::* will be ignored.
 
-You can also pass a comma or space seperate list of namespaces.
+You can also pass a comma or space separate list of namespaces.
 
     PerlSetVar HandelPluginPaths 'MyApp::Plugins, OtherApp::Plugins'
 
@@ -235,7 +235,7 @@ will be ignored.
 =head2 HandelAddPluginPaths
 
 This adds an additional plugin search paths. This can be a comma or space
-seperated list of namespaces.
+separated list of namespaces.
 
     PerlSetVar HandelAddPluginPaths  'MyApp::Plugins, OtherApp::Plugins'
 
@@ -248,7 +248,7 @@ will be ignored.
 
 =head2 HandelIgnorePlugins
 
-This is a comma/space seperated list [or an anonymous array, or a regex outside of httpd.conf] of plugins to ignore when loading
+This is a comma/space separated list [or an anonymous array, or a regex outside of httpd.conf] of plugins to ignore when loading
 all available plugins in the given namespaces.
 
     PerlSetVar HandelIgnorePlugins 'Handel::Checkout::Plugin::Initialize'
@@ -273,7 +273,7 @@ they will be ignored.
 
 =head2 HandelLoadPlugins
 
-This is a comma or space seperated list [or an anonymous array, or a regex outside of httpd.conf] of plugins to be loaded from the available namespaces.
+This is a comma or space separated list [or an anonymous array, or a regex outside of httpd.conf] of plugins to be loaded from the available namespaces.
 
     PerlSetVar HandelLoadPlugins 'Handel::Checkout::Plugin::ValidateAddress'
 

@@ -54,11 +54,11 @@ C<Handel::Checkout>. It's API is exactly the same as C<Handel::Checkout> with a 
 minor exceptions noted below.
 
 Since C<new> is used by TT2 to load plugins, Handel::Checkouts
-C<new> can be accesed using C<create>.
+C<new> can be accessed using C<create>.
 
 Starting in version C<0.08>, C<Handel::Constants> are now imported into this
 module automatically. This removes the need to use
-C<Template::Plugin::Handel::Constants> seperately when working with carts.
+C<Template::Plugin::Handel::Constants> separately when working with carts.
 
     [% USE hc = Handel.Constants %]
     [% cart = hc.create(...) %]
@@ -67,7 +67,7 @@ C<Template::Plugin::Handel::Constants> seperately when working with carts.
 =head1 CAVEATS
 
 C<Template Toolkit> handles method params in a smart fashion that
-allows you to pass named parameters into methoda and it will convert them
+allows you to pass named parameters into methods and it will convert them
 into HASH references.
 
 For example:
@@ -78,7 +78,7 @@ is turned into:
 
     checkout->method(otherarg, {name1=>val1, name2=>val2});
 
-Unfortunatly, it looks like TT2 reverses the @ARGS order during translation.
+Unfortunately, it looks like TT2 reverses the @ARGS order during translation.
 This causes problems with C<Handel::Order::load> and C<items> as they expect
 C<($hashref, $wantiterator)> instead.
 

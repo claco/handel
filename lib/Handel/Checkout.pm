@@ -347,7 +347,7 @@ to be passed.
 
 =item pluginpaths
 
-An array reference or a comma (or space) seperated list containing the various
+An array reference or a comma (or space) separated list containing the various
 namespaces of plugins to be loaded. This will override any settings in
 C<ENV> or F<httpd.conf> for the current checkout instance only.
 
@@ -364,7 +364,7 @@ plugin search paths.
 
 =item addpluginpaths
 
-An array reference or a comma (or space) seperated list containing the various
+An array reference or a comma (or space) separated list containing the various
 namespaces of plugin paths in addition to Handel::Checkout::Plugin to be loaded.
 If C<HandelAddPluginPaths> is also specified, the two will be combined.
 
@@ -381,7 +381,7 @@ plugin search paths.
 
 =item loadplugins
 
-An array reference or a comma (or space) seperated list containing the
+An array reference or a comma (or space) separated list containing the
 names of the specific plugins to load in the current plugin paths.
 
 See L<"HandelLoadPlugins"> for more information about loading specific
@@ -389,7 +389,7 @@ plugins.
 
 =item ignoreplugins
 
-An array reference or a comma (or space) seperated list containing the
+An array reference or a comma (or space) separated list containing the
 names of the specific plugins to be ignored (not loaded)
 in the current plugin paths.
 
@@ -398,7 +398,7 @@ plugins.
 
 =item phases
 
-An array reference or a comma (or space) seperated list containing the
+An array reference or a comma (or space) separated list containing the
 various phases to be executed.
 
     my $checkout = Handel::Checkout->new({
@@ -450,7 +450,7 @@ properties will be set.
 =head2 cart
 
 Creates a new Handel::Order object from the specified cart and associates
-that order with the current checkout process. This is typeically only needed
+that order with the current checkout process. This is typically only needed
 the first time you want to run checkout for a specific cart. From then on,
 you only need to load the already created order using C<order> below.
 
@@ -556,7 +556,7 @@ will be loaded and associated with the current checkout process.
 =head2 phases(\@phases)
 
 Get/Set the phases active for the current checkout process. This can be
-an array reference or a comma (or space) seperated string:
+an array reference or a comma (or space) separated string:
 
     $checkout->phases([
         CHECKOUT_PHASE_INITIALIZE,
@@ -573,10 +573,10 @@ out of order. Returns a list in list context and an array reference in scalar co
 
 Executes the current checkout process pipeline and returns CHECKOUT_STATUS_*.
 Any plugin handler that doesn't return CHECKOUT_HANDLER_OK or CHECKOUT_HANDLER_DECLINE
-is considered to be an error that the chekcout process is aborted.
+is considered to be an error that the checkout process is aborted.
 
 Just like C<phases>, you can pass an array reference or a comma (or space)
-seperated string of phases into process.
+separated string of phases into process.
 
 The call to C<process> will return on of the following constants:
 
@@ -615,7 +615,7 @@ In the example above, the checkout plugin search path will load all plugins
 in the MyApp::Plugins::* namespace (but not MyApp::Plugin itself). Any plugins
 in Handel::Checkout::Plugin::* will be ignored.
 
-You can also pass a comma or space seperate list of namespaces.
+You can also pass a comma or space separate list of namespaces.
 
     PerlSetVar HandelPluginPaths 'MyApp::Plugins, OtherApp::Plugins'
 
@@ -625,7 +625,7 @@ will be ignored.
 =head2 HandelAddPluginPaths
 
 This adds an additional plugin search paths. This can be a comma or space
-seperated list of namespaces.
+separated list of namespaces.
 
     PerlSetVar HandelAddPluginPaths  'MyApp::Plugins, OtherApp::Plugins'
 
@@ -638,7 +638,7 @@ will be ignored.
 
 =head2 HandelIgnorePlugins
 
-This is a comma/space seperated list [or an anonymous array, or a regex outside of httpd.conf] of plugins to ignore when loading
+This is a comma/space separated list [or an anonymous array, or a regex outside of httpd.conf] of plugins to ignore when loading
 all available plugins in the given namespaces.
 
     PerlSetVar HandelIgnorePlugins 'Handel::Checkout::Plugin::Initialize'
@@ -663,7 +663,7 @@ they will be ignored.
 
 =head2 HandelLoadPlugins
 
-This is a comma or space seperated list [or an anonymous array, or a regex outside of httpd.conf] of plugins to be loaded from the available namespaces.
+This is a comma or space separated list [or an anonymous array, or a regex outside of httpd.conf] of plugins to be loaded from the available namespaces.
 
     PerlSetVar HandelLoadPlugins 'Handel::Checkout::Plugin::ValidateAddress'
 
@@ -689,7 +689,7 @@ they will be ignored.
 
 =head1 CAVEATS
 
-[I think] Due to the localization of AutoCommit to coeerse disabling of autoupdates during process,
+[I think] Due to the localization of AutoCommit to coerce disabling of autoupdates during process,
 Always access orders and order items from their checkout parent once they've been assigned to
 the checkout process, and not any available reference:
 

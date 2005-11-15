@@ -67,11 +67,11 @@ C<Handel::Order>. It's API is exactly the same as C<Handel::Order> with a few
 minor exceptions noted below.
 
 Since C<new> and C<load> are used by TT2 to load plugins, Handel::Orders
-C<new> and C<load> can be accesed using C<create> and C<fetch>.
+C<new> and C<load> can be accessed using C<create> and C<fetch>.
 
 Starting in version C<0.08>, C<Handel::Constants> are now imported into this
 module automatically. This removes the need to use
-C<Template::Plugin::Handel::Constants> seperately when working with carts.
+C<Template::Plugin::Handel::Constants> separately when working with carts.
 
     [% USE hc = Handel.Constants %]
     [% cart = hc.create(...) %]
@@ -80,7 +80,7 @@ C<Template::Plugin::Handel::Constants> seperately when working with carts.
 =head1 CAVEATS
 
 C<Template Toolkit> handles method params in a smart fashion that
-allows you to pass named parameters into methoda and it will convert them
+allows you to pass named parameters into methods and it will convert them
 into HASH references.
 
 For example:
@@ -91,7 +91,7 @@ is turned into:
 
     order->method(otherarg, {name1=>val1, name2=>val2});
 
-Unfortunatly, it looks like TT2 reverses the @ARGS order during translation.
+Unfortunately, it looks like TT2 reverses the @ARGS order during translation.
 This causes problems with C<Handel::Order::load> and C<items> as they expect
 C<($hashref, $wantiterator)> instead.
 
@@ -101,7 +101,7 @@ you would use when calling C<Handel::Order> when calling C<create> and C<items>:
     [% order.method({name1=>val1, name2=>val2}, $wantiterator) %]
 
 Another issue is how C<Handel::Order> returns an iterator or an array based on its
-inspection ot C<wantarray>. It appears that TT2 thwarts C<wantarray> in some
+inspection of C<wantarray>. It appears that TT2 thwarts C<wantarray> in some
 manner.
 
 For example:
@@ -109,7 +109,7 @@ For example:
     [% orders = Handel.Order.fetch() %]
 
 returns an array reference since it's not clear at this point what you really
-want. To counteract this behaviour, you can use C<RETURNAS> constants to
+want. To counteract this behavior, you can use C<RETURNAS> constants to
 specify the exact output desired:
 
     [% orders = Handel.Order.fetch(undef, Handel.Order.RETURNAS_ITERATOR) %]
@@ -174,7 +174,7 @@ This is used internally by TT2 and should not be used directly.
 =head2 fetch(\%filter [, $wantiterator])
 
 The safest way to get a order is to use FOREACH. This negates the need
-to specfy C<$wanteriterator> for C<Handel::Order::load>. See L<CAVEATS>
+to specify C<$wanteriterator> for C<Handel::Order::load>. See L<CAVEATS>
 for further info on C<$wantiterator>, Perls C<wantarray> within TT2.
 
     [% USE Handel.Order %]

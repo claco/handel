@@ -1443,13 +1443,13 @@ The child tags take precedence over the attributes of the same name.
 C<new> B<must be a top level tag> within it's declared namespace.
 It will throw an C<Handel::Exception::Taglib> exception otherwise.
 
-When true, the C<process> attribute forces new to automaticly create
-a checkout process and initialize the currecnt order.
-See L<Handel::Order/"new"> for more informaiton on the process flag.
+When true, the C<process> attribute forces new to automatically create
+a checkout process and initialize the current order.
+See L<Handel::Order/"new"> for more information on the process flag.
 
 =head2 <order:number>
 
-Context aware tag that gets or sets the order numnber.
+Context aware tag that gets or sets the order number.
 
 =head2 <order:order>
 
@@ -1627,7 +1627,7 @@ as is.
 =head3 Precedence
 
 If you are using both the currency conversion and the currency formatting
-options, the conversion will be performaed first, then the result will
+options, the conversion will be performed first, then the result will
 be formatted.
 
 =head2 <order:quantity>
@@ -1671,7 +1671,7 @@ for the order item:
 
 =head2 <order:updated>
 
-COntext aware tag that gets or sets the order last updated date.
+Context aware tag that gets or sets the order last updated date.
 
 =head2 <order:update>
 
@@ -1710,7 +1710,7 @@ forms are valid for your syntactic sanity:
 =head2 <order:no-results>
 
 The anti-results or 'not found' tag. This tag is executed when
-C<order>, C<orders>, C<item>, or C<items> fails to fild a match for it's filters.
+C<order>, C<orders>, C<item>, or C<items> fails to find a match for it's filters.
 As with C<E<lt>order:resultsE<gt>>, both the
 singular and plural forms are available for your enjoyment:
 

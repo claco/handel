@@ -168,7 +168,7 @@ vs. search_like).
 =head1 CONFIGURATION
 
 Starting in version C<0.16>, the DBI configuration variables have been changed.
-The old variables are now considered depricated and will be removed in the
+The old variables are now considered deprecated and will be removed in the
 future.
 
 These can either be set in C<ENV>, or using PerlSetVar in C<httpd.conf>.

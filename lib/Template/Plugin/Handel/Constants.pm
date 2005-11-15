@@ -44,7 +44,7 @@ Template::Plugin::Handel::Constants - Template Toolkit plugin for constants
 =head1 DESCRIPTION
 
 C<Template::Plugin::Handel::Constants> is a TT2 (Template Toolkit 2) plugin to
-access C<Handel::Constants> iside of TT2 pages.
+access C<Handel::Constants> inside of TT2 pages.
 
 It contains all of the exportable constants declared in
 C<@Handel::Constants::EXPORT_OK>.

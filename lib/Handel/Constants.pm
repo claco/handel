@@ -149,7 +149,7 @@ Converts a string version of a constant into that constants value.
 
 All items in the saved cart will be appended to the list of items in the current
 cart. No effort will be made to merge items with the same SKU and duplicates
-will be left as seperate items.
+will be left as separate items.
 
 =head2 CART_MODE_MERGE
 
@@ -183,7 +183,7 @@ The phase run to validate address, shipping, and other information about an orde
 
 =head2 CHECKOUT_PHASE_AUTHORIZE
 
-The phase run when ahtorizing or validating credit card or other payment information.
+The phase run when authorizing or validating credit card or other payment information.
 
 =head2 CHECKOUT_PHASE_FINALIZE
 
@@ -205,7 +205,7 @@ Contains all available phases.
 
 =head2 CHECKOUT_STATUS_OK
 
-All plugin handlers returned successully and the checkout process has completed.
+All plugin handlers returned successfully and the checkout process has completed.
 
 =head2 CHECKOUT_STATUS_ERROR
 
@@ -237,7 +237,7 @@ only contains one item, that item will be returns instead.
 =head2 RETURNAS_ITERATOR
 
 Always return a C<Handel::Iterator> object regardless of context or the amount
-of retults.
+of results.
 
 =head2 RETURNAS_LIST
 

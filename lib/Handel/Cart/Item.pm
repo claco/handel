@@ -45,7 +45,7 @@ __END__
 
 =head1 NAME
 
-Handel::Cart::Item - Module representing an indivudal shopping cart line item
+Handel::Cart::Item - Module representing an individual shopping cart line item
 
 =head1 SYNOPSIS
 
