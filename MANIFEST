@@ -409,6 +409,7 @@ t/order_items.t
 t/order_load.t
 t/order_new.t
 t/pod_coverage.t
+t/pod_spelling.t
 t/pod_syntax.t
 t/strict.t
 t/SMOKE.PL
