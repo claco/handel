@@ -3,6 +3,8 @@ Revision history for Perl module Handel
 0.28
     - Added pod_spelling.t tests which don't run by default
     - Corrected a boatload of spelling errors :-)
+    - Catalyst Helpers now require Catalyst 5.56 to deal with short vs. long
+	M/V/C modules names.
 
 0.27 Sun Nov 13 12:08:38 2005
     - Tested with Class::DBI 3.0.12
