@@ -4,8 +4,8 @@ use strict;
 use warnings;
 use Test::More;
 
-eval 'use Test::Spelling';
-plan skip_all => 'Test::Spelling not installed' if $@;
+eval 'use Test::Spelling 0.11';
+plan skip_all => 'Test::Spelling 0.11 not installed' if $@;
 plan skip_all => 'set TEST_SPELLING to enable this test' unless $ENV{TEST_SPELLING};
 
 set_spell_cmd('aspell list');
