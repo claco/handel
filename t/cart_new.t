@@ -11,7 +11,7 @@ BEGIN {
     if($@) {
         plan skip_all => 'DBD::SQLite not installed';
     } else {
-        plan tests => 47;
+        plan tests => 48;
     };
 
     use_ok('Handel::Cart');
