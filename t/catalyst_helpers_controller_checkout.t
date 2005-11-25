@@ -53,8 +53,8 @@ my $app = 'TestApp';
     file_exists_ok($payment);
     file_exists_ok($complete);
 
-    file_contents_like($module, qr/TestApp::M::Cart->load/);
-    file_contents_like($module, qr/TestApp::M::Orders->load/);
+    file_contents_like($module, qr/->model\('Cart'\)->load/);
+    file_contents_like($module, qr/->model\('Orders'\)->load/);
     file_contents_like($module, qr/\$c->res->redirect\(\$c->req->base . 'cart\/'\);/);
     file_contents_like($module, qr/\$c->stash->{'template'} = 'checkout\/edit.tt';/);
     file_contents_like($module, qr/\$c->res->redirect\(\$c->req->base . 'checkout\/preview\/'\);/);
@@ -84,8 +84,8 @@ my $app = 'TestApp';
     file_exists_ok($payment);
     file_exists_ok($complete);
 
-    file_contents_like($module, qr/TestApp::M::MyCartModel->load/);
-    file_contents_like($module, qr/TestApp::M::MyOrdersModel->load/);
+    file_contents_like($module, qr/->model\('MyCartModel'\)->load/);
+    file_contents_like($module, qr/->model\('MyOrdersModel'\)->load/);
     file_contents_like($module, qr/\$c->res->redirect\(\$c->req->base . 'mycart\/'\);/);
     file_contents_like($module, qr/\$c->stash->{'template'} = 'mycheckout\/edit.tt';/);
     file_contents_like($module, qr/\$c->res->redirect\(\$c->req->base . 'mycheckout\/preview\/'\);/);
@@ -115,8 +115,8 @@ my $app = 'TestApp';
     file_exists_ok($payment);
     file_exists_ok($complete);
 
-    file_contents_like($module, qr/TestApp::M::My::CartModel->load/);
-    file_contents_like($module, qr/TestApp::M::My::OrdersModel->load/);
+    file_contents_like($module, qr/->model\('My::CartModel'\)->load/);
+    file_contents_like($module, qr/->model\('My::OrdersModel'\)->load/);
     file_contents_like($module, qr/\$c->res->redirect\(\$c->req->base . 'my\/cart\/'\);/);
     file_contents_like($module, qr/\$c->stash->{'template'} = 'mynewcheckout\/edit.tt';/);
     file_contents_like($module, qr/\$c->res->redirect\(\$c->req->base . 'mynewcheckout\/preview\/'\);/);
@@ -146,8 +146,8 @@ my $app = 'TestApp';
     file_exists_ok($payment);
     file_exists_ok($complete);
 
-    file_contents_like($module, qr/TestApp::M::My::CartModel->load/);
-    file_contents_like($module, qr/TestApp::M::My::OrdersModel->load/);
+    file_contents_like($module, qr/->model\('My::CartModel'\)->load/);
+    file_contents_like($module, qr/->model\('My::OrdersModel'\)->load/);
     file_contents_like($module, qr/\$c->res->redirect\(\$c->req->base . 'my\/cart\/'\);/);
     file_contents_like($module, qr/\$c->stash->{'template'} = 'myothercheckout\/edit.tt';/);
     file_contents_like($module, qr/\$c->res->redirect\(\$c->req->base . 'myothercheckout\/preview\/'\);/);
@@ -177,8 +177,8 @@ my $app = 'TestApp';
     file_exists_ok($payment);
     file_exists_ok($complete);
 
-    file_contents_like($module, qr/TestApp::M::My::CartModel->load/);
-    file_contents_like($module, qr/TestApp::M::My::OrdersModel->load/);
+    file_contents_like($module, qr/->model\('My::CartModel'\)->load/);
+    file_contents_like($module, qr/->model\('My::OrdersModel'\)->load/);
     file_contents_like($module, qr/\$c->res->redirect\(\$c->req->base . 'my\/cart\/'\);/);
     file_contents_like($module, qr/\$c->stash->{'template'} = 'mythirdcheckout\/edit.tt';/);
     file_contents_like($module, qr/\$c->res->redirect\(\$c->req->base . 'mythirdcheckout\/preview\/'\);/);
