@@ -17,7 +17,7 @@ build_requires:
   Test::More: 0.48
 recommends:
   AxKit: 1.61
-  Catalyst: 5.33
+  Catalyst: 5.5
   Class::DBI: 3.0.8
   Data::FormValidator: 4.00
   HTML::FillInForm: 1.04
