@@ -3,6 +3,7 @@ package Catalyst::Helper::Controller::Handel::Order;
 use strict;
 use warnings;
 use Path::Class;
+use Catalyst 5.56;
 
 sub mk_compclass {
     my ($self, $helper, $model) = @_;
@@ -11,10 +12,9 @@ sub mk_compclass {
 
     $model ||= 'Orders';
     $model = $model =~ /^(.*::M(odel)?::)?(.*)$/i ? $3 : 'Orders';
-    $helper->{'model'} = $helper->{'app'} . '::M::' . $model;
+    $helper->{'model'} = $model;
 
     $helper->mk_dir($dir);
-    #$helper->mk_component($helper->{'app'}, 'view', 'TT', 'TT');
     $helper->render_file('controller', $file);
     $helper->render_file('list', file($dir, 'list.tt'));
     $helper->render_file('view', file($dir, 'view.tt'));
@@ -162,7 +162,7 @@ sub begin : Private {
 sub end : Private {
     my ($self, $c) = @_;
 
-    $c->forward('[% app %]::V::TT') unless $c->res->output;
+    $c->forward($c->view('TT')) unless $c->res->output;
 };
 
 sub default : Private {
@@ -186,7 +186,7 @@ sub view : Local {
         };
 
         eval {
-            $c->stash->{'order'} = [% model %]->load({
+            $c->stash->{'order'} = $c->model('[% model %]')->load({
                 shopper => $c->stash->{'shopperid'},
                 type    => ORDER_TYPE_SAVED,
                 id      => $id
@@ -209,7 +209,7 @@ sub view : Local {
 sub list : Local {
     my ($self, $c) = @_;
 
-    $c->stash->{'orders'} = [% model %]->load({
+    $c->stash->{'orders'} = $c->model('[% model %]')->load({
         shopper => $c->stash->{'shopperid'},
         type    => ORDER_TYPE_SAVED
     }, RETURNAS_ITERATOR);

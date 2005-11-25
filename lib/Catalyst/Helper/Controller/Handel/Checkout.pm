@@ -3,6 +3,7 @@ package Catalyst::Helper::Controller::Handel::Checkout;
 use strict;
 use warnings;
 use Path::Class;
+use Catalyst 5.56;
 
 sub mk_compclass {
     my ($self, $helper, $cmodel, $omodel, $ccontroller, $ocontroller) = @_;
@@ -15,10 +16,10 @@ sub mk_compclass {
     $ocontroller ||= 'Orders';
 
     $cmodel = $cmodel =~ /^(.*::M(odel)?::)?(.*)$/i ? $3 : 'Cart';
-    $helper->{'cmodel'} = $helper->{'app'} . '::M::' . $cmodel;
+    $helper->{'cmodel'} = $cmodel;
 
     $omodel = $omodel =~ /^(.*::M(odel)?::)?(.*)$/i ? $3 : 'Orders';
-    $helper->{'omodel'} = $helper->{'app'} . '::M::' . $omodel;
+    $helper->{'omodel'} = $omodel;
 
     my $curi = $ccontroller =~ /^(.*::C(ontroller)?::)?(.*)$/i ? lc($3) : 'cart';
     $curi =~ s/::/\//g;
@@ -29,7 +30,6 @@ sub mk_compclass {
     $helper->{'ouri'} = $ouri;
 
     $helper->mk_dir($dir);
-    #$helper->mk_component($helper->{'app'}, 'view', 'TT', 'TT');
     $helper->render_file('controller', $file);
     $helper->render_file('edit', file($dir, 'edit.tt'));
     $helper->render_file('preview', file($dir, 'preview.tt'));
@@ -251,7 +251,7 @@ sub begin : Private {
 
         $c->stash->{'shopperid'} = $shopperid;
 
-        my $cart = [% cmodel %]->load({
+        my $cart = $c->model('[% cmodel %]')->load({
             shopper => $shopperid,
             type    => CART_TYPE_TEMP
         }, RETURNAS_ITERATOR)->first;
@@ -259,13 +259,13 @@ sub begin : Private {
         if (!$cart || !$cart->count) {
             $c->res->redirect($c->req->base . '[% curi %]/');
         } else {
-            my $order = [% omodel %]->load({
+            my $order = $c->model('[% omodel %]')->load({
                 shopper => $shopperid,
                 type    => ORDER_TYPE_TEMP
             }, RETURNAS_ITERATOR)->first;
 
             if (!$order) {
-                $order = [% omodel %]->new({
+                $order = $c->model('[% omodel %]')->new({
                     shopper => $shopperid,
                     cart    => $cart
                 });
@@ -293,7 +293,7 @@ sub begin : Private {
 sub end : Private {
     my ($self, $c) = @_;
 
-    $c->forward('[% app %]::V::TT') unless $c->res->output;
+    $c->forward($c->view('TT')) unless $c->res->output;
 
     if ($c->req->method eq 'POST' && $c->stash->{'messages'} && $FIF) {
         ## Merge (erase) DFV Missing/Invalid fields from params before formfill
@@ -425,7 +425,7 @@ sub payment : Local {
 
                     if ($checkout->process == CHECKOUT_STATUS_OK) {
                         eval {
-                            [% cmodel %]->destroy({
+                            $c->model('[% cmodel %]')->destroy({
                                 shopper => $c->stash->{'shopperid'},
                                 type      => CART_TYPE_TEMP
                             });

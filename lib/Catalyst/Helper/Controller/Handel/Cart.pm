@@ -3,6 +3,7 @@ package Catalyst::Helper::Controller::Handel::Cart;
 use strict;
 use warnings;
 use Path::Class;
+use Catalyst 5.56;
 
 sub mk_compclass {
     my ($self, $helper, $model, $checkout) = @_;
@@ -13,14 +14,13 @@ sub mk_compclass {
     $checkout  ||= 'Checkout';
 
     $model = $model =~ /^(.*::M(odel)?::)?(.*)$/i ? $3 : 'Cart';
-    $helper->{'model'} = $helper->{'app'} . '::M::' . $model;
+    $helper->{'model'} = $model;
 
     my $couri = $checkout =~ /^(.*::C(ontroller)?::)?(.*)$/i ? lc($3) : 'checkout';
     $couri =~ s/::/\//g;
     $helper->{'couri'} = $couri;
 
     $helper->mk_dir($dir);
-    #$helper->mk_component($helper->{'app'}, 'view', 'TT', 'TT');
     $helper->render_file('controller', $file);
     $helper->render_file('view', file($dir, 'view.tt'));
     $helper->render_file('list', file($dir, 'list.tt'));
@@ -229,23 +229,23 @@ sub begin : Private {
     my ($self, $c) = @_;
 
     if (!$c->req->cookie('shopperid')) {
-        $c->stash->{'shopperid'} = [% model %]->uuid;
+        $c->stash->{'shopperid'} = $c->model('[% model %]')->uuid;
         $c->res->cookies->{'shopperid'} = {value => $c->stash->{'shopperid'}, path => '/'};
 
-        $c->stash->{'cart'} = [% model %]->new({
+        $c->stash->{'cart'} = $c->model('[% model %]')->new({
             shopper => $c->stash->{'shopperid'},
             type    => CART_TYPE_TEMP
         });
     } else {
         $c->stash->{'shopperid'} = $c->req->cookie('shopperid')->value;
 
-        $c->stash->{'cart'} = [% model %]->load({
+        $c->stash->{'cart'} = $c->model('[% model %]')->load({
             shopper => $c->stash->{'shopperid'},
             type    => CART_TYPE_TEMP
         }, RETURNAS_ITERATOR)->first;
 
         if (!$c->stash->{'cart'}) {
-            $c->stash->{'cart'} = [% model %]->new({
+            $c->stash->{'cart'} = $c->model('[% model %]')->new({
                 shopper => $c->stash->{'shopperid'},
                 type    => CART_TYPE_TEMP
             });
@@ -256,7 +256,7 @@ sub begin : Private {
 sub end : Private {
     my ($self, $c) = @_;
 
-    $c->forward('[% app %]::V::TT') unless $c->res->output;
+    $c->forward($c->view('TT')) unless $c->res->output;
 };
 
 sub default : Private {
@@ -438,7 +438,7 @@ sub list : Local {
     my @messages;
 
     eval {
-        $c->stash->{'carts'} = [% model %]->load({
+        $c->stash->{'carts'} = $c->model('[% model %]')->load({
             shopper => $c->stash->{'shopperid'},
             type    => CART_TYPE_SAVED
         }, RETURNAS_ITERATOR);
@@ -548,7 +548,7 @@ sub destroy : Local {
             };
 
             eval {
-                [% model %]->destroy({
+                $c->model('[% model %]')->destroy({
                     id => $id
                 });
             };
