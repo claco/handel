@@ -30,13 +30,13 @@ GOALS
     Checkout agnostic. A checkout process means different things to
     different people in different situations. The Handel checkout pipeline
     by itself does absolutely nothing with an order. It is instead a plugin
-    manager that allows you to specifiy and build plugins to do various
-    actions (payment autorization, address validation, fax delivery, etc).
-    Each site, server, page, even process() call can have it's own uniquie
+    manager that allows you to specify and build plugins to do various
+    actions (payment authorization, address validation, fax delivery, etc).
+    Each site, server, page, even process() call can have it's own unique
     order processing pipeline.
     Easy integration into AxKit using taglibs.
     Easy integration into TT2 using plugins.
-    Easy intrgration into Catalyst using plugins.
+    Easy integration into Catalyst using plugins.
     Easy integration into other systems using SOAP.
     Feature complete demo site in AxKit.
     Feature complete demo site in TT2.
@@ -70,8 +70,8 @@ FEATURES
 REQUIREMENTS
   Prerequisites
     The following modules are required for Handel to work properly. Older
-    versions may work fine, but hese are the versions I have installed and
-    verified to work correctly. IF you have older versious and all tests
+    versions may work fine, but these are the versions I have installed and
+    verified to work correctly. If you have older versions and all tests
     pass, send me an email and I'll lower the version requirements.
 
     Class::DBI
@@ -134,7 +134,7 @@ REQUIREMENTS
         The "Test::More" included with perl 5.8.4 and "Test::More" <= 0.48
         have issues with ithreads that usually cause crashes in tests that
         use "Class::DBI" or "DBIx:ContextualFetch". The errors usual mention
-        "attempt to free unreferenced scalar". If you reveive these during
+        "attempt to free unreferenced scalar". If you receive these during
         "make test", try upgrading "Test::More".
 
     Pod::Coverage
