@@ -35,6 +35,12 @@ sub new {
         $data->{'type'} = CART_TYPE_TEMP;
     };
 
+    if ($data->{'type'} == CART_TYPE_SAVED && !$data->{'name'}) {
+        throw Handel::Exception::Constraint(
+            -details => translate(
+                'Cart name is required when creating a saved cart') . '.');
+    };
+
     return $self->insert($data);
 };
 
