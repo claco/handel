@@ -68,6 +68,22 @@ BEGIN {
 };
 
 
+## test for Handel::Exception::Constraint during cart new for empty shopper
+{
+    try {
+        my $cart = Handel::Cart->new({
+            id      => '11111111-1111-1111-1111-111111111111'
+        });
+
+        fail;
+    } catch Handel::Exception::Constraint with {
+        pass;
+    } otherwise {
+        fail;
+    };
+};
+
+
 ## test for Handel::Exception::Constraint during cart new when no name is
 ## specified and cart type has been set to CART_TYPE_SAVED
 {
