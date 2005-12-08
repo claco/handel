@@ -89,6 +89,36 @@ sub add_message {
     };
 };
 
+sub add_phase {
+    my ($self, $name, $value, $import) = @_;
+    my $caller = (caller);
+
+    if (Handel::Constants->can($name)) {
+        throw Handel::Exception::Constraint(
+            -text => translate("A constant named '$name' already exists in Handel::Constants")
+        );
+    } elsif (constraint_checkout_phase($value)) {
+        throw Handel::Exception::Constraint(
+            -text => translate("A phase constant value of '$value' already exists")
+        );
+    } elsif ($import && main->can($name)) {
+        throw Handel::Exception::Constraint(
+            -text => translate("A constant named '$name' already exists in caller '$caller'")
+        );
+    } else {
+        my $sub = sub {return $value};
+        no strict 'refs';
+
+        *{"Handel::Constants::$name"} = $sub;
+
+        if ($import) {
+            *{"${caller}::$name"} = $sub;
+        };
+
+        push @Handel::Constants::CHECKOUT_ALL_PHASES, $value;
+    };
+};
+
 sub cart {
     my ($self, $cart) = @_;
 
@@ -446,6 +476,23 @@ You can subclass Handel::Checkout::Message to add your own properties.
 If your adding a simple text message, a new Handel::Checkout::Message object
 will automatically be created and C<package>, C<filename>, and C<line>
 properties will be set.
+
+=head2 add_phase($name, $value [, $import]);
+
+Adds a new constant/sub named $name to Handel::Constant and adds the $value to
+CHECKOUT_ALL_PHASES. The new phase will be accepted by &constraint_checkout_phase
+and can be used by checkout plugins registering their handlers via
+add_handler($phase, &handler). If $import is true, add_phase will register the
+constant in the local namespace just as if it you had specified it in your use
+statement.
+
+    use Handel::Checkout;
+
+    Handel::Checkout->add_phase('CHECKOUT_PHASE_CUSTOMPHASE', 42, 1);
+
+    print constraint_checkout_phase(&CHECKOUT_PHASE_CUSTOMPHASE);
+
+    $plugincontext->add_handler(Handel::Constants::CHECKOUT_PHASE_CUSTOMPHASE, &handlersub);
 
 =head2 cart
 
