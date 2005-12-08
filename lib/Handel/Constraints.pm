@@ -95,12 +95,13 @@ sub constraint_checkout_phase {
 
     return if $value !~ /[0-9]/;
 
-    if ($value != CHECKOUT_PHASE_INITIALIZE && $value != CHECKOUT_PHASE_VALIDATE &&
-        $value != CHECKOUT_PHASE_FINALIZE && $value != CHECKOUT_PHASE_AUTHORIZE &&
-        $value != CHECKOUT_PHASE_DELIVER) {
-        return 0;
+    foreach my $const (@{Handel::Constants->CHECKOUT_ALL_PHASES}) {
+        if ($value == $const) {
+            return 1;
+        };
     };
-    return 1;
+
+    return 0;
 };
 
 sub constraint_order_type {
