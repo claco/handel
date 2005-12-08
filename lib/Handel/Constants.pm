@@ -2,10 +2,12 @@
 package Handel::Constants;
 use strict;
 use warnings;
-use vars qw(@EXPORT_OK %EXPORT_TAGS);
+use vars qw(@EXPORT_OK %EXPORT_TAGS @CHECKOUT_ALL_PHASES);
+
 
 BEGIN {
     use base 'Exporter';
+    use Handel::L10N qw(translate);
 };
 
 use constant CART_MODE_APPEND  => 3;
@@ -32,11 +34,12 @@ use constant CHECKOUT_DEFAULT_PHASES   => [CHECKOUT_PHASE_VALIDATE,
                                            CHECKOUT_PHASE_AUTHORIZE,
                                            CHECKOUT_PHASE_FINALIZE,
                                            CHECKOUT_PHASE_DELIVER];
-use constant CHECKOUT_ALL_PHASES       => [CHECKOUT_PHASE_INITIALIZE,
-                                           CHECKOUT_PHASE_VALIDATE,
-                                           CHECKOUT_PHASE_AUTHORIZE,
-                                           CHECKOUT_PHASE_FINALIZE,
-                                           CHECKOUT_PHASE_DELIVER];
+
+@CHECKOUT_ALL_PHASES = (CHECKOUT_PHASE_INITIALIZE,
+                        CHECKOUT_PHASE_VALIDATE,
+                        CHECKOUT_PHASE_AUTHORIZE,
+                        CHECKOUT_PHASE_FINALIZE,
+                        CHECKOUT_PHASE_DELIVER);
 
 use constant CHECKOUT_STATUS_OK        => 1;
 use constant CHECKOUT_STATUS_ERROR     => 2;
@@ -101,6 +104,10 @@ use constant CHECKOUT_HANDLER_ERROR    => 4;
                          CHECKOUT_HANDLER_ERROR
         )]
     );
+
+sub CHECKOUT_ALL_PHASES {
+        return \@CHECKOUT_ALL_PHASES;
+};
 
 sub str_to_const {
     my $str = shift;
