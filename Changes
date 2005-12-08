@@ -1,5 +1,11 @@
 Revision history for Perl module Handel
 
+0.29
+    - Constraint constraint_checkout_phase now checks CHECKOUT_ALL_PHASES
+    - Added add_phase to Handel::Checkout to add custom phases
+    - Removed APR::UUID usage under OpenBSD
+    - Disabled Apache-Tests tests by default and added TEST_HTTP to enable them
+
 0.28 Fri Nov 25 15:09:25 2005
     - Added pod_spelling.t tests which don't run by default
     - Corrected a boatload of spelling errors :-)
