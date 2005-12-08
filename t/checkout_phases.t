@@ -11,7 +11,7 @@ BEGIN {
     if($@) {
         plan skip_all => 'DBD::SQLite not installed';
     } else {
-        plan tests => 39;
+        plan tests => 42;
     };
 
     use_ok('Handel::Checkout');
@@ -46,6 +46,49 @@ BEGIN {
 
         fail;
     } catch Handel::Exception::Argument with {
+        pass;
+    } otherwise {
+        fail;
+    };
+};
+
+
+## Test for Handel::Exception::Constraint if new constant name already exists
+{
+    try {
+        Handel::Checkout->add_phase('CHECKOUT_PHASE_INITIALIZE', 99);
+
+        fail;
+    } catch Handel::Exception::Constraint with {
+        pass;
+    } otherwise {
+        fail;
+    };
+};
+
+
+## Test for Handel::Exception::Constraint if new constant value already exists
+{
+    try {
+        Handel::Checkout->add_phase('CUSTOM_CHECKOUT_PHASE', CHECKOUT_PHASE_INITIALIZE);
+
+        fail;
+    } catch Handel::Exception::Constraint with {
+        pass;
+    } otherwise {
+        fail;
+    };
+};
+
+
+## Test for Handel::Exception::Constraint if new constant already exists in caller
+sub CUSTOM_CHECKOUT_PHASE_TEST {};
+{
+    try {
+        Handel::Checkout->add_phase('CUSTOM_CHECKOUT_PHASE_TEST', 43, 1);
+
+        fail;
+    } catch Handel::Exception::Constraint with {
         pass;
     } otherwise {
         fail;
