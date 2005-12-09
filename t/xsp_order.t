@@ -6,6 +6,8 @@ require Test::More;
 use lib 't/lib';
 use Handel::TestHelper qw(preparetables comp_to_file);
 
+Test::More::plan(skip_all => 'set TEST_HTTP to enable this test') unless $ENV{TEST_HTTP};
+
 eval 'use Apache::Test 1.16';
 Test::More::plan(skip_all =>
     'Apache::Test 1.16 not installed') if $@;

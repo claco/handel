@@ -39,32 +39,36 @@ if ($^O eq 'MSWin32') {
 } else {
     %modules = ('Data::UUID' => 0.10);
 };
-if (eval {require APR::UUID}) {
+if ($^O ne 'openbsd' && eval {require APR::UUID}) {
     %modules = ();
 };
 
-eval 'use Apache::Test 1.27';
-if (!$@) {
-    require Apache::TestMM;
-    Apache::TestMM->import(qw(test clean));
-
-    my @defines;
-    eval 'use Apache::Template';
+if ($ENV{TEST_HTTP}) {
+    eval 'use Apache::Test 1.27';
     if (!$@) {
-        push @defines, 'TT2';
-    };
+        require Apache::TestMM;
+        Apache::TestMM->import(qw(test clean));
 
-    ## for whatever reason, use AxKit causes issues
-    ## use-ing A::A::Exception doesn't
-    eval 'use Apache::AxKit::Exception';
-    if (!$@) {
-        push @defines, 'AXKIT';
-    };
+        my @defines;
+        eval 'use Apache::Template';
+        if (!$@) {
+            push @defines, 'TT2';
+        };
 
-    push(@ARGV, '-defines', join(' ', @defines)) if scalar @defines;
-    Apache::TestMM::filter_args();
-    Apache::TestMM::generate_script('t/TEST');
-    Apache::TestMM::generate_script('t/SMOKE');
+        ## for whatever reason, use AxKit causes issues
+        ## use-ing A::A::Exception doesn't
+        eval 'use Apache::AxKit::Exception';
+        if (!$@) {
+            push @defines, 'AXKIT';
+        };
+
+        push(@ARGV, '-defines', join(' ', @defines)) if scalar @defines;
+        Apache::TestMM::filter_args();
+        Apache::TestMM::generate_script('t/TEST');
+        Apache::TestMM::generate_script('t/SMOKE');
+    };
+} else {
+    print 'Set TEST_HTTP to enable Apache-Test/HTTP tests', "\n";
 };
 
 my @clean = qw(
