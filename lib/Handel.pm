@@ -13,7 +13,7 @@ BEGIN {
 
     my $uuidsub;
 
-    if (eval{require APR::UUID}) {
+    if ($^O ne 'openbsd' && eval{require APR::UUID}) {
         $uuidsub = sub {
             return APR::UUID->new->format;
         };
