@@ -593,6 +593,48 @@ Gets/sets the bill to fax number
 
 Gets/sets the bill to email address
 
+=head2 ccn*
+
+Gets/sets the credit cart number.
+
+B<NOTE:> This field is stored in memory for the life of the order instance and
+is not a real database field.
+
+=head2 cctype*
+
+Gets/sets the credit cart type.
+
+B<NOTE:> This field is stored in memory for the life of the order instance and
+is not a real database field.
+
+=head2 ccm*
+
+Gets/sets the credit cart expiration month.
+
+B<NOTE:> This field is stored in memory for the life of the order instance and
+is not a real database field.
+
+=head2 ccy*
+
+Gets/sets the credit cart expiration year.
+
+B<NOTE:> This field is stored in memory for the life of the order instance and
+is not a real database field.
+
+=head2 ccvn*
+
+Gets/sets the credit cart verification number.
+
+B<NOTE:> This field is stored in memory for the life of the order instance and
+is not a real database field.
+
+=head2 ccname*
+
+Gets/sets the credit cart holders name as it appears on the card.
+
+B<NOTE:> This field is stored in memory for the life of the order instance and
+is not a real database field.
+
 =head2 comments
 
 Gets/sets the comments for this order
