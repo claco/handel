@@ -394,7 +394,11 @@ t/lib/Handel/Checkout/TestMessage.pm
 t/lib/Handel/OtherTestPlugins/Second.pm
 t/lib/Handel/Subclassing/Cart.pm
 t/lib/Handel/Subclassing/CartOnly.pm
-t/lib/Handel/Subclassing/Item.pm
+t/lib/Handel/Subclassing/CartItem.pm
+t/lib/Handel/Subclassing/Checkout.pm
+t/lib/Handel/Subclassing/Order.pm
+t/lib/Handel/Subclassing/OrderOnly.pm
+t/lib/Handel/Subclassing/OrderItem.pm
 t/lib/Handel/TestHelper.pm
 t/lib/Handel/TestPipeline/InitializeTotals.pm
 t/lib/Handel/TestPipeline/ValidateError.pm
