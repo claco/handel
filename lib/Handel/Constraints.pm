@@ -49,7 +49,7 @@ sub constraint_quantity {
 sub constraint_price {
     my $value = defined $_[0] ? shift : '';
 
-    return ($value =~ /^\d{1,5}(\.\d{1,2})?$/ && $value > 0);
+    return ($value =~ /^\d{1,5}(\.\d{1,2})?$/);
 };
 
 sub constraint_uuid {
