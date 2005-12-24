@@ -11,6 +11,8 @@ BEGIN {
     use Handel::Constraints qw(:all);
     use Handel::Currency;
     use Handel::L10N qw(translate);
+
+    __PACKAGE__->mk_classdata(cart_class => 'Handel::Cart');
 };
 
 __PACKAGE__->autoupdate(1);
@@ -71,7 +73,7 @@ sub new {
                   (ref($cart) eq 'HASH' or UNIVERSAL::isa($cart, 'Handel::Cart') or $is_uuid);
 
         if (ref $cart eq 'HASH') {
-            $cart = Handel::Cart->load($cart, RETURNAS_ITERATOR)->first;
+            $cart = $self->cart_class->load($cart, RETURNAS_ITERATOR)->first;
 
             throw Handel::Exception::Order( -details =>
                 translate(
@@ -93,29 +95,8 @@ sub new {
     my $order = $self->insert($data);
 
     if (defined $cart) {
-        my $subtotal = 0;
-        my $items = $cart->items(undef, RETURNAS_ITERATOR);
-        if ($cart->shopper && !$order->shopper) {
-            $order->shopper($cart->shopper);
-        };
-        while (my $item = $items->next) {
-            my %copy;
-
-            foreach ($item->columns) {
-                next if $_ =~ /^(id|cart)$/i;
-                $copy{$_} = $item->$_;
-            };
-
-            $copy{'id'} = $self->uuid unless constraint_uuid($copy{'id'});
-            $copy{'orderid'} = $order->id;
-            $copy{'total'} = $copy{'quantity'}*$copy{'price'};
-            $subtotal += $copy{'total'};
-
-            $order->add_to__items(\%copy);
-        };
-
-        $order->subtotal($subtotal);
-        $order->update;
+        $self->copy_cart($order, $cart);
+        $self->copy_cart_items($order, $cart);
     };
 
     if ($process) {
@@ -133,6 +114,37 @@ sub new {
     };
 
     return $order;
+};
+
+sub copy_cart {
+    my ($self, $order, $cart) = @_;
+
+    if ($cart->shopper && !$order->shopper) {
+        $order->shopper($cart->shopper);
+    };
+
+    $order->subtotal($cart->subtotal);
+    $order->update;
+};
+
+sub copy_cart_items {
+    my ($self, $order, $cart) = @_;
+    my $items = $cart->items(undef, RETURNAS_ITERATOR);
+
+    while (my $item = $items->next) {
+        my %copy;
+
+        foreach (Handel::Cart::Item->columns) {
+            next if $_ =~ /^(id|cart)$/i;
+            $copy{$_} = $item->$_;
+        };
+
+        $copy{'id'} = $self->uuid unless constraint_uuid($copy{'id'});
+        $copy{'orderid'} = $order->id;
+        $copy{'total'} = $copy{'quantity'}*$copy{'price'};
+
+        $order->add_to__items(\%copy);
+    };
 };
 
 sub add {
@@ -467,6 +479,64 @@ This method removes all items from the current cart object.
 
     $cart->clear;
 
+=head2 copy_cart
+
+When creating a new order from an existing cart, C<copy_cart> will be called to
+copy the carts contents into the new order object. If you are using custom cart
+or order subclasses, the default copy_cart will only copy the fields declared in
+Handel::Cart, ignoring any custom fields you may add.
+
+To fix this, simply subclass Handel::Order and override copy_cart. As its
+parameters, it will receive the order and cart objects.
+
+    package CustomOrder;
+    use base 'Handel::Order';
+
+    sub copy_cart {
+        my ($self, $cart, $order) = @_;
+
+        # copy stock fields
+        $self->SUPER::copy_cart($order, $cart);
+
+        # now catch the custom ones
+        $order->customfield($cart->customfield);
+    };
+
+=head2 copy_cart_items
+
+When creating a new order from an existing cart, C<copy_cart_items> will be
+called to copy the cart items into the new order object items. If you are using
+custom cart or order subclasses, the default copy_cart_item will only copy the
+fields declared in Handel::Cart::Item, ignoring any custom fields you may add.
+
+To fix this, simply subclass Handel::Order and override copy_cart. As its
+parameters, it will receive the order and cart objects.
+
+    package CustomOrder;
+    use base 'Handel::Order';
+
+    __PACKAGE__->cart_class('CustomCart');
+
+    sub copy_cart_items {
+        my ($self, $order, $cart) = @_;
+        my $items = $cart->items(undef, RETURNAS_ITERATOR);
+
+        while (my $item = $items->next) {
+            my %copy;
+
+            foreach (CustomCart::Item->columns) {
+                next if $_ =~ /^(id|cart)$/i;
+                $copy{$_} = $item->$_;
+            };
+
+            $copy{'id'} = $self->uuid unless constraint_uuid($copy{'id'});
+            $copy{'orderid'} = $order->id;
+            $copy{'total'} = $copy{'quantity'}*$copy{'price'};
+
+            $order->add_to__items(\%copy);
+        };
+    };
+
 =head2 delete(\%filter)
 
 This method deletes the cart item(s) matching the supplied filter values and
@@ -476,9 +546,20 @@ returns the number of items deleted.
         print 'Item deleted';
     };
 
+=head2 cart_class($orderclass)
+
+Gets/Sets the name of the class to use when loading existing cart into the
+new order. By default, it loads carts using Handel::Cart. While you can set this
+directly in your application, it's best to set it in a custom subclass of
+Handel::Order.
+
+    package CustomOrder;
+    use base 'Handel::Order';
+    __PACKAGE__->cart_class('CustomCart');
+
 =head2 item_class($classname)
 
-Sets the name of the class to be used when returning or creating order items.
+Gets/Sets the name of the class to be used when returning or creating order items.
 While you can set this directly in your application, it's best to set it
 in a custom subclass of Handel::Order.
 
