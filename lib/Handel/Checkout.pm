@@ -13,6 +13,9 @@ BEGIN {
     use Handel::L10N qw(translate);
     use Handel::Order;
     use Module::Pluggable 2.95 instantiate => 'new', sub_name => '_plugins';
+    use base qw(Class::Data::Inheritable);
+
+    __PACKAGE__->mk_classdata(order_class => 'Handel::Order');
 };
 
 sub new {
@@ -124,7 +127,7 @@ sub cart {
 
     if ($cart) {
         if (ref $cart eq 'HASH' || UNIVERSAL::isa($cart, 'Handel::Cart') || constraint_uuid($cart)) {
-            $self->order(Handel::Order->new({cart => $cart}));
+            $self->order($self->order_class->new({cart => $cart}));
         } else {
             throw Handel::Exception::Argument( -details =>
                 translate('Param 1 is not a HASH reference, Handel::Cart object, or cart id') . '.');
@@ -143,11 +146,11 @@ sub order {
 
     if ($order) {
         if (ref $order eq 'HASH') {
-            $self->{'order'} = Handel::Order->load($order, RETURNAS_ITERATOR)->first;
+            $self->{'order'} = $self->order_class->load($order, RETURNAS_ITERATOR)->first;
         } elsif (UNIVERSAL::isa($order, 'Handel::Order')) {
             $self->{'order'} = $order;
         } elsif (constraint_uuid($order)) {
-            $self->{'order'} = Handel::Order->load({id => $order});
+            $self->{'order'} = $self->order_class->load({id => $order});
         } else {
             throw Handel::Exception::Argument( -details =>
                 translate('Param 1 is not a HASH reference, Handel::Order object, or order id') . '.');
@@ -518,9 +521,9 @@ the first one will be used.
 
 =item cart(Handel::Cart)
 
-You can also pass in an already existing Handel::Cart object. It will then
-be loaded into a new order object ans associated with the current checkout
-process.
+You can also pass in an already existing Handel::Cart object or subclass. It
+will then be loaded into a new order object ans associated with the current
+checkout process.
 
     my $cart = Handel::Cart->load({
         id => '12345678-9098-7654-3212-345678909876'
@@ -537,6 +540,23 @@ current checkout process.
     $checkout->cart('12345678-9098-7654-3212-345678909876');
 
 =back
+
+=head2 order_class($orderclass)
+
+Gets/Sets the name of the class to use when loading existing order into the
+checkout process. By default, it loads order using Handel::Order. While you can
+set this directly in your application, it's best to set it in a custom subclass
+of Handel::Checkout.
+
+    package CustomCheckout;
+    use base 'Handel::Checkout';
+    __PACKAGE__->order_class('CustomOrder');
+
+    ...
+    use CustomCheckout;
+    my $checkout = CustomCheckout->new({order => '11111111-2222-3333-4444-555555555555'});
+
+    print ref $checkout->order; # CustomOrder
 
 =head2 messages
 
@@ -582,8 +602,8 @@ the first one will be used.
 
 =item order(Handel::Order)
 
-You can also pass in an already existing Handel::Order object. It will then
-be associated with the current checkout process.
+You can also pass in an already existing Handel::Order object or subclass. It
+will then be associated with the current checkout process.
 
     my $order = Handel::Order->load({
         id => '12345678-9098-7654-3212-345678909876'
