@@ -1,5 +1,16 @@
 Revision history for Perl module Handel
 
+0.30 Fri Dec 23 22:52:23 2005
+    - Constraint constraint_price now accepts 0 as a valid value
+    - Added order_class to Handel::Checkout to allow Checkout->order to create
+        subclassed versions of Order objects
+    - Added cart_class to Handel::Order to allow Order->new to create
+        subclassed versions of Cart objects
+    - Added copy_cart/copy_cart_items in Handel::Order so subclasses can
+        customize order creation from custom carts
+    - When copying cart items into a new order, only columns in
+         Handel::Cart::Item instead of all columns found
+
 0.29 Thu Dec 8 20:12:38 2005
     - Constraint constraint_checkout_phase now checks CHECKOUT_ALL_PHASES
     - Added add_phase to Handel::Checkout to add custom phases
