@@ -97,6 +97,7 @@ WriteMakefile(
     ABSTRACT     => 'Simple ecommerce framework with AxKit support',
     PREREQ_PM    => {
         'Class::DBI'        => '0.96',
+        'Class::Data::Inheritable' => '0',
         'DBI'               => '1.36',
         'Error'             => '0.14',
         'Locale::Maketext'  => '1.06',
