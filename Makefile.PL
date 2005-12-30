@@ -102,7 +102,6 @@ WriteMakefile(
         'Error'             => '0.14',
         'Locale::Maketext'  => '1.06',
         'Module::Pluggable' => '2.95',
-        'Path::Class'       => '0',
         %modules
     },
     (ExtUtils::MakeMaker->VERSION >= 6.11) ?
