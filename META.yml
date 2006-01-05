@@ -13,6 +13,7 @@ requires:
   Error: 0.14
   Locale::Maketext: 1.06
   Module::Pluggable: 2.95
+  version: 0
 build_requires:
   Test::More: 0.48
 recommends:
