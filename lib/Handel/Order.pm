@@ -28,7 +28,7 @@ __PACKAGE__->columns(All => qw(id shopper type number created updated comments
     shiptonightphone shiptofax shiptoemail)
 );
 __PACKAGE__->columns(
-    TEMP => qw(ccn cctype ccm ccy ccvn ccname)
+    TEMP => qw(ccn cctype ccm ccy ccvn ccname ccissuenumber ccstartdate ccenddate)
 );
 
 __PACKAGE__->has_many(_items => 'Handel::Order::Item', 'orderid');
@@ -62,9 +62,8 @@ sub new {
         $data->{'type'} = ORDER_TYPE_TEMP;
     };
 
-    my $cart = $data->{'cart'};
+    my $cart = delete $data->{'cart'};
     my $is_uuid = constraint_uuid($cart);
-    delete $data->{'cart'};
 
     if (defined $cart) {
         throw Handel::Exception::Argument( -details =>
@@ -79,7 +78,7 @@ sub new {
                 translate(
                     'Could not find a cart matching the supplied search criteria') . '.') unless $cart;
         } elsif ($is_uuid) {
-            $cart = Handel::Cart->load({id => $cart}, RETURNAS_ITERATOR)->first;
+            $cart = $self->cart_class->load({id => $cart}, RETURNAS_ITERATOR)->first;
 
             throw Handel::Exception::Order( -details =>
                 translate(
@@ -139,7 +138,7 @@ sub copy_cart_items {
             $copy{$_} = $item->$_;
         };
 
-        $copy{'id'} = $self->uuid unless constraint_uuid($copy{'id'});
+        $copy{'id'} = $self->uuid unless Handel::Constraints::constraint_uuid($copy{'id'});
         $copy{'orderid'} = $order->id;
         $copy{'total'} = $copy{'quantity'}*$copy{'price'};
 
@@ -301,13 +300,13 @@ sub reconcile {
                   (ref($cart) eq 'HASH' or UNIVERSAL::isa($cart, 'Handel::Cart') or $is_uuid);
 
         if (ref $cart eq 'HASH') {
-            $cart = Handel::Cart->load($cart, RETURNAS_ITERATOR)->first;
+            $cart = $self->cart_class->load($cart, RETURNAS_ITERATOR)->first;
 
             throw Handel::Exception::Order( -details =>
                 translate(
                     'Could not find a cart matching the supplied search criteria') . '.') unless $cart;
         } elsif ($is_uuid) {
-            $cart = Handel::Cart->load({id => $cart}, RETURNAS_ITERATOR)->first;
+            $cart = $self->cart_class->load({id => $cart}, RETURNAS_ITERATOR)->first;
 
             throw Handel::Exception::Order( -details =>
                 translate(
@@ -493,7 +492,7 @@ parameters, it will receive the order and cart objects.
     use base 'Handel::Order';
 
     sub copy_cart {
-        my ($self, $cart, $order) = @_;
+        my ($self, $order, $cart) = @_;
 
         # copy stock fields
         $self->SUPER::copy_cart($order, $cart);
@@ -712,6 +711,27 @@ is not a real database field.
 =head2 ccname*
 
 Gets/sets the credit cart holders name as it appears on the card.
+
+B<NOTE:> This field is stored in memory for the life of the order instance and
+is not a real database field.
+
+=head2 ccissuenumber*
+
+Gets/sets the credit cart issue number.
+
+B<NOTE:> This field is stored in memory for the life of the order instance and
+is not a real database field.
+
+=head2 ccstartdate*
+
+Gets/sets the credit cart start date.
+
+B<NOTE:> This field is stored in memory for the life of the order instance and
+is not a real database field.
+
+=head2 ccenddate*
+
+Gets/sets the credit cart end date.
 
 B<NOTE:> This field is stored in memory for the life of the order instance and
 is not a real database field.
