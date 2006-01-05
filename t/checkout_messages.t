@@ -11,7 +11,7 @@ BEGIN {
     if($@) {
         plan skip_all => 'DBD::SQLite not installed';
     } else {
-        plan tests => 43;
+        plan tests => 44;
     };
 
     use_ok('Handel::Checkout');
@@ -80,6 +80,10 @@ BEGIN {
 
     ok($message->filename);
     ok($message->line);
+
+    $checkout->clear_messages;
+    @messages = @{$checkout->messages};
+    is(scalar @messages, 0);
 };
 
 
