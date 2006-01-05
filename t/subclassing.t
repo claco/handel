@@ -13,7 +13,7 @@ BEGIN {
     eval 'use Class::DBI 3.0.8';
     plan skip_all => 'Class::DBI 3.0.8 or greater required' if($@);
 
-    plan tests => 54;
+    plan tests => 68;
 
     use_ok('Handel::Subclassing::Cart');
     use_ok('Handel::Subclassing::CartOnly');
@@ -22,6 +22,8 @@ BEGIN {
     use_ok('Handel::Subclassing::Order');
     use_ok('Handel::Subclassing::OrderOnly');
     use_ok('Handel::Subclassing::OrderItem');
+    use_ok('Handel::Subclassing::OrderCart');
+    use_ok('Handel::Subclassing::OrdersCart');
 };
 
 
@@ -113,17 +115,17 @@ BEGIN {
 
 ## Create a custom order that still returns Handel::Order::Item
 {
-    my $cart = Handel::Subclassing::OrderOnly->new({
+    my $order = Handel::Subclassing::OrderOnly->new({
         id => Handel->newuuid,
         custom => 'custom'
     });
 
-    isa_ok($cart, 'Handel::Subclassing::OrderOnly');
-    isa_ok($cart, 'Handel::Order');
-    can_ok($cart, 'custom');
-    is($cart->custom, 'custom');
+    isa_ok($order, 'Handel::Subclassing::OrderOnly');
+    isa_ok($order, 'Handel::Order');
+    can_ok($order, 'custom');
+    is($order->custom, 'custom');
 
-    my $item = $cart->add({
+    my $item = $order->add({
         sku => 'SKU123'
     });
 
@@ -135,17 +137,17 @@ BEGIN {
 
 ## Create a custom order that still returns custom items
 {
-    my $cart = Handel::Subclassing::Order->new({
+    my $order = Handel::Subclassing::Order->new({
         id => Handel->newuuid,
         custom => 'custom'
     });
 
-    isa_ok($cart, 'Handel::Subclassing::Order');
-    isa_ok($cart, 'Handel::Order');
-    can_ok($cart, 'custom');
-    is($cart->custom, 'custom');
+    isa_ok($order, 'Handel::Subclassing::Order');
+    isa_ok($order, 'Handel::Order');
+    can_ok($order, 'custom');
+    is($order->custom, 'custom');
 
-    my $item = $cart->add({
+    my $item = $order->add({
         sku    => 'SKU123',
         custom => 'custom'
     });
@@ -154,20 +156,20 @@ BEGIN {
     isa_ok($item, 'Handel::Subclassing::OrderItem');
     is(ref $item, 'Handel::Subclassing::OrderItem');
     can_ok($item, 'custom');
-    is($cart->custom, 'custom');
+    is($order->custom, 'custom');
 };
 
 
 ## Make sure the old stuff works like normal
 {
-    my $cart = Handel::Order->new({
+    my $order = Handel::Order->new({
         id => Handel->newuuid
     });
 
-    isa_ok($cart, 'Handel::Order');
-    ok(!$cart->can('custom'));
+    isa_ok($order, 'Handel::Order');
+    ok(!$order->can('custom'));
 
-    my $item = $cart->add({
+    my $item = $order->add({
         sku    => 'SKU123'
     });
 
@@ -188,4 +190,46 @@ BEGIN {
     isa_ok($checkout->order, 'Handel::Subclassing::Order');
     isa_ok($checkout->order, 'Handel::Order');
     is(ref $checkout->order, 'Handel::Subclassing::Order');
+};
+
+
+## Load an order from a cart after setting cart_class using using a uuid
+{
+    my $order = Handel::Subclassing::OrderCart->new({
+        cart => '11111111-1111-1111-1111-111111111111'
+    });
+
+    isa_ok($order, 'Handel::Subclassing::OrderCart');
+    isa_ok($order, 'Handel::Order');
+
+    is($Handel::Subclassing::OrdersCart::Loads, 1);
+
+    my $item = $order->add({
+        sku => 'SKU123'
+    });
+
+    isa_ok($item, 'Handel::Order::Item');
+    is(ref $item, 'Handel::Order::Item');
+    ok(!$item->can('custom'));
+};
+
+
+## Load an order from a cart after setting cart_class using using a hash
+{
+    my $order = Handel::Subclassing::OrderCart->new({
+        cart => {id => '11111111-1111-1111-1111-111111111111'}
+    });
+
+    isa_ok($order, 'Handel::Subclassing::OrderCart');
+    isa_ok($order, 'Handel::Order');
+
+    is($Handel::Subclassing::OrdersCart::Loads, 2);
+
+    my $item = $order->add({
+        sku => 'SKU123'
+    });
+
+    isa_ok($item, 'Handel::Order::Item');
+    is(ref $item, 'Handel::Order::Item');
+    ok(!$item->can('custom'));
 };
