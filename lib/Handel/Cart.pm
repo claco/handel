@@ -122,7 +122,10 @@ sub destroy {
 sub item_class {
     my ($class, $item_class) = @_;
 
-    if (Class::DBI->VERSION < 3.000008) {
+    require version;
+    my $cdbiver = version->new(Class::DBI->VERSION);
+
+    if ($cdbiver->numify < 3.000008) {
         undef(*_items);
         undef(*add_to__items);
         __PACKAGE__->has_many(_items => $item_class, 'cart');
