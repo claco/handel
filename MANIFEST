@@ -399,6 +399,8 @@ t/lib/Handel/Subclassing/Checkout.pm
 t/lib/Handel/Subclassing/Order.pm
 t/lib/Handel/Subclassing/OrderOnly.pm
 t/lib/Handel/Subclassing/OrderItem.pm
+t/lib/Handel/Subclassing/OrderCart.pm
+t/lib/Handel/Subclassing/OrdersCart.pm
 t/lib/Handel/TestHelper.pm
 t/lib/Handel/TestPipeline/InitializeTotals.pm
 t/lib/Handel/TestPipeline/ValidateError.pm
