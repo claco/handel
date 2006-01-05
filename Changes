@@ -1,5 +1,12 @@
 Revision history for Perl module Handel
 
+0.31 Wed Jan 4 19:43:14 2005
+    - Fixed order creation from cart uuid to use cart_class
+    - Fixed order reconcile to use cart_class
+    - Added ccissuenumber, ccstartdate and ccenddate temp fieds to orders
+    - Use version to property compare CDBI versions (3.0.1 doesn't use version)
+    - Added clear_messages to Handel::Checkout
+
 0.30 Fri Dec 23 22:52:23 2005
     - Constraint constraint_price now accepts 0 as a valid value
     - Added order_class to Handel::Checkout to allow Checkout->order to create
