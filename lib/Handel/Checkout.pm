@@ -122,6 +122,12 @@ sub add_phase {
     };
 };
 
+sub clear_messages {
+    my $self = shift;
+
+    $self->{'messages'} = [];
+};
+
 sub cart {
     my ($self, $cart) = @_;
 
@@ -496,6 +502,10 @@ statement.
     print constraint_checkout_phase(&CHECKOUT_PHASE_CUSTOMPHASE);
 
     $plugincontext->add_handler(Handel::Constants::CHECKOUT_PHASE_CUSTOMPHASE, &handlersub);
+
+=head2 clear_messages
+
+Clears all messages from the current checkout instance.
 
 =head2 cart
 
