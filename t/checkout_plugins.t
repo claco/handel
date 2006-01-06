@@ -78,9 +78,9 @@ BEGIN {
     ok($plugin->{'init_called'});
     ok($plugin->{'register_called'});
 
-    isa_ok($checkout->{'handlers'}->{1}->[0]->[0], 'Handel::TestPlugins::First');
-    is(ref $checkout->{'handlers'}->{1}->[0]->[1], 'CODE');
-    $checkout->{'handlers'}->{1}->[0]->[1]->($plugin);
+    isa_ok($checkout->{'handlers'}->{1}->{1}->[0], 'Handel::TestPlugins::First');
+    is(ref $checkout->{'handlers'}->{1}->{1}->[1], 'CODE');
+    $checkout->{'handlers'}->{1}->{1}->[1]->($plugin);
     ok($plugin->{'handler_called'});
 };
 
@@ -101,9 +101,9 @@ BEGIN {
     ok($plugin->{'init_called'});
     ok($plugin->{'register_called'});
 
-    isa_ok($checkout->{'handlers'}->{1}->[0]->[0], 'Handel::TestPlugins::First');
-    is(ref $checkout->{'handlers'}->{1}->[0]->[1], 'CODE');
-    $checkout->{'handlers'}->{1}->[0]->[1]->($plugin);
+    isa_ok($checkout->{'handlers'}->{1}->{1}->[0], 'Handel::TestPlugins::First');
+    is(ref $checkout->{'handlers'}->{1}->{1}->[1], 'CODE');
+    $checkout->{'handlers'}->{1}->{1}->[1]->($plugin);
     ok($plugin->{'handler_called'});
 };
 
@@ -124,9 +124,9 @@ BEGIN {
     ok($plugin->{'init_called'});
     ok($plugin->{'register_called'});
 
-    isa_ok($checkout->{'handlers'}->{1}->[0]->[0], 'Handel::TestPlugins::First');
-    is(ref $checkout->{'handlers'}->{1}->[0]->[1], 'CODE');
-    $checkout->{'handlers'}->{1}->[0]->[1]->($plugin);
+    isa_ok($checkout->{'handlers'}->{1}->{1}->[0], 'Handel::TestPlugins::First');
+    is(ref $checkout->{'handlers'}->{1}->{1}->[1], 'CODE');
+    $checkout->{'handlers'}->{1}->{1}->[1]->($plugin);
     ok($plugin->{'handler_called'});
 };
 
@@ -152,7 +152,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
@@ -185,7 +185,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
@@ -218,7 +218,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
@@ -251,7 +251,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
@@ -287,7 +287,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
@@ -322,7 +322,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
@@ -357,7 +357,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
@@ -392,7 +392,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
@@ -425,7 +425,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
@@ -458,7 +458,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
@@ -493,7 +493,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
@@ -528,7 +528,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
@@ -563,7 +563,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
@@ -598,7 +598,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
@@ -631,7 +631,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
@@ -664,7 +664,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
@@ -697,7 +697,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
@@ -732,7 +732,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
@@ -767,7 +767,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
@@ -802,7 +802,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
@@ -835,7 +835,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
@@ -868,7 +868,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
@@ -901,7 +901,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
@@ -937,7 +937,7 @@ BEGIN {
         ok($plugin->{'init_called'});
         ok($plugin->{'register_called'});
 
-        foreach (@{$checkout->{'handlers'}->{1}}) {
+        foreach (values %{$checkout->{'handlers'}->{1}}) {
             if (ref $_->[0] eq $package) {
                 isa_ok($_->[0], $package);
                 is(ref $_->[1], 'CODE');
