@@ -9,7 +9,7 @@ sub register {
     my ($self, $ctx) = @_;
 
     $self->{'register_called'}++;
-    $ctx->add_handler(CHECKOUT_PHASE_INITIALIZE, \&handler);
+    $ctx->add_handler(CHECKOUT_PHASE_INITIALIZE, \&handler, 2);
 };
 
 sub init {
