@@ -51,23 +51,6 @@ sub plugins {
     return wantarray ? sort @{$self->{'plugins'}} : $self->{'plugins'};
 };
 
-#
-#
-#
-#
-#   handlers->{
-#        CHECKOUT_PHASE_VALIDATION => {
-#               1 => [plugin, coderef],
-#               2 => [plugin, coderef]
-#        }
-#   }
-#
-# if preference !>= 1, add it to bottom keys + 1
-# sort {$a <=> $b} keys %{handlers->{CHECKOUT_PHASE_VALIDATION}}
-#
-# 1-100 reserved
-# 101-899 game on!
-#900-1000 reserved
 sub add_handler {
     my ($self, $phase, $ref, $preference) = @_;
     my ($package) = caller;
