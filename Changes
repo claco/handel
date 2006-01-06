@@ -6,6 +6,8 @@ Revision history for Perl module Handel
     - Added ccissuenumber, ccstartdate and ccenddate temp fieds to orders
     - Use version to property compare CDBI versions (3.0.1 doesn't use version)
     - Added clear_messages to Handel::Checkout
+    - Checkout plugin handlers are now run in the order of their declared
+        preference number
 
 0.30 Fri Dec 23 22:52:23 2005
     - Constraint constraint_price now accepts 0 as a valid value
