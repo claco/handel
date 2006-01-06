@@ -51,8 +51,25 @@ sub plugins {
     return wantarray ? sort @{$self->{'plugins'}} : $self->{'plugins'};
 };
 
+#
+#
+#
+#
+#   handlers->{
+#        CHECKOUT_PHASE_VALIDATION => {
+#               1 => [plugin, coderef],
+#               2 => [plugin, coderef]
+#        }
+#   }
+#
+# if preference !>= 1, add it to bottom keys + 1
+# sort {$a <=> $b} keys %{handlers->{CHECKOUT_PHASE_VALIDATION}}
+#
+# 1-100 reserved
+# 101-899 game on!
+#900-1000 reserved
 sub add_handler {
-    my ($self, $phase, $ref) = @_;
+    my ($self, $phase, $ref, $preference) = @_;
     my ($package) = caller;
 
     throw Handel::Exception::Argument( -details =>
@@ -67,7 +84,18 @@ sub add_handler {
 
     foreach (@{$self->{'plugins'}}) {
         if (ref $_ eq $package) {
-            push @{$self->{'handlers'}->{$phase}}, [$_, $ref];
+            if ($preference) {
+                if (exists $self->{'handlers'}->{$phase}->{$preference}) {
+                    my $plugin = $self->{'handlers'}->{$phase}->{$preference}->[0];
+
+                    throw Handel::Exception::Checkout( -details =>
+                        translate("There is already a handler in phase ([_1]) for preference ([_2]) from the plugin ([_3])", $phase, $preference, $plugin) . '.')
+                };
+            } else {
+                my @prefs = sort {$a <=> $b} keys %{$self->{'handlers'}->{'$phase'}};
+                $preference = scalar @prefs ? $#prefs++ : 101;
+            };
+            $self->{'handlers'}->{$phase}->{$preference} = [$_, $ref];
             last;
         };
     };
@@ -219,7 +247,10 @@ sub process {
 
         foreach my $phase (@{$phases}) {
             next unless $phase;
-            foreach my $handler (@{$self->{'handlers'}->{$phase}}) {
+
+            my @handlerprefs = sort {$a <=> $b} keys %{$self->{'handlers'}->{$phase}};
+            foreach my $handlerpref (@handlerprefs) {
+                my $handler = $self->{'handlers'}->{$phase}->{$handlerpref};
                 my $status = $handler->[1]->($handler->[0], $self);
 
                 if ($status != CHECKOUT_HANDLER_OK && $status != CHECKOUT_HANDLER_DECLINE) {
@@ -453,20 +484,31 @@ various phases to be executed.
 
 =head1 METHODS
 
-=head2 add_handler($phase, \&coderef)
+=head2 add_handler($phase, \&coderef, $preference)
 
-Registers a code reference with the checkout phase specified. This is
-usually called within C<register> on the current checkout context:
+Registers a code reference with the checkout phase specified and assigned a run
+order preference. This is usually called within C<register> on the current
+checkout context:
 
     sub register {
         my ($self, $ctx) = @_;
 
-        $ctx->add_handler(CHECKOUT_PHASE_DELIVER, \&myhandler);
+        $ctx->add_handler(CHECKOUT_PHASE_DELIVER, \&myhandler, 200);
     };
 
     sub myhandler {
         ...
     };
+
+If no preference number is specified, the handler is added to the end of the
+list after all other handlers in that phase.
+
+If there is already a handler in the specified phase with the same preference, a
+Handel::Exception::Checkout exception will be thrown.
+
+While not enforced, please keep your handler preference orders between 251 - 749.
+Preference orders 1-250 and 750-1000 will be reserved for core modules that need
+to run before or after all other plugin handlers.
 
 =head2 add_message($message)
 
