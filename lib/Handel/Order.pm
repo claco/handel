@@ -13,6 +13,7 @@ BEGIN {
     use Handel::L10N qw(translate);
 
     __PACKAGE__->mk_classdata(cart_class => 'Handel::Cart');
+    __PACKAGE__->mk_classdata(_item_class => 'Handel::Order::Item');
 };
 
 __PACKAGE__->autoupdate(1);
@@ -200,19 +201,23 @@ sub delete {
 
     ## I'd much rather use $self->_items->search_like, but it doesn't work that
     ## way yet. This should be fine as long as :weaken refs works.
-    return Handel::Order::Item->search_like(%{$filter},
+    return $self->item_class->search_like(%{$filter},
         orderid => $self->id)->delete_all;
 };
 
 sub item_class {
     my ($class, $item_class) = @_;
 
-    if (Class::DBI->VERSION < 3.000008) {
-        undef(*_items);
-        undef(*add_to__items);
-        __PACKAGE__->has_many(_items => $item_class, 'orderid');
+    if ($item_class) {
+        if (Class::DBI->VERSION < 3.000008) {
+            undef(*_items);
+            undef(*add_to__items);
+            __PACKAGE__->has_many(_items => $item_class, 'orderid');
+        } else {
+            $class->has_many(_items => $item_class, 'orderid');
+        };
     } else {
-        $class->has_many(_items => $item_class, 'orderid');
+        return $class->_item_class;
     };
 };
 
@@ -232,19 +237,19 @@ sub items {
     ## doesn't appear to be available within a loaded object.
     if ((wantarray && $wantiterator != RETURNAS_ITERATOR) || $wantiterator == RETURNAS_LIST) {
         my @items = $wildcard ?
-            Handel::Order::Item->search_like(%{$filter}, orderid => $self->id) :
+            $self->item_class->search_like(%{$filter}, orderid => $self->id) :
             $self->_items(%{$filter});
 
         return @items;
     } elsif ($wantiterator == RETURNAS_ITERATOR) {
         my $iterator = $wildcard ?
-            Handel::Order::Item->search_like(%{$filter}, orderid => $self->id) :
+            $self->item_class->search_like(%{$filter}, orderid => $self->id) :
             $self->_items(%{$filter});
 
         return $iterator;
     } else {
         my $iterator = $wildcard ?
-            Handel::Order::Item->search_like(%{$filter}, orderid => $self->id) :
+            $self->item_class->search_like(%{$filter}, orderid => $self->id) :
             $self->_items(%{$filter});
         if ($iterator->count == 1 && $wantiterator != RETURNAS_ITERATOR && $wantiterator != RETURNAS_LIST) {
             return $iterator->next;
