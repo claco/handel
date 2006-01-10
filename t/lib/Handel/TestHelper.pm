@@ -15,6 +15,10 @@ sub executesql {
     return unless ($db || $sqlfile);
 
     my $dbh = DBI->connect($db);
+
+    $dbh->do('PRAGMA synchronous = OFF');
+    $dbh->do('PRAGMA temp_store = MEMORY');
+
     open SQL, "< $sqlfile";
     while (<SQL>) {
         $dbh->do($_);
@@ -46,6 +50,9 @@ sub preparetables {
     my $dbh = DBI->connect($db);
     foreach my $group (@{$groups}) {
         return unless exists $tables{$group};
+
+        $dbh->do('PRAGMA synchronous = OFF');
+        $dbh->do('PRAGMA temp_store = MEMORY');
 
         my $data = $tables{$group};
         my ($count) = $dbh->selectrow_array("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='" . $data->{'exists'} . "'");
