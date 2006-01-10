@@ -12,6 +12,8 @@ Revision history for Perl module Handel
     - Fixed Carts items(), delete(), destroy() and restore() to use item_class
     - Fixed Orders item_class to return a default
     - Fixed Orders items(), delete() to use item_class
+    - PRAGMA synchronous = OFF and temp_store = MEMORY for SQLite tests to
+        reduce disk trashing during testing
 
 0.30 Fri Dec 23 22:52:23 2005
     - Constraint constraint_price now accepts 0 as a valid value
