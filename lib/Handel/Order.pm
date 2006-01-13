@@ -205,6 +205,26 @@ sub delete {
         orderid => $self->id)->delete_all;
 };
 
+sub destroy {
+    my ($self, $filter) = @_;
+
+    if (ref $self) {
+        $self->SUPER::delete;
+    } else {
+        throw Handel::Exception::Argument( -details =>
+            translate('Param 1 is not a HASH reference') . '.') unless
+                ref($filter) eq 'HASH';
+
+        my $orders = $self->item_class->load($filter, RETURNAS_ITERATOR);
+        while (my $order = $orders->next) {
+            $order->clear;
+            $order->SUPER::delete;
+        };
+    };
+
+    return;
+};
+
 sub item_class {
     my ($class, $item_class) = @_;
 
@@ -543,12 +563,21 @@ parameters, it will receive the order and cart objects.
 
 =head2 delete(\%filter)
 
-This method deletes the cart item(s) matching the supplied filter values and
+This method deletes the order item(s) matching the supplied filter values and
 returns the number of items deleted.
 
     if ( $cart->delete({id => '8D4B0BE1-C02E-11D2-A33D-00A0C94B8D0E'}) ) {
         print 'Item deleted';
     };
+
+=head2 destroy(\%filter)
+
+When called used as an instance method, this will delete all items from the
+current cart instance and delete the cart container. C<filter> will be ignored.
+
+When called as a package method, this will delete all carts matching C<filter>.
+A Handel::Exception::Argument exception will be thrown is C<filter> is not a
+HASH reference.
 
 =head2 cart_class($orderclass)
 
