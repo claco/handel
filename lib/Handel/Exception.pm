@@ -65,6 +65,10 @@ use warnings;
 
 BEGIN {
     use base 'Handel::Exception';
+    eval 'require Apache::AxKit::Exception';
+    if (!$@) {
+        push @__PACKAGE__::ISA, 'Apache::AxKit::Exception';
+    };
 };
 
 sub new {
