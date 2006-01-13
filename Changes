@@ -14,6 +14,9 @@ Revision history for Perl module Handel
     - Fixed Orders items(), delete() to use item_class
     - PRAGMA synchronous = OFF and temp_store = MEMORY for SQLite tests to
         reduce disk trashing during testing
+    - Handel::Exception::Taglib subclasses Apache::AxKit::Exception if available
+        to play nice with AxKits exception handling
+    - Added destroy() to Handel::Order
 
 0.30 Fri Dec 23 22:52:23 2005
     - Constraint constraint_price now accepts 0 as a valid value
