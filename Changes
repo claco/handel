@@ -1,6 +1,6 @@
 Revision history for Perl module Handel
 
-0.31 Wed Jan 4 19:43:14 2005
+0.31 Tue Jan 17 19:43:14 2005
     - Fixed order creation from cart uuid to use cart_class
     - Fixed order reconcile to use cart_class
     - Added ccissuenumber, ccstartdate and ccenddate temp fieds to orders
@@ -17,6 +17,7 @@ Revision history for Perl module Handel
     - Handel::Exception::Taglib subclasses Apache::AxKit::Exception if available
         to play nice with AxKits exception handling
     - Added destroy() to Handel::Order
+    - Added subclassing tests to current cart/order/checkout tests
 
 0.30 Fri Dec 23 22:52:23 2005
     - Constraint constraint_price now accepts 0 as a valid value
