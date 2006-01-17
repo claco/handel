@@ -64,6 +64,7 @@ t/basic.t
 t/cart_add.t
 t/cart_clear.t
 t/cart_delete.t
+t/cart_destroy.t
 t/cart_item_new.t
 t/cart_items.t
 t/cart_iterator.t
@@ -410,6 +411,7 @@ t/lib/Handel/TestPlugins/First.pm
 t/order_add.t
 t/order_clear.t
 t/order_delete.t
+t/order_destroy.t
 t/order_item_new.t
 t/order_items.t
 t/order_load.t
