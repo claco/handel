@@ -111,7 +111,7 @@ sub destroy {
             translate('Param 1 is not a HASH reference') . '.') unless
                 ref($filter) eq 'HASH';
 
-        my $carts = $self->item_class->load($filter, RETURNAS_ITERATOR);
+        my $carts = $self->load($filter, RETURNAS_ITERATOR);
         while (my $cart = $carts->next) {
             $cart->clear;
             $cart->SUPER::delete;

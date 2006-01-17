@@ -215,7 +215,7 @@ sub destroy {
             translate('Param 1 is not a HASH reference') . '.') unless
                 ref($filter) eq 'HASH';
 
-        my $orders = $self->item_class->load($filter, RETURNAS_ITERATOR);
+        my $orders = $self->load($filter, RETURNAS_ITERATOR);
         while (my $order = $orders->next) {
             $order->clear;
             $order->SUPER::delete;
