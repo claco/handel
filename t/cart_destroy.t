@@ -11,13 +11,13 @@ BEGIN {
     if($@) {
         plan skip_all => 'DBD::SQLite not installed';
     } else {
-        plan tests => 23;
+        plan tests => 35;
     };
 
     use_ok('Handel::Cart');
     use_ok('Handel::Subclassing::Cart');
     use_ok('Handel::Subclassing::CartOnly');
-    use_ok('Handel::Constants', ':cart');
+    use_ok('Handel::Constants', qw(:cart :returnas));
     use_ok('Handel::Exception', ':try');
 };
 
@@ -33,7 +33,7 @@ sub run {
 
     ## Setup SQLite DB for tests
     {
-        my $dbfile  = "t/cart_clear_$dbsuffix.db";
+        my $dbfile  = "t/cart_destroy_$dbsuffix.db";
         my $db      = "dbi:SQLite:dbname=$dbfile";
         my $create  = 't/sql/cart_create_table.sql';
         my $data    = 't/sql/cart_fake_data.sql';
@@ -47,24 +47,53 @@ sub run {
     };
 
 
-    ## Clear cart contents and validate counts
+    ## Test for Handel::Exception::Argument where first param is not a hashref
+    {
+        try {
+            $subclass->destroy(id => '1234');
+
+            fail;
+        } catch Handel::Exception::Argument with {
+            pass;
+        } otherwise {
+            fail;
+        };
+    };
+
+
+    ## Destroy a single cart via instance
     {
         my $cart = $subclass->load({
-            id => '11111111-1111-1111-1111-111111111111'
+            id => '22222222-2222-2222-2222-222222222222'
         });
         isa_ok($cart, 'Handel::Cart');
         isa_ok($cart, $subclass);
-        ok($cart->count >= 1);
+        is($cart->count, 1);
+        is($cart->subtotal, 9.99);
 
-        $cart->clear;
-        is($cart->count, 0);
+        $cart->destroy;
 
         my $recart = $subclass->load({
-            id => '11111111-1111-1111-1111-111111111111'
+            id => '22222222-2222-2222-2222-222222222222'
         });
-        isa_ok($recart, $subclass);
 
-        is($recart->count, 0);
+        is($recart, 0);
+    };
+
+
+    ## Destroy multiple carts with wildcard filter
+    {
+        my $carts = $subclass->load({name => 'Cart%'}, RETURNAS_ITERATOR);
+        isa_ok($carts, 'Handel::Iterator');
+        is($carts, 2);
+
+        $subclass->destroy({
+            name => 'Cart%'
+        });
+
+        $carts = $subclass->load({name => 'Cart%'}, RETURNAS_ITERATOR);
+        isa_ok($carts, 'Handel::Iterator');
+        is($carts, 0);
     };
 
 };

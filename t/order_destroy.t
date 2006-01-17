@@ -11,13 +11,13 @@ BEGIN {
     if($@) {
         plan skip_all => 'DBD::SQLite not installed';
     } else {
-        plan tests => 82;
+        plan tests => 37;
     };
 
     use_ok('Handel::Order');
     use_ok('Handel::Subclassing::Order');
     use_ok('Handel::Subclassing::OrderOnly');
-    use_ok('Handel::Constants', ':order');
+    use_ok('Handel::Constants', qw(:order :returnas));
     use_ok('Handel::Exception', ':try');
 };
 
@@ -33,7 +33,7 @@ sub run {
 
     ## Setup SQLite DB for tests
     {
-        my $dbfile  = "t/order_delete_$dbsuffix.db";
+        my $dbfile  = "t/order_destroy_$dbsuffix.db";
         my $db      = "dbi:SQLite:dbname=$dbfile";
         my $create  = 't/sql/order_create_table.sql';
         my $data    = 't/sql/order_fake_data.sql';
@@ -47,10 +47,10 @@ sub run {
     };
 
 
-    ## test for Handel::Exception::Argument where first param is not a hashref
+    ## Test for Handel::Exception::Argument where first param is not a hashref
     {
         try {
-            $subclass->delete(id => '1234');
+            $subclass->destroy(id => '1234');
 
             fail;
         } catch Handel::Exception::Argument with {
@@ -61,7 +61,7 @@ sub run {
     };
 
 
-    ## Delete a single order item contents and validate counts
+    ## Destroy a single order via instance
     {
         my $order = $subclass->load({
             id => '22222222-2222-2222-2222-222222222222'
@@ -74,50 +74,29 @@ sub run {
             is($order->custom, 'custom');
         };
 
-        is($order->delete({sku => 'SKU3333'}), 1);
-        is($order->count, 0);
-        is($order->subtotal, 5.55);
+        $order->destroy;
 
         my $reorder = $subclass->load({
             id => '22222222-2222-2222-2222-222222222222'
         });
-        isa_ok($reorder, 'Handel::Order');
-        isa_ok($reorder, $subclass);
-        is($reorder->count, 0);
-        is($reorder->subtotal, 5.55);
-        if ($subclass ne 'Handel::Order') {
-            is($reorder->custom, 'custom');
-        };
+
+        is($reorder, 0);
     };
 
 
-    ## Delete multiple order item contents with wildcard filter and validate counts
+    ## Destroy multiple orders with wildcard filter
     {
-        my $order = $subclass->load({
-            id => '11111111-1111-1111-1111-111111111111'
-        });
-        isa_ok($order, 'Handel::Order');
-        isa_ok($order, $subclass);
-        is($order->count, 2);
-        is($order->subtotal, 5.55);
-        if ($subclass ne 'Handel::Order') {
-            is($order->custom, 'custom');
-        };
+        my $orders = $subclass->load({billtofirstname => 'Chris%'}, RETURNAS_ITERATOR);
+        isa_ok($orders, 'Handel::Iterator');
+        is($orders, 2);
 
-        ok($order->delete({sku => 'SKU%'}));
-        is($order->count, 0);
-        is($order->subtotal, 5.55);
-
-        my $reorder = $subclass->load({
-            id => '11111111-1111-1111-1111-111111111111'
+        $subclass->destroy({
+            billtofirstname => 'Chris%'
         });
-        isa_ok($reorder, 'Handel::Order');
-        isa_ok($reorder, $subclass);
-        is($reorder->count, 0);
-        is($reorder->subtotal, 5.55);
-        if ($subclass ne 'Handel::Order') {
-            is($reorder->custom, 'custom');
-        };
+
+        $orders = $subclass->load({billtofirstname => 'Chris%'}, RETURNAS_ITERATOR);
+        isa_ok($orders, 'Handel::Iterator');
+        is($orders, 0);
     };
 
 };

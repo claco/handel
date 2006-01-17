@@ -11,46 +11,61 @@ BEGIN {
     if($@) {
         plan skip_all => 'DBD::SQLite not installed';
     } else {
-        plan tests =>8;
+        plan tests =>26;
     };
 
     use_ok('Handel::Order');
+    use_ok('Handel::Subclassing::Order');
+    use_ok('Handel::Subclassing::OrderOnly');
     use_ok('Handel::Constants', ':order');
     use_ok('Handel::Exception', ':try');
 };
 
 
-## Setup SQLite DB for tests
-{
-    my $dbfile  = 't/order_clear.db';
-    my $db      = "dbi:SQLite:dbname=$dbfile";
-    my $create  = 't/sql/order_create_table.sql';
-    my $data    = 't/sql/order_fake_data.sql';
+## This is a hack, but it works. :-)
+&run('Handel::Order', 'Handel::Order::Item', 1);
+&run('Handel::Subclassing::OrderOnly', 'Handel::Order::Item', 2);
+&run('Handel::Subclassing::Order', 'Handel::Subclassing::OrderItem', 3);
 
-    unlink $dbfile;
-    executesql($db, $create);
-    executesql($db, $data);
-
-    local $^W = 0;
-    Handel::DBI->connection($db);
-};
+sub run {
+    my ($subclass, $itemclass, $dbsuffix) = @_;
 
 
-## Clear order contents and validate counts
-{
-    my $order = Handel::Order->load({
-        id => '11111111-1111-1111-1111-111111111111'
-    });
-    isa_ok($order, 'Handel::Order');
-    ok($order->count >= 1);
+    ## Setup SQLite DB for tests
+    {
+        my $dbfile  = "t/order_clear_$dbsuffix.db";
+        my $db      = "dbi:SQLite:dbname=$dbfile";
+        my $create  = 't/sql/order_create_table.sql';
+        my $data    = 't/sql/order_fake_data.sql';
 
-    $order->clear;
-    is($order->count, 0);
+        unlink $dbfile;
+        executesql($db, $create);
+        executesql($db, $data);
 
-    my $reorder = Handel::Order->load({
-        id => '11111111-1111-1111-1111-111111111111'
-    });
-    isa_ok($reorder, 'Handel::Order');
+        local $^W = 0;
+        Handel::DBI->connection($db);
+    };
 
-    is($reorder->count, 0);
+
+    ## Clear order contents and validate counts
+    {
+        my $order = $subclass->load({
+            id => '11111111-1111-1111-1111-111111111111'
+        });
+        isa_ok($order, 'Handel::Order');
+        isa_ok($order, $subclass);
+        ok($order->count >= 1);
+
+        $order->clear;
+        is($order->count, 0);
+
+        my $reorder = $subclass->load({
+            id => '11111111-1111-1111-1111-111111111111'
+        });
+        isa_ok($reorder, 'Handel::Order');
+        isa_ok($reorder, $subclass);
+
+        is($reorder->count, 0);
+    };
+
 };
