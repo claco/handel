@@ -36,6 +36,7 @@ lib/Handel/Checkout/Message.pm
 lib/Handel/Checkout/Plugin.pm
 lib/Handel/Checkout/Plugin/AssignOrderNumber.pm
 lib/Handel/Checkout/Plugin/MarkOrderSaved.pm
+lib/Handel/Checkout/Stash.pm
 lib/Handel/ConfigReader.pm
 lib/Handel/Constants.pm
 lib/Handel/Constraints.pm
@@ -89,6 +90,7 @@ t/checkout_order.t
 t/checkout_phases.t
 t/checkout_plugins.t
 t/checkout_process.t
+t/checkout_stash.t
 t/conf/extra.conf.in
 t/config.t
 t/constants.t
@@ -397,11 +399,13 @@ t/lib/Handel/Subclassing/Cart.pm
 t/lib/Handel/Subclassing/CartOnly.pm
 t/lib/Handel/Subclassing/CartItem.pm
 t/lib/Handel/Subclassing/Checkout.pm
+t/lib/Handel/Subclassing/CheckoutStash.pm
 t/lib/Handel/Subclassing/Order.pm
 t/lib/Handel/Subclassing/OrderOnly.pm
 t/lib/Handel/Subclassing/OrderItem.pm
 t/lib/Handel/Subclassing/OrderCart.pm
 t/lib/Handel/Subclassing/OrdersCart.pm
+t/lib/Handel/Subclassing/Stash.pm
 t/lib/Handel/TestHelper.pm
 t/lib/Handel/TestPipeline/InitializeTotals.pm
 t/lib/Handel/TestPipeline/ValidateError.pm

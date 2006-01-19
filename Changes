@@ -18,6 +18,16 @@ Revision history for Perl module Handel
         to play nice with AxKits exception handling
     - Added destroy() to Handel::Order
     - Added subclassing tests to current cart/order/checkout tests
+    - Checkout::process now clears the stash before the call to plugin init, so
+	plugins can set stash data
+    - Added Handel::Checkout::Stash to checkout process
+    - Added Checkout->stash_class to allow the use of a custom stash class in
+        Checkout subclasses
+    - Checkout::new how takes the stash option, which should contain a instance
+	of a Handel::Checkout::Stash subclass
+    - Added t/checkout_stash,t tests
+    - Class setter methods (order_class, item_class, stash_class, cart_class)
+        now try to require the specified class
 
 0.30 Fri Dec 23 22:52:23 2005
     - Constraint constraint_price now accepts 0 as a valid value
