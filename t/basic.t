@@ -2,7 +2,7 @@
 # $Id$
 use strict;
 use warnings;
-use Test::More tests => 29;
+use Test::More tests => 30;
 
 BEGIN {
     use_ok('Handel');
@@ -10,6 +10,7 @@ BEGIN {
     use_ok('Handel::Cart::Item');
     use_ok('Handel::Checkout');
     use_ok('Handel::Checkout::Plugin');
+    use_ok('Handel::Checkout::Stash');
     use_ok('Handel::Constants');
     use_ok('Handel::Constraints');
     use_ok('Handel::Currency');
