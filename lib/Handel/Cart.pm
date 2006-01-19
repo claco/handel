@@ -125,6 +125,8 @@ sub item_class {
     my ($class, $item_class) = @_;
 
     if ($item_class) {
+        eval "require $item_class";
+
         require version;
         my $cdbiver = version->new(Class::DBI->VERSION);
 
