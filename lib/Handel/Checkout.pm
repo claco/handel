@@ -6,6 +6,7 @@ use warnings;
 BEGIN {
     use Handel;
     use Handel::Cart;
+    use Handel::Checkout::Stash;
     use Handel::Constants qw(:checkout :returnas);
     use Handel::Constraints qw(constraint_checkout_phase constraint_uuid);
     use Handel::Exception qw(:try);
@@ -15,7 +16,8 @@ BEGIN {
     use Module::Pluggable 2.95 instantiate => 'new', sub_name => '_plugins';
     use base qw(Class::Data::Inheritable);
 
-    __PACKAGE__->mk_classdata(order_class => 'Handel::Order');
+    __PACKAGE__->mk_classdata(_order_class => 'Handel::Order');
+    __PACKAGE__->mk_classdata(_stash_class => 'Handel::Checkout::Stash');
 };
 
 sub new {
@@ -26,7 +28,7 @@ sub new {
         handlers => {},
         phases => [],
         messages => [],
-        stash => {}
+        stash => $opts->{'stash'} || $class->stash_class->new
     }, ref $class || $class;
 
     $self->_set_search_path($opts);
@@ -158,6 +160,17 @@ sub messages {
     return wantarray ? @{$self->{'messages'}} : $self->{'messages'};
 };
 
+sub order_class {
+    my ($self, $order_class) = @_;
+
+    if ($order_class) {
+        eval "require $order_class";
+        $self->_order_class($order_class);
+    };
+
+    return $self->_order_class;
+};
+
 sub order {
     my ($self, $order) = @_;
 
@@ -221,12 +234,11 @@ sub process {
         translate('No order is assocated with this checkout process') . '.')
             unless $self->order;
 
+    $self->stash->clear;
     $self->_setup($self);
 
     {
         local $self->order->db_Main->{AutoCommit};
-
-        %{$self->{'stash'}} = ();
 
         foreach my $phase (@{$phases}) {
             next unless $phase;
@@ -255,6 +267,17 @@ sub process {
     $self->_teardown($self);
 
     return CHECKOUT_STATUS_OK;
+};
+
+sub stash_class {
+    my ($self, $stash_class) = @_;
+
+    if ($stash_class) {
+        eval "require $stash_class";
+        $self->_stash_class($stash_class);
+    };
+
+    return $self->_stash_class;
 };
 
 sub stash {
@@ -463,6 +486,11 @@ various phases to be executed.
         phases => 'CHECKOUT_PHASE_VALIDATION, CHECKOUT_PHASE_AUTHORIZATION'
     });
 
+=item stash
+
+A Handel::Checkout::Stash instance of subclass instance. If nothing is specified,
+$self->stash_class will be used instead.
+
 =back
 
 =head1 METHODS
@@ -593,6 +621,17 @@ of Handel::Checkout.
 
     print ref $checkout->order; # CustomOrder
 
+=head2 stash_class($stashclass)
+
+Gets/Sets the name of the stash class to create during C<new>. By default, it
+returns Handel::Checkout::Stash. While you can
+set this directly in your application, it's best to set it in a custom subclass
+of Handel::Checkout.
+
+    package CustomCheckout;
+    use base 'Handel::Checkout';
+    __PACKAGE__->stash_class('MyCustomStash');
+
 =head2 messages
 
 Returns a reference to an array in list context of Handel::Checkout::Message
@@ -680,6 +719,11 @@ is considered to be an error that the checkout process is aborted.
 Just like C<phases>, you can pass an array reference or a comma (or space)
 separated string of phases into process.
 
+The method $self->stash->clear is called before the call to
+$plugin->setup so plugins can set stash data, and the stash remains until the
+next call to process so $plugin->teardown can read any remaining stash data
+before C<process> ends.
+
 The call to C<process> will return on of the following constants:
 
 =over
@@ -697,7 +741,8 @@ the registered plugin handlers.
 
 =head2 stash
 
-Returns a hash collection of information shared by all plugins in the current context.
+Returns a Handel::Checkout::Stash object that can store information shared by
+all plugins in the current context.
 
     # plugin handler
     my ($self, $ctx) = @_;
