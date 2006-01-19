@@ -12,7 +12,7 @@ BEGIN {
     use Handel::Currency;
     use Handel::L10N qw(translate);
 
-    __PACKAGE__->mk_classdata(cart_class => 'Handel::Cart');
+    __PACKAGE__->mk_classdata(_cart_class => 'Handel::Cart');
     __PACKAGE__->mk_classdata(_item_class => 'Handel::Order::Item');
 };
 
@@ -114,6 +114,17 @@ sub new {
     };
 
     return $order;
+};
+
+sub cart_class {
+    my ($self, $cart_class) = @_;
+
+    if ($cart_class) {
+        eval "require $cart_class";
+        $self->_cart_class($cart_class);
+    };
+
+    return $self->_cart_class;
 };
 
 sub copy_cart {
@@ -229,7 +240,12 @@ sub item_class {
     my ($class, $item_class) = @_;
 
     if ($item_class) {
-        if (Class::DBI->VERSION < 3.000008) {
+        eval "require $item_class";
+
+        require version;
+        my $cdbiver = version->new(Class::DBI->VERSION);
+
+        if ($cdbiver->numify < 3.000008) {
             undef(*_items);
             undef(*add_to__items);
             __PACKAGE__->has_many(_items => $item_class, 'orderid');
