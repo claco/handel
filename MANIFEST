@@ -420,6 +420,7 @@ t/order_item_new.t
 t/order_items.t
 t/order_load.t
 t/order_new.t
+t/order_reconcile.t
 t/pod_coverage.t
 t/pod_spelling.t
 t/pod_syntax.t
