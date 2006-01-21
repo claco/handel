@@ -362,11 +362,8 @@ sub reconcile {
 
     if ($self->subtotal != $cart->subtotal || $self->count != $cart->count) {
         $self->clear;
-        my @citems = $cart->items;
-        foreach my $item (@citems) {
-            $self->add($item);
-        };
-        $self->subtotal($cart->subtotal);
+        $self->copy_cart($self, $cart);
+        $self->copy_cart_items($self, $cart);
     };
 };
 
