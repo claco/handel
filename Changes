@@ -1,6 +1,10 @@
 Revision history for Perl module Handel
 
-0.31 Tue Jan 17 19:43:14 2005
+0.32
+    - Added order_reconcile.t tests
+    - Order::reconcile now uses copy_cart/copy_cart_items
+
+0.31 Tue Jan 17 19:43:14 2006
     - Fixed order creation from cart uuid to use cart_class
     - Fixed order reconcile to use cart_class
     - Added ccissuenumber, ccstartdate and ccenddate temp fieds to orders
