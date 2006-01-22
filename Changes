@@ -1,6 +1,6 @@
 Revision history for Perl module Handel
 
-0.32
+0.32 Sun Jan 22 18:19:38 2006
     - Added order_reconcile.t tests
     - Order::reconcile now uses copy_cart/copy_cart_items
 
