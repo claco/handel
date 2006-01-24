@@ -1,5 +1,9 @@
 Revision history for Perl module Handel
 
+0.33
+    - Fixed version requirement for catalyst tests
+    - Fixed cart iterator tests db file creation issues
+
 0.32 Sun Jan 22 18:19:38 2006
     - Added order_reconcile.t tests
     - Order::reconcile now uses copy_cart/copy_cart_items
