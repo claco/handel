@@ -48,8 +48,8 @@ BEGIN {
     };
 
     SKIP: {
-        eval 'use Catalyst 5.0';
-        skip 'Catalyst 5.0 not installed', 6 if $@;
+        eval 'use Catalyst 5.56';
+        skip 'Catalyst 5.56 not installed', 6 if $@;
 
         use_ok('Catalyst::Helper::Handel::Scaffold');
         use_ok('Catalyst::Helper::Controller::Handel::Cart');

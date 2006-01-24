@@ -8,9 +8,9 @@ use File::Path;
 use File::Spec::Functions;
 
 BEGIN {
-    eval 'use Catalyst 5.00';
+    eval 'use Catalyst 5.56';
     plan(skip_all =>
-        'Catalyst 5 not installed') if $@;
+        'Catalyst 5.56 not installed') if $@;
 
     eval 'use Test::File 1.10';
     plan(skip_all =>
