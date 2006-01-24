@@ -33,7 +33,7 @@ sub run {
 
     ## Setup SQLite DB for tests
     {
-        my $dbfile  = 't/cart_iterator.db';
+        my $dbfile  = "t/cart_iterator_$dbsuffix.db";
         my $db      = "dbi:SQLite:dbname=$dbfile";
         my $create  = 't/sql/cart_create_table.sql';
         my $data    = 't/sql/cart_fake_data.sql';
