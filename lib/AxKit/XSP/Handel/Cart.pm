@@ -11,45 +11,200 @@ use base 'Apache::AxKit::Language::XSP';
 
 $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
 
-{
-    my @context = 'root';
+BEGIN {
+    my @quoted = qw/
+        new_description
+        new_id
+        new_name
+        new_shopper
+        new_results_add_id
+        new_results_add_sku
+        new_results_add_quantity
+        new_results_add_price
+        new_results_add_description
+        cart_filter
+        cart_results_add_id
+        cart_results_add_sku
+        cart_results_add_quantity
+        cart_results_add_price
+        cart_results_add_description
+        cart_results_delete_id
+        cart_results_delete_sku
+        cart_results_delete_quantity
+        cart_results_delete_price
+        cart_results_delete_description
+        cart_results_update_name
+        cart_results_update_shopper
+        cart_results_update_description
+        cart_results_item_filter
+        cart_results_item_results_update_sku
+        cart_results_item_results_update_quantity
+        cart_results_item_results_update_price
+        cart_results_item_results_update_description
+        cart_results_items_filter
+        cart_results_items_results_update_sku
+        cart_results_items_results_update_quantity
+        cart_results_items_results_update_price
+        cart_results_items_results_update_description
+        cart_results_restore_filter
+        carts_filter
+        carts_results_add_id
+        carts_results_add_sku
+        carts_results_add_quantity
+        carts_results_add_price
+        carts_results_add_description
+        carts_results_delete_id
+        carts_results_delete_sku
+        carts_results_delete_quantity
+        carts_results_delete_price
+        carts_results_delete_description
+        carts_results_item_filter
+        carts_results_item_results_update_sku
+        carts_results_item_results_update_quantity
+        carts_results_item_results_update_price
+        carts_results_item_results_update_description
+        carts_results_items_filter
+        carts_results_items_results_update_sku
+        carts_results_items_results_update_quantity
+        carts_results_items_results_update_price
+        carts_results_items_results_update_description
+        carts_results_update_name
+        carts_results_update_shopper
+        carts_results_update_description
+        carts_results_restore_filter
+        /;
 
-    sub start_document {
-        return "use Handel::Cart;\n";
+    my @empty = qw/
+        new
+        new_no_results
+        new_results
+        new_results_add
+        new_results_add_results
+        new_results_add_no_results
+        cart
+        cart_results
+        cart_results_add
+        cart_results_add_results
+        cart_results_add_no_results
+        cart_results_delete
+        cart_results_update
+        cart_results_item
+        cart_results_item_results
+        cart_results_item_results_update
+        cart_results_item_no_results
+        cart_results_items
+        cart_results_items_results
+        cart_results_items_results_update
+        cart_results_items_no_results
+        cart_results_restore
+        cart_no_results
+        carts
+        carts_results
+        carts_results_add
+        carts_results_delete
+        carts_results_update
+        carts_results_item
+        carts_results_item_results
+        carts_results_item_results_update
+        carts_results_item_no_results
+        carts_results_items
+        carts_results_items_results
+        carts_results_items_results_update
+        carts_results_items_no_results
+        carts_results_restore
+        carts_no_results
+        /;
+
+    my @constants = qw /
+        new_type
+        cart_results_update_type
+        carts_results_update_type
+        /;
+
+    foreach (@quoted) {
+        my $pkg = __PACKAGE__;
+        my $sub = $_ . "_char";
+        no strict 'refs';
+
+        *{"$pkg\::$sub"} = \&quoted_text;
     };
+
+    foreach (@empty) {
+        my $pkg = __PACKAGE__;
+        my $sub = $_ . "_char";
+        no strict 'refs';
+
+        *{"$pkg\::$sub"} = sub {};
+    };
+
+    foreach (@constants) {
+        my $pkg = __PACKAGE__;
+        my $sub = $_ . "_char";
+        no strict 'refs';
+
+        *{"$pkg\::$sub"} = \&constant_text;
+    };
+};
+
+my @context = 'root';
+
+sub start_document {
+    return "use Handel::Cart;\n";
+};
+
+sub quoted_text {
+    my ($e, $text) = @_;
+
+    return ".q|$text|";
+};
+
+sub constant_text {
+   my ($e, $text) = @_;
+
+    if ($text =~ /^[A-Z]{1}/) {
+        $text = str_to_const($text);
+    };
+
+    return ".q|$text|";
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     sub parse_char {
         my ($e, $text) = @_;
         my $tag = $e->current_element();
+        my $pkg = $AxKit::XSP::TaglibPkg;
 
-        return unless length($text);
-
-        if ($tag eq 'type' && $text =~ /^[A-Z]{1}/) {
-            $text = str_to_const($text);
+        ########################################################################
+        ## New magic to make subclassing more feasable
+        ########################################################################
+        my @ctx = @context; shift @ctx;
+        if ($ctx[$#ctx] ne $tag) {
+            push @ctx, $tag;
         };
+        push @ctx, 'char';
+        my $sub = join '_', @ctx;$sub =~ s/-/_/;
+        if (my $coderef = $pkg->can($sub)) {
+            AxKit::Debug(5, "[Handel] [Cart] parse_char: calling " . $sub);
 
-        if ($tag =~ /^(description|id|name|shopper|type)$/) {
-            if ($context[$#context] eq 'new') {
-                return ".q|$text|";
-            } elsif ($context[$#context] eq 'add') {
-                return ".q|$text|";
-            } elsif ($context[$#context] eq 'delete') {
-                return ".q|$text|";
-            } elsif ($context[$#context] eq 'update') {
-                return ".q|$text|";
-            };
-        } elsif ($tag =~ /^(sku|price|quantity)$/) {
-            if ($context[$#context] eq 'add') {
-                return ".q|$text|";
-            } elsif ($context[$#context] eq 'delete') {
-                return ".q|$text|";
-            } elsif ($context[$#context] eq 'update') {
-                return ".q|$text|";
-            };
-        } elsif ($tag eq 'filter') {
-            return ".q|$text|";
+            return $coderef->($e, $text);
+        } else {
+            AxKit::Debug(5, "[Handel] [Cart] parse_char: processing " . $tag);
         };
-        return '';
+        ########################################################################
+
+        return;
     };
 
     sub parse_start {
@@ -699,7 +854,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
 
         return '';
     };
-};
+#};
 
 1;
 __END__
