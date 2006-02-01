@@ -45,7 +45,9 @@ if ($^O ne 'openbsd' && eval {require APR::UUID}) {
 
 if ($ENV{TEST_HTTP}) {
     eval 'use Apache::Test 1.27';
-    if (!$@) {
+    if ($@) {
+        print "Apache-Test >= 1.27 is required!\n";
+    } else {
         require Apache::TestMM;
         Apache::TestMM->import(qw(test clean));
 
