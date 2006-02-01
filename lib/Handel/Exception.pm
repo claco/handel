@@ -6,6 +6,10 @@ use warnings;
 BEGIN {
     use base 'Error';
     use Handel::L10N qw(translate);
+    eval 'require Apache::AxKit::Exception';
+    if (!$@) {
+        push @__PACKAGE__::ISA, 'Apache::AxKit::Exception';
+    };
 };
 
 my $lh = Handel::L10N->get_handle();
@@ -65,10 +69,6 @@ use warnings;
 
 BEGIN {
     use base 'Handel::Exception';
-    eval 'require Apache::AxKit::Exception';
-    if (!$@) {
-        push @__PACKAGE__::ISA, 'Apache::AxKit::Exception';
-    };
 };
 
 sub new {
