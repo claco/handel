@@ -8,9 +8,9 @@ use Handel::TestHelper qw(preparetables comp_to_file);
 
 Test::More::plan(skip_all => 'set TEST_HTTP to enable this test') unless $ENV{TEST_HTTP};
 
-eval 'use Apache::Test 1.16';
+eval 'use Apache::Test 1.27';
 Test::More::plan(skip_all =>
-    'Apache::Test 1.16 not installed') if $@;
+    'Apache::Test 1.27 not installed') if $@;
 
 eval 'use DBD::SQLite';
 Test::More::plan(skip_all =>
