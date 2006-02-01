@@ -12,6 +12,9 @@ use base 'Apache::AxKit::Language::XSP';
 $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Cart';
 
 BEGIN {
+    my $pkg = __PACKAGE__;
+    no strict 'refs';
+
     my @quoted = qw/
         new_description
         new_id
@@ -122,28 +125,24 @@ BEGIN {
         /;
 
     foreach (@quoted) {
-        my $pkg = __PACKAGE__;
         my $sub = $_ . "_char";
-        no strict 'refs';
 
         *{"$pkg\::$sub"} = \&quoted_text;
     };
 
     foreach (@empty) {
-        my $pkg = __PACKAGE__;
         my $sub = $_ . "_char";
-        no strict 'refs';
 
         *{"$pkg\::$sub"} = sub {};
     };
 
     foreach (@constants) {
-        my $pkg = __PACKAGE__;
         my $sub = $_ . "_char";
-        no strict 'refs';
 
         *{"$pkg\::$sub"} = \&constant_text;
     };
+
+    *{"$pkg\::guid_start"} = \&uuid_start;
 };
 
 my @context = 'root';
@@ -168,8 +167,132 @@ sub constant_text {
     return ".q|$text|";
 };
 
+sub uuid_start {
+    my ($e, $tag, %attr) = @_;
 
+    $e->start_expr($tag);
+    $e->append_to_script("Handel::Cart->uuid");
+    $e->end_expr($tag);
 
+    return;
+};
+
+sub new_start {
+    my ($e, $tag, %attr) = @_;
+
+    throw Handel::Exception::Taglib(
+        -text => translate("Tag '[_1]' not valid inside of other Handel tags", $tag)
+    ) if ($context[$#context] ne 'root');
+
+    push @context, $tag;
+
+    my $code = "my \$_xsp_handel_cart_cart;\nmy \$_xsp_handel_cart_called_new;\n";
+    $code .= scalar keys %attr ?
+        'my %_xsp_handel_cart_new_filter = ("' . join('", "', %attr) . '");' :
+        'my %_xsp_handel_cart_new_filter;' ;
+
+    return "\n{\n$code\n";
+};
+
+sub new_description_start {
+    my ($e, $tag, %attr) = @_;
+
+    return "\n\$_xsp_handel_cart_new_filter{$tag} = ''";
+};
+
+sub new_id_start {
+    my ($e, $tag, %attr) = @_;
+
+    return "\n\$_xsp_handel_cart_new_filter{$tag} = ''";
+};
+
+sub new_name_start {
+    my ($e, $tag, %attr) = @_;
+
+    return "\n\$_xsp_handel_cart_new_filter{$tag} = ''";
+};
+
+sub new_shopper_start {
+    my ($e, $tag, %attr) = @_;
+
+    return "\n\$_xsp_handel_cart_new_filter{$tag} = ''";
+};
+
+sub new_type_start {
+    my ($e, $tag, %attr) = @_;
+
+    if (exists $attr{'type'}) {
+        if ($attr{'type'} =~ /^[A-Z]{1}/) {
+            $attr{'type'} = str_to_const($attr{'type'});
+        };
+    };
+
+    return "\n\$_xsp_handel_cart_new_filter{$tag} = ''";
+};
+
+sub new_results_start {
+    my ($e, $tag, %attr) = @_;
+
+    throw Handel::Exception::Taglib(
+        -text => translate("Tag '[_1]' not valid here", $tag)
+    ) if ($context[$#context] !~ /^(new|add|cart(s?)|item(s?))$/);
+
+    push @context, $tag;
+
+    return '
+        if (!$_xsp_handel_cart_called_new && scalar keys %_xsp_handel_cart_new_filter) {
+            $_xsp_handel_cart_cart = Handel::Cart->new(\%_xsp_handel_cart_new_filter);
+            $_xsp_handel_cart_called_new = 1;
+        };
+        if ($_xsp_handel_cart_cart) {
+
+    ';
+};
+
+sub new_results_count_start {
+    my ($e, $tag, %attr) = @_;
+
+    $e->start_expr($tag);
+    $e->append_to_script("\$_xsp_handel_cart_cart->$tag;\n");
+
+    return;
+};
+
+sub new_results_description_start {
+    my ($e, $tag, %attr) = @_;
+
+    $e->start_expr($tag);
+    $e->append_to_script("\$_xsp_handel_cart_cart->$tag;\n");
+
+    return;
+};
+
+sub new_results_name_start {
+    my ($e, $tag, %attr) = @_;
+
+    $e->start_expr($tag);
+    $e->append_to_script("\$_xsp_handel_cart_cart->$tag;\n");
+
+    return;
+};
+
+sub new_results_id_start {
+    my ($e, $tag, %attr) = @_;
+
+    $e->start_expr($tag);
+    $e->append_to_script("\$_xsp_handel_cart_cart->$tag;\n");
+
+    return;
+};
+
+sub new_results_shopper_start {
+    my ($e, $tag, %attr) = @_;
+
+    $e->start_expr($tag);
+    $e->append_to_script("\$_xsp_handel_cart_cart->$tag;\n");
+
+    return;
+};
 
 
 
@@ -190,17 +313,18 @@ sub constant_text {
         ## New magic to make subclassing more feasable
         ########################################################################
         my @ctx = @context; shift @ctx;
-        if ($ctx[$#ctx] && $ctx[$#ctx] ne $tag) {
+        if (($ctx[$#ctx] && $ctx[$#ctx] ne $tag) || !$ctx[$#ctx]) {
             push @ctx, $tag;
         };
         push @ctx, 'char';
         my $sub = join '_', @ctx;$sub =~ s/-/_/;
         if (my $coderef = $pkg->can($sub)) {
-            AxKit::Debug(5, "[Handel] [Cart] parse_char: calling " . $sub);
+            AxKit::Debug(5, "[Handel] [Cart] parse_char:  calling $sub");
 
             return $coderef->($e, $text);
         } else {
-            AxKit::Debug(5, "[Handel] [Cart] parse_char: processing " . $tag);
+            AxKit::Debug(5, "[Handel] [Cart] parse_char:  $sub not found");
+            AxKit::Debug(5, "[Handel] [Cart] parse_char:  processing $tag");
         };
         ########################################################################
 
@@ -211,23 +335,24 @@ sub constant_text {
         my ($e, $tag, %attr) = @_;
         my $pkg = $AxKit::XSP::TaglibPkg;
 
-        AxKit::Debug(5, "[Handel] [Cart] parse_start [$tag] context: " . join('->', @context));
+        AxKit::Debug(5, "[Handel] [Cart] parse_start: [$tag] context: " . join('->', @context));
 
         ########################################################################
         ## New magic to make subclassing more feasable
         ########################################################################
         my @ctx = @context; shift @ctx;
-        if ($ctx[$#ctx] && $ctx[$#ctx] ne $tag) {
+        if (($ctx[$#ctx] && $ctx[$#ctx] ne $tag) || !$ctx[$#ctx]) {
             push @ctx, $tag;
         };
         push @ctx, 'start';
         my $sub = join '_', @ctx;$sub =~ s/-/_/;
         if (my $coderef = $pkg->can($sub)) {
-            AxKit::Debug(5, "[Handel] [Cart] parse_start: calling " . $sub);
+            AxKit::Debug(5, "[Handel] [Cart] parse_start: calling $sub");
 
             return $coderef->($e, $tag, %attr);
         } else {
-            AxKit::Debug(5, "[Handel] [Cart] parse_start: processing " . $tag);
+            AxKit::Debug(5, "[Handel] [Cart] parse_start: $sub not found");
+            AxKit::Debug(5, "[Handel] [Cart] parse_start: processing $tag");
         };
         ########################################################################
 
@@ -660,7 +785,7 @@ sub constant_text {
     sub parse_end {
         my ($e, $tag) = @_;
 
-        AxKit::Debug(5, "[Handel] [Cart] parse_end   [$tag] context: " . join('->', @context));
+        AxKit::Debug(5, "[Handel] [Cart] parse_end:   [$tag] context: " . join('->', @context));
 
         ## cart:new
         if ($tag eq 'new') {
