@@ -190,7 +190,7 @@ sub constant_text {
         ## New magic to make subclassing more feasable
         ########################################################################
         my @ctx = @context; shift @ctx;
-        if ($ctx[$#ctx] ne $tag) {
+        if ($ctx[$#ctx] && $ctx[$#ctx] ne $tag) {
             push @ctx, $tag;
         };
         push @ctx, 'char';
@@ -209,8 +209,27 @@ sub constant_text {
 
     sub parse_start {
         my ($e, $tag, %attr) = @_;
+        my $pkg = $AxKit::XSP::TaglibPkg;
 
         AxKit::Debug(5, "[Handel] [Cart] parse_start [$tag] context: " . join('->', @context));
+
+        ########################################################################
+        ## New magic to make subclassing more feasable
+        ########################################################################
+        my @ctx = @context; shift @ctx;
+        if ($ctx[$#ctx] && $ctx[$#ctx] ne $tag) {
+            push @ctx, $tag;
+        };
+        push @ctx, 'start';
+        my $sub = join '_', @ctx;$sub =~ s/-/_/;
+        if (my $coderef = $pkg->can($sub)) {
+            AxKit::Debug(5, "[Handel] [Cart] parse_start: calling " . $sub);
+
+            return $coderef->($e, $tag, %attr);
+        } else {
+            AxKit::Debug(5, "[Handel] [Cart] parse_start: processing " . $tag);
+        };
+        ########################################################################
 
         if (exists $attr{'type'}) {
             if ($attr{'type'} =~ /^[A-Z]{1}/) {
