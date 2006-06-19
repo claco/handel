@@ -162,7 +162,8 @@ sub begin : Private {
 sub end : Private {
     my ($self, $c) = @_;
 
-    $c->forward($c->view('TT')) unless $c->res->output;
+    $c->forward($c->view('TT'))
+        unless ( $c->res->output || $c->res->body || ! $c->stash->{template} );
 };
 
 sub default : Private {
@@ -203,7 +204,7 @@ sub view : Local {
         $c->stash->{'messages'} = \@messages;
     };
 
-    $c->stash->{'template'} = '[% uri %]/view.tt';
+    $c->stash->{'template'} = '[% uri.replace('^/', '') %]/view.tt';
 };
 
 sub list : Local {
@@ -214,7 +215,7 @@ sub list : Local {
         type    => ORDER_TYPE_SAVED
     }, RETURNAS_ITERATOR);
 
-    $c->stash->{'template'} = '[% uri %]/list.tt';
+    $c->stash->{'template'} = '[% uri.replace('^/', '') %]/list.tt';
 };
 
 1;
@@ -230,7 +231,7 @@ __list__
 [% USE HTML %]
 <h1>Your Previous Orders</h1>
 <p>
-    <a href="[% base _ '[- uri -]/' %]">View Order List</a>
+    <a href="[% base _ '[- uri.replace('^/', '') -]/' %]">View Order List</a>
 </p>
 [% IF messages %]
     <ul>
@@ -248,7 +249,7 @@ __list__
     [% WHILE (order = orders.next) %]
         <tr>
             <td align="left">
-                <a href="[% base _ '[- uri -]/view/' _ order.id _ '/' %]">[% HTML.escape(order.number) %]</a>
+                <a href="[% base _ '[- uri.replace('^/', '') -]/view/' _ order.id _ '/' %]">[% HTML.escape(order.number) %]</a>
             </td>
             <td>
                 [% HTML.escape(order.updated) %]
@@ -265,7 +266,7 @@ __view__
 [% IF order %]
     <h1>Order# [% HTML.escape(order.number) %]</h1>
     <p>
-        <a href="[% base _ '[- uri -]/' %]">View Order List</a>
+        <a href="[% base _ '[- uri.replace('^/', '') -]/' %]">View Order List</a>
     </p>
     <table border="0" cellpadding="3" cellspacing="5">
         <tr>
@@ -439,7 +440,7 @@ __view__
 [% ELSE %]
     <h1>Order Not Found</h1>
     <p>
-        <a href="[% base _ '[- uri -]/' %]">View Order List</a>
+        <a href="[% base _ '[- uri.replace('^/', '') -]/' %]">View Order List</a>
     </p>
     [% IF messages %]
         <ul>

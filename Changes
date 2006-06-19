@@ -1,9 +1,10 @@
 Revision history for Perl module Handel
 
-0.33
+0.33 Mon Jun 19 19:31:23 2006
     - Fixed version requirement for catalyst tests
     - Fixed cart iterator tests db file creation issues
     - Cart taglib now calls tag-based functions to ease subclassing
+    - Applied Catalyst Controller Helper patch from Todd W. for Catalyst 5.6+
 
 0.32 Sun Jan 22 18:19:38 2006
     - Added order_reconcile.t tests

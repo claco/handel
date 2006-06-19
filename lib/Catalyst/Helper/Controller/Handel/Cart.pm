@@ -256,7 +256,8 @@ sub begin : Private {
 sub end : Private {
     my ($self, $c) = @_;
 
-    $c->forward($c->view('TT')) unless $c->res->output;
+    $c->forward($c->view('TT'))
+        unless ( $c->res->output || $c->res->body || ! $c->stash->{template} );
 };
 
 sub default : Private {
@@ -268,7 +269,7 @@ sub default : Private {
 sub view : Local {
     my ($self, $c) = @_;
 
-    $c->stash->{'template'} = '[% uri %]/view.tt';
+    $c->stash->{'template'} = '[% uri.replace('^/', '') %]/view.tt';
 };
 
 sub add : Local {
@@ -313,10 +314,10 @@ sub add : Local {
     };
 
     if (scalar @messages) {
-        $c->stash->{'template'} = '[% uri %]/view.tt';
+        $c->stash->{'template'} = '[% uri.replace('^/', '') %]/view.tt';
         $c->stash->{'messages'} = \@messages;
     } else {
-        $c->res->redirect($c->req->base . '[% uri %]/');
+        $c->res->redirect($c->req->base . '[% uri.replace('^/', '') %]/');
     };
 };
 
@@ -361,10 +362,10 @@ sub update : Local {
     };
 
     if (scalar @messages) {
-        $c->stash->{'template'} = '[% uri %]/view.tt';
+        $c->stash->{'template'} = '[% uri.replace('^/', '') %]/view.tt';
         $c->stash->{'messages'} = \@messages;
     } else {
-        $c->res->redirect($c->req->base . '[% uri %]/');
+        $c->res->redirect($c->req->base . '[% uri.replace('^/', '') %]/');
     };
 };
 
@@ -382,10 +383,10 @@ sub clear : Local {
     };
 
     if (scalar @messages) {
-        $c->stash->{'template'} = '[% uri %]/view.tt';
+        $c->stash->{'template'} = '[% uri.replace('^/', '') %]/view.tt';
         $c->stash->{'messages'} = \@messages;
     } else {
-        $c->res->redirect($c->req->base . '[% uri %]/');
+        $c->res->redirect($c->req->base . '[% uri.replace('^/', '') %]/');
     };
 };
 
@@ -420,10 +421,10 @@ sub delete : Local {
     };
 
     if (scalar @messages) {
-        $c->stash->{'template'} = '[% uri %]/view.tt';
+        $c->stash->{'template'} = '[% uri.replace('^/', '') %]/view.tt';
         $c->stash->{'messages'} = \@messages;
     } else {
-        $c->res->redirect($c->req->base . '[% uri %]/');
+        $c->res->redirect($c->req->base . '[% uri.replace('^/', '') %]/');
     };
 };
 
@@ -449,7 +450,7 @@ sub list : Local {
         $c->stash->{'messages'} = \@messages;
     };
 
-    $c->stash->{'template'} = '[% uri %]/list.tt';
+    $c->stash->{'template'} = '[% uri.replace('^/', '') %]/list.tt';
 };
 
 sub save : Local {
@@ -483,10 +484,10 @@ sub save : Local {
     };
 
     if (scalar @messages) {
-        $c->stash->{'template'} = '[% uri %]/view.tt';
+        $c->stash->{'template'} = '[% uri.replace('^/', '') %]/view.tt';
         $c->stash->{'messages'} = \@messages;
     } else {
-        $c->res->redirect($c->req->base . '[% uri %]/');
+        $c->res->redirect($c->req->base . '[% uri.replace('^/', '') %]/');
     };
 };
 
@@ -516,7 +517,7 @@ sub restore : Local {
                 push @messages, $@;
             };
 
-            $c->res->redirect($c->req->base . '[% uri %]/');
+            $c->res->redirect($c->req->base . '[% uri.replace('^/', '') %]/');
         } else {
             push @messages, map {$_} values %{$results->msgs};
         };
@@ -526,7 +527,7 @@ sub restore : Local {
         $c->stash->{'messages'} = \@messages;
         $c->forward('list');
     } else {
-        $c->res->redirect($c->req->base . '[% uri %]/');
+        $c->res->redirect($c->req->base . '[% uri.replace('^/', '') %]/');
     };
 };
 
@@ -564,7 +565,7 @@ sub destroy : Local {
         $c->stash->{'messages'} = \@messages;
         $c->forward('list');
     } else {
-        $c->res->redirect($c->req->base . '[% uri %]/list/');
+        $c->res->redirect($c->req->base . '[% uri.replace('^/', '') %]/list/');
     };
 };
 
@@ -581,8 +582,8 @@ __view__
 [% USE HTML %]
 <h1>Your Shopping Cart</h1>
 <p>
-    <a href="[% base _ '[- uri -]/' %]">View Cart</a> |
-    <a href="[% base _ '[- uri -]/list/' %]">View Saved Carts</a>
+    <a href="[% base _ '[- uri.replace('^/', '') -]/' %]">View Cart</a> |
+    <a href="[% base _ '[- uri.replace('^/', '') -]/list/' %]">View Saved Carts</a>
 </p>
 [% IF messages %]
     <ul>
@@ -603,7 +604,7 @@ __view__
         </tr>
     [% FOREACH item = cart.items %]
         <tr>
-            <form action="[% base _ '[- uri -]/update/' %]" method="post">
+            <form action="[% base _ '[- uri.replace('^/', '') -]/update/' %]" method="post">
                 <input type="hidden" name="id" value="[% HTML.escape(item.id) %]">
                 <td align="left">[% HTML.escape(item.sku) %]</td>
                 <td align="left">[% HTML.escape(item.description) %]</td>
@@ -612,7 +613,7 @@ __view__
                 <td align="right">[% HTML.escape(item.total.format(undef, 'FMT_SYMBOL')) %]</td>
                 <td><input type="submit" value="Update"></td>
             </form>
-            <form action="[% base _ '[- uri -]/delete/' %]" method="post">
+            <form action="[% base _ '[- uri.replace('^/', '') -]/delete/' %]" method="post">
                 <input type="hidden" name="id" value="[% HTML.escape(item.id) %]">
                 <td>
                     <input type="submit" value="Delete">
@@ -630,16 +631,16 @@ __view__
         </tr>
         <tr>
             <td colspan="7" align="right">
-                <form action="[% base _ '[- uri -]/empty/' %]" method="post">
+                <form action="[% base _ '[- uri.replace('^/', '') -]/empty/' %]" method="post">
                     <input type="submit" value="Empty Cart">
                 </form>
-                <form action="[% base  _ '[- couri -]/' %]" method="get">
+                <form action="[% base  _ '[- couri.replace('^/', '') -]/' %]" method="get">
                     <input type="submit" value="Checkout">
                 </form>
             </td>
         </tr>
     </table>
-    <form action="[% base _ '[- uri -]/save/' %]" method="post">
+    <form action="[% base _ '[- uri.replace('^/', '') -]/save/' %]" method="post">
         <input type="text" name="name">
         <input type="submit" value="Save Cart">
     </form>
@@ -651,8 +652,8 @@ __list__
 [% USE HTML %]
 <h1>Your Saved Shopping Carts</h1>
 <p>
-    <a href="[% base _ '[- uri -]/' %]">View Cart</a> |
-    <a href="[% base _ '[- uri -]/list/' %]">View Saved Carts</a>
+    <a href="[% base _ '[- uri.replace('^/', '') -]/' %]">View Cart</a> |
+    <a href="[% base _ '[- uri.replace('^/', '') -]/list/' %]">View Saved Carts</a>
 </p>
 [% IF messages %]
     <ul>
@@ -672,7 +673,7 @@ __list__
         <tr>
             <td align="left" valign="top">[% HTML.escape(cart.name) %]</td>
             <td>
-                <form action="[% base _ '[- uri -]/restore/' %]" method="POST">
+                <form action="[% base _ '[- uri.replace('^/', '') -]/restore/' %]" method="POST">
                     <input type="hidden" name="id" value="[% HTML.escape(cart.id) %]">
                     <select name="mode">
                         [% USE hc = Handel.Constants %]
@@ -684,7 +685,7 @@ __list__
                 </form>
             </td>
             <td>
-                <form action="[% base _ '[- uri -]/destroy/' %]" method="POST">
+                <form action="[% base _ '[- uri.replace('^/', '') -]/destroy/' %]" method="POST">
                     <input type="hidden" name="id" value="[% HTML.escape(cart.id) %]">
                     <input type="submit" value="Delete">
                 </form>
