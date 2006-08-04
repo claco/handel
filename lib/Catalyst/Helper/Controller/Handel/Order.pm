@@ -224,7 +224,7 @@ use Test::More tests => 2;
 use strict;
 use warnings;
 
-use_ok(Catalyst::Test, '[% app %]');
+use_ok('Catalyst::Test', '[% app %]');
 use_ok('[% class %]');
 __list__
 [% TAGS [- -] %]

@@ -1,5 +1,7 @@
 Revision history for Perl module Handel
 
+    - Applied Catalyst Helper test patch from Todd W.
+
 0.33 Mon Jun 19 19:31:23 2006
     - Fixed version requirement for catalyst tests
     - Fixed cart iterator tests db file creation issues
