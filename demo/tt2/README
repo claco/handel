@@ -19,3 +19,6 @@ in your existing httpd.conf file like so:
 
 Don't forget to change DocumentRoot, ErrorLog, db_name and 'use lib' to
 match your system configuration and the installation of Handel.
+
+NOTE: This is for demo purposes only. THe preferred way to use Handel in a
+web application is using Catalyst.

@@ -23,7 +23,7 @@
 			<order:billtofax>3-333-333-3333</order:billtofax>
 			<order:billtoemail>mendlefarg@gmail.com</order:billtoemail>
 			<order:comments>Comments</order:comments>
-			<order:created>20050715T201234Z</order:created>
+			<order:created>2005-07-15 20:12:34</order:created>
 			<order:handling>8.95</order:handling>
 			<order:number>O123456789</order:number>
 			<order:shipmethod>UPS Ground</order:shipmethod>
@@ -45,7 +45,7 @@
 			<order:subtotal>37.95</order:subtotal>
 			<order:total>37.95</order:total>
 			<order:tax>6.66</order:tax>
-			<order:updated>20050716T201234Z</order:updated>
+			<order:updated>2005-07-16 20:12:34</order:updated>
 			<order:results>
 				<order:add id="F22226DF-8B5D-496D-95BC-5134B39ED797" sku="SKU1" price="1.11" quantity="1" description="Description 1" total="1.11"/>
 				<order:add id="D4755257-AC3D-47AC-9F04-B17F5F5B11E9" sku="SKU2" price="2.22" quantity="2" description="Description 2" total="4.44"/>
@@ -72,7 +72,7 @@
 			<order:billtofax>3-333-333-3333</order:billtofax>
 			<order:billtoemail>mendlefarg@gmail.com</order:billtoemail>
 			<order:comments>Comments</order:comments>
-			<order:created>20050715T201234Z</order:created>
+			<order:created>2005-07-15 20:12:34</order:created>
 			<order:handling>8.95</order:handling>
 			<order:number>O123456789</order:number>
 			<order:shipmethod>UPS Ground</order:shipmethod>
@@ -94,7 +94,7 @@
 			<order:subtotal>37.95</order:subtotal>
 			<order:total>37.95</order:total>
 			<order:tax>6.66</order:tax>
-			<order:updated>20050716T201234Z</order:updated>
+			<order:updated>2005-07-16 20:12:34</order:updated>
 			<order:results>
 				<order:add id="E7C40FA5-5C34-4174-B63F-A9EF595E4AEF" sku="SKU3" price="3.33" quantity="3" description="Description 3" total="9.99"/>
 				<order:add id="32CB33D2-B2F5-41F6-BB81-C5C7E05D9F3A" sku="SKU4" price="4.44" quantity="4" description="Description 4" total="16.64"/>

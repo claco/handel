@@ -26,26 +26,26 @@
 		<message>Error creating shopping cart</message>
 	[% END %]
 
-	[% IF (cart = hcart.fetch({
+	[% IF (cart = hcart.search({
 		type => hcart.CART_TYPE_TEMP,
 		id 	 => '6509982B-14B3-4AB0-8DEB-B5160B115521'
-	})) %]
+	}).first) %]
 		<cart>
 			<count>[% cart.count %]</count>
 			<description>[% cart.description %]</description>
 			<id>[% cart.id %]</id>
 			<name>[% cart.name %]</name>
 			<shopper>[% cart.shopper %]</shopper>
-			<subtotal>[% cart.subtotal %]</subtotal>
+			<subtotal>[% cart.subtotal.value %]</subtotal>
 			<type>[% cart.type %]</type>
-			[% FOREACH item = cart.items %]
+			[% FOREACH item = cart.items.all %]
 				<item>
 					<description>[% item.description %]</description>
 					<id>[% item.id %]</id>
-					<price>[% item.price %]</price>
+					<price>[% item.price.value %]</price>
 					<quantity>[% item.quantity %]</quantity>
 					<sku>[% item.sku %]</sku>
-					<total>[% item.total %]</total>
+					<total>[% item.total.value %]</total>
 				</item>
 				[% CALL item.description('My Updated Item') %]
 				[% CALL item.price(10.13) %]
@@ -54,13 +54,13 @@
 				<updateditem>
 					<description>[% item.description %]</description>
 					<id>[% item.id %]</id>
-					<price>[% item.price %]</price>
+					<price>[% item.price.value %]</price>
 					<quantity>[% item.quantity %]</quantity>
 					<sku>[% item.sku %]</sku>
-					<total>[% item.total %]</total>
+					<total>[% item.total.value %]</total>
 				</updateditem>
 			[% END %]
-			<subtotal>[% cart.subtotal %]</subtotal>
+			<subtotal>[% cart.subtotal.value %]</subtotal>
 		</cart>
 	[% ELSE %]
 		<message>Could not find cart</message>

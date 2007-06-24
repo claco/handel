@@ -14,24 +14,24 @@
 			<id>[% cart.id %]</id>
 			<name>[% cart.name %]</name>
 			<shopper>[% cart.shopper %]</shopper>
-			<subtotal>[% cart.subtotal %]</subtotal>
+			<subtotal>[% cart.subtotal.value %]</subtotal>
 			<type>[% cart.type %]</type>
 		</cart>
 	[% ELSE %]
 		<message>Error creating shopping cart</message>
     [% END %]
 
-    [% IF (cart = hcart.fetch({
+    [% IF (cart = hcart.search({
 		id			=> '279C429E-547C-4429-9DA9-357659E3F654',
 		type		=> hcart.CART_TYPE_TEMP
-	})) %]
+	}).first) %]
 		<cart>
 			<count>[% cart.count %]</count>
 			<description>[% cart.description %]</description>
 			<id>[% cart.id %]</id>
 			<name>[% cart.name %]</name>
 			<shopper>[% cart.shopper %]</shopper>
-			<subtotal>[% cart.subtotal %]</subtotal>
+			<subtotal>[% cart.subtotal.value %]</subtotal>
 			<type>[% cart.type %]</type>
 			[% CALL cart.save %]
 			<type>[% cart.type %]</type>

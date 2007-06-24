@@ -1,181 +1,35 @@
 NAME
-    Handel - Simple commerce framework with AxKit/TT/Catalyst support
+    Handel - A cart/order/checkout framework with AxKit/TT/Catalyst support
+
+SYNOPSIS
+        use Handel;
+        Handel->config_class('My::ConfigReader');
+    
+        my $config = Handel->config;
+        # $config->isa('My::ConfigReader')
 
 DESCRIPTION
-    Handel is a quick and not-so-dirty ecommerce framework with AxKit taglib
-    support and TT2 (Template Toolkit) support. It was started for the
-    conversion of an IIS/ASP based commerce site to Apache/ModPerl, but I
-    decided that is might be useful to others so here it is on CPAN.
+    This is a generic class containing the default configuration used by
+    other Handel classes.
 
-    For the curious, Handel is German for commerce.
+    To learn more about what Handel is and how it works, take a look at the
+    manual.
 
-WEBSITE
-    You can get the latest news, source, documentation and wiki help at
-    http://handelframework.com/.
+METHODS
+  config_class
+    Arguments: $config_class
 
-MAILING LIST
-    Join the mailing list at
-    http://lists.rawmode.org/cgi-bin/mailman/listinfo/handel. Big thanks to
-    gabb@#catalyst for the list space.
+    Gets/sets the name of the configuration class to use. The default
+    configuration class is Handel::ConfigReader.
 
-GOALS
-    Database agnostic. Thanks to Class::DBI and staying away from auto
-    incrementing ids, Handel should run in any database that Class::DBI
-    supports.
-    Implementation agnostic. Handel should be able to be used from the
-    command line, from a web page, from a SOAP service, or from a GUI
-    application. It's simply a data access mechanism. Any interaction with
-    forms, web pages, browser, cookies, etc is the responsibility of the
-    consumer
-    Checkout agnostic. A checkout process means different things to
-    different people in different situations. The Handel checkout pipeline
-    by itself does absolutely nothing with an order. It is instead a plugin
-    manager that allows you to specify and build plugins to do various
-    actions (payment authorization, address validation, fax delivery, etc).
-    Each site, server, page, even process() call can have it's own unique
-    order processing pipeline.
-    Easy integration into AxKit using taglibs.
-    Easy integration into TT2 using plugins.
-    Easy integration into Catalyst using plugins.
-    Easy integration into other systems using SOAP.
-    Feature complete demo site in AxKit.
-    Feature complete demo site in TT2.
-    Feature complete demo site in Catalyst.
-    Public Subversion repository.
-    Public Wiki/Docs site.
-    Get someone to actually use the damn thing. :-)
-    Abstract schema into SQL::Translator scripts
+    A Handel::Exception exception will be thrown if the specified class can
+    not be loaded.
 
-WHAT HANDEL IS
-    Simple cart and order record maintenance.
-    Plugin based checkout pipeline processing framework.
-
-WHAT HANDEL ISN'T
-    Intershop, Cart32, WebGUI, CMS, complete web commerce package(1). Handel
-    is a simple framework to load/upload cart/order data and shove that data
-    through a plugin based pipeline.
-    (1) While it is not a complete web based commerce system, I do plan on
-    having feature complete working demos sites so people can still
-    quick-start their own projects.
-
-FEATURES
-    Add/Update/Delete/Save/Restore Cart Contents
-    Full AxKit XSP Taglib Support
-    Template Toolkit 2 Plugin Support
-    Currency Conversion
-    Currency Formatting
-    Basic Localization Support
-    Multiple Database Support
-
-REQUIREMENTS
-  Prerequisites
-    The following modules are required for Handel to work properly. Older
-    versions may work fine, but these are the versions I have installed and
-    verified to work correctly. If you have older versions and all tests
-    pass, send me an email and I'll lower the version requirements.
-
-    Class::DBI
-        "Class::DBI" version 0.96 or greater.
-
-    DBI "DBI" version 1.36 or greater.
-
-    Error
-        "Error" version 0.14 or greater.
-
-    Locale::Maketext
-        "Locale::Maketext" version 1.06 or greater.
-
-    Data::UUID
-        At least one of the following modules are required to create uuids:
-        "UUID" 0.02, "Win32::Guidgen" 0.04, "Win32API::GUID" 0.02, or
-        "Data::UUID" 0.10.
-
-  Optional Modules
-    The following modules are not required for Handel to run, although some
-    features may be unavailable without them.
-
-    AxKit
-        "AxKit" version 1.61 or greater.
-
-        "AxKit" is only required if you plan on using "Handel" within XSP
-        using the supplied taglibs.
-
-    Locale::Currency::Format
-        "Locale::Currency::Format" version 1.22 or greater.
-
-        When present, this module allows all prices to be formatted to
-        specific currency codes and formats.
-
-    Finance::Currency::Convert::WebserviceX
-        "Finance::Currency::Convert::WebserviceX" version 0.03 or greater.
-
-        When present, this module allows all prices to be converted from one
-        currency to another.
-
-    Locale::Currency
-        "Locale::Currency" version 2.07 or greater.
-
-        When present, this module allows all conversion and currency codes
-        to be verified as real 3 letter ISO currency codes.
-
-    Template
-        "Template" version 2.07 or greater.
-
-        "Template" (TT2/Template ToolKit) is only required if you plan on
-        using Handel within TT2 based websites.
-
-  Build/Test Modules
-    The following modules are only required for the test suite when running
-    "make test".
-
-    Test::More
-        "Test::More" version 0.48 or greater.
-
-        The "Test::More" included with perl 5.8.4 and "Test::More" <= 0.48
-        have issues with ithreads that usually cause crashes in tests that
-        use "Class::DBI" or "DBIx:ContextualFetch". The errors usual mention
-        "attempt to free unreferenced scalar". If you receive these during
-        "make test", try upgrading "Test::More".
-
-    Pod::Coverage
-        "Pod::Coverage" version 0.14 or greater.
-
-        The pod coverage tests may fail complaining about missing pod for
-        methods if Pod::Coverage < 0.14 is installed. This is due to certain
-        syntax variations of the pod with escaped gt/lt. I may just alter
-        the pod and bump this version down if there is enough feedback to do
-        so.
-
-    Test::Pod
-        "Test::Pod" version 1.00 or greater.
-
-        "Test::Pod" 1.00 added the "all_pod_files_ok()" method which makes
-        my life easier. :-)
-
-    Test::Pod::Coverage
-        "Test::Pod::Coverage" version 1.04 or greater.
-
-        "Test::Pod::Coverage" 1.04 was made taint safe, and we run the tests
-        with -wT like good girls and boys.
-
-    Test:Strict
-        "Test::Strict" version 0.01 or greater.
-
-        This keeps me honest and makes sure I always "use strict".
-
-CAVEATS
-    When using item_class to specify the item class returned from add/items
-    in your subclass under Class::DBI < 3.0.8, the item_class specified will
-    be returned from all cart classes, including Handel::Cart itself. In
-    most cases, people are only using one subclass of Handel::Cart so this
-    won't effect them.
-
-    If you plan on using multiple subclasses of Handel::Cart that may or may
-    not return custom items, upgrade your Class::DBI to version 3.0.8 or
-    greater.
+  config
+    Returns an instance of the specified configuration class.
 
 SEE ALSO
-    Handel::Cart
+    Handel::Cart, Handel::Order, Handel::Checkout
 
 AUTHOR
         Christopher H. Laco

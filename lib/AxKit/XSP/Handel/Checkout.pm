@@ -1,4 +1,5 @@
 # $Id$
+## no critic
 package AxKit::XSP::Handel::Checkout;
 use strict;
 use warnings;
@@ -42,8 +43,8 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Checkout';
 
         if ($tag eq 'new') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid inside of other Handel tags", $tag)
-            ) if ($context[$#context] ne 'root');
+                -text => translate('TAG_NOT_ALLOWED_IN_OTHERS', $tag)
+            ) if ($context[-1] ne 'root');
 
             push @context, $tag;
 
@@ -67,8 +68,8 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Checkout';
             return $code;
         } elsif ($tag eq 'plugin') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid inside of tag '" . $context[$#context] . "'", $tag)
-            ) if ($context[$#context] ne 'plugins');
+                -text => translate('Tag [_1] not valid inside of tag [_2]', $tag, $context[-1])
+            ) if ($context[-1] ne 'plugins');
 
             push @context, $tag;
 
@@ -95,8 +96,8 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Checkout';
             undef $property if ($property eq 'checkout');
 
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid inside of tag '" . $context[$#context] . "'", $tag)
-            ) if ($context[$#context] ne 'messages');
+                -text => translate('Tag [_1] not valid inside of tag [_2]', $tag, $context[-1])
+            ) if ($context[-1] ne 'messages');
 
             push @context, $tag;
 
@@ -134,8 +135,8 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Checkout';
             return $code;
         } elsif ($tag eq 'phase') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid inside of tag '" . $context[$#context] . "'", $tag)
-            ) if ($context[$#context] ne 'phases');
+                -text => translate('Tag [_1] not valid inside of tag [_2]', $tag, $context[-1])
+            ) if ($context[-1] ne 'phases');
 
             push @context, $tag;
 

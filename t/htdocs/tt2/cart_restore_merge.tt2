@@ -50,37 +50,37 @@
 		<message>Error adding cart</message>
 	[% END %]
 
-	[% IF (cart = hcart.fetch({
+	[% IF (cart = hcart.search({
 		id 	 => '32EAE1FC-FAD1-4C58-8826-5B9064DE0D63'
-	})) %]
+	}).first) %]
 		<cart>
 			<count>[% cart.count %]</count>
 			<description>[% cart.description %]</description>
 			<id>[% cart.id %]</id>
 			<name>[% cart.name %]</name>
 			<shopper>[% cart.shopper %]</shopper>
-			<subtotal>[% cart.subtotal %]</subtotal>
+			<subtotal>[% cart.subtotal.value %]</subtotal>
 			<type>[% cart.type %]</type>
-			[% FOREACH item = cart.items %]
+			[% FOREACH item = cart.items.all %]
 				<item>
 					<description>[% item.description %]</description>
 					<id>[% item.id %]</id>
-					<price>[% item.price %]</price>
+					<price>[% item.price.value %]</price>
 					<quantity>[% item.quantity %]</quantity>
 					<sku>[% item.sku %]</sku>
-					<total>[% item.total %]</total>
+					<total>[% item.total.value %]</total>
 				</item>
 			[% END %]
 			[% CALL cart.restore({id => '01B9CE36-B18D-4D30-A860-DB54993D4F80'}, hcart.CART_MODE_MERGE) %]
 			<count>[% cart.count %]</count>
-			<subtotal>[% cart.subtotal %]</subtotal>
-			[% FOREACH item = cart.items %]
+			<subtotal>[% cart.subtotal.value %]</subtotal>
+			[% FOREACH item = cart.items.all %]
 				<restoreditem>
 					<description>[% item.description %]</description>
-					<price>[% item.price %]</price>
+					<price>[% item.price.value %]</price>
 					<quantity>[% item.quantity %]</quantity>
 					<sku>[% item.sku %]</sku>
-					<total>[% item.total %]</total>
+					<total>[% item.total.value %]</total>
 				</restoreditem>
 			[% END %]
 		</cart>

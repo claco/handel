@@ -32,28 +32,28 @@
 			<id>[% cart.id %]</id>
 			<name>[% cart.name %]</name>
 			<shopper>[% cart.shopper %]</shopper>
-			<subtotal>[% cart.subtotal %]</subtotal>
+			<subtotal>[% cart.subtotal.value %]</subtotal>
 			<type>[% cart.type %]</type>
 		</cart>
 	[% ELSE %]
 		<message>Error creating shopping cart</message>
 	[% END %]
 
-	[% IF (cart = hcart.fetch({
+	[% IF (cart = hcart.search({
 		type => hcart.CART_TYPE_TEMP,
 		id	 => 'B05779D0-6D40-4F0A-B6A3-1CC2193571C6'
-	})) %]
+	}).first) %]
 		<cart>
 			<count>[% cart.count %]</count>
 			<description>[% cart.description %]</description>
 			<id>[% cart.id %]</id>
 			<name>[% cart.name %]</name>
 			<shopper>[% cart.shopper %]</shopper>
-			<subtotal>[% cart.subtotal %]</subtotal>
+			<subtotal>[% cart.subtotal.value %]</subtotal>
 			<type>[% cart.type %]</type>
 			[% CALL cart.delete({id => '2505E956-D5A6-47B0-AEB5-D19429FCA5FD'}) %]
 			<count>[% cart.count %]</count>
-			<subtotal>[% cart.subtotal %]</subtotal>
+			<subtotal>[% cart.subtotal.value %]</subtotal>
 		</cart>
 	[% ELSE %]
 		<message>Could not find cart</message>

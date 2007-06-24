@@ -11,17 +11,17 @@
 		<message>Error creating shopping cart</message>
 	[% END %]
 
-	[% IF (cart = hcart.fetch({
+	[% IF (cart = hcart.search({
 		type => hcart.CART_TYPE_SAVED,
 		id	 => '535FD0DD-A88E-42B0-B503-7FFB4384B4D6'
-	})) %]
+	}).first) %]
 		<cart>
 			<count>[% cart.count %]</count>
 			<description>[% cart.description %]</description>
 			<id>[% cart.id %]</id>
 			<name>[% cart.name %]</name>
 			<shopper>[% cart.shopper %]</shopper>
-			<subtotal>[% cart.subtotal %]</subtotal>
+			<subtotal>[% cart.subtotal.value %]</subtotal>
 			<type>[% cart.type %]</type>
 		</cart>
 		[% CALL cart.description('My New Description') %]
@@ -34,7 +34,7 @@
 			<id>[% cart.id %]</id>
 			<name>[% cart.name %]</name>
 			<shopper>[% cart.shopper %]</shopper>
-			<subtotal>[% cart.subtotal %]</subtotal>
+			<subtotal>[% cart.subtotal.value %]</subtotal>
 			<type>[% cart.type %]</type>
 		</cart>
 	[% ELSE %]

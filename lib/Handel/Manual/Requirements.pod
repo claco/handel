@@ -1,0 +1,249 @@
+=head1 NAME
+
+Handel::Manual::Requirements - What you need to install to use Handel.
+
+=head1 DESCRIPTION
+
+This page lists the known requirements recommended software needed to use Handel.
+
+=head1 REQUIREMENTS
+
+=head2 Prerequisites
+
+The following modules are required for Handel to work properly. Older versions may work fine, but these
+are the versions I have installed and verified to work correctly. If you have older versions and all tests pass,
+send me an email and I'll lower the version requirements.
+
+=head3 DBIx::Class
+
+Version 0.08 or greater.
+
+=head3 DBIx::Class::UUIDColumns
+
+Version 0.01 or greater.
+
+=head3 DBIx::Class::Validation
+
+Version 0.01 or greater.
+
+=head3 Class::Accessor::Grouped
+
+Version 0.02 or greater.
+
+=head3 Class::ISA
+
+Version 0.32 or greater.
+
+=head3 Class::Inspector
+
+Version 0.16 or greater.
+
+=head3 Clone
+
+Version 0.20 or greater.
+
+=head3 Data::Currency
+
+Version 0.03 or greater.
+
+=head3 Error
+
+Version 0.14 or greater.
+
+=head3 Locale::Maketext
+
+Version 1.06 or greater.
+
+=head3 Module::Pluggable
+
+Version 2.95 or greater.
+
+=head3 Module::Starter
+
+Version 1.42 or greater.
+
+This is only used for the quick start module creation. IF you don't plan on using that, you can ignore this
+requirement.
+
+=head3 Scalar::Util
+
+Version 0.13 or greater with weaken support.
+
+=head3 Tie::Hash
+
+Version 1.01 or greater.
+
+=head3 DateTime
+
+Version 0.31 or greater.
+
+=head3 DateTime::Format::MySQL
+
+Version 0.04 or greater.
+
+This is used in the bulk of core module tests with SQLite. IF you are using another database like Postgres,
+you should install the appropriate module for that database.
+
+=head3 NEXT
+
+This is only used in Handel::Compat.
+
+=head3 SQL::Translator
+
+Version 0.08 or greater. This is used by DBIC and the quick start code to install the schema to a db. You can
+ignore this requirement if you are not going to use the quick start.
+
+=head3 Locale::Currency::Format
+
+Version 1.22 or greater.
+
+This module allows all prices to be formatted to specific currency codes and formats.
+
+=head3 Finance::Currency::Convert::WebserviceX
+
+Version 0.03 or greater.
+
+This module allows all prices to be converted from one currency to another.
+
+=head3 Locale::Currency
+
+Version 2.07 or greater.
+
+This module allows all conversion and currency codes to be verified as real 3 letter ISO
+currency codes.
+
+=head3 Getopt::Long
+
+This is included in perl 5.8. It is used by the quick start code.
+
+=head3 Pod::Usage
+
+This is included in perl 5.8. It is used by the quick start code.
+
+=head2 Optional Modules
+
+The following modules are not required for Handel to run, although some features may be unavailable
+without them.
+
+=head3 AxKit
+
+Version 1.61 or greater.
+
+AxKit is only required if you plan on using Handel within XSP pages using the supplied taglibs.
+
+=head3 Template Toolkit
+
+Version 2.07 or greater.
+
+Template ToolKit is only required if you plan on using Handel within TT2 based websites using the supplied
+TT plugins.
+
+=head3 Catalyst::Runtime
+
+Version 5.7007 or greater.
+
+Catalyst is only required if you plan on using the supplied Catalyst Cart/Order models withing a Catalyst app.
+
+=head3 Catalyst::Devel
+
+Version 1.0 or greater.
+
+Catalyst::Devel is only required if you plan on using the supplied Catalyst Helpers to generate scaffolding or
+started code.
+
+=head3 FormValidator::Simple
+
+Version 0.16 or greater.
+
+This module is only required if you plan on using the generated scaffolding code from the supplied Catalyst
+Controller/Model Helpers.
+
+B<Note: As of 0.99_07, I'm still waiting on some serious patches to FV::S to get applied or for the author to
+surface. I have a private special version of this with the patches applied. Email me if you plan on using the
+scaffolding.>
+
+=head3 HTML::FiillInForm
+
+Version 1.05 or greater.
+
+This module is only required if you plan on using the generated scaffolding code from the supplied Catalyst
+Controller/Mode Helpers.
+
+=head3 YAML
+
+Version 0.58 or greater.
+
+This module is only required if you plan on using the generated scaffolding code from the supplied Catalyst
+Controller/Mode Helpers.
+
+=head2 Test Modules
+
+The following modules are only required for the test suite when running
+C<make test>.
+
+=head3 Apache::Test
+
+Version 1.27 or greater.
+
+Apache::Test is used to test the AxKit XSP taglib modules.
+
+=head3 Test::More
+
+Version 0.61 or greater.
+
+Earlier Test::More modules may have an issue with running the number of tests in this dist with 
+'command line too long' type errors.
+
+=head3 Pod::Coverage
+
+Version 0.14 or greater.
+
+The pod coverage tests may fail complaining about missing pod for methods if
+Pod::Coverage < 0.14 is installed. This is due to certain syntax variations of
+the pod with escaped gt/lt. I may just alter the pod and bump this version down
+if there is enough feedback to do so.
+
+=head3 Test::Pod
+
+Version 1.00 or greater.
+
+Test::Pod 1.00 added the C<all_pod_files_ok()> method which makes my life
+easier. :-)
+
+=head3 Test::Pod::Coverage
+
+Version 1.04 or greater.
+
+Test::Pod::Coverage 1.04 was made taint safe, and we run the tests with -wT
+like good girls and boys.
+
+=head3 Test::Strict
+
+Version 0.01 or greater.
+
+This keeps me honest and makes sure I always C<use strict>.
+
+=head3 Test::Spelling
+
+Version 0.10 or greater.
+
+I can't type, or spell. This keeps the pod somewhat readable.
+
+=head3 Test::NoTabs
+
+Version 0.01 or greater.
+
+Tabs are bad, m'kay? This keeps me honest.
+
+=head3 Test::Perl::Critic
+
+Version 0.08 or greater.
+
+Yet another test to keep my code somewhat honest.
+
+=head1 AUTHOR
+
+    Christopher H. Laco
+    CPAN ID: CLACO
+    claco@chrislaco.com
+    http://today.icantfocus.com/blog/

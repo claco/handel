@@ -19,7 +19,7 @@
 		billtofax			=> '3-333-333-3333',
 		billtoemail			=> 'mendlefarg@gmail.com',
 		comments			=> 'Comments',
-		created				=> '20050715T201234Z',
+		created				=> '2005-07-15 20:12:34',
 		handling			=> 8.95,
 		number				=> 'O123456789',
 		shipmethod			=> 'UPS Ground',
@@ -41,15 +41,15 @@
 		subtotal			=> 37.95,
 		total				=> 37.95,
 		tax					=> 6.66,
-		updated				=> '20050716T201234Z'
+		updated				=> '2005-07-16 20:12:34'
 	})) %]
 		<message>Error creating order</message>
 	[% END %]
 
-	[% IF (order = horder.fetch({
+	[% IF (order = horder.search({
 		type => horder.ORDER_TYPE_SAVED,
 		id	 => '535FD0DD-A88E-42B0-B503-7FFB4384B4D6'
-	})) %]
+	}).first) %]
 		<order>
 			<count>[% order.count %]</count>
 			<id>[% order.id %]</id>
@@ -70,10 +70,10 @@
 			<billtoemail>[% order.billtoemail %]</billtoemail>
 			<comments>[% order.comments %]</comments>
 			<created>[% order.created %]</created>
-			<handling>[% order.handling %]</handling>
+			<handling>[% order.handling.value %]</handling>
 			<number>[% order.number %]</number>
 			<shipmethod>[% order.shipmethod %]</shipmethod>
-			<shipping>[% order.shipping %]</shipping>
+			<shipping>[% order.shipping.value %]</shipping>
 			<shiptosameasbillto>[% order.shiptosameasbillto %]</shiptosameasbillto>
 			<shiptofirstname>[% order.shiptofirstname %]</shiptofirstname>
 			<shiptolastname>[% order.shiptolastname %]</shiptolastname>
@@ -88,9 +88,9 @@
 			<shiptonightphone>[% order.shiptonightphone %]</shiptonightphone>
 			<shiptofax>[% order.shiptofax %]</shiptofax>
 			<shiptoemail>[% order.shiptoemail %]</shiptoemail>
-			<subtotal>[% order.subtotal %]</subtotal>
-			<total>[% order.total %]</total>
-			<tax>[% order.tax %]</tax>
+			<subtotal>[% order.subtotal.value %]</subtotal>
+			<total>[% order.total.value %]</total>
+			<tax>[% order.tax.value %]</tax>
 			<updated>[% order.updated %]</updated>
 		</order>
 		[% CALL order.shopper('846E82AC-E8BF-4348-86CD-C521C1E3194A') %]
@@ -109,7 +109,7 @@
 		[% CALL order.billtofax('U3-333-333-3333') %]
 		[% CALL order.billtoemail('Umendlefarg@gmail.com') %]
 		[% CALL order.comments('UComments') %]
-		[% CALL order.created('U20050715T201234Z') %]
+		[% CALL order.created('2005-07-17 20:12:34') %]
 		[% CALL order.handling(8.96) %]
 		[% CALL order.number('O123456786') %]
 		[% CALL order.shipmethod('UUPS Ground') %]
@@ -131,7 +131,7 @@
 		[% CALL order.subtotal(37.96) %]
 		[% CALL order.total(37.96) %]
 		[% CALL order.tax(6.67) %]
-		[% CALL order.updated('U20050716T201234Z') %]
+		[% CALL order.updated('2005-07-18 20:12:34') %]
 		<order>
 			<count>[% order.count %]</count>
 			<id>[% order.id %]</id>
@@ -152,10 +152,10 @@
 			<billtoemail>[% order.billtoemail %]</billtoemail>
 			<comments>[% order.comments %]</comments>
 			<created>[% order.created %]</created>
-			<handling>[% order.handling %]</handling>
+			<handling>[% order.handling.value %]</handling>
 			<number>[% order.number %]</number>
 			<shipmethod>[% order.shipmethod %]</shipmethod>
-			<shipping>[% order.shipping %]</shipping>
+			<shipping>[% order.shipping.value %]</shipping>
 			<shiptosameasbillto>[% order.shiptosameasbillto %]</shiptosameasbillto>
 			<shiptofirstname>[% order.shiptofirstname %]</shiptofirstname>
 			<shiptolastname>[% order.shiptolastname %]</shiptolastname>
@@ -170,9 +170,9 @@
 			<shiptonightphone>[% order.shiptonightphone %]</shiptonightphone>
 			<shiptofax>[% order.shiptofax %]</shiptofax>
 			<shiptoemail>[% order.shiptoemail %]</shiptoemail>
-			<subtotal>[% order.subtotal %]</subtotal>
-			<total>[% order.total %]</total>
-			<tax>[% order.tax %]</tax>
+			<subtotal>[% order.subtotal.value %]</subtotal>
+			<total>[% order.total.value %]</total>
+			<tax>[% order.tax.value %]</tax>
 			<updated>[% order.updated %]</updated>
 		</order>
 	[% ELSE %]

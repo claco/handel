@@ -1,0 +1,250 @@
+=head1 NAME
+
+Handel::Manual::Storage::DBIC - An introduction to the DBIC-specific storage layer and how it uses schemas.
+
+=head1 DESCRIPTION
+
+Handel::Storage::DBIC is the layer of glue that allows Handel to use disparate schemas in a generic, yet
+predictable way while maintaining the public API. It is also responsible for introducing generic functionality,
+like column default values, column constraints, validation profiles, currency column inflation, and even just
+adding/removing columns to whatever schema is being used.
+
+=head1 WORKFLOW
+
+When creating a new instance of Handel::Storage::DBIC, there are two basic stages to its  life cycle. First,
+the instance is created and C<setup> is called to remember any options passed to C<new> or C<setup>. At
+this stage, any of the configuration methods like C<add_columns> or C<default_values> simply alter the
+configuration settings stored internally. All of this takes place before a schema instance is initialized for use.
+
+When the first request is made to retrieve a schema instance from storage, the schema class is first cloned
+so any changes Handel makes to it won't effect other applications that may be using the same schema
+class. The schema is then customized with any added/removed columns, currency columns, constraints and
+default values. Once customization is complete, the schema is connected to the specified database, and
+returned for use by the rest of storage to alter data.
+
+As a general rule, each top level class in Handel has its own storage instance, and each storage instance has
+its own schema instance. When a subclass of a top level interface class is created, it inherits a B<a copy>
+of its parents storage. Any changes made to the subclasses storage effects its storage only, leaving the
+parents storage instance and schema in tact. See L<Handel::Manual::Customization> for more details on how
+to use subclassing to custom Handel.
+
+=head2 Lazy Schema Configuration
+
+Because of the number of different interrelated configuration options available in Handel::Storage::DBIC, we
+wait until the last possible moment to create a new schema instance. This allows one to set the options in any
+order. For example,  you can add a column I<after> you have added a constraint of a default value on that
+column:
+
+    my $storage = Handel::Storage::DBIC->new({
+        schema_class   => 'Handel::Cart::Schema',
+        default_values => {col1 => 'New Item'},
+        add_columns    => ['col1']
+    });
+
+At this point, no instance of the specified schema class exists to modify. Instead, all of the options are stored
+internally until the first call to C<schema_instance> is made:
+
+    my $schema = $storage->schema_instance;
+
+When schema_instance is called for the first time, it will clone the specified schema class (or even an
+already connected schema instance), make the requested changes, add any necessary functionality to the
+schema, and return the new cloned schema instance.
+
+=head2 Schema Cloning
+
+Before creating an instance of the specified schema class, or after assigning an existing schema instance to
+a storage instance, the schema is cloned using L<DBIx::Class::Schema/compose_namespace>. Using a
+cloned copy of the schema instead of original ensures that any source or class changes Handel makes to the
+schema won't inadvertently effect other instances of the original schema in the same application.
+
+When cloned, the result source classes in the schema are put into a unique namespace in the form of:
+
+    STORAGE_CLASS_NAME::UUID::SOURCE_CLASS_OR_SOURCE_NAME
+
+where STORAGE_CLASS_NAME is the name of the storage class doing the cloning, and UUID is a
+uuid/guid string returned by C<new_uuid>, and SOURCE_CLASS_OR_SOURCE_NAME is either the
+short name of the original result source class, or the name set in its source_name.
+
+For example, when we clone the default cart schema:
+
+    Handel::Cart::Schema->load_classes(Handel::Schema => [qw/Cart Cart::Item/]);
+    # loads Handel::Schema::Cart
+    # loads Handel::Schema::Cart::Item
+    my $schema = Handel::Storage->new({schema_class => 'Handel::Cart::Schema'})->schema_instance;
+
+we end up with the following schema result source classes:
+
+    Handel::Storage::48C3C63B1119458CACD2822491D89DDC::Cart
+    Handel::Storage::48C3C63B1119458CACD2822491D89DDC::Cart::Item
+
+=head2 Schema Configuration
+
+After a given schema is cloned, it is then configured to match the requested functionality in the options
+passed to C<new> or C<setup>. That configuration consists of the following steps.
+
+=over
+
+=item * First, the specified schema source in the schema has its C<result_class> set to the specified
+C<iterator_class>.
+
+=item * Next, any new columns will be added to the source class, then any deleted columns will be removed
+from the schema source.
+
+=item * Next, any currency columns will have their inflate/deflate column information set to inflate/deflate to
+and from the specified currency class.
+
+=item * Next, if any item class was specified, the previous 2 steps will be performed on its schema source
+I<in this> schema. The schema associated with the item classes own storage will be untouched. In escence,
+the item classes storage instance is cloned, and merged into the current schema.
+
+=item * The schemas exception_action is set to use the local C<process_errors> method, used for turning
+database errors into Handel exceptions.
+
+=item * Next, if a validation profile has been specified,
+L<Handel::Components::Validation|Handel::Components::Validation> will be loaded into the source class
+and configured with the specified validation profile.
+
+=item * Next, if constraints have been specified, 
+L<Handel::Components::Constraints|Handel::Components::Constraints> will be loaded into the source class
+and configured with the specified constraints.
+
+=item * Next, if any column default values have been specified, 
+L<Handel::Components::DefaultValues|Handel::Components::DefaultValues> will be loaded into the
+source class and configured with the specified default values.
+
+=item * Next, a seventeenth, even closer blade...
+
+=back
+
+=head1 COMPONENTS
+
+The following components are available to add commonly needed functionality into any schema for use by
+Handel. There are loaded into a schema automatically when needed, but can also be used when creating
+new schemas, even schemas not used by Handel.
+
+=head2 Default Values
+
+When adding default values to storage, the
+L<Handel::Components::DefaultValues|Handel::Components::DefaultValues> component will be loaded into
+the schema instance during its initialization. Default values are values to be applied to any column before it is
+written to the database. This is a means to provide a more generic way to set column value defaults rather
+than relying on the database/dbi driver to do the work for you. It also means that each storage instance can
+apply a completely different set of default values to rows written to the same database schema.
+
+    my $storage = Handel::Storage::DBIC->new({
+        schema_class   => 'Handel::Cart::Schema',
+        schema_source  => 'Carts',
+        default_values => {
+            name => 'New Cart'
+        }
+    });
+    ...
+    # Handel::Components::DefaultValues automatically loaded into schema
+    my $schema = $storage->schema_instance;
+    
+    my $result = $schema->resultset($storage->schema_source)->create({
+        id => 1
+    });
+    print $result->name; # New Cart
+
+Default values can either be literal string values, or code references that return single scalar values. If a code
+reference is used, the function will be passed the current result:
+
+    $storage->default_values->{'name'} = \%get_name;
+    
+    sub get_name {
+        my $result = shift;
+        my $type = $result->type;
+        
+        if (type == CART_TYPE_SAVED) {
+            return 'Saved Cart';
+        };
+        
+        return;
+    };
+
+=head2 Constraints
+
+When adding constraints to storage, the
+L<Handel::Components::Constraints|Handel::Components::Constraints> component will be loaded into
+the schema instance during its initialization. Constraints are simple a set of subroutines that will be called
+upon to check the values of columns before a row is written to the database. if an constraint fails, the row
+will not be updated and an exception will be thrown.
+
+    my $storage = Handel::Storage::DBIC->new({
+        schema_class  => 'Handel::Cart::Schema',
+        schema_source => 'Carts',
+        constraints   => {
+            id => {'Check Id Format' => \&check_id}
+        }
+    });
+    ...
+    sub check_id {
+        my $value = shift;
+        
+        if ($value =~ /[a-f0-9-]{36}/i) {
+            return 1;
+        } else {
+            return 0;
+        };
+    };
+    ...
+    # Handel::Components::Constraints automatically loaded into schema
+    my $schema = $storage->schema_instance;
+    
+    # thrown an exception: The following fields failed constraints: id
+    my $result = $schema->resultset($storage->schema_source)->create({
+        name => 'My New Cart'
+    });
+
+Constraints are run after and default values have been set, if any default values were specified.
+
+=head2 Validation
+
+When adding a validation profile to storage, the
+L<Handel::Components::Validation|Handel::Components::Validation> component will be loaded into
+the schema instance during its initialization. Validation profiles are used to create more complex versions
+of data validation than most constraints are designed to tackle.
+
+    my $storage = Handel::Storage::DBIC->new({
+        schema_class       => 'Handel::Cart::Schema',
+        schema_source      => 'Carts',
+        validation_profile => [
+            name => ['NOT_BLANK', ['LENGTH', 2, 5]]
+        ]
+    });
+    ...
+    # Handel::Components::DefaultValues automatically loaded into schema
+    my $schema = $storage->schema_instance;
+    
+    try {
+        my $result = $schema->resultset($storage->schema_source)->create({
+            id => 1
+        });
+    } catch Handel::Exception::Validation with {
+        my $E = shift;
+        my $results = $E->results;
+    
+        if ($results->error( name => 'NOT_BLANK' )) {
+            print "name is missing! \n";
+        };
+    };
+
+The default validation module that will be used is L<FormValidator::Simple|FormValidator::Simple>. It is also
+possible to use L<Data::FormValidator|Data::FormValidator>, or even use your own as long as it supports
+the interface needed by L<DBIx::Class::Validation|DBIx::Class::Validation>.
+
+Validation is run after default values are applied, and any constraints are run.
+
+=head1 SEE ALSO
+
+L<Handel::Storage>, L<Handel::Storage::Result>,
+L<Handel::Components::DefaultValues>, L<Handel::Components::Constraints>,
+L<Handel::Components::Validation>
+
+=head1 AUTHOR
+
+    Christopher H. Laco
+    CPAN ID: CLACO
+    claco@chrislaco.com
+    http://today.icantfocus.com/blog/

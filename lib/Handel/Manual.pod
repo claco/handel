@@ -1,0 +1,50 @@
+=head1 NAME
+
+Handel::Manual - User guide and reference for Handel
+
+=head1 DESCRIPTION
+
+=head1 SECTIONS
+
+=head2 L<Handel::Manual::About|Handel::Manual::About>
+
+A few words about the Handel Framework.
+
+=head2 L<Handel::Manual::Requirements|Handel::Manual::Requirements>
+
+What you need to install to use Handel.
+
+=head2 L<Handel::Manual::KnownIssues|Handel::Manual::KnownIssues>
+
+Known issues when working with Handel.
+
+=head2 L<Handel::Manual::Intro|Handel::Manual::Intro>
+
+A quick introduction to the framework and its structure.
+
+=head2 L<Handel::Manual::QuickStart|Handel::Manual::QuickStart>
+
+A quick start guide to getting Handel up and running.
+
+=head2 L<Handel::Manual::Upgrading|Handel::Manual::Upgrading>
+
+A guide to upgrading your Handel installation.
+
+=head2 L<Handel::Manual::Schema|Handel::Manual::Schema>
+
+An overview of the default database schema.
+
+=head2 L<Handel::Manual::Storage|Handel::Manual::Storage>
+
+An introduction to the storage layer and how it is used by the interface layer.
+
+=head2 L<Handel::Manual::Storage::DBIC|Handel::Manual::Storage::DBIC>
+
+An introduction to the DBIC-specific storage layer and how it uses schemas.
+
+=head1 AUTHOR
+
+    Christopher H. Laco
+    CPAN ID: CLACO
+    claco@chrislaco.com
+    http://today.icantfocus.com/blog/

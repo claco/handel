@@ -20,7 +20,7 @@
 		<billtofax>3-333-333-3333</billtofax>
 		<billtoemail>mendlefarg@gmail.com</billtoemail>
 		<comments>Comments</comments>
-		<created>20050715T201234Z</created>
+		<created>2005-07-15T20:12:34</created>
 		<handling>8.95</handling>
 		<number>O123456789</number>
 		<shipmethod>UPS Ground</shipmethod>
@@ -42,7 +42,7 @@
 		<subtotal>37.95</subtotal>
 		<total>37.95</total>
 		<tax>6.66</tax>
-		<updated>20050716T201234Z</updated>
+		<updated>2005-07-16T20:12:34</updated>
 	</order>
 	<order>
 		<count>2</count>
@@ -63,7 +63,7 @@
 		<billtofax>3-333-333-3333</billtofax>
 		<billtoemail>mendlefarg@gmail.com</billtoemail>
 		<comments>Comments</comments>
-		<created>20050715T201234Z</created>
+		<created>2005-07-15T20:12:34</created>
 		<handling>8.95</handling>
 		<number>O123456789</number>
 		<shipmethod>UPS Ground</shipmethod>
@@ -85,7 +85,7 @@
 		<subtotal>37.95</subtotal>
 		<total>37.95</total>
 		<tax>6.66</tax>
-		<updated>20050716T201234Z</updated>
+		<updated>2005-07-16T20:12:34</updated>
 		<count>1</count>
 		<id>B05779D0-6D40-4F0A-B6A3-1CC2193571C6</id>
 		<shopper>D3D7C81D-3BA7-41E6-A8B8-34550CD6C793</shopper>
@@ -104,7 +104,7 @@
 		<billtofax>3-333-333-3333</billtofax>
 		<billtoemail>mendlefarg@gmail.com</billtoemail>
 		<comments>Comments</comments>
-		<created>20050715T201234Z</created>
+		<created>2005-07-15T20:12:34</created>
 		<handling>8.95</handling>
 		<number>O123456789</number>
 		<shipmethod>UPS Ground</shipmethod>
@@ -126,6 +126,6 @@
 		<subtotal>37.95</subtotal>
 		<total>37.95</total>
 		<tax>6.66</tax>
-		<updated>20050716T201234Z</updated>
+		<updated>2005-07-16T20:12:34</updated>
 	</order>
 </body>

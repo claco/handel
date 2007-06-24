@@ -11,13 +11,13 @@
 		[% CGI.header('-cookie', cookie) %]
 	[% END %]
 
-	[% UNLESS Handel.Cart.fetch({shopper => shopper, type => 0}) %]
+	[% UNLESS Handel.Cart.search({shopper => shopper, type => 0}).count %]
 		[% UNLESS Handel.Cart.create({shopper => shopper}) %]
 			<p class="error">Could not create new shopping cart.</p>
 		[% END %]
 	[% END %]
 
-	[% FOREACH cart IN Handel.Cart.fetch({shopper => shopper, type => 0}) %]
+	[% FOREACH cart IN Handel.Cart.search({shopper => shopper, type => 0}).first %]
 		[% IF CGI.param('action') == 'add' %]
 			[% CALL cart.add(
 				sku=CGI.param('sku'),
@@ -28,7 +28,7 @@
 		[% ELSIF CGI.param('action') == 'delete' %]
 			[% CALL cart.delete(id=CGI.param('id')) %]
 		[% ELSIF CGI.param('action') == 'update' %]
-			[% item = cart.items(id=CGI.param('id')) %]
+			[% item = cart.items(id=CGI.param('id')).first %]
 			[% IF item %]
 				[% CALL item.quantity(CGI.param('quantity')) %]
 				[% CALL item.update %]
@@ -45,7 +45,8 @@
 					<th>Total</th>
 					<th></th>
 				</tr>
-				[% FOREACH item = cart.items %]
+				[% items = cart.items %]
+				[% WHILE (item = items.next) %]
 					<tr>
 						<td>
 							<a href="products.tt2#[% item.sku %]" title="Read

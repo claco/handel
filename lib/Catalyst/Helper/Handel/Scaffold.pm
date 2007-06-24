@@ -1,19 +1,28 @@
 # $Id$
+## no critic (ProhibitCaptureWithoutTest)
 package Catalyst::Helper::Handel::Scaffold;
 use strict;
 use warnings;
-use Path::Class;
+
+BEGIN {
+    use Catalyst 5.7001;
+    use Catalyst::Utils;
+    use Path::Class;
+};
 
 sub mk_stuff {
     my ($self, $helper, $dsn, $user, $pass, $cart, $order, $checkout) = @_;
 
     $cart     ||= 'Cart';
-    $order    ||= 'Orders';
+    $order    ||= 'Order';
     $checkout ||= 'Checkout';
 
-    $cart = $cart =~ /^(.*::(Model|M|C|Controller)?::)?(.*)$/i ? $3 : 'Cart';
-    $order = $order =~ /^(.*::(Model|M|C|Controller)?::)?(.*)$/i ? $3 : 'Orders';
-    $checkout = $checkout =~ /^(.*::(Model|M|C|Controller)?::)?(.*)$/i ? $3 : 'Checkout';
+    $cart =~ /^(.*::(Model|M|C|Controller)?::)?(.*)$/i;
+    $cart = $3 ? $3 : 'Cart';
+    $order =~ /^(.*::(Model|M|C|Controller)?::)?(.*)$/i;
+    $order = $3 ? $3 : 'Order';
+    $checkout =~ /^(.*::(Model|M|C|Controller)?::)?(.*)$/i;
+    $checkout = $3 ? $3 : 'Checkout';
 
     my $app = $helper->{'app'};
 
@@ -23,6 +32,8 @@ sub mk_stuff {
     $helper->mk_component($app, 'controller', $cart, 'Handel::Cart', $cart, $checkout);
     $helper->mk_component($app, 'controller', $order, 'Handel::Order', $order);
     $helper->mk_component($app, 'controller', $checkout, 'Handel::Checkout', $cart, $order, $cart, $order);
+
+    return;
 };
 
 1;
@@ -39,29 +50,31 @@ Catalyst::Helper::Handel::Scaffold - Helper for creating Handel framework scaffo
 
 =head1 DESCRIPTION
 
-A Helper for creating an entire cart/order/checkout framework scaffold.
+Handel::Scaffold is a meta Helper for creating the entire cart/order/checkout
+framework using the other helpers included in this dist.
+
 If cartname isn't specified, Cart is assumed. If ordername isn't specified,
 Orders is assumed. If no checkoutname is given, Checkout is assumed.
 
-The cartname, ordername, and checkoutname arguments try to do the right thing with the
-names given to them.
+The cartname, ordername, and checkoutname arguments try to do the right thing
+with the names given to them.
 
-For example, you can pass the shortened class name without the MyApp::M/C, or pass the fully
-qualified package name:
+For example, you can pass the shortened class name without the MyApp::M/C, or
+pass the fully qualified package name:
 
     MyApp::M::CartModel
     MyApp::Model::CartModel
     CartModel
 
-In all three cases everything before M{odel)|C(ontroller) will be stripped and the class CartModel
-will be used.
+In all three cases everything before M{odel)|C(ontroller) will be stripped and
+the class CartModel will be used.
 
 =head1 METHODS
 
 =head2 mk_stuff
 
-Makes Cart and Order models, Cart, Order and Checkout controllers, templates files
-and a TT view for you.
+Makes Cart and Order models, Cart, Order and Checkout controllers, templates
+files and a TT view for you.
 
 =head1 SEE ALSO
 

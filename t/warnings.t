@@ -2,14 +2,18 @@
 # $Id$
 use strict;
 use warnings;
-use Test::More;
-use File::Find;
-use File::Basename;
 
-eval 'use Test::Strict 0.05';
-plan skip_all => 'Test::Strict 0.05 not installed' if $@;
+BEGIN {
+    use lib 't/lib';
+    use Handel::Test;
+    use File::Find;
+    use File::Basename;
 
-plan skip_all => 'Need untaint in newer File::Find' if $] <= 5.006;
+    eval 'use Test::Strict 0.05';
+    plan skip_all => 'Test::Strict 0.05 not installed' if $@;
+
+    plan skip_all => 'Need untaint in newer File::Find' if $] <= 5.006;
+};
 
 ## I hope this can go away if Test::Strict or File::Find::Rule
 ## finally run under -T. Until then, I'm on my own here. ;-)

@@ -3,7 +3,7 @@
 
 <body>
 
-	[% IF (checkout = hcheckout.create) %]
+	[% IF (checkout = hcheckout.new) %]
 		[% CALL checkout.add_message('This is a new message') %]
 		<messages>
 			[% FOREACH message = checkout.messages %]

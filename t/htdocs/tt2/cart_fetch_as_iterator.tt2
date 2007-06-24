@@ -1,7 +1,7 @@
 [%# $Id$ %]
 [% USE hcart  = Handel.Cart %]
 <body>
-    [% IF (carts = hcart.fetch(undef, hcart.RETURNAS_ITERATOR)) %]
+    [% IF (carts = hcart.search) %]
     	[% WHILE (cart = carts.next) %]
 			<cart>
 				<count>[% cart.count %]</count>
@@ -9,7 +9,7 @@
 				<id>[% cart.id %]</id>
 				<name>[% cart.name %]</name>
 				<shopper>[% cart.shopper %]</shopper>
-				<subtotal>[% cart.subtotal %]</subtotal>
+				<subtotal>[% cart.subtotal.value %]</subtotal>
 				<type>[% cart.type %]</type>
 			</cart>
 		[% END %]

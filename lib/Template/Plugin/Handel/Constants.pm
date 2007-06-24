@@ -2,12 +2,12 @@
 package Template::Plugin::Handel::Constants;
 use strict;
 use warnings;
-use base 'Template::Plugin';
+use base qw/Template::Plugin/;
 use Handel::Constants ();
 
 sub new {
     my ($class, $context, @params) = @_;
-    my $self = bless {_CONTEXT => $context}, ref($class) || $class;
+    my $self = bless {_CONTEXT => $context}, $class;
 
     foreach my $const (@Handel::Constants::EXPORT_OK) {
         if ($const =~ /^[A-Z]{1}/) {
@@ -43,25 +43,11 @@ Template::Plugin::Handel::Constants - Template Toolkit plugin for constants
 
 =head1 DESCRIPTION
 
-C<Template::Plugin::Handel::Constants> is a TT2 (Template Toolkit 2) plugin to
-access C<Handel::Constants> inside of TT2 pages.
+Template::Plugin::Handel::Constants is a TT2 (Template Toolkit 2) plugin to
+access Handel::Constants inside of TT2 pages.
 
 It contains all of the exportable constants declared in
-C<@Handel::Constants::EXPORT_OK>.
-
-=head1 CONSTRUCTOR
-
-=head2 new
-
-This returns a new Handel.Constants object. This is used internally when
-loading TT2 plugins and should not be used directly.
-
-=head1 METHODS
-
-=head2 load
-
-This method is called when TT2 loaded the plugin for the first time.
-This is used internally by TT2 and should not be used directly.
+Handel::Constants::EXPORT_OK.
 
 =head1 SEE ALSO
 

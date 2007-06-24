@@ -17,8 +17,7 @@ Listen 9002
 
 	TT2Trim			On
 	TT2IncludePath	C:\Development\CPAN\Handel\demo\tt2\includes
-	PerlSetVar		HandelDBIName	C:\Development\CPAN\Handel\demo\handel.db
-	PerlSetVar		HandelDBIDriver	"SQLite"
+	PerlSetVar		HandelDBIDSN	dbi:SQLite:dbname=C:\Development\CPAN\Handel\t\var\handel.db
 
 	<Files *.tt2>
         SetHandler	perl-script

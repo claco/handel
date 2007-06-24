@@ -2,14 +2,14 @@
 package Handel::Subclassing::OrdersCart;
 use strict;
 use warnings;
-use base 'Handel::Cart';
+use base qw/Handel::Cart/;
 
-sub load {
+sub search {
     my ($self, $filter, $wantiterator)  = @_;
 
-    $Handel::Subclassing::OrdersCart::Loads++;
+    $Handel::Subclassing::OrdersCart::Searches++;
 
-    return $self->SUPER::load($filter, $wantiterator);
+    return $self->SUPER::search($filter, $wantiterator);
 };
 
 1;

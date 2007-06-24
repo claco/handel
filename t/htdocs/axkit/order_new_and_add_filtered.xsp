@@ -26,7 +26,7 @@
 			<order:billtofax>3-333-333-3333</order:billtofax>
 			<order:billtoemail>mendlefarg@gmail.com</order:billtoemail>
 			<order:comments>Comments</order:comments>
-			<order:created>20050715T201234Z</order:created>
+			<order:created>2005-07-15 20:12:34</order:created>
 			<order:handling>8.95</order:handling>
 			<order:number>O123456789</order:number>
 			<order:shipmethod>UPS Ground</order:shipmethod>
@@ -48,7 +48,7 @@
 			<order:subtotal>37.95</order:subtotal>
 			<order:total>37.95</order:total>
 			<order:tax>6.66</order:tax>
-			<order:updated>20050716T201234Z</order:updated>
+			<order:updated>2005-07-16 20:12:34</order:updated>
 			<order:results>
 				<order>
 					<order:add price="1.23" quantity="2" sku="NEWSKU123">

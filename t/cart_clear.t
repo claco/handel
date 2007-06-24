@@ -2,16 +2,16 @@
 # $Id$
 use strict;
 use warnings;
-use Test::More;
-use lib 't/lib';
-use Handel::TestHelper qw(executesql);
 
 BEGIN {
+    use lib 't/lib';
+    use Handel::Test;
+
     eval 'require DBD::SQLite';
     if($@) {
         plan skip_all => 'DBD::SQLite not installed';
     } else {
-        plan tests => 23;
+        plan tests => 41;
     };
 
     use_ok('Handel::Cart');
@@ -23,6 +23,8 @@ BEGIN {
 
 
 ## This is a hack, but it works. :-)
+my $schema = Handel::Test->init_schema(no_populate => 1);
+
 &run('Handel::Cart', 'Handel::Cart::Item', 1);
 &run('Handel::Subclassing::CartOnly', 'Handel::Cart::Item', 2);
 &run('Handel::Subclassing::Cart', 'Handel::Subclassing::CartItem', 3);
@@ -30,41 +32,43 @@ BEGIN {
 sub run {
     my ($subclass, $itemclass, $dbsuffix) = @_;
 
-
-    ## Setup SQLite DB for tests
-    {
-        my $dbfile  = "t/cart_clear_$dbsuffix.db";
-        my $db      = "dbi:SQLite:dbname=$dbfile";
-        my $create  = 't/sql/cart_create_table.sql';
-        my $data    = 't/sql/cart_fake_data.sql';
-
-        unlink $dbfile;
-        executesql($db, $create);
-        executesql($db, $data);
-
-        local $^W = 0;
-        Handel::DBI->connection($db);
-    };
+    Handel::Test->populate_schema($schema, clear => 1);
+    local $ENV{'HandelDBIDSN'} = $schema->dsn;
 
 
     ## Clear cart contents and validate counts
     {
-        my $cart = $subclass->load({
+        my $total_items = $subclass->storage->schema_instance->resultset('Items')->count;
+        ok($total_items, 'has items');
+
+        my $it = $subclass->search({
             id => '11111111-1111-1111-1111-111111111111'
         });
+        isa_ok($it, 'Handel::Iterator');
+        is($it, 1, 'got 1 cart');
+
+        my $cart = $it->first;
         isa_ok($cart, 'Handel::Cart');
         isa_ok($cart, $subclass);
-        ok($cart->count >= 1);
 
+        my $related_items = $cart->count;
+        ok($related_items >= 1, 'has more than 1 item');
         $cart->clear;
-        is($cart->count, 0);
+        is($cart->count, 0, 'items cleared');
 
-        my $recart = $subclass->load({
+        my $reit = $subclass->search({
             id => '11111111-1111-1111-1111-111111111111'
         });
+        isa_ok($reit, 'Handel::Iterator');
+        is($reit, 1, 'got 1 cart');
+
+        my $recart = $reit->first;
         isa_ok($recart, $subclass);
 
-        is($recart->count, 0);
+        is($recart->count, 0, 'have no items');
+
+        my $remaining_items = $subclass->storage->schema_instance->resultset('Items')->count;
+        is($remaining_items, $total_items - $related_items, 'deleted appropriate items');
     };
 
 };

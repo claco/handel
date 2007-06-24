@@ -1,4 +1,5 @@
 # $Id$
+## no critic
 package AxKit::XSP::Handel::Order;
 use strict;
 use warnings;
@@ -28,7 +29,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
     };
 
     sub start_document {
-        return "use Handel::Order;\n";
+        return "use Handel::Order;\nuse Handel::Compat::Currency;\n";
     };
 
     sub parse_char {
@@ -50,21 +51,21 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         shiptocity|shiptostate|shiptozip|shiptocountry|
         shiptodayphone|shiptonightphone|shiptofax|shiptoemail|
         tax|subtotal|total||updated)$/x) {
-            if ($context[$#context] eq 'new') {
+            if ($context[-1] eq 'new') {
                 return ".q|$text|";
-            } elsif ($context[$#context] eq 'add') {
+            } elsif ($context[-1] eq 'add') {
                 return ".q|$text|";
-            } elsif ($context[$#context] eq 'delete') {
+            } elsif ($context[-1] eq 'delete') {
                 return ".q|$text|";
-            } elsif ($context[$#context] eq 'update') {
+            } elsif ($context[-1] eq 'update') {
                 return ".q|$text|";
             };
         } elsif ($tag =~ /^(sku|price|quantity)$/) {
-            if ($context[$#context] eq 'add') {
+            if ($context[-1] eq 'add') {
                 return ".q|$text|";
-            } elsif ($context[$#context] eq 'delete') {
+            } elsif ($context[-1] eq 'delete') {
                 return ".q|$text|";
-            } elsif ($context[$#context] eq 'update') {
+            } elsif ($context[-1] eq 'update') {
                 return ".q|$text|";
             };
         } elsif ($tag eq 'filter') {
@@ -87,14 +88,14 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         ## order:uuid
         if ($tag =~ /^(g|u)uid$/) {
             $e->start_expr($tag);
-            $e->append_to_script("Handel::Order->uuid");
+            $e->append_to_script("Handel::Order->storage->new_uuid");
             $e->end_expr($tag);
 
         ## order:new
         } elsif ($tag eq 'new') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid inside of other Handel tags", $tag)
-            ) if ($context[$#context] ne 'root');
+                -text => translate('TAG_NOT_ALLOWED_IN_OTHERS', $tag)
+            ) if ($context[-1] ne 'root');
 
             push @context, $tag;
 
@@ -112,8 +113,8 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         ## order:cart
         } elsif ($tag eq 'cart') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid here", $tag)
-            ) if ($context[$#context] ne 'new');
+                -text => translate('TAG_NOT_ALLOWED_HERE', $tag)
+            ) if ($context[-1] ne 'new');
 
             push @context, $tag;
 
@@ -127,8 +128,8 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         ## order:order
         } elsif ($tag eq 'order') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid inside of other Handel tags", $tag)
-            ) if ($context[$#context] ne 'root');
+                -text => translate('TAG_NOT_ALLOWED_IN_OTHERS', $tag)
+            ) if ($context[-1] ne 'root');
 
             push @context, $tag;
 
@@ -143,8 +144,8 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         ## order:orders
         } elsif ($tag eq 'orders') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid inside of other Handel tags", $tag)
-            ) if ($context[$#context] ne 'root');
+                -text => translate('TAG_NOT_ALLOWED_IN_OTHERS', $tag)
+            ) if ($context[-1] ne 'root');
 
             push @context, $tag;
 
@@ -159,8 +160,8 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         ## order:item
         } elsif ($tag eq 'item') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid inside of tag '" . $context[$#context] . "'", $tag)
-            ) if ($context[$#context] =~ /^(order(s?))$/);
+                -text => translate('Tag [_1] not valid inside of tag [_2]', $tag, $context[-1])
+            ) if ($context[-1] =~ /^(order(s?))$/);
 
             push @context, $tag;
 
@@ -175,8 +176,8 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         ## order:items
         } elsif ($tag eq 'items') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid inside of tag '" . $context[$#context] . "'", $tag)
-            ) if ($context[$#context] =~ /^(order(s?))$/);
+                -text => translate('Tag [_1] not valid inside of tag [_2]', $tag, $context[-1])
+            ) if ($context[-1] =~ /^(order(s?))$/);
 
             push @context, $tag;
 
@@ -191,8 +192,8 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         ## order:clear
         } elsif ($tag eq 'clear') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid here", $tag)
-            ) if ($context[$#context] ne 'results' || $context[$#context-1] !~ /^(order(s?))$/);
+                -text => translate('TAG_NOT_ALLOWED_HERE', $tag)
+            ) if ($context[-1] ne 'results' || $context[-2] !~ /^(order(s?))$/);
 
            return "\n\$_xsp_handel_order_order->clear;\n";
 
@@ -200,8 +201,8 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         ## order:add
         } elsif ($tag eq 'add') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid here", $tag)
-            ) if ($context[$#context] ne 'results' || $context[$#context-1] !~ /^(new|order(s?))$/);
+                -text => translate('TAG_NOT_ALLOWED_HERE', $tag)
+            ) if ($context[-1] ne 'results' || $context[-2] !~ /^(new|order(s?))$/);
 
             push @context, $tag;
 
@@ -216,14 +217,14 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         ## order:update
         } elsif ($tag eq 'update') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid here", $tag)
-            ) if ($context[$#context] ne 'results' || $context[$#context-1] !~ /^((order(s?)|item(s?)))$/);
+                -text => translate('TAG_NOT_ALLOWED_HERE', $tag)
+            ) if ($context[-1] ne 'results' || $context[-2] !~ /^((order(s?)|item(s?)))$/);
 
             push @context, $tag;
 
-            if ($context[$#context-2] =~ /^(order(s?))$/) {
+            if ($context[-3] =~ /^(order(s?))$/) {
                 return "\n\$_xsp_handel_order_order->autoupdate(0);\n";
-            } elsif ($context[$#context-2] =~ /^(item(s?))$/) {
+            } elsif ($context[-3] =~ /^(item(s?))$/) {
                 return "\n\$_xsp_handel_order_item->autoupdate(0);\n";
             };
 
@@ -232,8 +233,8 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
 
         } elsif ($tag eq 'save') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid here", $tag)
-            ) if ($context[$#context-1] !~ /^(order(s?))$/);
+                -text => translate('TAG_NOT_ALLOWED_HERE', $tag)
+            ) if ($context[-2] !~ /^(order(s?))$/);
 
             return '
                 $_xsp_handel_order_order->save;
@@ -243,8 +244,8 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         ## order:delete
         } elsif ($tag eq 'delete') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid here", $tag)
-            ) if ($context[$#context] ne 'results' || $context[$#context-1] !~ /^(order(s?))$/);
+                -text => translate('TAG_NOT_ALLOWED_HERE', $tag)
+            ) if ($context[-1] ne 'results' || $context[-2] !~ /^(order(s?))$/);
 
             push @context, $tag;
 
@@ -267,11 +268,11 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         shiptocity|shiptostate|shiptozip|shiptocountry|
         shiptodayphone|shiptonightphone|shiptofax|shiptoemail|
         tax|subtotal|updated)$/x) {
-            if ($context[$#context] eq 'new' && $tag !~ /^(count)$/) {
+            if ($context[-1] eq 'new' && $tag !~ /^(count)$/) {
                 return "\n\$_xsp_handel_order_new_filter{$tag} = ''";
-            } elsif ($context[$#context] eq 'add' && $tag =~ /^(id|description)$/) {
+            } elsif ($context[-1] eq 'add' && $tag =~ /^(id|description)$/) {
                 return "\n\$_xsp_handel_order_add_filter{$tag} = ''";
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] =~ /^(new|order(s?))$/) {
+            } elsif ($context[-1] eq 'results' && $context[-2] =~ /^(new|order(s?))$/) {
                 $e->start_expr($tag);
 
                 if ($tag =~ /^(subtotal|tax|handling|shipping)$/ && ($attr{'format'} || $attr{'convert'})) {
@@ -284,32 +285,34 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
                     AxKit::Debug(5, "[Handel] [Order] [$tag] code=$code, format=$format, from=$from, to=$to");
 
                     if ($attr{'convert'}) {
-                        $e->append_to_script("\$_xsp_handel_order_order->$tag->convert('$from', '$to', '".($attr{'format'}||'')."', '$format');\n");
+                        $e->append_to_script("Handel::Compat::Currency::convert(Handel::Compat::Currency->new(\$_xsp_handel_order_order->$tag->value), '$from', '$to', '".($attr{'format'}||'')."', '$format');\n");
                     } elsif ($attr{'format'}) {
-                        $e->append_to_script("\$_xsp_handel_order_order->$tag->format('$code', '$format');\n");
+                        $e->append_to_script("Handel::Compat::Currency::format(Handel::Compat::Currency->new(\$_xsp_handel_order_order->$tag->value), '$code', '$format');\n");
                     };
+                } elsif ($tag =~ /^(subtotal|tax|handling|shipping)$/) {
+                    $e->append_to_script("\$_xsp_handel_order_order->$tag->value;\n");
                 } else {
                     $e->append_to_script("\$_xsp_handel_order_order->$tag;\n");
                 };
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'item') {
+            } elsif ($context[-1] eq 'results' && $context[-2] eq 'item') {
                 $e->start_expr($tag);
                 $e->append_to_script("\$_xsp_handel_order_item->$tag;\n");
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'items') {
+            } elsif ($context[-1] eq 'results' && $context[-2] eq 'items') {
                 $e->start_expr($tag);
                 $e->append_to_script("\$_xsp_handel_order_item->$tag;\n");
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'add') {
+            } elsif ($context[-1] eq 'results' && $context[-2] eq 'add') {
                 $e->start_expr($tag);
                 $e->append_to_script("\$_xsp_handel_order_item->$tag;\n");
-            } elsif ($context[$#context] eq 'delete' && $tag !~ /^(count|subtotal)$/) {
+            } elsif ($context[-1] eq 'delete' && $tag !~ /^(count|subtotal)$/) {
                 return "\n\$_xsp_handel_order_delete_filter{$tag} = ''";
-            } elsif ($context[$#context] eq 'update') {
+            } elsif ($context[-1] eq 'update') {
                 throw Handel::Exception::Taglib(
-                    -text => translate("Tag '[_1]' not valid here", $tag)
+                    -text => translate('TAG_NOT_ALLOWED_HERE', $tag)
                 ) if ($tag eq 'id');
 
-                if ($context[$#context-2] =~ /^(order(s?))$/) {
+                if ($context[-3] =~ /^(order(s?))$/) {
                     return "\n\$_xsp_handel_order_order->$tag(''";
-                } elsif ($context[$#context-2] =~ /^(item(s?))$/) {
+                } elsif ($context[-3] =~ /^(item(s?))$/) {
                     return "\n\$_xsp_handel_order_item->$tag(''";
                 };
             };
@@ -318,14 +321,14 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         ## order item property tags
         ## order:sku, price, quantity, total
         } elsif ($tag =~ /^(sku|price|quantity|total)$/) {
-            if ($context[$#context] eq 'new') {
+            if ($context[-1] eq 'new') {
                 return "\n\$_xsp_handel_order_new_filter{$tag} = ''";
-            } elsif ($context[$#context] eq 'add') {
+            } elsif ($context[-1] eq 'add') {
                 return "\n\$_xsp_handel_order_add_filter{$tag} = ''";
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'add') {
-                $e->start_expr($tag);
-                $e->append_to_script("\$_xsp_handel_order_item->$tag;\n");
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] =~ /^(new|order(s?)|item(s?))$/) {
+            #} elsif ($context[-1] eq 'results' && $context[-2] eq 'add') {
+            #    $e->start_expr($tag);
+            #    $e->append_to_script("\$_xsp_handel_order_item->$tag;\n");
+            } elsif ($context[-1] eq 'results' && $context[-2] =~ /^(add|new|order(s?)|item(s?))$/) {
                 $e->start_expr($tag);
 
                 if ($tag =~ /^(price|total)$/ && ($attr{'format'} || $attr{'convert'})) {
@@ -338,31 +341,37 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
                     AxKit::Debug(5, "[Handel] [Order] [$tag] code=$code, format=$format, from=$from, to=$to");
 
                     if ($attr{'convert'}) {
-                        if ($context[$#context-1] =~ /^(new|order(s?))$/) {
-                            $e->append_to_script("\$_xsp_handel_order_order->$tag->convert('$from', '$to', '".($attr{'format'}||'')."', '$format');\n");
+                        if ($context[-2] =~ /^(new|order(s?))$/) {
+                            $e->append_to_script("Handel::Compat::Currency::convert(Handel::Compat::Currency->new(\$_xsp_handel_order_order->$tag->value), '$from', '$to', '".($attr{'format'}||'')."', '$format');\n");
                         } else {
-                            $e->append_to_script("\$_xsp_handel_order_item->$tag->convert('$from', '$to', '".($attr{'format'}||'')."', '$format');\n");
+                            $e->append_to_script("Handel::Compat::Currency::convert(Handel::Compat::Currency->new(\$_xsp_handel_order_item->$tag->value), '$from', '$to', '".($attr{'format'}||'')."', '$format');\n");
                         };
                     } elsif ($attr{'format'}) {
-                        if ($context[$#context-1] =~ /^(new|order(s?))$/) {
-                            $e->append_to_script("\$_xsp_handel_order_order->$tag->format('$code', '$format');\n");
+                        if ($context[-2] =~ /^(new|order(s?))$/) {
+                            $e->append_to_script("Handel::Compat::Currency::format(Handel::Compat::Currency->new(\$_xsp_handel_order_order->$tag->value), '$code', '$format');\n");
                         } else {
-                            $e->append_to_script("\$_xsp_handel_order_item->$tag->format('$code', '$format');\n");
+                            $e->append_to_script("Handel::Compat::Currency::format(Handel::Compat::Currency->new(\$_xsp_handel_order_item->$tag->value), '$code', '$format');\n");
                         };
                     };
+                } elsif ($tag =~ /^(price|total)$/) {
+                    if ($context[-2] =~ /^(new|order(s?))$/) {
+                        $e->append_to_script("\$_xsp_handel_order_order->$tag->value;\n");
+                    } else {
+                        $e->append_to_script("\$_xsp_handel_order_item->$tag->value;\n");
+                    };
                 } else {
-                    if ($context[$#context-1] =~ /^(new|order(s?))$/) {
+                    if ($context[-2] =~ /^(new|order(s?))$/) {
                         $e->append_to_script("\$_xsp_handel_order_order->$tag;\n");
                     } else {
                         $e->append_to_script("\$_xsp_handel_order_item->$tag;\n");
                     };
                 };
-            } elsif ($context[$#context] eq 'delete') {
+            } elsif ($context[-1] eq 'delete') {
                 return "\n\$_xsp_handel_order_delete_filter{$tag} = ''";
-            } elsif ($context[$#context] eq 'update') {
-                if ($context[$#context-2] =~ /^(order(s?))$/) {
+            } elsif ($context[-1] eq 'update') {
+                if ($context[-3] =~ /^(order(s?))$/) {
                     return "\n\$_xsp_handel_order_order->$tag(''";
-                } elsif ($context[$#context-2] =~ /^(item(s?))$/) {
+                } elsif ($context[-3] =~ /^(item(s?))$/) {
                     return "\n\$_xsp_handel_order_item->$tag(''";
                 };
             };
@@ -372,15 +381,15 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         } elsif ($tag eq 'filter') {
             my $key = $attr{'name'} || 'id';
 
-            if ($context[$#context] eq 'order') {
+            if ($context[-1] eq 'order') {
                 return "\n\$_xsp_handel_order_load_filter{'$key'} = ''";
-            } elsif ($context[$#context] eq 'orders') {
+            } elsif ($context[-1] eq 'orders') {
                 return "\n\$_xsp_handel_orders_load_filter{'$key'} = ''";
-            } elsif ($context[$#context] eq 'item') {
+            } elsif ($context[-1] eq 'item') {
                 return "\n\$_xsp_handel_order_item_filter{'$key'} = ''";
-            } elsif ($context[$#context] eq 'items') {
+            } elsif ($context[-1] eq 'items') {
                 return "\n\$_xsp_handel_order_items_filter{'$key'} = ''";
-            } elsif ($context[$#context] eq 'cart') {
+            } elsif ($context[-1] eq 'cart') {
                 return "\n\$_xsp_handel_order_new_cart_filter{'$key'} = ''";
             };
 
@@ -388,65 +397,65 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         ## order:results
         } elsif ($tag =~ /^result(s?)$/) {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid here", $tag)
-            ) if ($context[$#context] !~ /^(new|add|order(s?)|item(s?))$/);
+                -text => translate('TAG_NOT_ALLOWED_HERE', $tag)
+            ) if ($context[-1] !~ /^(new|add|order(s?)|item(s?))$/);
 
             push @context, $tag;
 
-            if ($context[$#context-1] eq 'new') {
+            if ($context[-2] eq 'new') {
                 return '
                     if (!$_xsp_handel_order_called_new && scalar keys %_xsp_handel_order_new_filter) {
-                        $_xsp_handel_order_order = Handel::Order->new(\%_xsp_handel_order_new_filter, $_xsp_handel_order_new_process);
+                        $_xsp_handel_order_order = Handel::Order->create(\%_xsp_handel_order_new_filter, $_xsp_handel_order_new_process);
                         $_xsp_handel_order_called_new = 1;
                     };
                     if ($_xsp_handel_order_order) {
 
                 ';
-            } elsif ($context[$#context-1] eq 'order') {
+            } elsif ($context[-2] eq 'order') {
                 return '
                     if (!$_xsp_handel_order_called_load) {
                         $_xsp_handel_order_order = (scalar keys %_xsp_handel_order_load_filter) ?
-                            Handel::Order->load(\%_xsp_handel_order_load_filter, 1)->next :
-                            Handel::Order->load(undef, 1)->next;
+                            Handel::Order->search(\%_xsp_handel_order_load_filter)->next :
+                            Handel::Order->search->next;
                             $_xsp_handel_order_called_load = 1;
                     };
                     if ($_xsp_handel_order_order) {
 
                 ';
-            } elsif ($context[$#context-1] eq 'orders') {
+            } elsif ($context[-2] eq 'orders') {
                 return '
                     if (!$_xsp_handel_orders_called_load) {
                         @_xsp_handel_order_orders = (scalar keys %_xsp_handel_orders_load_filter) ?
-                            Handel::Order->load(\%_xsp_handel_orders_load_filter) :
-                            Handel::Order->load();
+                            Handel::Order->search(\%_xsp_handel_orders_load_filter) :
+                            Handel::Order->search;
                             $_xsp_handel_orders_called_load = 1;
                     };
                     foreach my $_xsp_handel_order_order (@_xsp_handel_order_orders) {
 
                 ';
-            } elsif ($context[$#context-1] eq 'item') {
+            } elsif ($context[-2] eq 'item') {
                 return '
                     if (!$_xsp_handel_order_called_item) {
                         $_xsp_handel_order_item = (scalar keys %_xsp_handel_order_item_filter) ?
-                            $_xsp_handel_order_order->items(\%_xsp_handel_order_item_filter, 1)->next :
-                            $_xsp_handel_order_order->items(undef, 1)->next;
+                            $_xsp_handel_order_order->items(\%_xsp_handel_order_item_filter)->next :
+                            $_xsp_handel_order_order->items->next;
                             $_xsp_handel_order_called_item = 1;
                     };
                     if ($_xsp_handel_order_item) {
 
                 ';
-            } elsif ($context[$#context-1] eq 'items') {
+            } elsif ($context[-2] eq 'items') {
                 return '
                     if (!$_xsp_handel_order_called_items) {
                         @_xsp_handel_order_items = (scalar keys %_xsp_handel_order_items_filter) ?
                             $_xsp_handel_order_order->items(\%_xsp_handel_order_items_filter) :
-                            $_xsp_handel_order_order->items();
+                            $_xsp_handel_order_order->items;
                             $_xsp_handel_order_called_items = 1;
                     };
                     foreach my $_xsp_handel_order_item (@_xsp_handel_order_items) {
 
                 ';
-            } elsif ($context[$#context-1] eq 'add') {
+            } elsif ($context[-2] eq 'add') {
                 return '
                     if (!$_xsp_handel_order_called_add && scalar keys %_xsp_handel_order_add_filter) {
                         $_xsp_handel_order_item = $_xsp_handel_order_order->add(\%_xsp_handel_order_add_filter);
@@ -461,60 +470,60 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         ## order:no-results
         } elsif ($tag =~ /^no-result(s?)$/) {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid here", $tag)
-            ) if ($context[$#context] !~ /^(new|add|order(s?)|item(s?))$/);
+                -text => translate('TAG_NOT_ALLOWED_HERE', $tag)
+            ) if ($context[-1] !~ /^(new|add|order(s?)|item(s?))$/);
 
             push @context, $tag;
 
-            if ($context[$#context-1] eq 'new') {
+            if ($context[-2] eq 'new') {
                 return '
                     if (!$_xsp_handel_order_called_new && scalar keys %_xsp_handel_order_new_filter) {
-                        $_xsp_handel_order_order = Handel::Order->new(\%_xsp_handel_order_new_filter, $_xsp_handel_order_new_process);
+                        $_xsp_handel_order_order = Handel::Order->create(\%_xsp_handel_order_new_filter, $_xsp_handel_order_new_process);
                         $_xsp_handel_order_called_new = 1;
                     };
                     if (!$_xsp_handel_order_order) {
                 ';
-            } elsif ($context[$#context-1] eq 'order') {
+            } elsif ($context[-2] eq 'order') {
                 return '
                     if (!$_xsp_handel_order_called_load) {
                         $_xsp_handel_order_order = (scalar keys %_xsp_handel_order_load_filter) ?
-                            Handel::Order->load(\%_xsp_handel_order_load_filter, 1)->next :
-                            Handel::Order->load(undef, 1)->next;
+                            Handel::Order->search(\%_xsp_handel_order_load_filter)->next :
+                            Handel::Order->search->next;
                             $_xsp_handel_order_called_load = 1;
                     };
                     if (!$_xsp_handel_order_order) {
                 ';
-            } elsif ($context[$#context-1] eq 'orders') {
+            } elsif ($context[-2] eq 'orders') {
                 return '
                     if (!$_xsp_handel_orders_called_load) {
                         @_xsp_handel_order_orders = (scalar keys %_xsp_handel_orders_load_filter) ?
-                            Handel::Order->load(\%_xsp_handel_orders_load_filter) :
-                            Handel::Order->load();
+                            Handel::Order->search(\%_xsp_handel_orders_load_filter) :
+                            Handel::Order->search;
                             $_xsp_handel_orders_called_load = 1;
                     };
                     if (!scalar @_xsp_handel_order_orders) {
                 ';
-            } elsif ($context[$#context-1] eq 'item') {
+            } elsif ($context[-2] eq 'item') {
                 return '
                     if (!$_xsp_handel_order_called_item) {
                         $_xsp_handel_order_item = (scalar keys %_xsp_handel_order_item_filter) ?
-                            $_xsp_handel_order_order->items(\%_xsp_handel_order_item_filter, 1)->next :
-                            $_xsp_handel_order_order->items(undef, 1)->next;
+                            $_xsp_handel_order_order->items(\%_xsp_handel_order_item_filter)->next :
+                            $_xsp_handel_order_order->items->next;
                             $_xsp_handel_order_called_item = 1;
                     };
                     if (!$_xsp_handel_order_item) {
                 ';
-            } elsif ($context[$#context-1] eq 'items') {
+            } elsif ($context[-2] eq 'items') {
                 return '
                     if (!$_xsp_handel_order_called_items) {
                         @_xsp_handel_order_items = (scalar keys %_xsp_handel_order_items_filter) ?
                             $_xsp_handel_order_order->items(\%_xsp_handel_order_items_filter) :
-                            $_xsp_handel_order_order->items();
+                            $_xsp_handel_order_order->items;
                             $_xsp_handel_order_called_items = 1;
                     };
                     if (!scalar @_xsp_handel_order_items) {
                 ';
-            } elsif ($context[$#context-1] eq 'add') {
+            } elsif ($context[-2] eq 'add') {
                 return '
                     if (!$_xsp_handel_order_called_add && scalar keys %_xsp_handel_order_add_filter) {
                         $_xsp_handel_order_item = $_xsp_handel_order_order->add(\%_xsp_handel_order_add_filter);
@@ -539,7 +548,7 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
 
             return '
                 if (!$_xsp_handel_order_called_new && scalar keys %_xsp_handel_order_new_filter) {
-                    $_xsp_handel_order_order = Handel::Order->new(\%_xsp_handel_order_new_filter);
+                    $_xsp_handel_order_order = Handel::Order->create(\%_xsp_handel_order_new_filter);
                     $_xsp_handel_order_called_new = 1;
                 };
             };';
@@ -599,15 +608,17 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
 
         ## order:update
         } elsif ($tag eq 'update') {
-            if ($context[$#context-2] =~ /^(order(s?))$/) {
+            if ($context[-3] =~ /^(order(s?))$/) {
                 pop @context;
                 return '
                     $_xsp_handel_order_order->update;
+                    $_xsp_handel_order_order->autoupdate(1);
                 ';
-            } elsif ($context[$#context-2] =~ /^(item(s?))$/) {
+            } elsif ($context[-3] =~ /^(item(s?))$/) {
                 pop @context;
                 return '
                     $_xsp_handel_order_item->update;
+                    $_xsp_handel_order_item->autoupdate(1);
                 ';
             };
 
@@ -636,18 +647,18 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         shiptocity|shiptostate|shiptozip|shiptocountry|
         shiptodayphone|shiptonightphone|shiptofax|shiptoemail|
         tax|subtotal|updated)$/x) {
-            if ($context[$#context] eq 'new' && $tag !~ /^(count)$/) {
+            if ($context[-1] eq 'new' && $tag !~ /^(count)$/) {
                 return ";\n";
-            } elsif ($context[$#context] eq 'add' && $tag !~ /^(count|subtotal)$/) {
+            } elsif ($context[-1] eq 'add' && $tag !~ /^(count|subtotal)$/) {
                 return ";\n";
-            } elsif ($context[$#context] eq 'results') {
+            } elsif ($context[-1] eq 'results') {
                 $e->end_expr($tag);
-            } elsif ($context[$#context] eq 'delete' && $tag !~ /^(count|subtotal)$/) {
+            } elsif ($context[-1] eq 'delete' && $tag !~ /^(count|subtotal)$/) {
                 return ";\n";
-            } elsif ($context[$#context] eq 'update') {
-                if ($context[$#context-2] =~ /^(order(s?))$/) {
+            } elsif ($context[-1] eq 'update') {
+                if ($context[-3] =~ /^(order(s?))$/) {
                     return ");\n";
-                } elsif ($context[$#context-2] =~ /^(item(s?))$/) {
+                } elsif ($context[-3] =~ /^(item(s?))$/) {
                     return ");\n";
                 };
             };
@@ -656,28 +667,28 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
         ## order item property tags
         ## order:sku, price, quantity
         } elsif ($tag =~ /^(sku|price|quantity|total)$/) {
-            if ($context[$#context] eq 'add') {
+            if ($context[-1] eq 'add') {
                 return ";\n";
-            } elsif ($context[$#context] eq 'new') {
+            } elsif ($context[-1] eq 'new') {
                 return ";\n";
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'new') {
+            } elsif ($context[-1] eq 'results' && $context[-2] eq 'new') {
                 $e->end_expr($tag);
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'add') {
+            } elsif ($context[-1] eq 'results' && $context[-2] eq 'add') {
                 $e->end_expr($tag);
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'item') {
+            } elsif ($context[-1] eq 'results' && $context[-2] eq 'item') {
                 $e->end_expr($tag);
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'items') {
+            } elsif ($context[-1] eq 'results' && $context[-2] eq 'items') {
                 $e->end_expr($tag);
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'order') {
+            } elsif ($context[-1] eq 'results' && $context[-2] eq 'order') {
                 $e->end_expr($tag);
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'orders') {
+            } elsif ($context[-1] eq 'results' && $context[-2] eq 'orders') {
                 $e->end_expr($tag);
-            } elsif ($context[$#context] eq 'delete' && $tag !~ /^(count|subtotal)$/) {
+            } elsif ($context[-1] eq 'delete' && $tag !~ /^(count|subtotal)$/) {
                 return ";\n";
-            } elsif ($context[$#context] eq 'update') {
-                if ($context[$#context-2] =~ /^(order(s?))$/) {
+            } elsif ($context[-1] eq 'update') {
+                if ($context[-3] =~ /^(order(s?))$/) {
                     return ");\n";
-                } elsif ($context[$#context-2] =~ /^(item(s?))$/) {
+                } elsif ($context[-3] =~ /^(item(s?))$/) {
                     return ");\n";
                 };
             };
@@ -685,44 +696,44 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
 
         ## order:filter
         } elsif ($tag eq 'filter') {
-            if ($context[$#context] eq 'order') {
+            if ($context[-1] eq 'order') {
                 return ";\n";
-            } elsif ($context[$#context] eq 'orders') {
+            } elsif ($context[-1] eq 'orders') {
                 return ";\n";
-            } elsif ($context[$#context] eq 'item') {
+            } elsif ($context[-1] eq 'item') {
                 return ";\n";
-            } elsif ($context[$#context] eq 'items') {
+            } elsif ($context[-1] eq 'items') {
                 return ";\n";
-            } elsif ($context[$#context] eq 'restore') {
+            } elsif ($context[-1] eq 'restore') {
                 return ";\n";
-            } elsif ($context[$#context] eq 'cart') {
+            } elsif ($context[-1] eq 'cart') {
                 return ";\n";
             };
 
 
         ## order:results
         } elsif ($tag =~ /^result(s?)$/) {
-            if ($context[$#context-1] eq 'new') {
+            if ($context[-2] eq 'new') {
                 pop @context;
 
                 return "\n};\n";
-            } elsif ($context[$#context-1] eq 'order') {
+            } elsif ($context[-2] eq 'order') {
                 pop @context;
 
                 return "\n};\n";
-            } elsif ($context[$#context-1] eq 'orders') {
+            } elsif ($context[-2] eq 'orders') {
                 pop @context;
 
                 return "\n};\n";
-            } elsif ($context[$#context-1] eq 'item') {
+            } elsif ($context[-2] eq 'item') {
                 pop @context;
 
                 return "\n};\n";
-            } elsif ($context[$#context-1] eq 'items') {
+            } elsif ($context[-2] eq 'items') {
                 pop @context;
 
                 return "\n};\n";
-            } elsif ($context[$#context-1] eq 'add') {
+            } elsif ($context[-2] eq 'add') {
                 pop @context;
 
                 return "\n};\n";
@@ -732,27 +743,27 @@ $NS  = 'http://today.icantfocus.com/CPAN/AxKit/XSP/Handel/Order';
 
         ## order:no-results
         } elsif ($tag =~ /^no-result(s?)$/) {
-            if ($context[$#context-1] eq 'new') {
+            if ($context[-2] eq 'new') {
                 pop @context;
 
                 return "\n};\n";
-            } elsif ($context[$#context-1] eq 'order') {
+            } elsif ($context[-2] eq 'order') {
                 pop @context;
 
                 return "\n};\n";
-            } elsif ($context[$#context-1] eq 'orders') {
+            } elsif ($context[-2] eq 'orders') {
                 pop @context;
 
                 return "\n};\n";
-            } elsif ($context[$#context-1] eq 'item') {
+            } elsif ($context[-2] eq 'item') {
                 pop @context;
 
                 return "\n};\n";
-            } elsif ($context[$#context-1] eq 'items') {
+            } elsif ($context[-2] eq 'items') {
                 pop @context;
 
                 return "\n};\n";
-            } elsif ($context[$#context-1] eq 'add') {
+            } elsif ($context[-2] eq 'add') {
                 pop @context;
 
                 return "\n};\n";

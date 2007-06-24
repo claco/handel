@@ -26,27 +26,28 @@
 		<message>Error creating shopping cart</message>
 	[% END %]
 
-	[% IF (cart = hcart.fetch({
+	[% IF (cart = hcart.search({
 		type => hcart.CART_TYPE_TEMP,
 		id 	 => '89C8C2E3-3170-4E9D-81DC-9E572E102FB8'
-	})) %]
+	}).first) %]
 		<cart>
 			<count>[% cart.count %]</count>
 			<description>[% cart.description %]</description>
 			<id>[% cart.id %]</id>
 			<name>[% cart.name %]</name>
 			<shopper>[% cart.shopper %]</shopper>
-			<subtotal>[% cart.subtotal %]</subtotal>
+			<subtotal>[% cart.subtotal.value %]</subtotal>
 			<type>[% cart.type %]</type>
-			[% IF (items = cart.items({sku => 'FOO%'})) %]
-				[% FOREACH item IN items %]
+			[% items = cart.items({sku => 'FOO%'}) %]
+			[% IF items.count %]
+				[% WHILE (item = items.next) %]
 					<item>
 						<description>[% item.description %]</description>
 						<id>[% item.id %]</id>
-						<price>[% item.price %]</price>
+						<price>[% item.price.value %]</price>
 						<quantity>[% item.quantity %]</quantity>
 						<sku>[% item.sku %]</sku>
-						<total>[% item.total %]</total>
+						<total>[% item.total.value %]</total>
 					</item>
 				[% END %]
 			[% ELSE %]

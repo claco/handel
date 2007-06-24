@@ -1,7 +1,7 @@
 [%# $Id$ %]
 [% USE horder  = Handel.Order %]
 <body>
-    [% IF (order = horder.fetch(undef, horder.RETURNAS_ARRAY)) %]
+    [% IF (order = horder.search.all) %]
 		<order>
 			<count>[% order.0.count %]</count>
 			<id>[% order.0.id %]</id>
@@ -22,10 +22,10 @@
 			<billtoemail>[% order.0.billtoemail %]</billtoemail>
 			<comments>[% order.0.comments %]</comments>
 			<created>[% order.0.created %]</created>
-			<handling>[% order.0.handling %]</handling>
+			<handling>[% order.0.handling.value %]</handling>
 			<number>[% order.0.number %]</number>
 			<shipmethod>[% order.0.shipmethod %]</shipmethod>
-			<shipping>[% order.0.shipping %]</shipping>
+			<shipping>[% order.0.shipping.value %]</shipping>
 			<shiptosameasbillto>[% order.0.shiptosameasbillto %]</shiptosameasbillto>
 			<shiptofirstname>[% order.0.shiptofirstname %]</shiptofirstname>
 			<shiptolastname>[% order.0.shiptolastname %]</shiptolastname>
@@ -40,9 +40,9 @@
 			<shiptonightphone>[% order.0.shiptonightphone %]</shiptonightphone>
 			<shiptofax>[% order.0.shiptofax %]</shiptofax>
 			<shiptoemail>[% order.0.shiptoemail %]</shiptoemail>
-			<subtotal>[% order.0.subtotal %]</subtotal>
-			<total>[% order.0.total %]</total>
-			<tax>[% order.0.tax %]</tax>
+			<subtotal>[% order.0.subtotal.value %]</subtotal>
+			<total>[% order.0.total.value %]</total>
+			<tax>[% order.0.tax.value %]</tax>
 			<updated>[% order.0.updated %]</updated>
 		</order>
 		<order>
@@ -65,10 +65,10 @@
 			<billtoemail>[% order.1.billtoemail %]</billtoemail>
 			<comments>[% order.1.comments %]</comments>
 			<created>[% order.1.created %]</created>
-			<handling>[% order.1.handling %]</handling>
+			<handling>[% order.1.handling.value %]</handling>
 			<number>[% order.1.number %]</number>
 			<shipmethod>[% order.1.shipmethod %]</shipmethod>
-			<shipping>[% order.1.shipping %]</shipping>
+			<shipping>[% order.1.shipping.value %]</shipping>
 			<shiptosameasbillto>[% order.1.shiptosameasbillto %]</shiptosameasbillto>
 			<shiptofirstname>[% order.1.shiptofirstname %]</shiptofirstname>
 			<shiptolastname>[% order.1.shiptolastname %]</shiptolastname>
@@ -83,9 +83,9 @@
 			<shiptonightphone>[% order.1.shiptonightphone %]</shiptonightphone>
 			<shiptofax>[% order.1.shiptofax %]</shiptofax>
 			<shiptoemail>[% order.1.shiptoemail %]</shiptoemail>
-			<subtotal>[% order.1.subtotal %]</subtotal>
-			<total>[% order.1.total %]</total>
-			<tax>[% order.1.tax %]</tax>
+			<subtotal>[% order.1.subtotal.value %]</subtotal>
+			<total>[% order.1.total.value %]</total>
+			<tax>[% order.1.tax.value %]</tax>
 			<updated>[% order.1.updated %]</updated>
 		</order>
 		<order>
@@ -108,10 +108,10 @@
 			<billtoemail>[% order.2.billtoemail %]</billtoemail>
 			<comments>[% order.2.comments %]</comments>
 			<created>[% order.2.created %]</created>
-			<handling>[% order.2.handling %]</handling>
+			<handling>[% order.2.handling.value %]</handling>
 			<number>[% order.2.number %]</number>
 			<shipmethod>[% order.2.shipmethod %]</shipmethod>
-			<shipping>[% order.2.shipping %]</shipping>
+			<shipping>[% order.2.shipping.value %]</shipping>
 			<shiptosameasbillto>[% order.2.shiptosameasbillto %]</shiptosameasbillto>
 			<shiptofirstname>[% order.2.shiptofirstname %]</shiptofirstname>
 			<shiptolastname>[% order.2.shiptolastname %]</shiptolastname>
@@ -126,9 +126,9 @@
 			<shiptonightphone>[% order.2.shiptonightphone %]</shiptonightphone>
 			<shiptofax>[% order.2.shiptofax %]</shiptofax>
 			<shiptoemail>[% order.2.shiptoemail %]</shiptoemail>
-			<subtotal>[% order.2.subtotal %]</subtotal>
-			<total>[% order.2.total %]</total>
-			<tax>[% order.2.tax %]</tax>
+			<subtotal>[% order.2.subtotal.value %]</subtotal>
+			<total>[% order.2.total.value %]</total>
+			<tax>[% order.2.tax.value %]</tax>
 			<updated>[% order.2.updated %]</updated>
 		</order>
 	[% ELSE %]

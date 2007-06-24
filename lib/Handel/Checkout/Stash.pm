@@ -3,9 +3,18 @@ package Handel::Checkout::Stash;
 use strict;
 use warnings;
 
+BEGIN {
+    use Handel::L10N qw/translate/;
+};
+
 sub new {
-    my $class = shift;
-    my $self = bless {}, ref $class || $class;
+    my ($class, $data) = @_;
+
+    throw Handel::Exception::Argument(
+        -details => translate('PARAM1_NOT_HASHREF')
+    ) if defined $data && ref($data) ne 'HASH'; ## no critic
+
+    my $self = bless $data || {}, $class;
 
     return $self;
 };
@@ -14,6 +23,8 @@ sub clear {
     my $self = shift;
 
     %{$self} = ();
+
+    return;
 };
 
 1;
@@ -26,10 +37,10 @@ Handel::Checkout::Stash - Basic storage for checkout plugins during processing
 =head1 SYNOPSIS
 
     use Handel::Checkout;
-
+    
     my $checkout = Handel::Checkout->new;
     $checkout->process;
-
+    
     # later in some plugin
     sub myhandler {
         my ($self, $ctx) = @_;
@@ -37,11 +48,11 @@ Handel::Checkout::Stash - Basic storage for checkout plugins during processing
         $ctx->stash->{'mystuff'};
         ...
     };
-
+    
     # later in some other plugin
     sub myhandler {
         my ($self, $ctx) = @_;
-
+    
         my $stuff = $ctx->stash->{'mystuff'};
         ...
     };
@@ -59,13 +70,13 @@ tell Handel::Checkout to use the new stash instead:
     use strict;
     use warnings;
     use base 'Handel::Checkout::Stash';
-
+    
     sub clear {};
-
+    
     ---
-
+    
     use Handel::Checkout;
-
+    
     my $co = Handel::Checkout->new({
         stash => MyApp::Stash->new
     });
@@ -74,7 +85,14 @@ tell Handel::Checkout to use the new stash instead:
 
 =head2 new
 
-Creates a new instance of Handel::Checkout::Stash.
+=over
+
+=item Arguments: \%data
+
+=back
+
+Creates a new instance of Handel::Checkout::Stash. You can optionally pass a hash
+reference to new which will be blessed into the new stash instance.
 
 =head1 METHODS
 

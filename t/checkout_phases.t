@@ -2,17 +2,26 @@
 # $Id$
 use strict;
 use warnings;
-use Test::More tests => 123;
-use lib 't/lib';
-use Handel::TestHelper qw(executesql);
 
 BEGIN {
+    use lib 't/lib';
+    use Handel::Test tests => 141;
+
     use_ok('Handel::Checkout');
     use_ok('Handel::Subclassing::Checkout');
     use_ok('Handel::Subclassing::CheckoutStash');
     use_ok('Handel::Subclassing::Stash');
     use_ok('Handel::Constants', qw(:checkout));
     use_ok('Handel::Exception', ':try');
+};
+
+
+## add a phase and import
+{
+    is(main->can('NEWPHASE'), undef, 'new phase does not exists');
+    Handel::Checkout->add_phase('NEWPHASE', 23, 1);
+    can_ok('main', 'NEWPHASE');
+    is(&main::NEWPHASE, 23, 'new phase in place');
 };
 
 
@@ -29,15 +38,17 @@ sub run {
     ## than an array reference
     {
         try {
+            local $ENV{'LANG'} = 'en';
             my $checkout = $subclass->new;
 
             $checkout->phases({'1234' => 1});
 
-            fail;
+            fail('no exception thrown');
         } catch Handel::Exception::Argument with {
-            pass;
+            pass('caught argument exception');
+            like(shift, qr/not an array/i, 'not array in message');
         } otherwise {
-            fail;
+            fail('other exception caught');
         };
     };
 
@@ -47,13 +58,15 @@ sub run {
     ## than an array reference in news' phases option
     {
         try {
+            local $ENV{'LANG'} = 'en';
             my $checkout = $subclass->new({phases => {'1234' => 1}});
 
-            fail;
+            fail('no exception thrown');
         } catch Handel::Exception::Argument with {
-            pass;
+            pass('caught argument exception');
+            like(shift, qr/not an array/i, 'not array in message');
         } otherwise {
-            fail;
+            fail('other exception caught');
         };
     };
 
@@ -61,13 +74,15 @@ sub run {
     ## Test for Handel::Exception::Constraint if new constant name already exists
     {
         try {
+            local $ENV{'LANG'} = 'en';
             $subclass->add_phase('CHECKOUT_PHASE_INITIALIZE', 99);
 
-            fail;
+            fail('no exception thrown');
         } catch Handel::Exception::Constraint with {
-            pass;
+            pass('caught constraint exception');
+            like(shift, qr/already exists/i, 'already exists in message');
         } otherwise {
-            fail;
+            fail('other exception caught');
         };
     };
 
@@ -75,13 +90,15 @@ sub run {
     ## Test for Handel::Exception::Constraint if new constant value already exists
     {
         try {
+            local $ENV{'LANG'} = 'en';
             $subclass->add_phase('CUSTOM_CHECKOUT_PHASE', CHECKOUT_PHASE_INITIALIZE);
 
-            fail;
+            fail('no exception thrown');
         } catch Handel::Exception::Constraint with {
-            pass;
+            pass('caught constraint exception');
+            like(shift, qr/already exists/i, 'already exists in message');
         } otherwise {
-            fail;
+            fail('other exception caught');
         };
     };
 
@@ -90,13 +107,15 @@ sub run {
     sub CUSTOM_CHECKOUT_PHASE_TEST {};
     {
         try {
+            local $ENV{'LANG'} = 'en';
             $subclass->add_phase('CUSTOM_CHECKOUT_PHASE_TEST', 43, 1);
 
-            fail;
+            fail('no exception thrown');
         } catch Handel::Exception::Constraint with {
-            pass;
+            pass('caught constraint exception');
+            like(shift, qr/already exists/i, 'already exists in message');
         } otherwise {
-            fail;
+            fail('other exception caught');
         };
     };
 
@@ -109,8 +128,8 @@ sub run {
 
         my $phases = $checkout->phases;
         isa_ok($phases, 'ARRAY');
-        is(scalar @{$phases}, 1);
-        is($phases->[0], CHECKOUT_PHASE_AUTHORIZE);
+        is(scalar @{$phases}, 1, 'has 1 phase');
+        is($phases->[0], CHECKOUT_PHASE_AUTHORIZE, 'authorize set');
     };
 
 
@@ -119,8 +138,8 @@ sub run {
         my $checkout = $subclass->new({phases => [CHECKOUT_PHASE_DELIVER]});
         my $phases = $checkout->phases;
         isa_ok($phases, 'ARRAY');
-        is(scalar @{$phases}, 1);
-        is($phases->[0], CHECKOUT_PHASE_DELIVER);
+        is(scalar @{$phases}, 1, 'has 1 phase');
+        is($phases->[0], CHECKOUT_PHASE_DELIVER, 'deliver set');
     };
 
 
@@ -128,11 +147,11 @@ sub run {
     {
         my $checkout = $subclass->new;
         my @phases = $checkout->phases;
-        ok(scalar @phases >= 1);
+        ok(scalar @phases >= 1, 'has phases');
 
         my $phases = $checkout->phases;
         isa_ok($phases, 'ARRAY');
-        ok(scalar @{$phases} >= 1);
+        ok(scalar @{$phases} >= 1, 'has more than one phase');
     };
 
 
@@ -140,11 +159,11 @@ sub run {
     {
         my $checkout = $subclass->new({phases => [CHECKOUT_PHASE_DELIVER, CHECKOUT_PHASE_INITIALIZE]});
         my @phases = $checkout->phases;
-        is(scalar @phases, 2);
+        is(scalar @phases, 2, 'has 2 phases');
 
         my $phases = $checkout->phases;
         isa_ok($phases, 'ARRAY');
-        is(scalar @{$phases}, 2);
+        is(scalar @{$phases}, 2, 'has 2 phases');
     };
 
 
@@ -156,8 +175,8 @@ sub run {
 
         my $phases = $checkout->phases;
         isa_ok($phases, 'ARRAY');
-        is(scalar @{$phases}, 1);
-        is($phases->[0], CHECKOUT_PHASE_AUTHORIZE);
+        is(scalar @{$phases}, 1, 'has 1 phase');
+        is($phases->[0], CHECKOUT_PHASE_AUTHORIZE, 'authorize set');
     };
 
 
@@ -169,9 +188,9 @@ sub run {
 
         my $phases = $checkout->phases;
         isa_ok($phases, 'ARRAY');
-        is(scalar @{$phases}, 2);
-        is($phases->[0], CHECKOUT_PHASE_AUTHORIZE);
-        is($phases->[1], CHECKOUT_PHASE_DELIVER);
+        is(scalar @{$phases}, 2, 'has 2 phases');
+        is($phases->[0], CHECKOUT_PHASE_AUTHORIZE, 'authorize set');
+        is($phases->[1], CHECKOUT_PHASE_DELIVER, 'deliver set');
     };
 
 
@@ -183,9 +202,9 @@ sub run {
 
         my $phases = $checkout->phases;
         isa_ok($phases, 'ARRAY');
-        is(scalar @{$phases}, 2);
-        is($phases->[0], CHECKOUT_PHASE_AUTHORIZE);
-        is($phases->[1], CHECKOUT_PHASE_DELIVER);
+        is(scalar @{$phases}, 2, 'has 2 phases');
+        is($phases->[0], CHECKOUT_PHASE_AUTHORIZE, 'authorize set');
+        is($phases->[1], CHECKOUT_PHASE_DELIVER, 'deliver set');
     };
 
 
@@ -194,34 +213,32 @@ sub run {
         my $checkout = $subclass->new({phases => 'CHECKOUT_PHASE_DELIVER'});
         my $phases = $checkout->phases;
         isa_ok($phases, 'ARRAY');
-        is(scalar @{$phases}, 1);
-        is($phases->[0], CHECKOUT_PHASE_DELIVER);
+        is(scalar @{$phases}, 1, 'has 1 phase');
+        is($phases->[0], CHECKOUT_PHASE_DELIVER, 'deliver set');
     };
 
 
     ## Set the phases using news' phases option as comma seperated string and make
     ## sure they stick
     {
-        my $checkout = $subclass->new({phases => 'CHECKOUT_PHASE_AUTHORIZE,
-        CHECKOUT_PHASE_DELIVER'});
+        my $checkout = $subclass->new({phases => 'CHECKOUT_PHASE_AUTHORIZE, CHECKOUT_PHASE_DELIVER'});
         my $phases = $checkout->phases;
         isa_ok($phases, 'ARRAY');
-        is(scalar @{$phases}, 2);
-        is($phases->[0], CHECKOUT_PHASE_AUTHORIZE);
-        is($phases->[1], CHECKOUT_PHASE_DELIVER);
+        is(scalar @{$phases}, 2, 'has 2 phases');
+        is($phases->[0], CHECKOUT_PHASE_AUTHORIZE, 'authorize set');
+        is($phases->[1], CHECKOUT_PHASE_DELIVER, 'deliver set');
     };
 
 
     ## Set the phases using news' space option as comma seperated string and make
     ## sure they stick
     {
-        my $checkout = $subclass->new({phases => 'CHECKOUT_PHASE_AUTHORIZE
-        CHECKOUT_PHASE_DELIVER'});
+        my $checkout = $subclass->new({phases => 'CHECKOUT_PHASE_AUTHORIZE CHECKOUT_PHASE_DELIVER'});
         my $phases = $checkout->phases;
         isa_ok($phases, 'ARRAY');
-        is(scalar @{$phases}, 2);
-        is($phases->[0], CHECKOUT_PHASE_AUTHORIZE);
-        is($phases->[1], CHECKOUT_PHASE_DELIVER);
+        is(scalar @{$phases}, 2, 'has 2 phases');
+        is($phases->[0], CHECKOUT_PHASE_AUTHORIZE, 'authorize set');
+        is($phases->[1], CHECKOUT_PHASE_DELIVER, 'deliver set');
     };
 
 };

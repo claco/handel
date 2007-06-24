@@ -1,12 +1,278 @@
 Revision history for Perl module Handel
 
-    - Applied Catalyst Helper test patch from Todd W.
+1.00000 Sun June 24 08:57:22 2007
+    - constraint_price now uses $currency->value if value isa
+        Data::Currency object
 
-0.33 Mon Jun 19 19:31:23 2006
+0.99_19 Thur June 21 21:02:36 2007
+    - Storage->setup now puts non-accessor keys into %$self
+    - Removed incomplete L10N Lexicons
+    - Cleanup coverage before 1.0 release
+    - DBIx::Class 0.08 Released & Required
+    - Added AutoCommit to Handel::Test
+    - Tweaked failing checkout process tests
+
+0.99_18 Wed Apr 18 19:55:09 2007
+    - Added --version to handel.pl/handel.bat
+    - Fixed Handel::Compat::Currency pod
+    - Updated prereq to use DBIx::Class 0.07999_02
+    - Added skips for DBD::SQLite 1.13 (teh devil) causing failing tests
+    - Updated Perl::Critic tests
+
+0.99_17 Wed Mar 21 20:11:24 2007
+    - Renamed ConfigReaders %Defaults to %DEFAULTS
+    - Removed t/style_critic_tests. ETOOMUCHWORKFORLITTLEBENEFIT
+    - Updated Test::MockObject in tests to 1.07
+    - Fixed destroy in Order
+    - Fixed has_column check when setting item currency columns
+
+    BREAKING API CHANGE:
+    - Handel::Currency isa Data::Currency
+    - H::C::format moved to as_string; now just returns the format
+
+0.99_16 Thur Dec 21 16:21:15 2006
+    - Added \%options/order_by to search/items in Cart/Order
+    - Added has_column to DBIC Storage to use ResultSource->has_column
+    - Added has_column to Result/DBIC Result
+    - Fixed TT demo code. Maybe that will die some day.
+        Seriously. Two words: Catalyst Helpers. :-)
+    - Fixed issue where Compat Currency convert failed with converter returns 0
+    - Changed quickstart setup script to *_handel.pl
+    - Added 0700 perms to handel.pl app script
+    - Storage::process_error now only dies Handel::Exception subclasses instead
+        of all blessed objects
+    - Renamed DBIC schema classes into Schema::DBIC space, like their RDBO
+        cousins
+
+0.99_15 Sun Nov 12 17:50:52 2006
+    - L10N files now use constant-like keys rather than english errors
+    - L10N::es_es.pm reworked by Diego Kuperman
+    - L10N::fr reworked by Pierrick DINTRAT
+    - Added l10n_lexicon_synced.t to ensure language lexicons are synced with
+        each other via key checks
+    - Removed constraint_uuid check from Checkout order/cart since it's not
+        subclass friendly (RT#19813,TKP)
+    - Checkout cart now throws an exception of now order can be found matching
+        the search criteria
+    - Converted tests to use Handel::Test
+    - Cleanup tests against Perl::Critic
+    - Fixed Checkout prototype mismatch warning under perl > 5.8.8
+    - Added more config tests for MP1/MP2
+    - Added more Schema connect tests
+    - Added more Base tests
+    - Added Iterator tests
+    - Fixed bug in Iterator:::DBIC where first increments the resulset
+    - Fixed issue in Cat Helpers that treated MyApp::Controller:: as a valid
+        name
+    - Added Catalyst Model setup tests
+    - Added Catalyst Scaffold Helper tests
+    - Added checkout_class to Order pod
+    - Added Module::Starter::Handel to help kickstart Handel projects
+    - Added currency_code_column to storage so DBIC inflators can set currency
+        code using another column in the row
+    - Removed formatting options from Currency->convert now that it always
+        returns a currency object instead of formatted strings
+    - Reworked Handel::Currency to be more object like with its parameters
+    - Added Handel::Compat::Currency, inserted automatically when loading
+        Handel::Compat
+    - Added compat_currency.t tests
+    - Converted to Module::Pluggable::Object
+    - Cart restore now throws exception on unknown mode like it was supposed to
+    - Only create currency converter when calling convert for the first time
+    - Added handel.pl quickstart scripts for Module::Starter::Handel apps
+    - Added Catalyst::Helper::Handel to create entire cat app w/ starter
+        subclasses
+    - Huge test coverage. 99% w00t!
+    - Mostly Perl::Critic happy...except for some test labels
+    - Probably last release before 1.0!
+
+0.99_14 Sat Sep 23 19:14:22 2006
+    - Added Order::save method
+    - MarkOrderSaved plugin now uses Order::save method instead of setting
+        the type field directly
+    - Removed constraint_uuid check from Order create/reconcile as it's not
+        subclass of interchangable schema friendly (RT#19813,TKP)
+    - Changed id references in search to use first primary key from Storage
+        (RT#19813,TKP)
+    - Order creation from cart no does can('shopper') to help w/ subclassing
+
+0.99_13 Wed Sep 20 19:01:29 2006
+    - Added NEXT to prereqs for Handel::Compat
+    - Moved FormValidator::Simple from recommended to prereqs
+    - Added set_default_values to Storage
+    - Added check_constraints to Storage
+    - Added validate_data to Storage
+
+0.99_12 Fri Sep 15 22:28:53 2006
+    - Moved Locale::Currency/Format and WebServiceX modules to requirements
+    - Currency new() now takes $code and $format params
+    - Added name/code to Currency
+    - Added converter_class to Currency
+    - Added currency_code and currency_format to Storage
+    - Storage::DBIC now passes currency_code/format into DBIC inflate subs for
+        currency_columns
+    - Added Storage::DBIC currency_code/currency_format tests
+    - Finished Perl::Critic cleanup
+
+0.99_11 Sun Sep 10 13:33:22 2006
+    - Fix examples code in AddingColumns.pod
+    - Fixed pod references after DBIC Storage rearrangement
+    - Added item_storage_class/item_storage to Storage so item related methods
+        could get item storage config from item storage without being tied to
+        top level item class
+    - Moved item_class/cart_class back into Handel::Base. They don't belong in
+        storage
+    - Moved checkout_class back into Handel::Order. That doesn't belong in
+        storage either
+    - Added WritingCustomStorage to Cookbook
+    - Added has_column to Storage
+
+0.99_10 Wed Sep 06 21:02:33 2006
+    - Added start of Cookbook and Cookbook/AddColumns
+    - Moved DBIC specific Storage classes into DBIC namespace
+    - Changed process to get items->all instead of (items)
+
+0.99_09 Tue Sep 05 19:18:52 2006
+    - Catalyst Helpers now require FormValidator::Simple 0.17 (Woohoo!)
+    - Validation component now requires DBIx::Class::Validation 0.01001
+        which uses new FV::S for profile/instance/messages fixes
+    - Filled in pod generated by Catalyst Helpers in a moment of weakness
+
+0.99_08 Mon Sep 04 16:45:22 2006
+    - Added txn_begin/commit/rollback to Storage and Storage::DBIC to help
+        abstract Checkout::process from Storage.
+    - Added Storage::DBIC::Result to get DBIC specific things out of
+    Storage::Result
+    - Minor pod fixes
+
+0.99_07 Sun Sep 03 20:58:13 2006
+	WARNING: The auto generated Catalyst helper code requires
+	FormValidator::Simple
+	changes/fixes that have yet to be commited or accepted until the author
+	responds.
+	Contact me if you need a copy of the modified version.
+
+    - Moved perl_critic.t to style_perl_critic.t
+    - Added style_no_tabs.t
+    - Style tests now enabled via TEST_PRIVATE
+    - Reworked Catalyst Helpers for Controllers and their tests.
+    - Fixed issue where add_handler wasn't assigning unique pref ids when non
+        were specified in the plugins themselves.
+    - Moved requirements to Requirements.pod
+    - Cart destroy now works on a blessed object under Catalyst
+    - AssignOrderNumber checkout plugin no longer sets the updated field.
+        This will be rolled into the Order class in the next release.
+
+0.99_06 Fri Aug 25 20:53:26 2006
+    - Simplified Storage->setup and removed clear/reset nonsense
+    - Added Spanish lexion provided by Diego Kuperman
+    - Abstracted Iterator and added subclasses for lists, DBIC resultsets
+        and storage results
+    - Added result_iterator_class to Base using default of
+    Handel::Iterator::Results
+    - Storage now leaves DBIC result_class alone and returns
+    Handel::Iterator::DBIC
+        iterators for search/search_items
+    - Cart/Order now use Handel::Iterator::Results iterator
+    - Split DBIC specific storage into Storage::DBIC w/ massive tests
+    - Started moving news tests to Handel::Test w/ better db deploy/var
+    directory
+    - Split Manual Storage into Storage/Storage::DBIC
+    - Added param checks to many Storage methods
+    - Replaced old Makefile warnings w/ mention of Test::More and DateTime
+    compares
+    - Added Perl::Critic tests for my personal gratification. None pass yet. :-)
+    - currency_columns gets/sets list instead of arrayrefs to better match
+    generic
+        columns/primary_columns
+    - Bumped DBIC requirement to 0.08 (use -current for now)
+    - Reworked Catalyst Helpers for Models (Controllers are still broken)
+
+0.99_05 Wed Aug 09 21::02::29 2006
+    - Changed create_result in Base to create_instance
+    - Added create/search/uuid_maker/copyable_item_columns to Storage
+    - Storage->clone now clones even with an active schema instance
+    - Schema configuration in Storage now uses a clone of the item_classes
+        storage instead of the original, and redirects result->storage
+    - Cart/Order/Items now use storage create/search
+    - Cart/Order add() now use copyable_item_columns when passed objects
+    - Cart/Order add() now look for source columns and methods to fill
+        destination column values
+    - Various pod fixes
+    - Added more tests for create_instance/clone changes
+    - Cart/Order/Item new/load/destroy now take \%options, specifically
+    $options{storage}
+    - Order->new $process argument moved into \%options
+    - Order->copy_cart_items now just uses add
+    - Added checkout_class to Storage
+    - Storage now uses exception_action rather than dbh->{HandleError}
+    - Storage process_error now creates a Storage Exception for unknown errors
+    - Moved storage settings in Cart/Order Item into Storage::Cart/Order::Item
+    - Applied Catalyst Helper test patch from Todd W.
+    - Added Storage::Result, which is now returned by storage actions
+    - Handel::Currency convert now returns a new currency object
+    - Cart/Order/Item now use generic result objects
+    - Cart/Order clear now returns result of action like delete does
+    - Renamed Cart/Order/Item new() to create()
+    - Renamed Cart/Order/Item load() to search()
+    - Added load/new/items to Compat.t w/subclass tests
+
+0.99_04 Sat Jul 15 16:21:25 2006
+    - Schema configuration now finally uses load_components without the
+        Class::C3 recalc slowdown
+    - Validation component now uses throw_exception/next::method now that
+        load_components is used
+    - Major pod cleanup
+    - Excised all forms of RETURN_AS
+    - TEST_SPELLING is now TEST_POD, which all pod tests now use
+    - Order created/updated fields now return DateTime objects using
+        DBIx::Class::InflateColumn::DateTime
+    - Excised remaining UNIVERSAL::isa mistakes. Blessed is your friend.
+    - Order created/updated fields now default to DateTime->now
+
+0.99_03 Mon Jul 10 21:05:27 2006
+    - Fixed AxKit Exception Error (RT#19707,TKP)
+    - Added start of Handel::Manual
+    - uuid is now new_uuid, and now in Storage
+    - Removed setup_columns_accessors in favor or create_accessors in Base
+    - Cart/Order/Item classes now have a instance of storage instead of
+        subclassing it
+    - Added Handel::Base as super class for Cart/Order/Item classes
+    - Added Handel::Storage tests
+    - Handel::Storage now does all schema configurate during first
+        schema_instance call
+    - Added Handel::Storage::new/setup
+    - Cart/Order/Item classes now delegate direct schema access to Storage
+    - Added validation/constraint/default_value_class to Storage
+    - Converted Storage from Class::Data::Accessor to Class::Accesssor::Grouped
+    - Refactored injection of components into schema source classes
+    - schema_instance now creates a clone using compose_namespace and
+        does its component injection into the clone instead
+    - Added currency_class/currency_columns to Storage
+    - Added value() to Handel::Currency
+    - Added autoupdate to results that inherits from storage->autoupdate
+    - Added basic compatibility layer for older subclasses
+
+0.99_02 Mon Jun 05 22:08:32 2006
+    - Fixed test counts in t/order_new.t (RT#19700,TKP)
+    - Moved _error_handler in Storage to process_error and set
+        dbh->{HandelError} using $self->can
+    - Use blessed when setting schema_instance in Storage
+    - Abstracted schema setup when setting Storage->schema_instance($schema)
+
+0.99_01
+    - RETURN_AS has been removed from the API
+    - Data filters now take SQL::Abstract syntax for wildcards
+    - Converted from Class::DBI to DBIx::Class schemas
+    - Handel::ConfigReader is now a singleton via instance()
+    - Handel::DBI is deprecated in favor if Handel::Storage
+    - Moved column defaults into Handel::Components::DefaultValues
+    - Added constraint_cart_name
+
+0.33
     - Fixed version requirement for catalyst tests
     - Fixed cart iterator tests db file creation issues
     - Cart taglib now calls tag-based functions to ease subclassing
-    - Applied Catalyst Controller Helper patch from Todd W. for Catalyst 5.6+
 
 0.32 Sun Jan 22 18:19:38 2006
     - Added order_reconcile.t tests
@@ -407,6 +673,9 @@ Revision history for Perl module Handel
 
 0.01_01 Mon Dec 27 21:47:04 2004
     - Initial alpha release
+
+
+
 
 
 

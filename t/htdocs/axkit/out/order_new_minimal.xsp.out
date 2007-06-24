@@ -20,7 +20,7 @@
 		<billtofax>3-333-333-3333</billtofax>
 		<billtoemail>mendlefarg@gmail.com</billtoemail>
 		<comments>Comments</comments>
-		<created>20050715T201234Z</created>
+		<created>2005-07-15T20:12:34</created>
 		<handling>8.95</handling>
 		<number>O123456789</number>
 		<shipmethod>UPS Ground</shipmethod>
@@ -42,6 +42,6 @@
 		<subtotal>37.95</subtotal>
 		<total>37.95</total>
 		<tax>6.66</tax>
-		<updated>20050716T201234Z</updated>
+		<updated>2005-07-16T20:12:34</updated>
 	</order>
 </body>

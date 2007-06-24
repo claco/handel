@@ -3,7 +3,7 @@ package Handel::TestPipeline::ValidateError;
 use strict;
 use warnings;
 use base 'Handel::Checkout::Plugin';
-use Handel::Constants qw(:checkout :returnas);
+use Handel::Constants qw(:checkout);
 
 sub register {
     my ($self, $ctx) = @_;
@@ -19,8 +19,8 @@ sub handler {
         my $subtotal = 0;
 
         eval {
-            my $items = $order->items(undef, RETURNAS_ITERATOR);
-            while (my $item = $items->next) {
+            my @items = $order->items;
+            foreach my $item (@items) {
                 $item->sku('ERRORSKU');
             };
             $order->billtofirstname('ErrorBillToFirstName');

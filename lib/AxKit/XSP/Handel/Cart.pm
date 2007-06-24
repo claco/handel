@@ -1,4 +1,5 @@
 # $Id$
+## no critic
 package AxKit::XSP::Handel::Cart;
 use strict;
 use warnings;
@@ -148,7 +149,7 @@ BEGIN {
 my @context = 'root';
 
 sub start_document {
-    return "use Handel::Cart;\n";
+    return "use Handel::Cart;\nuse Handel::Compat::Currency;use Handel::Currency;\n";
 };
 
 sub quoted_text {
@@ -171,7 +172,7 @@ sub uuid_start {
     my ($e, $tag, %attr) = @_;
 
     $e->start_expr($tag);
-    $e->append_to_script("Handel::Cart->uuid");
+    $e->append_to_script("Handel::Cart->storage->new_uuid");
     $e->end_expr($tag);
 
     return;
@@ -181,8 +182,8 @@ sub new_start {
     my ($e, $tag, %attr) = @_;
 
     throw Handel::Exception::Taglib(
-        -text => translate("Tag '[_1]' not valid inside of other Handel tags", $tag)
-    ) if ($context[$#context] ne 'root');
+        -text => translate('TAG_NOT_ALLOWED_IN_OTHERS', $tag)
+    ) if ($context[-1] ne 'root');
 
     push @context, $tag;
 
@@ -234,14 +235,14 @@ sub new_results_start {
     my ($e, $tag, %attr) = @_;
 
     throw Handel::Exception::Taglib(
-        -text => translate("Tag '[_1]' not valid here", $tag)
-    ) if ($context[$#context] !~ /^(new|add|cart(s?)|item(s?))$/);
+        -text => translate('TAG_NOT_ALLOWED_HERE', $tag)
+    ) if ($context[-1] !~ /^(new|add|cart(s?)|item(s?))$/);
 
     push @context, $tag;
 
     return '
         if (!$_xsp_handel_cart_called_new && scalar keys %_xsp_handel_cart_new_filter) {
-            $_xsp_handel_cart_cart = Handel::Cart->new(\%_xsp_handel_cart_new_filter);
+            $_xsp_handel_cart_cart = Handel::Cart->create(\%_xsp_handel_cart_new_filter);
             $_xsp_handel_cart_called_new = 1;
         };
         if ($_xsp_handel_cart_cart) {
@@ -365,14 +366,14 @@ sub new_results_shopper_start {
         ## cart:uuid
         if ($tag =~ /^(g|u)uid$/) {
             $e->start_expr($tag);
-            $e->append_to_script("Handel::Cart->uuid");
+            $e->append_to_script("Handel::Cart->storage->new_uuid");
             $e->end_expr($tag);
 
         ## cart:new
         } elsif ($tag eq 'new') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid inside of other Handel tags", $tag)
-            ) if ($context[$#context] ne 'root');
+                -text => translate('TAG_NOT_ALLOWED_IN_OTHERS', $tag)
+            ) if ($context[-1] ne 'root');
 
             push @context, $tag;
 
@@ -387,8 +388,8 @@ sub new_results_shopper_start {
         ## cart:restore
         } elsif ($tag eq 'restore') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid inside of tag '" . $context[$#context] . "'", $tag)
-            ) if ($context[$#context] =~ /^(cart(s?))$/);
+                -text => translate('Tag [_1] not valid inside of tag [_2]', $tag, $context[-1])
+            ) if ($context[-1] =~ /^(cart(s?))$/);
 
             push @context, $tag;
 
@@ -404,8 +405,8 @@ sub new_results_shopper_start {
         ## cart:cart
         } elsif ($tag eq 'cart') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid inside of other Handel tags", $tag)
-            ) if ($context[$#context] ne 'root');
+                -text => translate('TAG_NOT_ALLOWED_IN_OTHERS', $tag)
+            ) if ($context[-1] ne 'root');
 
             push @context, $tag;
 
@@ -420,8 +421,8 @@ sub new_results_shopper_start {
         ## cart:carts
         } elsif ($tag eq 'carts') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid inside of other Handel tags", $tag)
-            ) if ($context[$#context] ne 'root');
+                -text => translate('TAG_NOT_ALLOWED_IN_OTHERS', $tag)
+            ) if ($context[-1] ne 'root');
 
             push @context, $tag;
 
@@ -436,8 +437,8 @@ sub new_results_shopper_start {
         ## cart:item
         } elsif ($tag eq 'item') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid inside of tag '" . $context[$#context] . "'", $tag)
-            ) if ($context[$#context] =~ /^(cart(s?))$/);
+                -text => translate('Tag [_1] not valid inside of tag [_2]', $tag, $context[-1])
+            ) if ($context[-1] =~ /^(cart(s?))$/);
 
             push @context, $tag;
 
@@ -452,8 +453,8 @@ sub new_results_shopper_start {
         ## cart:items
         } elsif ($tag eq 'items') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid inside of tag '" . $context[$#context] . "'", $tag)
-            ) if ($context[$#context] =~ /^(cart(s?))$/);
+                -text => translate('Tag [_1] not valid inside of tag [_2]', $tag, $context[-1])
+            ) if ($context[-1] =~ /^(cart(s?))$/);
 
             push @context, $tag;
 
@@ -468,8 +469,8 @@ sub new_results_shopper_start {
         ## cart:clear
         } elsif ($tag eq 'clear') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid here", $tag)
-            ) if ($context[$#context] ne 'results' || $context[$#context-1] !~ /^(cart(s?))$/);
+                -text => translate('TAG_NOT_ALLOWED_HERE', $tag)
+            ) if ($context[-1] ne 'results' || $context[-2] !~ /^(cart(s?))$/);
 
            return "\n\$_xsp_handel_cart_cart->clear;\n";
 
@@ -477,8 +478,8 @@ sub new_results_shopper_start {
         ## cart:add
         } elsif ($tag eq 'add') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid here", $tag)
-            ) if ($context[$#context] ne 'results' || $context[$#context-1] !~ /^(new|cart(s?))$/);
+                -text => translate('TAG_NOT_ALLOWED_HERE', $tag)
+            ) if ($context[-1] ne 'results' || $context[-2] !~ /^(new|cart(s?))$/);
 
             push @context, $tag;
 
@@ -493,14 +494,14 @@ sub new_results_shopper_start {
         ## cart:update
         } elsif ($tag eq 'update') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid here", $tag)
-            ) if ($context[$#context] ne 'results' || $context[$#context-1] !~ /^((cart(s?)|item(s?)))$/);
+                -text => translate('TAG_NOT_ALLOWED_HERE', $tag)
+            ) if ($context[-1] ne 'results' || $context[-2] !~ /^((cart(s?)|item(s?)))$/);
 
             push @context, $tag;
 
-            if ($context[$#context-2] =~ /^(cart(s?))$/) {
+            if ($context[-3] =~ /^(cart(s?))$/) {
                 return "\n\$_xsp_handel_cart_cart->autoupdate(0);\n";
-            } elsif ($context[$#context-2] =~ /^(item(s?))$/) {
+            } elsif ($context[-3] =~ /^(item(s?))$/) {
                 return "\n\$_xsp_handel_cart_item->autoupdate(0);\n";
             };
 
@@ -509,8 +510,8 @@ sub new_results_shopper_start {
 
         } elsif ($tag eq 'save') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid here", $tag)
-            ) if ($context[$#context-1] !~ /^(cart(s?))$/);
+                -text => translate('TAG_NOT_ALLOWED_HERE', $tag)
+            ) if ($context[-2] !~ /^(cart(s?))$/);
 
             return '
                 $_xsp_handel_cart_cart->save;
@@ -520,8 +521,8 @@ sub new_results_shopper_start {
         ## cart:delete
         } elsif ($tag eq 'delete') {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid here", $tag)
-            ) if ($context[$#context] ne 'results' || $context[$#context-1] !~ /^(cart(s?))$/);
+                -text => translate('TAG_NOT_ALLOWED_HERE', $tag)
+            ) if ($context[-1] ne 'results' || $context[-2] !~ /^(cart(s?))$/);
 
             push @context, $tag;
 
@@ -535,11 +536,11 @@ sub new_results_shopper_start {
         ## cart property tags
         ## cart:description, id, name, shopper, type, count, subtotal
         } elsif ($tag =~ /^(description|id|name|shopper|type|count|subtotal)$/) {
-            if ($context[$#context] eq 'new' && $tag !~ /^(count|subtotal)$/) {
+            if ($context[-1] eq 'new' && $tag !~ /^(count|subtotal)$/) {
                 return "\n\$_xsp_handel_cart_new_filter{$tag} = ''";
-            } elsif ($context[$#context] eq 'add' && $tag =~ /^(id|description)$/) {
+            } elsif ($context[-1] eq 'add' && $tag =~ /^(id|description)$/) {
                 return "\n\$_xsp_handel_cart_add_filter{$tag} = ''";
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] =~ /^(new|cart(s?))$/) {
+            } elsif ($context[-1] eq 'results' && $context[-2] =~ /^(new|cart(s?))$/) {
                 $e->start_expr($tag);
 
                 if ($tag eq 'subtotal' && ($attr{'format'} || $attr{'convert'})) {
@@ -552,32 +553,34 @@ sub new_results_shopper_start {
                     AxKit::Debug(5, "[Handel] [Cart] [$tag] code=$code, format=$format, from=$from, to=$to");
 
                     if ($attr{'convert'}) {
-                        $e->append_to_script("\$_xsp_handel_cart_cart->$tag->convert('$from', '$to', '".($attr{'format'}||'')."', '$format');\n");
+                        $e->append_to_script("Handel::Compat::Currency::convert(Handel::Compat::Currency->new(\$_xsp_handel_cart_cart->$tag->value), '$from', '$to', '".($attr{'format'}||'')."', '$format');\n");
                     } elsif ($attr{'format'}) {
-                        $e->append_to_script("\$_xsp_handel_cart_cart->$tag->format('$code', '$format');\n");
+                        $e->append_to_script("Handel::Compat::Currency::format(Handel::Compat::Currency->new(\$_xsp_handel_cart_cart->$tag->value), '$code', '$format');\n");
                     };
+                } elsif ($tag eq 'subtotal') {
+                    $e->append_to_script("\$_xsp_handel_cart_cart->$tag->value;\n");
                 } else {
                     $e->append_to_script("\$_xsp_handel_cart_cart->$tag;\n");
                 };
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'item') {
+            } elsif ($context[-1] eq 'results' && $context[-2] eq 'item') {
                 $e->start_expr($tag);
                 $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'items') {
+            } elsif ($context[-1] eq 'results' && $context[-2] eq 'items') {
                 $e->start_expr($tag);
                 $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'add') {
+            } elsif ($context[-1] eq 'results' && $context[-2] eq 'add') {
                 $e->start_expr($tag);
                 $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
-            } elsif ($context[$#context] eq 'delete' && $tag !~ /^(count|subtotal)$/) {
+            } elsif ($context[-1] eq 'delete' && $tag !~ /^(count|subtotal)$/) {
                 return "\n\$_xsp_handel_cart_delete_filter{$tag} = ''";
-            } elsif ($context[$#context] eq 'update') {
+            } elsif ($context[-1] eq 'update') {
                 throw Handel::Exception::Taglib(
-                    -text => translate("Tag '[_1]' not valid here", $tag)
+                    -text => translate('TAG_NOT_ALLOWED_HERE', $tag)
                 ) if ($tag eq 'id');
 
-                if ($context[$#context-2] =~ /^(cart(s?))$/) {
+                if ($context[-3] =~ /^(cart(s?))$/) {
                     return "\n\$_xsp_handel_cart_cart->$tag(''";
-                } elsif ($context[$#context-2] =~ /^(item(s?))$/) {
+                } elsif ($context[-3] =~ /^(item(s?))$/) {
                     return "\n\$_xsp_handel_cart_item->$tag(''";
                 };
             };
@@ -586,12 +589,12 @@ sub new_results_shopper_start {
         ## cart item property tags
         ## cart:sku, price, quantity, total
         } elsif ($tag =~ /^(sku|price|quantity|total)$/) {
-            if ($context[$#context] eq 'add' && $tag ne 'total') {
+            if ($context[-1] eq 'add' && $tag ne 'total') {
                 return "\n\$_xsp_handel_cart_add_filter{$tag} = ''";
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'add') {
-                $e->start_expr($tag);
-                $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] =~ /^item(s?)$/) {
+            #} elsif ($context[-1] eq 'results' && $context[-2] eq 'add') {
+            #    $e->start_expr($tag);
+            #    $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
+            } elsif ($context[-1] eq 'results' && $context[-2] =~ /^(item(s?)|add)$/) {
                 $e->start_expr($tag);
 
                 if ($tag =~ /^(price|total)$/ && ($attr{'format'} || $attr{'convert'})) {
@@ -604,19 +607,21 @@ sub new_results_shopper_start {
                     AxKit::Debug(5, "[Handel] [Cart] [$tag] code=$code, format=$format, from=$from, to=$to");
 
                     if ($attr{'convert'}) {
-                        $e->append_to_script("\$_xsp_handel_cart_item->$tag->convert('$from', '$to', '".($attr{'format'}||'')."', '$format');\n");
+                        $e->append_to_script("Handel::Compat::Currency::convert(Handel::Compat::Currency->new(\$_xsp_handel_cart_item->$tag->value), '$from', '$to', '".($attr{'format'}||'')."', '$format');\n");
                     } elsif ($attr{'format'}) {
-                        $e->append_to_script("\$_xsp_handel_cart_item->$tag->format('$code', '$format');\n");
+                        $e->append_to_script("Handel::Compat::Currency::format(Handel::Compat::Currency->new(\$_xsp_handel_cart_item->$tag->value), '$code', '$format');\n");
                     };
+                } elsif ($tag =~ /^(price|total)$/) {
+                    $e->append_to_script("\$_xsp_handel_cart_item->$tag->value;\n");
                 } else {
                     $e->append_to_script("\$_xsp_handel_cart_item->$tag;\n");
                 };
-            } elsif ($context[$#context] eq 'delete') {
+            } elsif ($context[-1] eq 'delete') {
                 return "\n\$_xsp_handel_cart_delete_filter{$tag} = ''";
-            } elsif ($context[$#context] eq 'update') {
-                if ($context[$#context-2] =~ /^(cart(s?))$/) {
+            } elsif ($context[-1] eq 'update') {
+                if ($context[-3] =~ /^(cart(s?))$/) {
                     return "\n\$_xsp_handel_cart_cart->$tag(''";
-                } elsif ($context[$#context-2] =~ /^(item(s?))$/) {
+                } elsif ($context[-3] =~ /^(item(s?))$/) {
                     return "\n\$_xsp_handel_cart_item->$tag(''";
                 };
             };
@@ -626,15 +631,15 @@ sub new_results_shopper_start {
         } elsif ($tag eq 'filter') {
             my $key = $attr{'name'} || 'id';
 
-            if ($context[$#context] eq 'cart') {
+            if ($context[-1] eq 'cart') {
                 return "\n\$_xsp_handel_cart_load_filter{'$key'} = ''";
-            } elsif ($context[$#context] eq 'carts') {
+            } elsif ($context[-1] eq 'carts') {
                 return "\n\$_xsp_handel_carts_load_filter{'$key'} = ''";
-            } elsif ($context[$#context] eq 'item') {
+            } elsif ($context[-1] eq 'item') {
                 return "\n\$_xsp_handel_cart_item_filter{'$key'} = ''";
-            } elsif ($context[$#context] eq 'items') {
+            } elsif ($context[-1] eq 'items') {
                 return "\n\$_xsp_handel_cart_items_filter{'$key'} = ''";
-            } elsif ($context[$#context] eq 'restore') {
+            } elsif ($context[-1] eq 'restore') {
                 return "\n\$_xsp_handel_cart_restore_filter{'$key'} = ''";
             };
 
@@ -642,65 +647,65 @@ sub new_results_shopper_start {
         ## cart:results
         } elsif ($tag =~ /^result(s?)$/) {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid here", $tag)
-            ) if ($context[$#context] !~ /^(new|add|cart(s?)|item(s?))$/);
+                -text => translate('TAG_NOT_ALLOWED_HERE', $tag)
+            ) if ($context[-1] !~ /^(new|add|cart(s?)|item(s?))$/);
 
             push @context, $tag;
 
-            if ($context[$#context-1] eq 'new') {
+            if ($context[-2] eq 'new') {
                 return '
                     if (!$_xsp_handel_cart_called_new && scalar keys %_xsp_handel_cart_new_filter) {
-                        $_xsp_handel_cart_cart = Handel::Cart->new(\%_xsp_handel_cart_new_filter);
+                        $_xsp_handel_cart_cart = Handel::Cart->create(\%_xsp_handel_cart_new_filter);
                         $_xsp_handel_cart_called_new = 1;
                     };
                     if ($_xsp_handel_cart_cart) {
 
                 ';
-            } elsif ($context[$#context-1] eq 'cart') {
+            } elsif ($context[-2] eq 'cart') {
                 return '
                     if (!$_xsp_handel_cart_called_load) {
                         $_xsp_handel_cart_cart = (scalar keys %_xsp_handel_cart_load_filter) ?
-                            Handel::Cart->load(\%_xsp_handel_cart_load_filter, 1)->next :
-                            Handel::Cart->load(undef, 1)->next;
+                            Handel::Cart->search(\%_xsp_handel_cart_load_filter)->next :
+                            Handel::Cart->search->next;
                             $_xsp_handel_cart_called_load = 1;
                     };
                     if ($_xsp_handel_cart_cart) {
 
                 ';
-            } elsif ($context[$#context-1] eq 'carts') {
+            } elsif ($context[-2] eq 'carts') {
                 return '
                     if (!$_xsp_handel_carts_called_load) {
                         @_xsp_handel_cart_carts = (scalar keys %_xsp_handel_carts_load_filter) ?
-                            Handel::Cart->load(\%_xsp_handel_carts_load_filter) :
-                            Handel::Cart->load();
+                            Handel::Cart->search(\%_xsp_handel_carts_load_filter) :
+                            Handel::Cart->search;
                             $_xsp_handel_carts_called_load = 1;
                     };
                     foreach my $_xsp_handel_cart_cart (@_xsp_handel_cart_carts) {
 
                 ';
-            } elsif ($context[$#context-1] eq 'item') {
+            } elsif ($context[-2] eq 'item') {
                 return '
                     if (!$_xsp_handel_cart_called_item) {
                         $_xsp_handel_cart_item = (scalar keys %_xsp_handel_cart_item_filter) ?
-                            $_xsp_handel_cart_cart->items(\%_xsp_handel_cart_item_filter, 1)->next :
-                            $_xsp_handel_cart_cart->items(undef, 1)->next;
+                            $_xsp_handel_cart_cart->items(\%_xsp_handel_cart_item_filter)->next :
+                            $_xsp_handel_cart_cart->items->next;
                             $_xsp_handel_cart_called_item = 1;
                     };
                     if ($_xsp_handel_cart_item) {
 
                 ';
-            } elsif ($context[$#context-1] eq 'items') {
+            } elsif ($context[-2] eq 'items') {
                 return '
                     if (!$_xsp_handel_cart_called_items) {
                         @_xsp_handel_cart_items = (scalar keys %_xsp_handel_cart_items_filter) ?
                             $_xsp_handel_cart_cart->items(\%_xsp_handel_cart_items_filter) :
-                            $_xsp_handel_cart_cart->items();
+                            $_xsp_handel_cart_cart->items;
                             $_xsp_handel_cart_called_items = 1;
                     };
                     foreach my $_xsp_handel_cart_item (@_xsp_handel_cart_items) {
 
                 ';
-            } elsif ($context[$#context-1] eq 'add') {
+            } elsif ($context[-2] eq 'add') {
                 return '
                     if (!$_xsp_handel_cart_called_add && scalar keys %_xsp_handel_cart_add_filter) {
                         $_xsp_handel_cart_item = $_xsp_handel_cart_cart->add(\%_xsp_handel_cart_add_filter);
@@ -715,60 +720,60 @@ sub new_results_shopper_start {
         ## cart:no-results
         } elsif ($tag =~ /^no-result(s?)$/) {
             throw Handel::Exception::Taglib(
-                -text => translate("Tag '[_1]' not valid here", $tag)
-            ) if ($context[$#context] !~ /^(new|add|cart(s?)|item(s?))$/);
+                -text => translate('TAG_NOT_ALLOWED_HERE', $tag)
+            ) if ($context[-1] !~ /^(new|add|cart(s?)|item(s?))$/);
 
             push @context, $tag;
 
-            if ($context[$#context-1] eq 'new') {
+            if ($context[-2] eq 'new') {
                 return '
                     if (!$_xsp_handel_cart_called_new && scalar keys %_xsp_handel_cart_new_filter) {
-                        $_xsp_handel_cart_cart = Handel::Cart->new(\%_xsp_handel_cart_new_filter);
+                        $_xsp_handel_cart_cart = Handel::Cart->create(\%_xsp_handel_cart_new_filter);
                         $_xsp_handel_cart_called_new = 1;
                     };
                     if (!$_xsp_handel_cart_cart) {
                 ';
-            } elsif ($context[$#context-1] eq 'cart') {
+            } elsif ($context[-2] eq 'cart') {
                 return '
                     if (!$_xsp_handel_cart_called_load) {
                         $_xsp_handel_cart_cart = (scalar keys %_xsp_handel_cart_load_filter) ?
-                            Handel::Cart->load(\%_xsp_handel_cart_load_filter, 1)->next :
-                            Handel::Cart->load(undef, 1)->next;
+                            Handel::Cart->search(\%_xsp_handel_cart_load_filter)->next :
+                            Handel::Cart->search->next;
                             $_xsp_handel_cart_called_load = 1;
                     };
                     if (!$_xsp_handel_cart_cart) {
                 ';
-            } elsif ($context[$#context-1] eq 'carts') {
+            } elsif ($context[-2] eq 'carts') {
                 return '
                     if (!$_xsp_handel_carts_called_load) {
                         @_xsp_handel_cart_carts = (scalar keys %_xsp_handel_carts_load_filter) ?
-                            Handel::Cart->load(\%_xsp_handel_carts_load_filter) :
-                            Handel::Cart->load();
+                            Handel::Cart->search(\%_xsp_handel_carts_load_filter) :
+                            Handel::Cart->search;
                             $_xsp_handel_carts_called_load = 1;
                     };
                     if (!scalar @_xsp_handel_cart_carts) {
                 ';
-            } elsif ($context[$#context-1] eq 'item') {
+            } elsif ($context[-2] eq 'item') {
                 return '
                     if (!$_xsp_handel_cart_called_item) {
                         $_xsp_handel_cart_item = (scalar keys %_xsp_handel_cart_item_filter) ?
-                            $_xsp_handel_cart_cart->items(\%_xsp_handel_cart_item_filter, 1)->next :
-                            $_xsp_handel_cart_cart->items(undef, 1)->next;
+                            $_xsp_handel_cart_cart->items(\%_xsp_handel_cart_item_filter)->next :
+                            $_xsp_handel_cart_cart->items->next;
                             $_xsp_handel_cart_called_item = 1;
                     };
                     if (!$_xsp_handel_cart_item) {
                 ';
-            } elsif ($context[$#context-1] eq 'items') {
+            } elsif ($context[-2] eq 'items') {
                 return '
                     if (!$_xsp_handel_cart_called_items) {
                         @_xsp_handel_cart_items = (scalar keys %_xsp_handel_cart_items_filter) ?
                             $_xsp_handel_cart_cart->items(\%_xsp_handel_cart_items_filter) :
-                            $_xsp_handel_cart_cart->items();
+                            $_xsp_handel_cart_cart->items;
                             $_xsp_handel_cart_called_items = 1;
                     };
                     if (!scalar @_xsp_handel_cart_items) {
                 ';
-            } elsif ($context[$#context-1] eq 'add') {
+            } elsif ($context[-2] eq 'add') {
                 return '
                     if (!$_xsp_handel_cart_called_add && scalar keys %_xsp_handel_cart_add_filter) {
                         $_xsp_handel_cart_item = $_xsp_handel_cart_cart->add(\%_xsp_handel_cart_add_filter);
@@ -793,7 +798,7 @@ sub new_results_shopper_start {
 
             return '
                 if (!$_xsp_handel_cart_called_new && scalar keys %_xsp_handel_cart_new_filter) {
-                    $_xsp_handel_cart_cart = Handel::Cart->new(\%_xsp_handel_cart_new_filter);
+                    $_xsp_handel_cart_cart = Handel::Cart->create(\%_xsp_handel_cart_new_filter);
                     $_xsp_handel_cart_called_new = 1;
                 };
             };';
@@ -853,15 +858,17 @@ sub new_results_shopper_start {
 
         ## cart:update
         } elsif ($tag eq 'update') {
-            if ($context[$#context-2] =~ /^(cart(s?))$/) {
+            if ($context[-3] =~ /^(cart(s?))$/) {
                 pop @context;
                 return '
                     $_xsp_handel_cart_cart->update;
+                    $_xsp_handel_cart_cart->autoupdate(1);
                 ';
-            } elsif ($context[$#context-2] =~ /^(item(s?))$/) {
+            } elsif ($context[-3] =~ /^(item(s?))$/) {
                 pop @context;
                 return '
                     $_xsp_handel_cart_item->update;
+                    $_xsp_handel_cart_item->autoupdate(1);
                 ';
             };
 
@@ -882,18 +889,18 @@ sub new_results_shopper_start {
         ## cart propery tags
         ## cart:description, id, name, shopper, type, count, subtotal
         } elsif ($tag =~ /^(description|id|name|shopper|type|count|subtotal)$/) {
-            if ($context[$#context] eq 'new' && $tag !~ /^(count|subtotal)$/) {
+            if ($context[-1] eq 'new' && $tag !~ /^(count|subtotal)$/) {
                 return ";\n";
-            } elsif ($context[$#context] eq 'add' && $tag !~ /^(count|subtotal)$/) {
+            } elsif ($context[-1] eq 'add' && $tag !~ /^(count|subtotal)$/) {
                 return ";\n";
-            } elsif ($context[$#context] eq 'results') {
+            } elsif ($context[-1] eq 'results') {
                 $e->end_expr($tag);
-            } elsif ($context[$#context] eq 'delete' && $tag !~ /^(count|subtotal)$/) {
+            } elsif ($context[-1] eq 'delete' && $tag !~ /^(count|subtotal)$/) {
                 return ";\n";
-            } elsif ($context[$#context] eq 'update') {
-                if ($context[$#context-2] =~ /^(cart(s?))$/) {
+            } elsif ($context[-1] eq 'update') {
+                if ($context[-3] =~ /^(cart(s?))$/) {
                     return ");\n";
-                } elsif ($context[$#context-2] =~ /^(item(s?))$/) {
+                } elsif ($context[-3] =~ /^(item(s?))$/) {
                     return ");\n";
                 };
             };
@@ -902,20 +909,20 @@ sub new_results_shopper_start {
         ## cart item property tags
         ## cart:sku, price, quantity
         } elsif ($tag =~ /^(sku|price|quantity|total)$/) {
-            if ($context[$#context] eq 'add' && $tag ne 'total') {
+            if ($context[-1] eq 'add' && $tag ne 'total') {
                 return ";\n";
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'add') {
+            } elsif ($context[-1] eq 'results' && $context[-2] eq 'add') {
                 $e->end_expr($tag);
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'item') {
+            } elsif ($context[-1] eq 'results' && $context[-2] eq 'item') {
                 $e->end_expr($tag);
-            } elsif ($context[$#context] eq 'results' && $context[$#context-1] eq 'items') {
+            } elsif ($context[-1] eq 'results' && $context[-2] eq 'items') {
                 $e->end_expr($tag);
-            } elsif ($context[$#context] eq 'delete' && $tag !~ /^(count|subtotal)$/) {
+            } elsif ($context[-1] eq 'delete' && $tag !~ /^(count|subtotal)$/) {
                 return ";\n";
-            } elsif ($context[$#context] eq 'update') {
-                if ($context[$#context-2] =~ /^(cart(s?))$/) {
+            } elsif ($context[-1] eq 'update') {
+                if ($context[-3] =~ /^(cart(s?))$/) {
                     return ");\n";
-                } elsif ($context[$#context-2] =~ /^(item(s?))$/) {
+                } elsif ($context[-3] =~ /^(item(s?))$/) {
                     return ");\n";
                 };
             };
@@ -923,42 +930,42 @@ sub new_results_shopper_start {
 
         ## cart:filter
         } elsif ($tag eq 'filter') {
-            if ($context[$#context] eq 'cart') {
+            if ($context[-1] eq 'cart') {
                 return ";\n";
-            } elsif ($context[$#context] eq 'carts') {
+            } elsif ($context[-1] eq 'carts') {
                 return ";\n";
-            } elsif ($context[$#context] eq 'item') {
+            } elsif ($context[-1] eq 'item') {
                 return ";\n";
-            } elsif ($context[$#context] eq 'items') {
+            } elsif ($context[-1] eq 'items') {
                 return ";\n";
-            } elsif ($context[$#context] eq 'restore') {
+            } elsif ($context[-1] eq 'restore') {
                 return ";\n";
             };
 
 
         ## cart:results
         } elsif ($tag =~ /^result(s?)$/) {
-            if ($context[$#context-1] eq 'new') {
+            if ($context[-2] eq 'new') {
                 pop @context;
 
                 return "\n};\n";
-            } elsif ($context[$#context-1] eq 'cart') {
+            } elsif ($context[-2] eq 'cart') {
                 pop @context;
 
                 return "\n};\n";
-            } elsif ($context[$#context-1] eq 'carts') {
+            } elsif ($context[-2] eq 'carts') {
                 pop @context;
 
                 return "\n};\n";
-            } elsif ($context[$#context-1] eq 'item') {
+            } elsif ($context[-2] eq 'item') {
                 pop @context;
 
                 return "\n};\n";
-            } elsif ($context[$#context-1] eq 'items') {
+            } elsif ($context[-2] eq 'items') {
                 pop @context;
 
                 return "\n};\n";
-            } elsif ($context[$#context-1] eq 'add') {
+            } elsif ($context[-2] eq 'add') {
                 pop @context;
 
                 return "\n};\n";
@@ -968,27 +975,27 @@ sub new_results_shopper_start {
 
         ## cart:no-results
         } elsif ($tag =~ /^no-result(s?)$/) {
-            if ($context[$#context-1] eq 'new') {
+            if ($context[-2] eq 'new') {
                 pop @context;
 
                 return "\n};\n";
-            } elsif ($context[$#context-1] eq 'cart') {
+            } elsif ($context[-2] eq 'cart') {
                 pop @context;
 
                 return "\n};\n";
-            } elsif ($context[$#context-1] eq 'carts') {
+            } elsif ($context[-2] eq 'carts') {
                 pop @context;
 
                 return "\n};\n";
-            } elsif ($context[$#context-1] eq 'item') {
+            } elsif ($context[-2] eq 'item') {
                 pop @context;
 
                 return "\n};\n";
-            } elsif ($context[$#context-1] eq 'items') {
+            } elsif ($context[-2] eq 'items') {
                 pop @context;
 
                 return "\n};\n";
-            } elsif ($context[$#context-1] eq 'add') {
+            } elsif ($context[-2] eq 'add') {
                 pop @context;
 
                 return "\n};\n";

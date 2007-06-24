@@ -1,0 +1,629 @@
+=head1 NAME
+
+Handel::Manual::Cookbook::WritingCustomStorage - Step by Step example of writing a custom storage class.
+
+=head1 DESCRIPTION
+
+This document will cover the basic steps needed to write a custom storage class for Handel 1.0.  For this
+exercise, we will write an XML storage class that will store a cart and its items in a single xml file with the
+ability to do wildcard searches just like our DBIC storage class. The new storage class could be used for
+order and order items as well.
+
+Writing a custom storage class is just a matter of subclassing Handel::Storage and Handel::Storage::Result
+and implementing the methods necessary to create/delete/search carts and items as well as
+begin/commit/rollback transactions and update calls.
+
+The example code below demonstrates how to write a custom storage class in Handel. While it covers the
+basic steps, it is by no means a complete implementation of all possible features, including things like
+column default values, parameter validation, etc. Those are left as an exercise for the reader to implement
+based on their particular situation and application needs.
+
+=head1 GETTING STARTED
+
+=head2 Create A Blank XML File
+
+First, let's create the xml file we'll use to store shopping carts in:
+
+    <?xml version="1.0"?>
+    <carts/>
+
+Save this as F<carts.xml> in a location of your choosing. As we add to this file later, it will take on the following
+format:
+
+    <?xml version="1.0"?>
+    <carts>
+        <cart id="1" shopper="1" name="My Cart">
+            <item id="1" sku="ABC-123" quantity="1" price="1.23"/>
+        </cart>
+    </cart>
+
+=head2 Create Storage and Storage Result Subclasses
+
+First, lets create the basic modules for the new xml storage:
+
+    package Handel::Storage::XML;
+    use strict;
+    use warnings;
+    
+    BEGIN {
+        use base qw/Handel::Storage/;
+    };
+    
+    __PACKAGE__->result_class('Handel::Storage::XML::Result');
+    
+    1;
+
+and the xml storage results:
+
+    package Handel::Storage::XML::Result;
+    use strict;
+    use warnings;
+    
+    BEGIN {
+        use base qw/Handel::Storage::Result/;
+    };
+    
+    1;
+
+Pretty straight forward stuff so far. We've subclassed Handel::Storage and Handel::Storage::Result and told
+Storage::XML to use the XML::Result class for its results.
+
+=head2 Setup Private Storage Mechanism
+
+Next, in Storage::XML, we will load the necessary XML modules and find a place to store a parser object.
+
+    BEGIN {
+        use base qw/Handel::Storage/;
+        use XML::LibXML;
+        use XML::LibXML::XPathContext;
+        
+        # we use Class::Accessor::Grouped in this here town
+        __PACKAGE__->mk_group_accessors('inherited', qw/parser/);
+    };
+    
+    # create a default xml parser
+    __PACKAGE__->parser(XML::LibXML->new);
+
+We're going to use XML::LibXML as the parser and XML::LibXML::XPathContext for the wildcard XPath
+searches using a custom XPath function in perl.
+
+Next we need to load our newly created F<carts xml> document. For that, we'll need to specify the file
+name, load the xml document and set the document root. First, let's setup an option for storing a file name. It
+will be used later when we create a new instance of Storage::XML.
+
+    BEGIN {
+        use base qw/Handel::Storage/;
+        use XML::LibXML;
+        use XML::LibXML::XPathContext;
+        use Handel::Exception qw/:try/;
+        
+        __PACKAGE__->mk_group_accessors('inherited', qw/parser file_name/);
+    };
+    
+    __PACKAGE__->parser(XML::LibXML->new);
+
+and setup a method to load and return the XML::Document object:
+
+    sub document {
+        my $self = shift;
+    
+        # if no document has been loaded, load it from file_name
+        if (!$self->{'xmldoc'}) {
+            $self->{'xmldoc'} = $self->parser->parse_file($self->file_name);
+        };
+    
+        return $self->{'xmldoc'};
+    };
+
+Now that we can load the xml file, let's create a method to save it back to the original file.
+
+    sub save_file {
+        my $self = shift;
+        $self->document->toFile($self->file_name);
+    };
+
+Next, we'll create a method to get the document root. Just for the sake of configurability, let's make a
+preference for the parent node and child node names. Those will be set later when we create a new instance
+of Storage::XML.
+
+    BEGIN {
+        use base qw/Handel::Storage/;
+        use XML::LibXML;
+        use XML::LibXML::XPathContext;
+        
+        __PACKAGE__->mk_group_accessors('inherited', qw/parser file_name parent_node child_node/);
+    };
+    
+    __PACKAGE__->parser(XML::LibXML->new);
+    
+    sub document_root {
+        my $self = shift;
+    
+        # if we havn't set root, do so
+        if (!$self->{'xmldocroot'}) {
+            my $root = XML::LibXML::XPathContext->new(
+                $self->document->getDocumentElement
+            );
+    
+            # register a new function in XPath
+            $root->registerFunction('attr_matches', sub {
+                my ($nodelist, $pattern) = @_;
+                my $node = $nodelist->get_node(0);
+    
+                if ($node->getValue =~ /^$pattern$/i) {
+                    return $node;
+                };
+    
+                return;
+            });
+    
+            $self->{'xmldocroot'} = $root;
+        };
+    
+        return $self->{'xmldocroot'};
+    };
+
+If no document root is set, we create a new context object and register our wildcard matching function
+called 'attr_matches'. Now, anytime we write an XPath query, we can use that function:
+
+    /carts[attr_match(@name, 'foo.*')]
+
+Now that we can get XML results using wildcards, we need a method to convert our standard search filters
+into XPath attribute queries:
+
+    sub filter_to_xpath {
+        my ($self, $filter) = @_;
+        my @attrs = map {
+            my $value = $filter->{$_} || '';
+            $value =~ s/'/"/g;
+    
+            # turn % into regex .* and do attr_match
+            if ($value =~ s/%/.*/g) {
+                "attr_matches(\@$_, '$value')";
+            # just a straight compare thanks
+            } else {
+                "\@$_='$value'";
+            };
+        } keys %{$filter};
+    
+        return @attrs ? '[' . join(' and ', @attrs) . ']' : undef;
+    };
+
+The method above turns each hash key/value pair into XPath attribute match statements:
+
+    print $self->filter_to_xpath({
+        shopper => 1,
+        name    => 'My%'
+    });
+    
+    # prints [@shopper=1 and attr_match('@name', .*)]
+
+We'll see later how to use that during search operations and in create operations to check if a cart exists
+before we create another one.
+
+=head1 CART ACTIONS
+
+Now that we have a rough framework for reading an xml document and matching wildcards using XPath, it's
+time to start adding methods to create/search/delete cart records from the xml file.
+
+=head2 Create
+
+To create a new cart record, we need to accept a hash full of data and write a new xml node if no node
+exists with the same primary key value.
+
+    sub create {
+        my ($self, $data) = @_;
+        
+        # turn the hash data into an xpath compare for the primary columns
+        my %filter = map {$_ => $data->{$_}} $self->primary_columns;
+        my $attributes = $self->filter_to_xpath(\%filter);
+    
+        # look for an existing cart and die if it exists
+        if ($self->document_root->find($self->child_node . $attributes)) {
+            throw Handel::Exception::Storage( -text => 'Cart already exists with that id');
+        } else {
+            # create a new cart node
+            my $cart = $self->document->createElement($self->child_node);
+    
+            # set all of the attributes using the supplied data
+            map {$cart->setAttribute($_ => $data->{$_})} keys %{$data};
+    
+            # using document instead of document_root due to issue w/ XPathContext
+            # Can't locate auto/XML/LibXML/XPathContext/appendChild.al in @INC
+            # $self->document_root->appendChild($cart);
+            # may be my install
+            #
+            # append the new cart node to the document and save the changes
+            $self->document->getDocumentElement->appendChild($cart);
+            $self->save_file;
+    
+            # now return a new result object containing the new node
+            return $self->result_class->create_instance($cart, $self);
+        };
+    };
+
+=head2 Search
+
+Now that we can create a new xml node, it would be nice to be able to load it  and other nodes. We need
+to search all nodes and create an iterator containing the results.
+
+    sub search {
+        my ($self, $filter) = @_;
+    
+        # turn the hash filter into an xpath attribute query
+        my $attributes = $self->filter_to_xpath($filter);
+    
+        # find all cart nodes matching the query
+        my @nodes = $self->document_root->findnodes($self->child_node . $attributes);
+    
+        # create an iterator of results
+        my $iterator = $self->iterator_class->new({
+            data         => \@nodes,
+            result_class => $self->result_class,
+            storage      => $self
+        });
+    
+        # return the iterator in scalar, or all in list context
+        return wantarray ? $iterator->all : $iterator;
+    };
+
+The default result iterator class in storage is Handel::Iterator::List. It simply takes an array reference, and
+iterates over the list contents.
+
+=head2 Delete
+
+Last but not least in this section, we need to be able to remove carts matching the specified filter. We could
+reuse C<search> here, but for the sake of example, let's do the search again ourselves.
+
+    sub delete {
+        my ($self, $filter) = @_;
+    
+        # turn the hash filter into an xpath attribute query
+        my $attributes = $self->filter_to_xpath($filter);
+    
+        # find all cart nodes matching the query
+        my @nodes = $self->document_root->findnodes($self->child_node . $attributes);
+    
+        foreach my $node (@nodes) {
+            $node->unbindNode;
+        };
+        $self->save_file;
+    };
+
+=head1 ITEM ACTIONS
+
+Now that we can create, search and delete carts, we need to do the same thing for cart items. Now would be
+a good time to review L<Handel::Manual::Storage/Items_As_Second_Class_Objects>. Since carts and their
+items reside in the same file, we shall consider items and the Item class used later as second class objects.
+They will hold configuration information about items, but will do none of the work and the same storage
+instance will take care of reading/writing cart and cart items.
+
+=head2 Adding Items
+
+To create a new item record, we simply need to make sure on item doesn't already exist with the supplied id,
+then create a new node, populate it and insert it into the cart nodes child node collection.
+
+    sub add_item {
+        my ($self, $result, $data) = @_;
+        my $item_storage = $self->item_storage;
+        
+        # get the cart node
+        my $cart = $result->storage_result;
+        
+        # convert the data into a primary key filter
+        my %filter = map {$_ => $data->{$_}} $item_storage->primary_columns;
+        my $attributes = $self->filter_to_xpath(\%filter);
+    
+        # see if there is already an item in this cart matching the id
+        if ($cart->find($item_storage->child_node . $attributes)) {
+            throw Handel::Exception::Storage( -text => 'Cart item already exists with that id');
+        # create a new item node and insert it into the cart node
+        } else {
+            my $item = $self->document->createElement($item_storage->child_node);
+            map {$item->setAttribute($_ => $data->{$_})} keys %{$data};
+    
+            $cart->appendChild($item);
+            $self->save_file;
+    
+            return $item_storage->result_class->create_instance($item, $self);
+        };
+    };
+
+=head2 Searching Items
+
+Now that we can add cart items, we need to be able to fetch them later.
+
+    sub search_items {
+        my ($self, $result, $filter) = @_;
+        my $item_storage = $self->item_storage;
+        
+        # get the cart node
+        my $cart = $result->storage_result;
+        
+        # convert the filter to a xpath statement
+        my $attributes = $self->filter_to_xpath($filter);
+        
+        # get items in this cart matching the xpath
+        my @nodes = $self->document_root->findnodes($item_storage->child_node . $attributes, $cart);
+    
+        my $iterator = $self->iterator_class->new({
+            data         => \@nodes,
+            result_class => $item_storage->result_class,
+            storage      => $self
+        });
+    
+        return wantarray ? $iterator->all : $iterator;
+    };
+
+Just like the cart search, we just need to create an XPath query from the supplied filter, and return any found
+nodes wrapped in storage results.
+
+=head2 Counting Items
+
+To make Cart::count happy, we also need a way to count the number of items in a cart. Again, we could just
+use C<search_items> and count the number of results, but this is more efficient.
+
+    sub count_items {
+        my ($self, $result) = @_;
+        my $item_storage = $self->item_storage;
+        my $cart = $result->storage_result;
+    
+        # find all ./item nodes in the current cart
+        return $cart->find($item_storage->child_node)->size;
+    };
+
+=head2 Deleting Items
+
+Last on the list again, we need to be able to delete items. This should look pretty familiar by now.
+
+    sub delete_items {
+        my ($self, $result, $filter) = @_;
+        my $item_storage = $self->item_storage;
+        
+        # get the cart node
+        my $cart = $result->storage_result;
+        
+        # make an xpath wquery from the filter if we have one
+        my $attributes = $self->filter_to_xpath($filter);
+        my @nodes = $self->document_root->findnodes($item_storage->child_node . $attributes, $cart);
+    
+        foreach my $node (@nodes) {
+            $node->unbindNode;
+        };
+        $self->save_file;
+    };
+
+=head2 Transaction Support
+
+Each custom storage class should strive to support transactions if possible. If it is not possible, you need to
+override the base classes methods to keep them from throwing 'not implemented' exceptions.
+
+    sub txn_begin {};
+    sub txn_rollback {};
+    sub txn_commit {};
+    sub discard_changes {};
+
+=head1 STORAGE RESULTS
+
+=head2 Mapping Methods to XML Attributes
+
+Now that we have created the basic XML storage class, we need to create a results class that knows how
+to update individual xml nodes. The default Storage::Result class simply passes methods to the underlying 
+storage result:
+
+    $result->id;
+    
+    # the same as:
+    $result->storage_result->id;
+
+Since XML::Node objects only expose attributes using set/getAttribute, we need to write  a custom
+AUTOLOAD method to redirect method calls.
+
+    package Handel::Storage::XML::Result;
+    use strict;
+    use warnings;
+    
+    BEGIN {
+        use base qw/Handel::Storage::Result/;
+    };
+    
+    sub AUTOLOAD {
+        my $self = shift;
+    
+        # leave DESTROY alone
+        return if (our $AUTOLOAD) =~ /::DESTROY$/;
+    
+        $AUTOLOAD =~ s/^.*:://;
+    
+        return unless $self->storage->has_column($AUTOLOAD);
+    
+        # if we are setting, call setAttribute
+        if (scalar @_) {
+            $self->storage_result->setAttribute($AUTOLOAD, shift);
+        };
+    
+        # return from getAttribute
+        $self->storage_result->getAttribute($AUTOLOAD);
+    };
+    
+    1;
+
+This is the easiest way to make results and the underlying storage results talk to each other. Using this
+method, you can use the same result class for carts, order and cart/order items even if their fields differ.
+
+If have a particular hatred for AUTOLOAD, you could just as well create two result classes:
+Handel::Storage::XML::Cart::Result and Handel::Storage::XML::Cart::Item::Result and assign them to the
+corresponding storage classes:
+
+    package Handel::Storage::XML::Cart;
+    use strict;
+    use warnings;
+    use base qw/Handel::Storage::XML/;
+    __PACKAGE__->result_class('Handel::Storage::XML::Cart::Result');
+    1;
+    
+    package Handel::Storage::XML::Cart::Item;
+    use strict;
+    use warnings;
+    use base qw/Handel::Storage::XML/;
+    __PACKAGE__->result_class('Handel::Storage::XML::Cart::Item::Result');
+    1;
+
+In each result class, you could map actual attributes to real methods instead of using autoload:
+
+    package Handel::Storage::XML::Cart::Result;
+    use strict
+    use warnings;
+    use base qw/Handel::Storage::Result/;
+    
+    sub id {
+        my ($self, $value) = @_;
+        
+        if ($value) {
+            $self->storage_result->setAttribute('id', $value);
+        };
+    
+        return $self->storage_result->getAttribute('id');
+    };
+
+=head2 Updating Results
+
+When autoupdates are off, one has to call update manually to save the changes made to cart and item nodes.
+When autoupdates are enabled, update will be called automatically on each result. To support updates we
+need to create an update method on the custom result class:
+
+    sub update {
+        my ($self, $data) = @_;
+    
+        if ($data) {
+            foreach my $key (keys %{$data}) {
+                $self->storage_result->setAttribute($key, $data->{$key});
+            };
+        };
+    
+        $self->storage->save_file;
+    };
+
+When update is called, the xml file is saved. If a hashref of data is supplied, it will set the appropriate
+attributes and then save the changes to the xml file.
+
+=head2 Deleting Results
+
+Each result needs to be able to remove itself from storage. To do so, we simply need to add a delete method
+to the result that removes itself and updates the file:
+
+    sub delete {
+        my $self = shift;
+    
+        $self->storage_result->unbindNode;
+        $self->update;
+    };
+
+=head1 USING YOUR NEW STORAGE CLASS
+
+Now that we have a shiny new XML storage class, we need to use it. There are two ways we can go about
+using our new storage class. The easiest way would be to load and configure them directly in the Cart and
+Item interface classes:
+
+    package My::Cart;
+    use strict;
+    use warnings;
+    use base qw/Handel::Cart/;
+    __PACKAGE__->item_class('My::Cart::Item');
+    __PACKAGE__->storage_class('Handel::Storage::XML');
+    __PACKAGE__->storage({
+        add_columns     => [qw/id shopper name description type/],
+        primary_columns => [qw/id/],
+        file_name       => 'carts.xml',
+        parent_node     => 'carts',
+        child_node      => 'cart',
+    });
+    
+    1;
+
+While this way works, it has one problem. If you decide to change storage classes later, it may not take the
+same options that this storage class does.
+
+=head2 Create Cart and Item Storage Classes
+
+In order to make changing storage classes less painful, it is recommended that you make subclasses of your
+custom storage class to set storage options, and then use those subclasses within your Cart and Item
+interface classes:
+
+    package My::Storage::Cart;
+    use strict;
+    use warnings;
+    use base qw/Handel::Storage::XML/;
+    
+    __PACKAGE__->item_storage_class('My::Storage::Cart::Item');
+    
+    __PACKAGE__->setup({
+        file_name       => 'carts.xml',
+        parent_node     => 'carts',
+        child_node      => 'cart',
+        add_columns     => [qw/id shopper name description type/],
+        primary_columns => [qw/id/],
+    });
+    
+    1;
+    
+    package My::Storage::Cart::Item;
+    use strict;
+    use warnings;
+    use base qw/Handel::Storage::XML/;
+    
+    __PACKAGE__->setup({
+        parent_node     => 'items',
+        child_node      => 'item',
+        add_columns     => [qw/id sku quantity price description/],
+        primary_columns => [qw/id/]
+    });
+    
+    1;
+
+=head2 Create Cart and Item Classes
+
+Now that we have custom storage subclasses for Carts and Items, we just need to tell our cart and item
+classes to use them:
+
+    package My::Cart;
+    use strict;
+    use warnings;
+    use base qw/Handel::Cart/;
+    
+    __PACKAGE__->item_class('My::Cart::Item');
+    __PACKAGE__->storage_class('My::Storage::Cart');
+    
+    1;
+    
+    package My::Cart::Item;
+    use strict;
+    use warnings;
+    use base qw/Handel::Cart::Item/;
+    
+    __PACKAGE__->storage_class('My::Storage::Cart::Item');
+    
+    1;
+
+Now that we have some separation between the Cart/Items classes and the storage classes, changing storage
+classes in the future just means changing My::Storage::Cart and My::Storage::Cart::Item.
+
+=head2 All Hands on Deck
+
+That's all there is to it. Using the same techniques above, you should be able to write a custom storage class
+for just about anything; LDAP, INI files, SOAP/XMLRPC, etc.
+
+=head1 CAVEATS
+
+The example above is by no means complete. It makes no effort to deal with constraints, default values or
+data validation. It also does not make any attempt to support transactions in any meaningful way nor does it
+deal with concurrency issues with xml file reading and writing.
+
+Given more time, I may work on making this example into a supported Storage::XML class.
+
+=head1 AUTHOR
+
+    Christopher H. Laco
+    CPAN ID: CLACO
+    claco@chrislaco.com
+    http://today.icantfocus.com/blog/

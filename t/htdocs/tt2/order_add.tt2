@@ -19,7 +19,7 @@
 		billtofax			=> '3-333-333-3333',
 		billtoemail			=> 'mendlefarg@gmail.com',
 		comments			=> 'Comments',
-		created				=> '20050715T201234Z',
+		created				=> '2005-07-15 20:12:34',
 		handling			=> 8.95,
 		number				=> 'O123456789',
 		shipmethod			=> 'UPS Ground',
@@ -41,7 +41,7 @@
 		subtotal			=> 37.95,
 		total				=> 37.95,
 		tax					=> 6.66,
-		updated				=> '20050716T201234Z'
+		updated				=> '2005-07-16 20:12:34'
 	})) %]
 		<order>
 			<count>[% order.count %]</count>
@@ -63,10 +63,10 @@
 			<billtoemail>[% order.billtoemail %]</billtoemail>
 			<comments>[% order.comments %]</comments>
 			<created>[% order.created %]</created>
-			<handling>[% order.handling %]</handling>
+			<handling>[% order.handling.value %]</handling>
 			<number>[% order.number %]</number>
 			<shipmethod>[% order.shipmethod %]</shipmethod>
-			<shipping>[% order.shipping %]</shipping>
+			<shipping>[% order.shipping.value %]</shipping>
 			<shiptosameasbillto>[% order.shiptosameasbillto %]</shiptosameasbillto>
 			<shiptofirstname>[% order.shiptofirstname %]</shiptofirstname>
 			<shiptolastname>[% order.shiptolastname %]</shiptolastname>
@@ -81,19 +81,19 @@
 			<shiptonightphone>[% order.shiptonightphone %]</shiptonightphone>
 			<shiptofax>[% order.shiptofax %]</shiptofax>
 			<shiptoemail>[% order.shiptoemail %]</shiptoemail>
-			<subtotal>[% order.subtotal %]</subtotal>
-			<total>[% order.total %]</total>
-			<tax>[% order.tax %]</tax>
+			<subtotal>[% order.subtotal.value %]</subtotal>
+			<total>[% order.total.value %]</total>
+			<tax>[% order.tax.value %]</tax>
 			<updated>[% order.updated %]</updated>
 		</order>
 	[% ELSE %]
 		<message>Error creating order</message>
 	[% END %]
 
-	[% IF (order = horder.fetch({
+	[% IF (order = horder.search({
 		type => horder.ORDER_TYPE_TEMP,
 		id 	 => '94FE4F12-4C1A-46E4-9DD5-3757555862A8'
-	})) %]
+	}).first) %]
 		[% IF (addeditem = order.add({
 			description => 'My New Item',
 			id			=> '9BE94446-ABB8-493D-9C8D-5177901B59D3',
@@ -105,10 +105,10 @@
 			<addeditem>
 				<description>[% addeditem.description %]</description>
 				<id>[% addeditem.id %]</id>
-				<price>[% addeditem.price %]</price>
+				<price>[% addeditem.price.value %]</price>
 				<quantity>[% addeditem.quantity %]</quantity>
 				<sku>[% addeditem.sku %]</sku>
-				<total>[% addeditem.total %]</total>
+				<total>[% addeditem.total.value %]</total>
 			</addeditem>
 		[% ELSE %]
 			<message>New item not added</message>
@@ -133,10 +133,10 @@
 			<billtoemail>[% order.billtoemail %]</billtoemail>
 			<comments>[% order.comments %]</comments>
 			<created>[% order.created %]</created>
-			<handling>[% order.handling %]</handling>
+			<handling>[% order.handling.value %]</handling>
 			<number>[% order.number %]</number>
 			<shipmethod>[% order.shipmethod %]</shipmethod>
-			<shipping>[% order.shipping %]</shipping>
+			<shipping>[% order.shipping.value %]</shipping>
 			<shiptosameasbillto>[% order.shiptosameasbillto %]</shiptosameasbillto>
 			<shiptofirstname>[% order.shiptofirstname %]</shiptofirstname>
 			<shiptolastname>[% order.shiptolastname %]</shiptolastname>
@@ -151,9 +151,9 @@
 			<shiptonightphone>[% order.shiptonightphone %]</shiptonightphone>
 			<shiptofax>[% order.shiptofax %]</shiptofax>
 			<shiptoemail>[% order.shiptoemail %]</shiptoemail>
-			<subtotal>[% order.subtotal %]</subtotal>
-			<total>[% order.total %]</total>
-			<tax>[% order.tax %]</tax>
+			<subtotal>[% order.subtotal.value %]</subtotal>
+			<total>[% order.total.value %]</total>
+			<tax>[% order.tax.value %]</tax>
 			<updated>[% order.updated %]</updated>
 		</order>
 	[% ELSE %]

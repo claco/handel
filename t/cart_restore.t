@@ -2,16 +2,10 @@
 # $Id$
 use strict;
 use warnings;
-use Test::More;
-use lib 't/lib';
 
 BEGIN {
-    eval 'require DBD::SQLite';
-    if($@) {
-        plan skip_all => 'DBD::SQLite not installed';
-    } else {
-        plan tests => 10;
-    };
+    use lib 't/lib';
+    use Handel::Test tests => 16;
 
     use_ok('Handel::Cart');
     use_ok('Handel::Subclassing::Cart');
@@ -33,13 +27,15 @@ sub run {
     ## or Handle::Cart subclass
     {
         try {
+            local $ENV{'LANG'} = 'en';
             $subclass->restore(id => '1234');
 
-            fail;
+            fail('no exception thrown');
         } catch Handel::Exception::Argument with {
-            pass;
+            pass('Argument exception thrown');
+            like(shift, qr/not a hash/i, 'no a hash ref in message');
         } otherwise {
-            fail;
+            fail('Other exception thrown');
         };
     };
 
@@ -48,15 +44,16 @@ sub run {
     ## or Handle::Cart::Item subclass
     {
         try {
+            local $ENV{'LANG'} = 'en';
             my $fakeitem = bless {}, 'FakeItem';
             $subclass->restore($fakeitem);
 
-            fail;
+            fail('no exception thrown');
         } catch Handel::Exception::Argument with {
-            pass;
+            pass('Argument exception thrown');
+            like(shift, qr/not a hash/i, 'no a hash ref in message');
         } otherwise {
-            fail;
+            fail('Other exception thrown');
         };
     };
-
 };

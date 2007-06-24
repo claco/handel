@@ -2,15 +2,21 @@
 # $Id$
 use strict;
 use warnings;
-use Test::More;
-use Cwd;
-use File::Path;
-use File::Spec::Functions;
 
 BEGIN {
-    eval 'use Catalyst 5.56';
+    use lib 't/lib';
+    use Handel::Test;
+    use Cwd;
+    use File::Path;
+    use File::Spec::Functions;
+
+    eval 'use Catalyst 5.7001';
     plan(skip_all =>
-        'Catalyst 5.56 not installed') if $@;
+        'Catalyst 5.7001 not installed') if $@;
+
+    eval 'use Catalyst::Devel 1.0';
+    plan(skip_all =>
+        'Catalyst::Devel 1.0 not installed') if $@;
 
     eval 'use Test::File 1.10';
     plan(skip_all =>
@@ -20,20 +26,24 @@ BEGIN {
     plan(skip_all =>
         'Test::File::Contents 0.02 not installed') if $@;
 
-    plan tests => 5;
+    plan tests => 8;
 
     use_ok('Catalyst::Helper');
 };
 
-my $helper = Catalyst::Helper->new({short => 1});
+my $helper = Catalyst::Helper->new;
 my $app = 'TestApp';
+
+
+## setup var
+chdir('t');
+mkdir('var') unless -d 'var';
+chdir('var');
 
 
 ## create the test app
 {
-    chdir('t');
-    rmtree('TestApp');
-
+    rmtree($app);
     $helper->mk_app($app);
     $FindBin::Bin = catdir(cwd, $app, 'lib');
 };
@@ -41,10 +51,27 @@ my $app = 'TestApp';
 
 ## create the default model
 {
-    my $module = catfile($app, 'lib', $app, 'M', 'Order.pm');
-    $helper->mk_component($app, 'model', 'Order', 'Handel::Cart', 'testdsn', 'testuser', 'testpass');
+    my $module = catfile($app, 'lib', $app, 'Model', 'Order.pm');
+    $helper->mk_component($app, 'model', 'Order', 'Handel::Order', 'testdsn', 'testuser', 'testpass');
     file_exists_ok($module);
     file_contents_like($module, qr/'testdsn'/);
     file_contents_like($module, qr/'testuser'/);
     file_contents_like($module, qr/'testpass'/);
+};
+
+
+## create the default model without defaults
+{
+    my $module = catfile($app, 'lib', $app, 'Model', 'MyOrder.pm');
+    $helper->mk_component($app, 'model', 'MyOrder', 'Handel::Order');
+    file_exists_ok($module);
+    file_contents_like($module, qr/\['', '', ''\]/);
+};
+
+
+## load it up
+{
+    my $lib = catfile(cwd, $app, 'lib');
+    eval "use lib '$lib';use $app\:\:Model\:\:Order";
+    ok(!$@, 'loaded new class');
 };

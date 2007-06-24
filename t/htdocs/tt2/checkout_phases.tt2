@@ -2,7 +2,7 @@
 [% USE hcheckout = Handel.Checkout %]
 
 <body>
-	[% IF (checkout = hcheckout.create) %]
+	[% IF (checkout = hcheckout.new) %]
 		<phases>
 			[% FOREACH phase = checkout.phases %]
 				<phase>[% phase %]</phase>
@@ -10,7 +10,7 @@
 		</phases>
 	[% END %]
 
-	[% IF (checkout = hcheckout.create({phases => 'CHECKOUT_PHASE_AUTHORIZE CHECKOUT_PHASE_DELIVER'})) %]
+	[% IF (checkout = hcheckout.new({phases => 'CHECKOUT_PHASE_AUTHORIZE CHECKOUT_PHASE_DELIVER'})) %]
 		<phases>
 			[% FOREACH phase = checkout.phases %]
 				<phase>[% phase %]</phase>

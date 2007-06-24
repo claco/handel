@@ -1,0 +1,56 @@
+# $Id$
+# Remember to Id keyword our files
+[Miscellanea::RequireRcsKeywords]
+keywords = Id
+
+# Only in Handel.pm thank you
+[-Modules::RequireVersionVar]
+
+# Just the basics
+[Documentation::RequirePodSections]
+lib_sections = NAME | SYNOPSIS | DESCRIPTION | AUTHOR
+
+# I like my $obj->delete
+[-Subroutines::ProhibitBuiltinHomonyms]
+
+# Sometimes, refs just happen
+[-TestingAndDebugging::ProhibitProlongedStrictureOverride]
+[TestingAndDebugging::ProhibitNoStrict]
+allow = refs vars
+
+[TestingAndDebugging::ProhibitNoWarnings]
+allow = once redefine
+
+# Uhm...no.
+[-RegularExpressions::RequireExtendedFormatting]
+[-RegularExpressions::RequireLineBoundaryMatching]
+[-CodeLayout::RequireTrailingCommas]
+[-CodeLayout::RequireTidyCode]
+
+# Not in this town
+[-ValuesAndExpressions::ProhibitConstantPragma]
+
+# I just don't see it matters
+[-ValuesAndExpressions::ProhibitEmptyQuotes]
+
+# I'll live
+[-Modules::ProhibitMultiplePackages]
+
+# We have a use for them
+[-ClassHierarchies::ProhibitAutoloading]
+
+# Using $@ is just too common
+[Variables::ProhibitPunctuationVars]
+allow = $@
+
+# Any pod is good pod, Cat Helpers use both sometimes.
+[-Documentation::RequirePodAtEnd]
+
+# Code clarity isn't a bad thing
+[-CodeLayout::ProhibitParensWithBuiltins]
+
+# Don't use it
+#[-Editor::RequireEmacsFileVariables]
+
+# I agree, just not here.
+#[-ValuesAndExpressions::ProhibitMagicNumbers]

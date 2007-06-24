@@ -14,17 +14,17 @@
 			<id>[% cart.id %]</id>
 			<name>[% cart.name %]</name>
 			<shopper>[% cart.shopper %]</shopper>
-			<subtotal>[% cart.subtotal %]</subtotal>
+			<subtotal>[% cart.subtotal.value %]</subtotal>
 			<type>[% cart.type %]</type>
 		</cart>
 	[% ELSE %]
 		<message>Error creating shopping cart</message>
 	[% END %]
 
-	[% IF (cart = hcart.fetch({
+	[% IF (cart = hcart.search({
 		type => hcart.CART_TYPE_TEMP,
 		id 	 => '94FE4F12-4C1A-46E4-9DD5-3757555862A8'
-	})) %]
+	}).first) %]
 		[% IF (addeditem = cart.add({
 			description => 'My New Item',
 			id			=> '9BE94446-ABB8-493D-9C8D-5177901B59D3',
@@ -35,10 +35,10 @@
 			<addeditem>
 				<description>[% addeditem.description %]</description>
 				<id>[% addeditem.id %]</id>
-				<price>[% addeditem.price %]</price>
+				<price>[% addeditem.price.value %]</price>
 				<quantity>[% addeditem.quantity %]</quantity>
 				<sku>[% addeditem.sku %]</sku>
-				<total>[% addeditem.total %]</total>
+				<total>[% addeditem.total.value %]</total>
 			</addeditem>
 		[% ELSE %]
 			<message>New item not added</message>
@@ -49,7 +49,7 @@
 			<id>[% cart.id %]</id>
 			<name>[% cart.name %]</name>
 			<shopper>[% cart.shopper %]</shopper>
-			<subtotal>[% cart.subtotal %]</subtotal>
+			<subtotal>[% cart.subtotal.value %]</subtotal>
 			<type>[% cart.type %]</type>
 		</cart>
 	[% ELSE %]

@@ -2,16 +2,65 @@
 # $Id$
 use strict;
 use warnings;
-use lib 't/lib';
-use Test::More tests => 1257;
 
 BEGIN {
+    use lib 't/lib';
+    use Handel::Test tests => 1275;
+
     use_ok('Handel::Checkout');
+    use_ok('Handel::Checkout::Plugin');
     use_ok('Handel::Subclassing::Checkout');
     use_ok('Handel::Subclassing::CheckoutStash');
     use_ok('Handel::Subclassing::Stash');
     use_ok('Handel::Constants', ':checkout');
     use_ok('Handel::Exception', ':try');
+};
+
+
+## make sure no path returns no path
+is(Handel::Checkout::_path_to_array(''), '', 'path to array returns nothing for nothing');
+
+
+
+## name returns class name, others do nothing
+{
+    my $plugin = Handel::Checkout::Plugin->new;
+    isa_ok($plugin, 'Handel::Checkout::Plugin');
+    is($plugin->name, 'Handel::Checkout::Plugin', 'name returns class name');
+    is(Handel::Checkout::Plugin->name, 'Handel::Checkout::Plugin', 'name returns class name');
+    is(Handel::Checkout::Plugin::name, undef, 'function returns nothing');
+
+    is(Handel::Checkout::Plugin->setup, undef, 'setup does nothing');
+    is(Handel::Checkout::Plugin->teardown, undef, 'teardown does nothing');
+
+    {
+        my $warning;
+        local $SIG{'__WARN__'} = sub {
+            $warning = shift;
+        };
+        is(Handel::Checkout::Plugin->register, undef, 'register does nothing');
+        like($warning, qr/plugin .* defined register/i, 'warning was set');
+    };
+};
+
+
+## test for exception when adding the same phase, preference
+{
+    my $checkout = Handel::Checkout->new({pluginpaths => 'Handel::LOADNOTHING'});
+    $checkout->{'plugins'} = [bless {}, 'main'];
+    $checkout->add_handler(CHECKOUT_PHASE_INITIALIZE, sub{}, 350);
+
+    try {
+        local $ENV{'LANG'} = 'en';
+        $checkout->add_handler(CHECKOUT_PHASE_INITIALIZE, sub{}, 350);
+
+        fail('no exception thrown');
+    } catch Handel::Exception::Checkout with {
+            pass('caught checkout exception');
+            like(shift, qr/already a handler/i, 'phase exists in message');
+    } otherwise {
+        fail('other exception thrown');
+    };
 };
 
 
@@ -27,15 +76,17 @@ sub run {
     ## test for Handel::Exception::Argument on bad add_handler phase
     {
         try {
+            local $ENV{'LANG'} = 'en';
             my $checkout = $subclass->new;
 
             $checkout->add_handler(42, sub{});
 
-            fail;
+            fail('no exception thrown');
         } catch Handel::Exception::Argument with {
-            pass;
+            pass('caught argument exception');
+            like(shift, qr/not a valid checkout_phase/i, 'phase not found in message');
         } otherwise {
-            fail;
+            fail('other exception thrown');
         };
     };
 
@@ -43,15 +94,17 @@ sub run {
     ## test for Handel::Exception::Argument on bad CODE reference
     {
         try {
+            local $ENV{'LANG'} = 'en';
             my $checkout = $subclass->new;
 
             $checkout->add_handler(CHECKOUT_PHASE_INITIALIZE, 'foo');
 
-            fail;
+            fail('no exception thrown');
         } catch Handel::Exception::Argument with {
-            pass;
+            pass('caught argument exception');
+            like(shift, qr/not a code/i, 'not a code in message');
         } otherwise {
-            fail;
+            fail('other exception thrown');
         };
     };
 
@@ -59,6 +112,8 @@ sub run {
     ## Add a custom phase and verify it works in add_handler
     {
         try {
+            local $ENV{'LANG'} = 'en';
+
             #clean out the new constant between subclass runs
             {
                 no warnings;
@@ -71,10 +126,9 @@ sub run {
 
             $checkout->add_handler(Handel::Constants->CHECKOUT_PHASE_CUSTOM, sub{});
 
-            pass;
+            pass('added custom phase');
         } otherwise {
-        warn shift;
-            fail;
+            fail('other exception thrown');
         };
     };
 
@@ -86,21 +140,21 @@ sub run {
         my $checkout = $subclass->new;
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        is(scalar keys %plugins, 1);
-        ok(exists $plugins{'Handel::TestPlugins::First'});
-        ok(!exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        is(scalar keys %plugins, 1, 'loaded 1 plugin');
+        ok(exists $plugins{'Handel::TestPlugins::First'}, 'first plugin exists');
+        ok(!exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         my $plugin = $plugins{'Handel::TestPlugins::First'};
         isa_ok($plugin, 'Handel::Checkout::Plugin');
-        ok($plugin->{'init_called'});
-        ok($plugin->{'register_called'});
+        ok($plugin->{'init_called'}, 'init was called');
+        ok($plugin->{'register_called'}, 'register was called');
 
         isa_ok($checkout->{'handlers'}->{1}->{1}->[0], 'Handel::TestPlugins::First');
-        is(ref $checkout->{'handlers'}->{1}->{1}->[1], 'CODE');
+        is(ref $checkout->{'handlers'}->{1}->{1}->[1], 'CODE', 'stored code ref');
         $checkout->{'handlers'}->{1}->{1}->[1]->($plugin);
-        ok($plugin->{'handler_called'});
+        ok($plugin->{'handler_called'}, 'handler called');
     };
 
 
@@ -109,21 +163,21 @@ sub run {
         my $checkout = $subclass->new({pluginpaths => 'Handel::TestPlugins'});
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        is(scalar keys %plugins, 1);
-        ok(exists $plugins{'Handel::TestPlugins::First'});
-        ok(!exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        is(scalar keys %plugins, 1, 'loaded 1 plugin');
+        ok(exists $plugins{'Handel::TestPlugins::First'}, 'first plugin loaded');
+        ok(!exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         my $plugin = $plugins{'Handel::TestPlugins::First'};
         isa_ok($plugin, 'Handel::Checkout::Plugin');
-        ok($plugin->{'init_called'});
-        ok($plugin->{'register_called'});
+        ok($plugin->{'init_called'}, 'init was called');
+        ok($plugin->{'register_called'}, 'register was called');
 
         isa_ok($checkout->{'handlers'}->{1}->{1}->[0], 'Handel::TestPlugins::First');
-        is(ref $checkout->{'handlers'}->{1}->{1}->[1], 'CODE');
+        is(ref $checkout->{'handlers'}->{1}->{1}->[1], 'CODE', 'registered code ref');
         $checkout->{'handlers'}->{1}->{1}->[1]->($plugin);
-        ok($plugin->{'handler_called'});
+        ok($plugin->{'handler_called'}, 'handler called');
     };
 
 
@@ -132,21 +186,21 @@ sub run {
         my $checkout = $subclass->new({pluginpaths => ['Handel::TestPlugins']});
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        is(scalar keys %plugins, 1);
-        ok(exists $plugins{'Handel::TestPlugins::First'});
-        ok(!exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        is(scalar keys %plugins, 1, 'loaded 1 plugin');
+        ok(exists $plugins{'Handel::TestPlugins::First'}, 'first plugin loaded');
+        ok(!exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         my $plugin = $plugins{'Handel::TestPlugins::First'};
         isa_ok($plugin, 'Handel::Checkout::Plugin');
-        ok($plugin->{'init_called'});
-        ok($plugin->{'register_called'});
+        ok($plugin->{'init_called'}, 'init called');
+        ok($plugin->{'init_called'}, 'register called');
 
         isa_ok($checkout->{'handlers'}->{1}->{1}->[0], 'Handel::TestPlugins::First');
-        is(ref $checkout->{'handlers'}->{1}->{1}->[1], 'CODE');
+        is(ref $checkout->{'handlers'}->{1}->{1}->[1], 'CODE', 'has code ref');
         $checkout->{'handlers'}->{1}->{1}->[1]->($plugin);
-        ok($plugin->{'handler_called'});
+        ok($plugin->{'handler_called'}, 'handler called');
     };
 
 
@@ -157,26 +211,26 @@ sub run {
         my $checkout = $subclass->new;
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        is(scalar keys %plugins, 2);
-        ok(exists $plugins{'Handel::TestPlugins::First'});
-        ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        is(scalar keys %plugins, 2, 'loaded 2 plugins');
+        ok(exists $plugins{'Handel::TestPlugins::First'}, 'first plugin loaded');
+        ok(exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::TestPlugins::First Handel::OtherTestPlugins::Second)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'init_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'has code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -190,26 +244,26 @@ sub run {
         my $checkout = $subclass->new({pluginpaths => 'Handel::TestPlugins Handel::OtherTestPlugins'});
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        is(scalar keys %plugins, 2);
-        ok(exists $plugins{'Handel::TestPlugins::First'});
-        ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        is(scalar keys %plugins, 2, 'loaded 2 plugins');
+        ok(exists $plugins{'Handel::TestPlugins::First'}, 'first plugin loaded');
+        ok(exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::TestPlugins::First Handel::OtherTestPlugins::Second)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'init_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'has code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -223,26 +277,26 @@ sub run {
         my $checkout = $subclass->new({pluginpaths => 'Handel::TestPlugins, Handel::OtherTestPlugins'});
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        is(scalar keys %plugins, 2);
-        ok(exists $plugins{'Handel::TestPlugins::First'});
-        ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        is(scalar keys %plugins, 2, 'loaded 2 plugins');
+        ok(exists $plugins{'Handel::TestPlugins::First'}, 'first plugin loaded');
+        ok(exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::TestPlugins::First Handel::OtherTestPlugins::Second)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'init_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'has code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -256,26 +310,26 @@ sub run {
         my $checkout = $subclass->new({pluginpaths => ['Handel::TestPlugins', 'Handel::OtherTestPlugins']});
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        is(scalar keys %plugins, 2);
-        ok(exists $plugins{'Handel::TestPlugins::First'});
-        ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        is(scalar keys %plugins, 2, 'loaded 2 plugins');
+        ok(exists $plugins{'Handel::TestPlugins::First'}, 'first plugin loaded');
+        ok(exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::TestPlugins::First Handel::OtherTestPlugins::Second)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'init_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'has code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -292,26 +346,26 @@ sub run {
         my $checkout = $subclass->new({pluginpaths => ['Handel::TestPlugins', 'Handel::OtherTestPlugins']});
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        is(scalar keys %plugins, 2);
-        ok(exists $plugins{'Handel::TestPlugins::First'});
-        ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        is(scalar keys %plugins, 2, 'loaded 2 plugins');
+        ok(exists $plugins{'Handel::TestPlugins::First'}, 'first plugin loaded');
+        ok(exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::TestPlugins::First Handel::OtherTestPlugins::Second)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'init_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'has code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -327,26 +381,26 @@ sub run {
         my $checkout = $subclass->new;
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        is(scalar keys %plugins, 2);
-        ok(exists $plugins{'Handel::TestPlugins::First'});
-        ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        is(scalar keys %plugins, 2, 'loaded 2 plugins');
+        ok(exists $plugins{'Handel::TestPlugins::First'}, 'first plugin loaded');
+        ok(exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::TestPlugins::First Handel::OtherTestPlugins::Second)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'init_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'has code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -362,26 +416,26 @@ sub run {
         my $checkout = $subclass->new;
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        ok(scalar keys %plugins >= 3);
-        ok(exists $plugins{'Handel::TestPlugins::First'});
-        ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        ok(scalar keys %plugins >= 3, 'loaded 3 plugins');
+        ok(exists $plugins{'Handel::TestPlugins::First'}, 'first plugin loaded');
+        ok(exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin loaded');
+        ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::TestPlugins::First Handel::OtherTestPlugins::Second Handel::Checkout::Plugin::TestPlugin)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'init_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'has code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -397,26 +451,26 @@ sub run {
         my $checkout = $subclass->new;
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        ok(scalar keys %plugins >= 2);
-        ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::TestPlugins::First'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        ok(scalar keys %plugins >= 2, 'loaded at least 2 plugins');
+        ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin loaded');
+        ok(exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin loaded');
+        ok(!exists $plugins{'Handel::TestPlugins::First'}, 'first plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::OtherTestPlugins::Second Handel::Checkout::Plugin::TestPlugin)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'init_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'has code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -430,26 +484,26 @@ sub run {
         my $checkout = $subclass->new({addpluginpaths => 'Handel::OtherTestPlugins'});
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        ok(scalar keys %plugins >= 2);
-        ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::TestPlugins::First'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        ok(scalar keys %plugins >= 2, 'loaded at least 2 plugins');
+        ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin loaded');
+        ok(exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin loaded');
+        ok(!exists $plugins{'Handel::TestPlugins::First'}, 'first plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::OtherTestPlugins::Second Handel::Checkout::Plugin::TestPlugin)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'init_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'has code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -463,26 +517,26 @@ sub run {
         my $checkout = $subclass->new({addpluginpaths => ['Handel::OtherTestPlugins']});
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        ok(scalar keys %plugins >= 2);
-        ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::TestPlugins::First'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        ok(scalar keys %plugins >= 2, 'loaded at least 2 plugins');
+        ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin loaded');
+        ok(exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin loaded');
+        ok(!exists $plugins{'Handel::TestPlugins::First'}, 'first plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::OtherTestPlugins::Second Handel::Checkout::Plugin::TestPlugin)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'init_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'has code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -498,26 +552,26 @@ sub run {
         my $checkout = $subclass->new({addpluginpaths => ['Handel::OtherTestPlugins']});
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        ok(scalar keys %plugins >= 3);
-        ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(exists $plugins{'Handel::TestPlugins::First'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        ok(scalar keys %plugins >= 3, 'loaded at least 3 plugins');
+        ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin loaded');
+        ok(exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin loaded');
+        ok(exists $plugins{'Handel::TestPlugins::First'}, 'first plugin loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::OtherTestPlugins::Second Handel::Checkout::Plugin::TestPlugin Handel::TestPlugins::First)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'init_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'has code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -533,26 +587,26 @@ sub run {
         my $checkout = $subclass->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins']});
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        ok(scalar keys %plugins >= 2);
-        ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(exists $plugins{'Handel::TestPlugins::First'});
-        ok(!exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        ok(scalar keys %plugins >= 2, 'loaded at least 2 plugins');
+        ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin loaded');
+        ok(exists $plugins{'Handel::TestPlugins::First'}, 'first plugin loaded');
+        ok(!exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::Checkout::Plugin::TestPlugin Handel::TestPlugins::First)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'init_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'has code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -568,26 +622,26 @@ sub run {
         my $checkout = $subclass->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins']});
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        ok(scalar keys %plugins >= 2);
-        ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(exists $plugins{'Handel::TestPlugins::First'});
-        ok(!exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        ok(scalar keys %plugins >= 2, 'loaded at least 2 plugins');
+        ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin loaded');
+        ok(exists $plugins{'Handel::TestPlugins::First'}, 'first plugin loaded');
+        ok(!exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::Checkout::Plugin::TestPlugin Handel::TestPlugins::First)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'init_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'has code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -603,26 +657,26 @@ sub run {
         my $checkout = $subclass->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins']});
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        ok(scalar keys %plugins >= 2);
-        ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(exists $plugins{'Handel::TestPlugins::First'});
-        ok(!exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        ok(scalar keys %plugins >= 2, 'loaded at least 2 plugins');
+        ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin loaded');
+        ok(exists $plugins{'Handel::TestPlugins::First'}, 'first plugin loaded');
+        ok(!exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::Checkout::Plugin::TestPlugin Handel::TestPlugins::First)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'init_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'has code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -636,26 +690,26 @@ sub run {
         my $checkout = $subclass->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins'], ignoreplugins => ['Handel::OtherTestPlugins::Second']});
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        ok(scalar keys %plugins >= 2);
-        ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(exists $plugins{'Handel::TestPlugins::First'});
-        ok(!exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        ok(scalar keys %plugins >= 2, 'loaded at least 2 plugins');
+        ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin loaded');
+        ok(exists $plugins{'Handel::TestPlugins::First'}, 'first plugin loaded');
+        ok(!exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::Checkout::Plugin::TestPlugin Handel::TestPlugins::First)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'init_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'has code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -669,26 +723,26 @@ sub run {
         my $checkout = $subclass->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins'], ignoreplugins => 'Handel::OtherTestPlugins::Second'});
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        ok(scalar keys %plugins >= 2);
-        ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(exists $plugins{'Handel::TestPlugins::First'});
-        ok(!exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        ok(scalar keys %plugins >= 2, 'loaded at least 2 plugins');
+        ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin loaded');
+        ok(exists $plugins{'Handel::TestPlugins::First'}, 'first plugin loaded');
+        ok(!exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::Checkout::Plugin::TestPlugin Handel::TestPlugins::First)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'init_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'has code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -702,26 +756,26 @@ sub run {
         my $checkout = $subclass->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins'], ignoreplugins => qr/^Handel::OtherTestPlugins::Second$/});
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        ok(scalar keys %plugins >= 2);
-        ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(exists $plugins{'Handel::TestPlugins::First'});
-        ok(!exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        ok(scalar keys %plugins >= 2, 'loaded at least 2 plugins');
+        ok(exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin loaded');
+        ok(exists $plugins{'Handel::TestPlugins::First'}, 'first plugin loaded');
+        ok(!exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::Checkout::Plugin::TestPlugin Handel::TestPlugins::First)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'init_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'has code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -737,26 +791,26 @@ sub run {
         my $checkout = $subclass->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins']});
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        is(scalar keys %plugins, 1);
-        ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(!exists $plugins{'Handel::TestPlugins::First'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        is(scalar keys %plugins, 1, 'loaded 1 plugin');
+        ok(exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin not loaded');
+        ok(!exists $plugins{'Handel::TestPlugins::First'}, 'first plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::OtherTestPlugins::Second)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'init_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'has code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -772,26 +826,26 @@ sub run {
         my $checkout = $subclass->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins']});
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        is(scalar keys %plugins, 1);
-        ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(!exists $plugins{'Handel::TestPlugins::First'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        is(scalar keys %plugins, 1, 'loaded 1 plugin');
+        ok(exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin not loaded');
+        ok(!exists $plugins{'Handel::TestPlugins::First'}, 'first plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::OtherTestPlugins::Second)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'register_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'hase code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -807,26 +861,26 @@ sub run {
         my $checkout = $subclass->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins']});
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        is(scalar keys %plugins, 1);
-        ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(!exists $plugins{'Handel::TestPlugins::First'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        is(scalar keys %plugins, 1, 'loaded 1 plugin');
+        ok(exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin not loaded');
+        ok(!exists $plugins{'Handel::TestPlugins::First'}, 'fist plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::OtherTestPlugins::Second)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'register_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'has code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -840,26 +894,26 @@ sub run {
         my $checkout = $subclass->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins'], loadplugins => ['Handel::OtherTestPlugins::Second']});
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        is(scalar keys %plugins, 1);
-        ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(!exists $plugins{'Handel::TestPlugins::First'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        is(scalar keys %plugins, 1, 'loaded 1 plugin');
+        ok(exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin not loaded');
+        ok(!exists $plugins{'Handel::TestPlugins::First'}, 'first plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::OtherTestPlugins::Second)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'register_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'has code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -873,26 +927,26 @@ sub run {
         my $checkout = $subclass->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins'], loadplugins => 'Handel::OtherTestPlugins::Second'});
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        is(scalar keys %plugins, 1);
-        ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(!exists $plugins{'Handel::TestPlugins::First'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        is(scalar keys %plugins, 1, 'loaded 1 plugin');
+        ok(exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin not loaded');
+        ok(!exists $plugins{'Handel::TestPlugins::First'}, 'first plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::OtherTestPlugins::Second)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'register_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'has code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -906,26 +960,26 @@ sub run {
         my $checkout = $subclass->new({addpluginpaths => ['Handel::OtherTestPlugins', 'Handel::TestPlugins'], loadplugins => qr/^Handel::OtherTestPlugins::Second$/});
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        is(scalar keys %plugins, 1);
-        ok(exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(!exists $plugins{'Handel::TestPlugins::First'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        is(scalar keys %plugins, 1, 'loaded 1 plugin');
+        ok(exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin not loaded');
+        ok(!exists $plugins{'Handel::TestPlugins::First'}, 'first plugin no loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::OtherTestPlugins::Second)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'register_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'has code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -942,26 +996,26 @@ sub run {
         });
         my %plugins = map { ref $_ => $_ } $checkout->plugins;
 
-        is(scalar keys %plugins, 1);
-        ok(exists $plugins{'Handel::TestPlugins::First'});
-        ok(!exists $plugins{'Handel::OtherTestPlugins::Second'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'});
-        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'});
+        is(scalar keys %plugins, 1, 'loaded 1 plugin');
+        ok(exists $plugins{'Handel::TestPlugins::First'}, 'fist plugin loaded');
+        ok(!exists $plugins{'Handel::OtherTestPlugins::Second'}, 'other plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
 
         foreach (qw(Handel::TestPlugins::First)) {
             my $package = $_;
             my $plugin = $plugins{$package};
 
             isa_ok($plugin, 'Handel::Checkout::Plugin');
-            ok($plugin->{'init_called'});
-            ok($plugin->{'register_called'});
+            ok($plugin->{'init_called'}, 'init called');
+            ok($plugin->{'register_called'}, 'register called');
 
             foreach (values %{$checkout->{'handlers'}->{1}}) {
                 if (ref $_->[0] eq $package) {
                     isa_ok($_->[0], $package);
-                    is(ref $_->[1], 'CODE');
+                    is(ref $_->[1], 'CODE', 'has code ref');
                     $_->[1]->($plugin);
-                    ok($plugin->{'handler_called'});
+                    ok($plugin->{'handler_called'}, 'handler called');
 
                     last;
                 };
@@ -979,11 +1033,10 @@ sub run {
         });
 
         my @plugins = $checkout->plugins;
-        is(scalar @plugins, 2);
+        is(scalar @plugins, 2, 'loaded 2 plugins');
 
         my $plugins = $checkout->plugins;
         isa_ok($plugins, 'ARRAY');
-        is(scalar @{$plugins}, 2);
+        is(scalar @{$plugins}, 2, 'loaded 2 plugins');
     };
-
 };

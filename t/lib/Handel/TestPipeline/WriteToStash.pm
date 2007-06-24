@@ -3,7 +3,7 @@ package Handel::TestPipeline::WriteToStash;
 use strict;
 use warnings;
 use base 'Handel::Checkout::Plugin';
-use Handel::Constants qw(:checkout :returnas);
+use Handel::Constants qw(:checkout);
 
 sub register {
     my ($self, $ctx) = @_;

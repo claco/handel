@@ -19,10 +19,10 @@
 				<item>
 					<description>[% addeditem.description %]</description>
 					<id>[% addeditem.id %]</id>
-					<price>[% addeditem.price %]</price>
+					<price>[% addeditem.price.value %]</price>
 					<quantity>[% addeditem.quantity %]</quantity>
 					<sku>[% addeditem.sku %]</sku>
-					<total>[% addeditem.total %]</total>
+					<total>[% addeditem.total.value %]</total>
 				</item>
 			[% ELSE %]
 				<message>Error adding cart item</message>
@@ -32,7 +32,7 @@
 			<id>[% cart.id %]</id>
 			<name>[% cart.name %]</name>
 			<shopper>[% cart.shopper %]</shopper>
-			<subtotal>[% cart.subtotal %]</subtotal>
+			<subtotal>[% cart.subtotal.value %]</subtotal>
 			<type>[% cart.type %]</type>
 		</cart>
 	[% ELSE %]

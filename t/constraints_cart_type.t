@@ -2,9 +2,11 @@
 # $Id$
 use strict;
 use warnings;
-use Test::More tests => 7;
 
 BEGIN {
+    use lib 't/lib';
+    use Handel::Test tests => 7;
+
     use_ok('Handel::Constraints', qw(:all));
     use_ok('Handel::Constants', qw(:cart));
 };

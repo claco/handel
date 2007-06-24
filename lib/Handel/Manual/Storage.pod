@@ -1,0 +1,157 @@
+=head1 NAME
+
+Handel::Manual::Storage - An introduction to the storage layer and how it is used by the interface layer.
+
+=head1 DESCRIPTION
+
+Handel::Storage is the layer of glue that binds the public interface layer API to custom storage mediums. It
+is used to abstract the most common storage actions away from the public classes so they are more likely
+to work the same whether you are storing carts in DBIx::Class schemas, or in a remote LDAP directory.
+
+=head1 WORKFLOW
+
+Handel::Storage provides two main sets of methods for use within the interface classes. The first set of
+of methods deal with creating/searching/deleting carts. The second set of methods deal with
+creating/searching/deleting items on the carts objects themselves. How items are associated with carts is
+dependent upon the type of storage being used.
+
+When carts are created by the cart storage class, and items are created by the item storage class, both carts
+and items are considered to be 'first class objects'. This means that carts and items are treated as equals and
+will function independently of each other. This form will usually occur when you are storing carts/items in
+storage mediums that doesn't have an internal representation for relationships like flat test files or remote
+server calls.
+
+When carts are created by the cart storage class, and the items are also created by the cart storage class,
+carts are considered to be 'first class objects' and items are treated as 'second class objects', or children of the
+cart objects. This means that one should only create items using the cart storage class and never directly using
+the item storage class. This form will usually occur when you are storing carts/item in storage mediums that
+have internal representations for relationships, like databases (foreign keys), or xml documents
+(item tags inside of parent cart tags), etc.
+
+In order to accommodate both scenarios, Handel::Storage and Handel::Storage::Result provides a set of 
+abstract methods (add_item, search_items, etc) that allow each storage class to determine the best way to
+act upon a carts item collection.
+
+=head2 Items As Second Class Objects
+
+Since this is the default method used by the default Handel::Storage::DBIC class, we'll cover it first.
+
+In the realm of DBIx::Class schemas, all schema source classes are loaded into a schema object. After
+adding a cart record, one can either add an item record manually to the items table, or use the *_related
+helper methods provided on each cart result. Since the *_related methods take care of setting any
+foreign key relationship data for us, and Handel wants to know as little about your schema as possible, we
+will use those methods. :-)
+
+    my $cart_result = $cart_storage->create(\%data);
+    
+    # These are the same
+    my $item_result = $cart_result->add_item(\%itemdata);
+    my $item_result = $cart_storage->add_item($cart_result, \%itemdata);
+    
+    # in carts storage class
+    sub add_item {
+        my ($self, $cart, $data) = @_;
+        ...
+        $cart->add_related('items', $data);
+        ...
+    };
+    
+In the example above, the carts storage object has taken care of adding the item to the current cart. The
+items storage object wasn't involved at all in the process.
+
+=head2 Items as First Class Objects
+
+In the realm of text files, where there is no direct physical relationship between carts and items, the cart
+classes storage object will take care of maintaining carts, and the item classes storage will take car of
+maintaining items
+
+    my $cart_result = $cart_storage->create(\%data);
+    
+    # These are the same
+    my $item_result = $cart_result->add_item(\%itemdata);
+    my $item_result = $cart_storage->add_item($cart_result, \%itemdata);
+    
+    # in carts storage class
+    sub add_item {
+        my ($self, $cart, $data) = @_;
+        my $item_storage = $self->item_class->storage;
+        ...
+        $item_storage->create($data);
+        ...
+    };
+
+In the example above, the carts storage object receives the call to add an item to the cart, but it actually uses
+the item classes storage object to do the work. This is essentially no different than doing:
+
+    my $cart_result = $cart_storage->create(\%data);
+    my $item_result = $item_storage->create({cart_id => $data{id}, %itemdata})
+
+=head2 Abstract Storage Results
+
+By default, all objects returned by the create/add/search methods above are Handel::Storage::Result objects.
+They are simply thin wrappers around the actual storage results:
+
+    my $storage = Handel::Storage::Cart->new;
+    my $result  = $storage->create({name => 'My Cart'});
+    
+    print ref $result; # Handel::Storage::Result
+    print ref $result->storage_result; # Handel::Schema::Cart
+
+For the most part, each result simply proxies methods to its private storage result, in this case, the
+DBIx::Class resultset result returned from the schema.
+
+    print $result->id;
+    
+    # is really just
+    print $result->storage_result->id;
+    
+    # storage_result is a real live DBIx::Class resultset result
+    print ref $storage->storage_result; # Handel::Schema::Cart
+
+The result objects also provide a few convenience methods that forward to the storage object that created
+them:
+
+    $result->add({sku => 'ABC-123'});
+    $result->items;
+    
+    # is really
+    $storage->add_item($result, {sku => 'ABC-123'});
+    $storage->search_items;
+
+Whenever possible, storage is asked to perform work on behalf of the result. This allows one to write a
+custom storage layer without having to also write a custom storage result, although you can do that too if
+you if it is necessary.
+
+Once created, the storage results are then consumed by the interface layer which doesn't care where they
+came from or how they are stored.
+
+    my $cart = Handel::Cart->create_instance(
+        $storage->create({name => 'My Cart'})
+    );
+    
+    print ref $cart; # Handel::Cart
+    print ref $cart->result # Handel::Storage::Result
+    print ref $cart->result->storage_result; # Handel::Schema::Cart
+    
+    print $cart->id;
+    
+    # is really this
+    print $cart->get_column('id');
+    
+    # which is really just this
+    print $cart->result->id;
+    
+    # which is really even this:
+    print $cart->result->storage_result->id;
+
+=head1 SEE ALSO
+
+L<Handel::Manual::Storage::DBIC>, L<Handel::Storage>, L<Handel::Storage::Result>,
+L<Handel::Storage::DBIC>
+
+=head1 AUTHOR
+
+    Christopher H. Laco
+    CPAN ID: CLACO
+    claco@chrislaco.com
+    http://today.icantfocus.com/blog/

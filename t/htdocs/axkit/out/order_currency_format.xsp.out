@@ -20,7 +20,7 @@
 		<billtofax>3-333-333-3333</billtofax>
 		<billtoemail>mendlefarg@gmail.com</billtoemail>
 		<comments>Comments</comments>
-		<created>20050715T201234Z</created>
+		<created>2005-07-15T20:12:34</created>
 		<handling>8.95</handling>
 		<handling>8.95 USD</handling>
 		<handling>8.95 CAD</handling>
@@ -62,7 +62,7 @@
 		<tax>6.66 CAD</tax>
 		<tax>&amp;#x0024;6.66</tax>
 		<tax>6.66 Canadian Dollar</tax>
-		<updated>20050716T201234Z</updated>
+		<updated>2005-07-16T20:12:34</updated>
 		<item>
 			<description>Description 1</description>
 			<id>EF254990-53FB-46DA-8B8A-A287698D3E6A</id>

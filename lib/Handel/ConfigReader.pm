@@ -2,9 +2,11 @@
 package Handel::ConfigReader;
 use strict;
 use warnings;
-use vars qw(%Defaults $MOD_PERL);
+use vars qw/%DEFAULTS $MOD_PERL/;
 
-%Defaults = (
+my $instance;
+
+%DEFAULTS = (
     HandelMaxQuantityAction => 'Adjust',
     HandelCurrencyCode      => 'USD',
     HandelCurrencyFormat    => 'FMT_STANDARD'
@@ -12,16 +14,16 @@ use vars qw(%Defaults $MOD_PERL);
 
 BEGIN {
     use Tie::Hash;
-    use base 'Tie::StdHash';
+    use base qw/Tie::StdHash/;
 
-    if (exists $ENV{MOD_PERL_API_VERSION} && $ENV{MOD_PERL_API_VERSION} == 2) {
+    if (exists $ENV{'MOD_PERL_API_VERSION'} && $ENV{'MOD_PERL_API_VERSION'} == 2) {
         require Apache2::RequestRec;
         require Apache2::RequestUtil;
         require Apache2::RequestIO;
         require Apache2::ServerUtil;
 
         $MOD_PERL = 2;
-    } elsif ($ENV{MOD_PERL}) {
+    } elsif ($ENV{'MOD_PERL'}) {
         require Apache;
 
         $MOD_PERL = 1;
@@ -33,22 +35,31 @@ BEGIN {
 sub new {
     my $class = shift;
     my %config;
-    tie %config, __PACKAGE__;
+    tie %config, __PACKAGE__; ## no critic
 
     return bless \%config, $class;
 };
 
+sub instance {
+    if (!$instance) {
+        $instance = shift->new(@_);
+    };
+
+    return $instance;
+};
+
 sub get {
     my ($self, $key) = (shift, shift);
-    my $default = shift || $Defaults{$key} || '';
+    my $default = defined $_[0] ? shift : $DEFAULTS{$key};
+    my $value = $self->{$key} || undef;
 
-    return $self->{$key} || $default;
+    return defined $value ? $value : $default;
 };
 
 sub FETCH {
     my ($self, $key) = @_;
-    my $default = $Defaults{$key} || '';
-    my $value   = '';
+    my $default = $DEFAULTS{$key};
+    my $value;
 
     if ($MOD_PERL == 2) {
         my $c = eval {
@@ -73,7 +84,9 @@ sub FETCH {
     };
 
     # quick untaint for now. Assuming we'll mever get a ref from system os ENV
-    if (! ref $value && $value =~ /^(.*)$/g) {
+    if ($value &&  !ref $value) {
+        ## no critic
+        $value =~ /^(.*)$/g;
         $value = $1;
     };
 
@@ -83,7 +96,11 @@ sub FETCH {
 sub EXISTS {
     my ($self, $key) = @_;
 
-    return 1 if ($self->FETCH($key));
+    if (defined $self->FETCH($key)) {
+        return 1;
+    };
+
+    return;
 };
 
 sub STORE {};
@@ -95,14 +112,15 @@ __END__
 
 =head1 NAME
 
-Handel::ConfigReader - Read in Handel configuration settings
+Handel::ConfigReader - Read in Handel configuration settings from ENV/ModPerl
 
 =head1 SYNOPSIS
 
     use Handel::ConfigReader;
-
-    my $cfg = Handel::ConfigReader-new();
+    
+    my $cfg = Handel::ConfigReader->instance();
     my $setting = $cfg->get('HandelMaxQuantity');
+    my $other = $cfg->{'OtherSetting'};
 
 =head1 DESCRIPTION
 
@@ -110,11 +128,10 @@ Handel::ConfigReader is a generic wrapper to get various configuration
 values. As some point this will probably get worked into XS/custom httpd.conf
 directives.
 
-Starting in version 0.11, each instance is also a tied hash. The two usages are
-the same:
+Each configuration object is also a tied hash. The two usages are the same:
 
-    my $cfg = Handel::ConfigReader->new();
-
+    my $cfg = Handel::ConfigReader->instance();
+    
     my $setting = $cfg->get('Setting');
     my $setting = $cfg->{'Setting'};
 
@@ -125,24 +142,81 @@ Apache::ModuleConfig and custom directives which use the same hash syntax.
 
 =head2 new
 
-Returns a new Handel::ConfigReader object.
+Returns a new Handel::ConfigReader instance.
 
     my $cfg = Handel::ConfigReader->new();
 
+=head2 instance
+
+Returns the same Handel::ConfigReader instance for each call.
+
+    my $cfg = Handel::ConfigReader->instance();
+
 =head1 METHODS
 
-=head2 get($key [, $default])
+=head2 get
+
+=over
+
+=item Arguments: $key [, $default]
+
+=back
 
 Returns the configured value for the key specified. You can use this as an
 instance method or as a simpleton:
 
-    my $setting = Handel::ConfigReader->get('HandelMaxQuantity');
-
-    my $cfg = Handel::ConfigReader->new();
+    my $cfg = Handel::ConfigReader->instance();
+    my $setting = $cfg->get('HandelMaxQuantity');
+    
+    my $cfg = Handel::ConfigReader->instance();
     my $setting = $cfg->get('HandelMaxQuantity');
 
 You can also pass a default value as the second parameter. If no value is loaded
 for the key specified, the default value will be returned instead.
+
+    my $cfg = Handel::ConfigReader->instance();
+    my $setting = $cfg->get('DoesNotExist', 'foo');
+    print $setting; # foo
+
+=head2 FETCH
+
+=over
+
+=item Arguments: $key
+
+=back
+
+Returns an item form the configuration via tied hash.
+
+    my $cfg = Handel::ConfigReader->new;
+    my $setting = $cfg->{'MySetting'};
+
+=head2 EXISTS
+
+=over
+
+=item Arguments: $key
+
+=back
+
+Returns true if the specified setting returns a defined value.
+
+    my $cfg = Handel::ConfigReader->new;
+    if (exists $cfg->{'MySetting'}) {
+        ...
+    };
+
+=head2 CLEAR
+
+Does nothing.
+
+=head2 DELETE
+
+Does nothing.
+
+=head2 STORE
+
+Does nothing.
 
 =head1 CONFIGURATION
 
@@ -155,34 +229,34 @@ C<PerlSetVar> when running under C<mod_perl>.
     ...
     $ENV{HandelMaxQuantity} = 32;
 
-If defined, this sets the maximum quantity allowed for each C<Handel::Cart::Item>
-in the shopping cart. By default, when the user request more than
-C<HandelMaxQuantity>, C<quantity> is reset to C<HandelMaxQuantity>. If you
-would rather raise an C<Handel::Exception::Constraint> instead, see
+If defined, this sets the maximum quantity allowed for each
+C<Handel::Cart::Item> in the shopping cart. By default, when the user request
+more than C<HandelMaxQuantity>, C<quantity> is reset to C<HandelMaxQuantity>.
+If you would rather raise an C<Handel::Exception::Constraint> instead, see
 C<HandelMaxQuantityAction> below.
 
 =head2 HandelMaxQuantityAction (Adjust|Exception)
 
-This option defines what action should be taken when a cart items quantity is being set
-to something above C<HandelMaxQuantity>. When set to C<Adjust> the quantity will simply
-be reset to C<HandelMaxQuantity> and no exception will be raised. This is the default
-action.
+This option defines what action should be taken when a cart items quantity is
+being set to something above C<HandelMaxQuantity>. When set to C<Adjust> the
+quantity will simply be reset to C<HandelMaxQuantity> and no exception will be
+raised. This is the default action.
 
-When set to <Exception> and the quantity requested is greater than C<HandelMaxQuantity>,
-a C<Handel::Exception::Constraint> exception is thrown.
+When set to <Exception> and the quantity requested is greater than
+C<HandelMaxQuantity>, a C<Handel::Exception::Constraint> exception is thrown.
 
 =head2 HandelCurrencyCode
 
 This sets the default currency code used when no code is passed into C<format>.
-See L<Locale::Currency::Format> for all available currency codes. The default code
-is USD.
+See L<Locale::Currency::Format> for all available currency codes. The default
+code is USD.
 
 =head2 HandelCurrencyFormat
 
 This sets the default options used to format the price. See
 L<Locale::Currency::Format> for all available currency codes. The default format
-used is C<FMT_STANDARD>. Just like in C<Locale::Currency::Format>, you can combine
-options using C<|>.
+used is C<FMT_STANDARD>. Just like in C<Locale::Currency::Format>, you can
+combine options using C<|>.
 
 =head2 HandelDBIDriver
 
@@ -229,8 +303,8 @@ You can also pass a comma or space separate list of namespaces.
 
     PerlSetVar HandelPluginPaths 'MyApp::Plugins, OtherApp::Plugins'
 
-Any plugin found in the search path that isn't a subclass of Handel::Checkout::Plugin
-will be ignored.
+Any plugin found in the search path that isn't a subclass of
+Handel::Checkout::Plugin will be ignored.
 
 =head2 HandelAddPluginPaths
 
@@ -243,13 +317,14 @@ In the example above, when a checkout process is loaded, it will load
 all plugins in the Handel::Checkout::Plugin::*, MyApp::Plugins::*, and
 OtherApp::Plugins namespaces.
 
-Any plugin found in the search path that isn't a subclass of Handel::Checkout::Plugin
-will be ignored.
+Any plugin found in the search path that isn't a subclass of
+Handel::Checkout::Plugin will be ignored.
 
 =head2 HandelIgnorePlugins
 
-This is a comma/space separated list [or an anonymous array, or a regex outside of httpd.conf] of plugins to ignore when loading
-all available plugins in the given namespaces.
+This is a comma/space separated list [or an anonymous array, or a regex outside
+of httpd.conf] of plugins to ignore when loading all available plugins in the
+given namespaces.
 
     PerlSetVar HandelIgnorePlugins 'Handel::Checkout::Plugin::Initialize'
 
@@ -264,16 +339,18 @@ If the Handel::Checkout::Plugin namespace has the following modules:
     Handel::Checkout::Plugin::FaxDelivery
     Handel::Checkout::Plugin::EmailDelivery
 
-all of the modules above will be loaded <b>except</b> Handel::Checkout::Plugin::Initialize.
-All plugins in any other configured namespaces will be loaded.
+all of the modules above will be loaded <b>except</b>
+Handel::Checkout::Plugin::Initialize. All plugins in any other configured
+namespaces will be loaded.
 
-If both HandelLoadPlugins and HandelIgnorePlugins are specified, only the plugins in
-HandelLoadPlugins will be loaded, unless they are also in HandelIgnorePlugins in which case
-they will be ignored.
+If both HandelLoadPlugins and HandelIgnorePlugins are specified, only the
+plugins in HandelLoadPlugins will be loaded, unless they are also in
+HandelIgnorePlugins in which case they will be ignored.
 
 =head2 HandelLoadPlugins
 
-This is a comma or space separated list [or an anonymous array, or a regex outside of httpd.conf] of plugins to be loaded from the available namespaces.
+This is a comma or space separated list [or an anonymous array, or a regex
+outside of httpd.conf] of plugins to be loaded from the available namespaces.
 
     PerlSetVar HandelLoadPlugins 'Handel::Checkout::Plugin::ValidateAddress'
 
@@ -290,12 +367,12 @@ If the following plugins are available in all configured namespaces:
     MyApp::Plugin::VerifiedByVisa
     MyApp::Plugin::WarehouseUpdate
 
-only Handel::Checkout::Plugin::ValidateAddress will be loaded. All other plugins in all
-configured namespaces will be ignored.
+only Handel::Checkout::Plugin::ValidateAddress will be loaded. All other
+plugins in all configured namespaces will be ignored.
 
-If both HandelLoadPlugins and HandelIgnorePlugins are specified, only the plugins in
-HandelLoadPlugins will be loaded, unless they are also in HandelIgnorePlugins in which case
-they will be ignored.
+If both HandelLoadPlugins and HandelIgnorePlugins are specified, only the
+plugins in HandelLoadPlugins will be loaded, unless they are also in
+HandelIgnorePlugins in which case they will be ignored.
 
 =head1 AUTHOR
 

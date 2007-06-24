@@ -19,7 +19,7 @@
 		billtofax			=> '3-333-333-3333',
 		billtoemail			=> 'mendlefarg@gmail.com',
 		comments			=> 'Comments',
-		created				=> '20050715T201234Z',
+		created				=> '2005-07-15 20:12:34',
 		handling			=> 8.95,
 		number				=> 'O123456789',
 		shipmethod			=> 'UPS Ground',
@@ -41,7 +41,7 @@
 		subtotal			=> 37.95,
 		total				=> 37.95,
 		tax					=> 6.66,
-		updated				=> '20050716T201234Z'
+		updated				=> '2005-07-16 20:12:34'
 	})) %]
 		[% CALL order.add({
 			description => 'Description 1',
@@ -61,10 +61,10 @@
 		}) %]
 	[% END %]
 
-	[% IF (order = horder.fetch({
+	[% IF (order = horder.search({
 		type => horder.ORDER_TYPE_TEMP,
 		id 	 => 'E516A609-1905-4C7B-AC82-C33D50DE7AB9'
-	})) %]
+	}).first) %]
 		<order>
 			<count>[% order.count %]</count>
 			<id>[% order.id %]</id>
@@ -85,10 +85,10 @@
 			<billtoemail>[% order.billtoemail %]</billtoemail>
 			<comments>[% order.comments %]</comments>
 			<created>[% order.created %]</created>
-			<handling>[% order.handling %]</handling>
+			<handling>[% order.handling.value %]</handling>
 			<number>[% order.number %]</number>
 			<shipmethod>[% order.shipmethod %]</shipmethod>
-			<shipping>[% order.shipping %]</shipping>
+			<shipping>[% order.shipping.value %]</shipping>
 			<shiptosameasbillto>[% order.shiptosameasbillto %]</shiptosameasbillto>
 			<shiptofirstname>[% order.shiptofirstname %]</shiptofirstname>
 			<shiptolastname>[% order.shiptolastname %]</shiptolastname>
@@ -103,19 +103,19 @@
 			<shiptonightphone>[% order.shiptonightphone %]</shiptonightphone>
 			<shiptofax>[% order.shiptofax %]</shiptofax>
 			<shiptoemail>[% order.shiptoemail %]</shiptoemail>
-			<subtotal>[% order.subtotal %]</subtotal>
-			<total>[% order.total %]</total>
-			<tax>[% order.tax %]</tax>
+			<subtotal>[% order.subtotal.value %]</subtotal>
+			<total>[% order.total.value %]</total>
+			<tax>[% order.tax.value %]</tax>
 			<updated>[% order.updated %]</updated>
-			[% IF (items = order.items(undef, horder.RETURNAS_ITERATOR)) %]
+			[% IF (items = order.items) %]
 				[% WHILE (item = items.next) %]
 					<item>
 						<description>[% item.description %]</description>
 						<id>[% item.id %]</id>
-						<price>[% item.price %]</price>
+						<price>[% item.price.value %]</price>
 						<quantity>[% item.quantity %]</quantity>
 						<sku>[% item.sku %]</sku>
-						<total>[% item.total %]</total>
+						<total>[% item.total.value %]</total>
 					</item>
 				[% END %]
 			[% END %]

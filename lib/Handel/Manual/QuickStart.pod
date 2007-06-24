@@ -1,0 +1,256 @@
+=head1 NAME
+
+Handel::Manual::QuickStart - A quick start guide to getting Handel up and running.
+
+=head1 DESCRIPTION
+
+This guide is meant for those who want to get a shopping cart up and running as quickly as possible using
+Handel as a stand alone set of classes, as a complete Catalyst application, or as an addition to an existing
+Catalyst application.
+
+=head1 INSTALLATION
+
+See L<Handel::Manual::Requirements|Handel::Manual::Requirements> for the list of requirements needed
+for Handel to run properly. These should be installed automatically by CPAN or CPANPLUS.
+
+=head2 CPAN
+
+    $ cpan -i Handel
+
+=head2 CPANPLUS
+
+    $ cpanp -i Handel
+
+=head1 NO CUSTOMIZATION
+
+If you don't plan on customizing the default schema or classes, then you're done. Simply use the stock classes
+in your existing program as you would any other CPAN module.
+
+=head1 STAND ALONE APPLICATIONS
+
+If you plan on customizing the default schema (adding columns, changing table names, etc), it is
+recommended that you create your own set of subclasses, and customize those instead of altering the
+behaviour of the Handel classes themselves.
+
+To create a new application with Handel classes, run C<handel>: and give it a new application name:
+
+    $ handel MyApp
+    
+    Created MyApp
+    Created MyApp\lib
+    Created MyApp\lib\MyApp.pm
+    Created MyApp\lib\MyApp
+    Created MyApp\lib\MyApp\Cart.pm
+    Created MyApp\lib\MyApp\Cart
+    Created MyApp\lib\MyApp\Cart\Item.pm
+    Created MyApp\lib\MyApp\Storage
+    Created MyApp\lib\MyApp\Storage\Cart.pm
+    Created MyApp\lib\MyApp\Storage\Cart
+    Created MyApp\lib\MyApp\Storage\Cart\Item.pm
+    Created MyApp\lib\MyApp\Order.pm
+    Created MyApp\lib\MyApp\Order
+    Created MyApp\lib\MyApp\Order\Item.pm
+    Created MyApp\lib\MyApp\Storage\Order.pm
+    Created MyApp\lib\MyApp\Storage\Order
+    Created MyApp\lib\MyApp\Storage\Order\Item.pm
+    Created MyApp\lib\MyApp\Checkout.pm
+    Created MyApp\t
+    Created MyApp\t\pod_syntax.t
+    Created MyApp\t\pod_spelling.t
+    Created MyApp\t\basic.t
+    Created MyApp\t\pod_coverage.t
+    Created MyApp\.cvsignore
+    Created MyApp\Makefile.PL
+    Created MyApp\MANIFEST
+    Created MyApp\script\myapp_handel.pl
+    Created starter directories and files
+
+This creates a new CPAN style distribution with all of the recommended Handel subclasses. If you need to
+change any table names, or add columns, etc, simply alter the various C<Storage> classes using the options
+in L<Handel::Storage::DBIC|Handel::Storage::DBIC>. For example, if you wanted to change the C<carts>
+table to be named C<myapp_carts> instead, add this to C<MyApp::Storage::Cart>:
+
+    __PACKAGE__->table_name('myapp_carts');
+
+Once you are done customizing the storage classes, we need to install the database schema. To do that, run
+the setup script created in the step above, passing it the DBI dsn /user/pass for the database you wish to
+install into.
+
+B<Note:> The database you specify must already exist and you need to use a user/password that has
+permissions to create tables.
+
+    $ cd MyApp
+    $ perl script/myapp_handel.pl --install --dsn dbi:mysql:handel:localhost --user myuser --pass mypass
+    Installed/created database schema
+
+If you want to use a local SQLite database, you can simply pass the --default option which will create a
+database in MyApp/data/handel.db
+
+    $ cd MyApp
+    $ perl script/myapp_handel.pl --install --default
+    Installed/created database schema
+
+Now, simply treat the newly created code as any other CPAN distribution:
+
+    $ perl Makefile.PL
+    $ make
+    $ make test
+    $ make install
+
+=head1 NEW CATALYST APPLICATIONS
+
+If you plan on using Handel within a new Catalyst application, you're in luck. Simply create a new Catalyst
+application using C<catalyst>:
+
+    $ catalyst MyApp
+    
+    created "MyApp"
+    created "MyApp\script"
+    created "MyApp\lib"
+    created "MyApp\root"
+    created "MyApp\root\static"
+    created "MyApp\root\static\images"
+    created "MyApp\t"
+    created "MyApp\lib\MyApp"
+    created "MyApp\lib\MyApp\Model"
+    created "MyApp\lib\MyApp\View"
+    created "MyApp\lib\MyApp\Controller"
+    created "MyApp\myapp.yml"
+    created "MyApp\lib\MyApp.pm"
+    created "MyApp\lib\MyApp\Controller\Root.pm"
+    created "MyApp/README"
+    created "MyApp/Changes"
+    created "MyApp\t/01app.t"
+    created "MyApp\t/02pod.t"
+    created "MyApp\t/03podcoverage.t"
+    created "MyApp\root\static\images\catalyst_logo.png"
+    created "MyApp\root\static\images\btn_120x50_built.png"
+    created "MyApp\root\static\images\btn_120x50_built_shadow.png"
+    created "MyApp\root\static\images\btn_120x50_powered.png"
+    created "MyApp\root\static\images\btn_120x50_powered_shadow.png"
+    created "MyApp\root\static\images\btn_88x31_built.png"
+    created "MyApp\root\static\images\btn_88x31_built_shadow.png"
+    created "MyApp\root\static\images\btn_88x31_powered.png"
+    created "MyApp\root\static\images\btn_88x31_powered_shadow.png"
+    created "MyApp\root\favicon.ico"
+    created "MyApp/Makefile.PL"
+    created "MyApp\script/myapp_cgi.pl"
+    created "MyApp\script/myapp_fastcgi.pl"
+    created "MyApp\script/myapp_server.pl"
+    created "MyApp\script/myapp_test.pl"
+    created "MyApp\script/myapp_create.pl"
+
+Now, in that new directory, use the Handel helper to create all of the custom subclasses as well as all of the
+models, controllers, page templates, etc. Make sure to specify the dsn/user/pass of the database this
+application will be connecting to:
+
+    $ cd MyApp
+    $ perl script/myapp_create.pl Handel mydsn myuser mypass
+    
+    created "C:\MyApp\data"
+     exists "C:\MyApp\lib\MyApp"
+    created "C:\MyApp\lib\MyApp\Cart.pm"
+    created "C:\MyApp\lib\MyApp\Cart"
+    created "C:\MyApp\lib\MyApp\Cart\Item.pm"
+    created "C:\MyApp\lib\MyApp\Storage"
+    created "C:\MyApp\lib\MyApp\Storage\Cart.pm"
+    created "C:\MyApp\lib\MyApp\Storage\Cart"
+    created "C:\MyApp\lib\MyApp\Storage\Cart\Item.pm"
+     exists "C:\MyApp\lib\MyApp"
+    created "C:\MyApp\lib\MyApp\Order.pm"
+    created "C:\MyApp\lib\MyApp\Order"
+    created "C:\MyApp\lib\MyApp\Order\Item.pm"
+     exists "C:\MyApp\lib\MyApp\Storage"
+    created "C:\MyApp\lib\MyApp\Storage\Order.pm"
+    created "C:\MyApp\lib\MyApp\Storage\Order"
+    created "C:\MyApp\lib\MyApp\Storage\Order\Item.pm"
+     exists "C:\MyApp\lib\MyApp"
+    created "C:\MyApp\lib\MyApp\Checkout.pm"
+    created "C:\MyApp\script\myapp_handel.pl"
+     exists "C:\MyApp\lib\MyApp\View"
+     exists "C:\MyApp\t"
+    created "C:\MyApp\lib\MyApp\View\TT.pm"
+    created "C:\MyApp\t\view_TT.t"
+     exists "C:\MyApp\lib\MyApp\Model"
+     exists "C:\MyApp\t"
+    created "C:\MyApp\lib\MyApp\Model\Cart.pm"
+    created "C:\MyApp\t\model_Cart.t"
+     exists "C:\MyApp\lib\MyApp\Model"
+     exists "C:\MyApp\t"
+    created "C:\MyApp\lib\MyApp\Model\Order.pm"
+    created "C:\MyApp\t\model_Order.t"
+     exists "C:\MyApp\lib\MyApp\Controller"
+     exists "C:\MyApp\t"
+    created "C:\MyApp\root\cart"
+    created "C:\MyApp\lib\MyApp\Controller\Cart.pm"
+    created "C:\MyApp\root\cart\default"
+    created "C:\MyApp\root\cart\list"
+    created "C:\MyApp\root\cart\errors"
+    created "C:\MyApp\root\cart\profiles.yml"
+    created "C:\MyApp\root\cart\messages.yml"
+    created "C:\MyApp\root\static\products.htm"
+    created "C:\MyApp\t\controller_Cart.t"
+     exists "C:\MyApp\lib\MyApp\Controller"
+     exists "C:\MyApp\t"
+    created "C:\MyApp\root\order"
+    created "C:\MyApp\lib\MyApp\Controller\Order.pm"
+    created "C:\MyApp\root\order\default"
+    created "C:\MyApp\root\order\view"
+    created "C:\MyApp\root\order\errors"
+    created "C:\MyApp\root\order\profiles.yml"
+    created "C:\MyApp\root\order\messages.yml"
+    created "C:\MyApp\t\controller_Order.t"
+     exists "C:\MyApp\lib\MyApp\Controller"
+     exists "C:\MyApp\t"
+    created "C:\MyApp\root\checkout"
+    created "C:\MyApp\lib\MyApp\Controller\Checkout.pm"
+    created "C:\MyApp\root\checkout\default"
+    created "C:\MyApp\root\checkout\billing"
+     exists "C:\MyApp\root\checkout\billing"
+    created "C:\MyApp\root\checkout\preview"
+    created "C:\MyApp\root\checkout\payment"
+    created "C:\MyApp\root\checkout\complete"
+    created "C:\MyApp\root\checkout\errors"
+    created "C:\MyApp\root\checkout\profiles.yml"
+    created "C:\MyApp\root\checkout\messages.yml"
+    created "C:\MyApp\t\controller_Checkout.t"
+
+If you need to change any table names, or add columns, etc, simply alter the various C<Storage> classes
+using the options in L<Handel::Storage::DBIC|Handel::Storage::DBIC>. For example, if you wanted to change
+the C<carts> table to be named C<myapp_carts> instead, add this to C<MyApp::Storage::Cart>:
+
+    __PACKAGE__->table_name('myapp_carts');
+
+Once you are done customizing the storage classes, we need to install the database schema. To do that, run
+the createdb script created in the step above, passing it the DBI dsn /user/pass you used above.
+
+B<Note:> The database you specify must already exist and you need to use a user/password that has
+permissions to create tables.
+
+    $ cd MyApp
+    $ perl script/myapp_handel.pl --install --dsn mydsn --user myuser --pass mypass
+    Installed/created database schema
+
+Now, just run your shiny new Catalyst/Handel application:
+
+    $ perl script/myapp_server.pl
+
+=head1 EXISTING CATALYST APPLICATIONS
+
+If you already have a Catalyst application but want to add Handel bits and piece to it, several helpers are
+provided to assist.
+
+See the individual helper documentation below for more information.
+
+=head1 SEE ALSO
+
+L<Catalyst::Helper::Controller::Handel::Cart>, L<Catalyst::Helper::Controller::Handel::Order>,
+L<Catalyst::Helper::Controller::Handel::Checkout>, L<Catalyst::Helper::Handel::Scaffold>,
+L<Catalyst::Helper::Model::Handel::Cart>, L<Catalyst::Helper::Model::Handel::Order>
+
+=head1 AUTHOR
+
+    Christopher H. Laco
+    CPAN ID: CLACO
+    claco@chrislaco.com
+    http://today.icantfocus.com/blog/

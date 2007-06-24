@@ -1,0 +1,192 @@
+=head1 NAME
+
+Handel::Manual::Cookbook::AddingColumns - Adding columns in Handel
+
+=head1 DESCRIPTION
+
+The methods below outline the steps necessary to add columns to the default install of Handel. The steps
+below generally apply to customizing most storage options, including removing columns, adding constraints,
+etc.
+
+=head1 GOOD
+
+If you need a quick fix in a script or want to alter all instances of Handel objects within the same process, you
+can simple add a column to the desired classes storage using L<Handel::Storage/add_columns>.
+
+    #!/usr/bin/perl -w
+    use strict;
+    use warnings;
+    use Handel::Cart;
+    
+    Handel::Cart->storage->add_columns('custom');
+    Handel::Cart->create_accessors;
+    
+    
+    my $carts = Handel::Cart->search;
+    print $carts->count;
+    
+    while (my $cart = $carts->next) {
+        print $cart->custom, "\n";
+    };
+
+=head1 BETTER
+
+The example above gets the job done with a minimal amount of code. But if you're on shared server with
+other people using Handel, you're going to get a nasty phone call when every one discovers their stuff has an
+extra field in it.
+
+The better, more polite approach is to make your own custom classes and use [ab]use them instead.
+
+    package My::Cart;
+    use strict;
+    use warnings;
+    use base qw/Handel::Cart/;
+    
+    __PACKAGE__->item_class('My::Cart::Item');
+    __PACKAGE__->storage->add_columns('custom');
+    __PACKAGE__->create_accessors;
+    
+    1;
+
+You don't have to subclass both the cart and items classes, but for the sake of good practice, there's no
+reason not to if  you've gone this far.
+
+    package My::Cart::Item;
+    use strict;
+    use warnings;
+    use base qw/Handel::Cart::Item/;
+    
+    1;
+
+Then in your script, use you're cart instead.
+
+    #!/usr/bin/perl -w
+    use strict;
+    use warnings;
+    use My::Cart;
+    
+    my $carts = My::Cart->search;
+    print $carts->count;
+    
+    while (my $cart = $carts->next) {
+        print $cart->custom, "\n";
+    };
+
+=head1 BEST
+
+The two approaches above have one potential issue: they assume that the current classes will always use the
+default storage. If you add columns using only the column name, that won't be an issue. If you add columns
+using the DBIx::Class C<\%column_info> syntax, you will have a problem if the new storage class doesn't
+understand the syntax.
+
+    package My::Cart;
+    use strict;
+    use warnings;
+    
+    use base qw/Handel::Cart/;
+    __PACKAGE__->storage_class('Future::Storage::XML');
+    
+    # this line goes boom!
+    # don't know how to add column 'HASH(0x2254b8)'
+    __PACKAGE__->storage->add_columns('foo' => {
+        data_type   => 'varchar',
+        size        => 50,
+        is_nullable => 1
+    });
+    
+    1;
+
+This is a potential problem when setting any storage class option from within the interface classes that
+uses it. To help abstract the storage specifics away from the interface classes that use them, you should go
+the extra mile and declare custom storage classes. I did mention that it's a 'framework' right? :-)
+
+=head2 Create Cart and Item Storage Classes
+
+First we need to create custom storage classes for the Cart and Item interface classes.
+
+    package My::Storage::Cart;
+    use strict;
+    use warnings;
+    use base qw/Handel::Storage::DBIC::Cart/;
+    
+    __PACKAGE__->item_storage_class('My::Storage::Cart::Item');
+    
+    __PACKAGE__->add_columns('foo' => {
+        data_type   => 'varchar',
+        size        => 50,
+        is_nullable => 1
+    });
+    
+    1;
+    
+    package My::Storage::Cart::Item;
+    use strict;
+    use warnings;
+    use base qw/Handel::Storage::DBIC::Cart::Item/;
+    
+    1;
+
+=head2 Create Cart and Item Classes
+
+    package My::Cart;
+    use strict;
+    use warnings;
+    use base qw/Handel::Cart/;
+    
+    __PACKAGE__->item_class('My::Cart::Item');
+    
+    # No storage changes in here
+    # The storage class takes care of adding the column
+    __PACKAGE__->storage_class('My::Storage::Cart');
+    __PACKAGE__->create_accessors;
+    
+    1;
+    
+    package My::Cart::Item;
+    use strict;
+    use warnings;
+    use base qw/Handel::Cart::Item/;
+    
+    __PACKAGE__->storage_class('My::Storage::Cart::Item');
+    __PACKAGE__->create_accessors;
+    
+    1;
+
+=head2 Code Away Merrill
+
+    #!/usr/bin/perl -w
+    use strict;
+    use warnings;
+    use My::Cart;
+    
+    my $carts = My::Cart->search;
+    print $carts->count;
+    
+    while (my $cart = $carts->next) {
+        print $cart->custom, "\n";
+    };
+
+Now that we've pushed the add column magic down into the storage class, My::Cart is blissfully unaware of
+any changes that storage class needs to make in order to add a column:
+
+    package My::Storage::Cart;
+    use strict;
+    use warnings;
+    use base qw/Handel::Storage::DBIC::Cart/;
+    
+    __PACKAGE__->item_storage_class('My::Storage::Cart::Item');
+    
+    __PACKAGE__->add_columns([qw/foo varchar 50 nullable/]);
+    
+    1;
+
+=head1 SEE ALSO
+
+L<Handel::Storage>, L<Handel::Storage::DBIC>, L<Handel::Storage::DBIC::Cart>, L<Handel::Storage::DBIC::Cart::Item>
+
+=head1 AUTHOR
+
+    Christopher H. Laco
+    CPAN ID: CLACO
+    claco@chrislaco.com
+    http://today.icantfocus.com/blog/

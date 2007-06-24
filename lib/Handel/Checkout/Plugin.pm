@@ -3,9 +3,14 @@ package Handel::Checkout::Plugin;
 use strict;
 use warnings;
 
+BEGIN {
+    use Handel::L10N qw/translate/;
+    use Carp qw/cluck/;
+};
+
 sub new {
     my ($class, $ctx) = @_;
-    my $self = bless {}, ref $class || $class;
+    my $self = bless {}, $class;
 
     $self->init($ctx);
 
@@ -13,19 +18,21 @@ sub new {
 };
 
 sub init {
-
+    return;
 };
 
 sub setup {
-
+    return;
 };
 
 sub teardown {
-
+    return;
 };
 
 sub register {
-    warn "Attempt to register plugin that hasn't defined 'register'!";
+    cluck translate('PLUGIN_HAS_NO_REGISTER');
+
+    return;
 };
 
 sub name {
@@ -46,25 +53,25 @@ Handel::Checkout::Plugin - Base module for Handle::Checkout plugins
     package MyPackage::FaxOrder;
     use Handel::Constants qw(:checkout);
     use base 'Handel::Checkout::Plugin';
-
+    
     sub register {
         my ($self, $ctx) = @_;
 
         $ctx->add_handler(CHECKOUT_PHASE_DELIVER, \&deliver);
     };
-
+    
     sub deliver {
         my ($self, $ctx) = @_;
-
+    
         ...
-
+    
         return CHECKOUT_HANDLER_OK;
     };
 
 =head1 DESCRIPTION
 
-C<Handel::Checkout::Plugin> is the base module for all checkout pipeline
-plugins used in C<Handel::Checkout>.
+Handel::Checkout::Plugin is the base module for all checkout pipeline plugins
+used in Handel::Checkout.
 
 =head1 CONSTRUCTOR
 

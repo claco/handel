@@ -1,0 +1,24 @@
+=head1 NAME
+
+Handel::Manual::Cookbook - Overview
+
+=head1 DESCRIPTION
+
+The following recipes cover the most common questions and problems encountered when using Handel.
+
+=head1 RECIPES
+
+=head2 L<Adding Columns|Handel::Manual::Cookbook::AddingColumns>
+
+Various ways to add columns in Handel.
+
+=head2 L<Writing Custom Storage Classes|Handel::Manual::Cookbook::WritingCustomStorage>
+
+Step by Step example of writing a custom storage class.
+
+=head1 AUTHOR
+
+    Christopher H. Laco
+    CPAN ID: CLACO
+    claco@chrislaco.com
+    http://today.icantfocus.com/blog/

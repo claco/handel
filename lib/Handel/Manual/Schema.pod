@@ -1,0 +1,54 @@
+=head1 NAME
+
+Handel::Manual::Schema - An overview of the default database schema.
+
+=head1 DESCRIPTION
+
+The default schemas in Handel are really just DBIx::Class::Schema classes with some syntactic sugar added
+to C<connect> to get configuration information from Handel::ConfigReader. The whole point of using
+DBIx::Class schemas is that fact that you can reuse any existing schemas you  have lying around for other
+purposes. DBIx::Class offers an amazing amount of flexibility that allows Handel to mix and match most
+schemas for use inside of Handel, even allowing for the changing of fields, components, and other things
+on the fly.
+
+An attempt is made to keep the default Handel schema restricted to only those fields that were the most
+common, or necessary for almost every cart/order process.
+
+=head1 SCHEMA CLASSES
+
+=head2 L<Handel::Cart::Schema|Handel::Cart::Schema>
+
+Handel::Cart::Schema is a subclass of DBIx::Class::Schema that takes care of preloading
+Handel::Schema::DBIC::Cart and Handel::Schema::DBIC::Cart::Item for you.
+
+=head2 L<Handel::Schema::DBIC::Cart|Handel::Schema::DBIC::Cart>
+
+Handel::Schema::Cart is a schema class for the main cart table that holds basic information about each cart like
+its name, description and the shopper id it belongs to.
+
+=head2 L<Handel::Schema::DBIC::Cart::Item|Handel::Schema::DBIC::Cart::Item>
+
+Handel::Schema::Cart::Item is a schema class for the table that holds the contents, or 'items' for each cart
+in the carts table above. This includes fields like sku, quantity and price.
+
+=head2 L<Handel::Order::Schema|Handel::Order::Schema>
+
+Handel::Order::Schema is a subclass of DBIx::Class::Schema that takes care of preloading
+Handel::Schema::DBIC::Order and Handel::Schema::DBIC::Order::Item for you.
+
+=head2 L<Handel::Schema::DBIC::Order|Handel::Schema::DBIC::Order>
+
+Handel::Schema::Order is a schema class for the main order table that holds basic information about each
+order like the billing and shipping information, the order totals, etc.
+
+=head2 L<Handel::Schema::DBIC::Order::Item|Handel::Schema::DBIC::Order::Item>
+
+Handel::Schema::Order::Item is a schema class for the table that holds the contents, or 'items' for each order
+in the carts table above. This includes fields like sku, quantity and price.
+
+=head1 AUTHOR
+
+    Christopher H. Laco
+    CPAN ID: CLACO
+    claco@chrislaco.com
+    http://today.icantfocus.com/blog/

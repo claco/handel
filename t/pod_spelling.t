@@ -2,11 +2,16 @@
 # $Id$
 use strict;
 use warnings;
-use Test::More;
 
-eval 'use Test::Spelling 0.11';
-plan skip_all => 'Test::Spelling 0.11 not installed' if $@;
-plan skip_all => 'set TEST_SPELLING to enable this test' unless $ENV{TEST_SPELLING};
+BEGIN {
+    use lib 't/lib';
+    use Handel::Test;
+
+    plan skip_all => 'set TEST_POD to enable this test' unless $ENV{TEST_POD};
+
+    eval 'use Test::Spelling 0.11';
+    plan skip_all => 'Test::Spelling 0.11 not installed' if $@;
+};
 
 set_spell_cmd('aspell list');
 
@@ -15,6 +20,12 @@ add_stopwords(<DATA>);
 all_pod_files_spelling_ok();
 
 __DATA__
+createdb
+behaviour
+handel
+rethrows
+CVS
+Candian
 AxKit
 CMS
 CPAN
@@ -120,3 +131,47 @@ wildcard
 wildcards
 lastskuadded
 wT
+schemas
+ModPerl
+autoupdate
+resultset
+xxxx
+xxxxxxxx
+xxxxxxxxxxxx
+WORKFLOW
+preloading
+refactor
+IRC
+MSSQL
+Postgres
+SQLite
+dsns
+username
+orderid
+PROPAGE
+cenddate
+ccm
+ccname
+ccstartdate
+cctype
+ccvn
+ccy
+ccn
+pre
+ccenddate
+ccissuenumber
+DateTime
+escence
+DBIC
+forwards
+UTF
+CPANPLUS
+Compat
+resultsets
+xml
+YAML
+m'kay
+DBIx-Class-current
+XPath
+xpath
+INI

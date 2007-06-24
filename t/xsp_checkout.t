@@ -1,20 +1,25 @@
 #!perl -wT
 # $Id$
+## no critic (RequireTestLabels)
 use strict;
 use warnings;
-require Test::More;
-use lib 't/lib';
-use Handel::TestHelper qw(preparetables comp_to_file);
 
-Test::More::plan(skip_all => 'set TEST_HTTP to enable this test') unless $ENV{TEST_HTTP};
+BEGIN {
+    use lib 't/lib';
+    require Handel::Test;
+    use Handel::TestHelper qw/comp_to_file/;
+    use File::Spec::Functions qw/catfile/;
 
-eval 'use Apache::Test 1.27';
-Test::More::plan(skip_all =>
-    'Apache::Test 1.27 not installed') if $@;
+    Handel::Test::plan(skip_all => 'set TEST_HTTP to enable this test') unless $ENV{TEST_HTTP};
 
-eval 'use DBD::SQLite';
-Test::More::plan(skip_all =>
-    'DBD::SQLite not installed') if $@;
+    eval 'use Apache::Test 1.27';
+    Handel::Test::plan(skip_all =>
+        'Apache::Test 1.27 not installed') if $@;
+
+    eval 'use DBD::SQLite';
+    Handel::Test::plan(skip_all =>
+        'DBD::SQLite not installed') if $@;
+};
 
 my @tests = (
     'checkout_plugins.xsp',
@@ -34,12 +39,7 @@ Apache::Test::plan(tests => (scalar @tests * 2),
 my $docroot = Apache::Test::vars('documentroot');
 
 ## Setup SQLite DB for tests
-{
-    my $dbfile  = "$docroot/xsp.db";
-    my $db      = "dbi:SQLite:dbname=$dbfile";
-
-    preparetables($db, [qw(cart order)], 1);
-};
+Handel::Test->init_schema(eval_deploy => 1, clear => 1, db_file => 'axkit.db');
 
 LOOP: foreach (@tests) {
     my $r = GET("/axkit/$_");

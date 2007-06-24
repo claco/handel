@@ -24,27 +24,27 @@
 		}) %]
 	[% END %]
 
-	[% IF (cart = hcart.fetch({
+	[% IF (cart = hcart.search({
 		type => hcart.CART_TYPE_TEMP,
 		id 	 => 'E516A609-1905-4C7B-AC82-C33D50DE7AB9'
-	})) %]
+	}).first) %]
 		<cart>
 			<count>[% cart.count %]</count>
 			<description>[% cart.description %]</description>
 			<id>[% cart.id %]</id>
 			<name>[% cart.name %]</name>
 			<shopper>[% cart.shopper %]</shopper>
-			<subtotal>[% cart.subtotal %]</subtotal>
+			<subtotal>[% cart.subtotal.value %]</subtotal>
 			<type>[% cart.type %]</type>
-			[% IF (items = cart.items(undef, hcart.RETURNAS_ITERATOR)) %]
+			[% IF (items = cart.items) %]
 				[% WHILE (item = items.next) %]
 					<item>
 						<description>[% item.description %]</description>
 						<id>[% item.id %]</id>
-						<price>[% item.price %]</price>
+						<price>[% item.price.value %]</price>
 						<quantity>[% item.quantity %]</quantity>
 						<sku>[% item.sku %]</sku>
-						<total>[% item.total %]</total>
+						<total>[% item.total.value %]</total>
 					</item>
 				[% END %]
 			[% END %]

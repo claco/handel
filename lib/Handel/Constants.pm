@@ -2,12 +2,12 @@
 package Handel::Constants;
 use strict;
 use warnings;
-use vars qw(@EXPORT_OK %EXPORT_TAGS @CHECKOUT_ALL_PHASES);
+use vars qw/@EXPORT_OK %EXPORT_TAGS @CHECKOUT_ALL_PHASES/;
 
 
 BEGIN {
-    use base 'Exporter';
-    use Handel::L10N qw(translate);
+    use base qw/Exporter/;
+    use Handel::L10N qw/translate/;
 };
 
 use constant CART_MODE_APPEND  => 3;
@@ -126,7 +126,7 @@ Handel::Constants - Common constants used in Handel
 
     use Handel::Constants qw(:cart);
 
-    my $cart = Handel::Cart->new({
+    my $cart = Handel::Cart->create({
         shopper => 'D597DEED-5B9F-11D1-8DD2-00AA004ABD5E'
     });
 
@@ -136,15 +136,21 @@ Handel::Constants - Common constants used in Handel
 
 =head1 DESCRIPTION
 
-C<Handel::Constants> contains a set of constants used throughout C<Handel>. It
-may be useful (or even a good idea) to use these in your code. :-)
+Handel::Constants contains a set of constants used throughout Handel. It may be
+useful (or even a good idea) to use these in your code. :-)
 
-By default, C<Handel::Constants> export C<nothing>. Use can use the export tags
+By default, Handel::Constants export I<nothing>. You can use the export tags
 below to export all or only certain groups of constants.
 
-=head1 METHODS
+=head1 FUNCTIONS
 
-=head2 str_to_const($)
+=head2 str_to_const
+
+=over
+
+=item Arguments: $constant_name
+
+=back
 
 Converts a string version of a constant into that constants value.
 
@@ -177,7 +183,7 @@ automatically reaped from the database during cleanup.
 
 =head2 CART_TYPE_TEMP
 
-Any cart with this type could be purged form the database during cleanup at any
+Any cart with this type could be purged from the database during cleanup at any
 time.
 
 =head2 CHECKOUT_PHASE_INITIALIZE
@@ -186,16 +192,18 @@ The phase run when first creating a new order.
 
 =head2 CHECKOUT_PHASE_VALIDATE
 
-The phase run to validate address, shipping, and other information about an order.
+The phase run to validate address, shipping, and other information about an
+order.
 
 =head2 CHECKOUT_PHASE_AUTHORIZE
 
-The phase run when authorizing or validating credit card or other payment information.
+The phase run when authorizing or validating credit card or other payment
+information.
 
 =head2 CHECKOUT_PHASE_FINALIZE
 
-The phase to run and post authorization order cleanup, like setting order number, before
-order delivery/confirmation.
+The phase to run and post authorization order cleanup, like setting order
+number, before order delivery/confirmation.
 
 =head2 CHECKOUT_PHASE_DELIVER
 
@@ -212,7 +220,8 @@ Contains all available phases.
 
 =head2 CHECKOUT_STATUS_OK
 
-All plugin handlers returned successfully and the checkout process has completed.
+All plugin handlers returned successfully and the checkout process has
+completed.
 
 =head2 CHECKOUT_STATUS_ERROR
 
@@ -234,30 +243,20 @@ using L<Handel::Checkout/add_handler>
 Specifies that the plugin handler encountered errors and would like to abort
 the checkout process.
 
-=head2 RETURNAS_AUTO
+=head2 ORDER_TYPE_SAVED
 
-When calling C<load> or C<items> on C<Handel::Cart>, it will attempt to return
-the most appropriate object. In list context, it will return a list. In
-scalar context, it will return a C<Handel::Iterator> object. If the iterator
-only contains one item, that item will be returns instead.
+Marks the order as permanent. Order with this value set should never be
+automatically reaped from the database during cleanup.
 
-=head2 RETURNAS_ITERATOR
+=head2 ORDER_TYPE_TEMP
 
-Always return a C<Handel::Iterator> object regardless of context or the amount
-of results.
-
-=head2 RETURNAS_LIST
-
-Always return a list regardless of context or the amount of results.
-
-=head2 RETURNAS_ARRAY
-
-Same as C<RETURNAS_LIST>
+Any order with this type could be purged from the database during cleanup at any
+time.
 
 =head1 EXPORT_TAGS
 
-The following C<%EXPORT_TAGS> are defined for C<Handel::Constants>. See
-L<Exporter> for further details on using export tags.
+The following C<%EXPORT_TAGS> are defined for Handel::Constants. See
+L<Exporter|Exporter> for further details on using export tags.
 
 =head2 :all
 
@@ -267,9 +266,14 @@ This exports all constants found in this module.
 
 This exports all C<CART_*> constants in this module.
 
-=head2 :returnas
+=head2 :checkout
 
-This exports all C<RETURNAS_*> constants in this module.
+This exports all C<CHECKOUT_*> constants in this module.
+
+
+=head2 :order
+
+This exports all C<ORDER_*> constants in this module.
 
 =head1 AUTHOR
 

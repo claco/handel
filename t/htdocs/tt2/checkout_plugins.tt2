@@ -2,7 +2,7 @@
 [% USE hcheckout = Handel.Checkout %]
 
 <body>
-	[% IF (checkout = hcheckout.create({pluginpaths => 'Handel::TestPlugins'})) %]
+	[% IF (checkout = hcheckout.new({pluginpaths => 'Handel::TestPlugins'})) %]
 		<plugins>
 			[% FOREACH plugin = checkout.plugins %]
 				<plugin>[% plugin.name %]</plugin>
@@ -10,7 +10,7 @@
 		</plugins>
 	[% END %]
 
-	[% IF (checkout = hcheckout.create({pluginpaths => 'Handel::OtherTestPlugins'})) %]
+	[% IF (checkout = hcheckout.new({pluginpaths => 'Handel::OtherTestPlugins'})) %]
 		<plugins>
 			[% FOREACH plugin = checkout.plugins %]
 				<plugin>[% plugin.name %]</plugin>
@@ -18,7 +18,7 @@
 		</plugins>
 	[% END %]
 
-	[% IF (checkout = hcheckout.create({pluginpaths => 'Handel::TestPlugins, Handel::OtherTestPlugins'})) %]
+	[% IF (checkout = hcheckout.new({pluginpaths => 'Handel::TestPlugins, Handel::OtherTestPlugins'})) %]
 		<plugins>
 			[% FOREACH plugin = checkout.plugins %]
 				<plugin>[% plugin.name %]</plugin>
@@ -26,7 +26,7 @@
 		</plugins>
 	[% END %]
 
-	[% IF (checkout = hcheckout.create({pluginpaths => 'Handel::TestPlugins, Handel::OtherTestPlugins, Handel::TestPipeline'})) %]
+	[% IF (checkout = hcheckout.new({pluginpaths => 'Handel::TestPlugins, Handel::OtherTestPlugins, Handel::TestPipeline'})) %]
 		<plugins>
 			[% FOREACH plugin = checkout.plugins %]
 				<plugin>[% plugin.name %]</plugin>
@@ -34,7 +34,7 @@
 		</plugins>
 	[% END %]
 
-	[% IF (checkout = hcheckout.create({
+	[% IF (checkout = hcheckout.new({
 		pluginpaths => 'Handel::TestPlugins, Handel::OtherTestPlugins, Handel::TestPipeline',
 		ignoreplugins => 'Handel::TestPipeline::ValidateError'
 	})) %]
@@ -46,7 +46,7 @@
 	[% END %]
 
 
-	[% IF (checkout = hcheckout.create({
+	[% IF (checkout = hcheckout.new({
 		pluginpaths => 'Handel::TestPlugins, Handel::OtherTestPlugins, Handel::TestPipeline',
 		loadplugins => 'Handel::TestPipeline::ValidateError'
 	})) %]
@@ -57,7 +57,7 @@
 		</plugins>
 	[% END %]
 
-	[% IF (checkout = hcheckout.create({
+	[% IF (checkout = hcheckout.new({
 		pluginpaths => 'Handel::TestPlugins, Handel::OtherTestPlugins, Handel::TestPipeline',
 		loadplugins => 'Handel::TestPipeline::WriteToStash, Handel::TestPipeline::ReadFromStash',
 		ignoreplugins => 'Handel::TestPipeline::WriteToStash'

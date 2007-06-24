@@ -2,7 +2,7 @@
 [% USE hcheckout = Handel.Checkout %]
 
 <body>
-	[% IF (checkout = hcheckout.create({
+	[% IF (checkout = hcheckout.new({
 		order => '11111111-1111-1111-1111-111111111111'
 	})) %]
 		[% IF (order = checkout.order) %]
@@ -26,10 +26,10 @@
 				<billtoemail>[% order.billtoemail %]</billtoemail>
 				<comments>[% order.comments %]</comments>
 				<created>[% order.created %]</created>
-				<handling>[% order.handling %]</handling>
+				<handling>[% order.handling.value %]</handling>
 				<number>[% order.number %]</number>
 				<shipmethod>[% order.shipmethod %]</shipmethod>
-				<shipping>[% order.shipping %]</shipping>
+				<shipping>[% order.shipping.value %]</shipping>
 				<shiptosameasbillto>[% order.shiptosameasbillto %]</shiptosameasbillto>
 				<shiptofirstname>[% order.shiptofirstname %]</shiptofirstname>
 				<shiptolastname>[% order.shiptolastname %]</shiptolastname>
@@ -44,18 +44,18 @@
 				<shiptonightphone>[% order.shiptonightphone %]</shiptonightphone>
 				<shiptofax>[% order.shiptofax %]</shiptofax>
 				<shiptoemail>[% order.shiptoemail %]</shiptoemail>
-				<subtotal>[% order.subtotal %]</subtotal>
-				<total>[% order.total %]</total>
-				<tax>[% order.tax %]</tax>
+				<subtotal>[% order.subtotal.value %]</subtotal>
+				<total>[% order.total.value %]</total>
+				<tax>[% order.tax.value %]</tax>
 				<updated>[% order.updated %]</updated>
-				[% FOREACH item = order.items.list %]
+				[% FOREACH item = order.items.all %]
 					<item>
 						<description>[% item.description %]</description>
 						<id>[% item.id %]</id>
-						<price>[% item.price %]</price>
+						<price>[% item.price.value %]</price>
 						<quantity>[% item.quantity %]</quantity>
 						<sku>[% item.sku %]</sku>
-						<total>[% item.total %]</total>
+						<total>[% item.total.value %]</total>
 					</item>
 				[% END %]
 			</order>

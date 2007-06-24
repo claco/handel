@@ -24,34 +24,34 @@
 		}) %]
 	[% END %]
 
-	[% IF (cart = hcart.fetch({
+	[% IF (cart = hcart.search({
 		type => hcart.CART_TYPE_TEMP,
 		id 	 => 'E516A609-1905-4C7B-AC82-C33D50DE7AB7'
-	})) %]
+	}).first) %]
 		<cart>
 			<count>[% cart.count %]</count>
 			<description>[% cart.description %]</description>
 			<id>[% cart.id %]</id>
 			<name>[% cart.name %]</name>
 			<shopper>[% cart.shopper %]</shopper>
-			<subtotal>[% cart.subtotal %]</subtotal>
+			<subtotal>[% cart.subtotal.value %]</subtotal>
 			<type>[% cart.type %]</type>
-			[% IF (items = cart.items(undef, hcart.RETURNAS_ARRAY)) %]
+			[% IF (items = cart.items.all) %]
 				<item>
 					<description>[% items.0.description %]</description>
 					<id>[% items.0.id %]</id>
-					<price>[% items.0.price %]</price>
+					<price>[% items.0.price.value %]</price>
 					<quantity>[% items.0.quantity %]</quantity>
 					<sku>[% items.0.sku %]</sku>
-					<total>[% items.0.total %]</total>
+					<total>[% items.0.total.value %]</total>
 				</item>
 				<item>
 					<description>[% items.1.description %]</description>
 					<id>[% items.1.id %]</id>
-					<price>[% items.1.price %]</price>
+					<price>[% items.1.price.value %]</price>
 					<quantity>[% items.1.quantity %]</quantity>
 					<sku>[% items.1.sku %]</sku>
-					<total>[% items.1.total %]</total>
+					<total>[% items.1.total.value %]</total>
 				</item>
 			[% END %]
 		</cart>

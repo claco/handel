@@ -1,0 +1,7 @@
+[%# $Id$ %]
+[% USE Handel.Constants %]
+[% USE hconstants = Handel.Constants %]
+<body>
+	<typesaved>[% hconstants.CART_TYPE_SAVED %]</typesaved>
+	<typesaved>[% Handel.Constants.CART_TYPE_SAVED %]</typesaved>
+</body>

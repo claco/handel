@@ -1,0 +1,109 @@
+=head1 NAME
+
+Handel::Manual::Intro - A quick introduction to the framework and its structure.
+
+=head1 DESCRIPTION
+
+The 1.x version of Handel is a major refactor from earlier versions. This refactor had two main goals:
+
+=over
+
+=item * Remove the load/items RETURN_AS API silliness
+
+=item * Allow interchangeable schemas to work with as many diverse cart/order schemas as possible.
+
+=back
+
+To facilitate the latter goal, the various cart/order/item classes are built using three distinct layers
+(from the bottom up): the Schema layer, the Storage layer, and the Interface (public API) layer.
+
+    +-----------------------+
+    |      Handel::Cart     |
+    +-----------------------+
+                |
+    +-----------V-----------+
+    | Handel::Storage::DBIC |
+    +-----------------------+
+                |
+    +-----------V-----------+
+    |    Handel::Schema     |
+    +-----------------------+
+
+The Schema layer is nothing more than a L<DBIx::Class::Schema|DBIx::Class::Schema>. It contains all of
+the table and column definitions for the various carts/orders/items and does the raw database reading/writing.
+
+The Storage layer is the glue between the schema and the interface. Its job is to examine the current schema
+and provide a consistent API for the interface layer to work with. This is the magic that allows Handel to
+work with schemas other than the default schema, and even other storage layers other than DBIC.
+
+The Interface layer is of course the top level Cart/Order/Item API that most classes and subclasses will use.
+
+=head2 WORKFLOW
+
+When one of the Cart/Order/Item classes are loaded for the first time, the storage layer is called upon to
+remember details about the schema specified and configure B<a copy> of it for future use. This is roughly:
+
+    package Handel::Cart;
+    use strict;
+    use warnings;
+    use base qw/Handel::Base/;
+    __PACKAGE__->storage_class('Handel::Storage::Cart');
+    ...
+    1;
+    
+    package Handel::Storage::Cart;
+    use strict
+    use warnings;
+    use base qw/Handel::Storage::DBIC/;
+    
+    __PACKAGE__->setup({
+        schema_class   => 'Handel::Cart::Schema',
+        schema_source  => 'Carts',
+        item_class     => 'Handel::Cart::Item',
+        constraints    => {
+            id         => {'Check Id'      => \&constraint_uuid},
+            shopper    => {'Check Shopper' => \&constraint_uuid},
+            type       => {'Check Type'    => \&constraint_cart_type},
+            name       => {'Check Name'    => \&constraint_cart_name}
+        },
+        default_values => {
+            id         => \&Handel::Storage::new_uuid,
+            type       => CART_TYPE_TEMP
+        }
+    });
+    ...
+    1;
+
+The first time the database needs to be accessed, storage will create a new schema instance, and return the
+appropriate schema result. This is roughly:
+
+    package Handel::Cart;
+    ...
+    sub create {
+        my $class = shift;
+        return bless{ result => $class-storage->create(shift) }, $class;
+    };
+    
+    package Handel::Storage;
+    ...
+    sub create {
+        my $self = shift;
+        my $dbresult = $self->schema_instance->resultset($self->schema_source)->create(shift);
+    
+        return $self->result_class->create_instance($dbresult);
+    };
+
+From that point on, the schema is connected to the database and remains alive for the life of the Interface
+layer. Each subclass gets its own storage container to share among all of its instances, and each instance
+can even have its own unique storage layer as long as it provides the same columns to the interface layer.
+
+=head1 SEE ALSO
+
+L<Handel::Manual::Schema>, L<Handel::Manual::Storage>, L<Handel::Manual::Storage::DBIC>
+
+=head1 AUTHOR
+
+    Christopher H. Laco
+    CPAN ID: CLACO
+    claco@chrislaco.com
+    http://today.icantfocus.com/blog/

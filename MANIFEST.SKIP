@@ -2,6 +2,7 @@
 \bCVS\b
 ,v$
 \B\.svn\b
+\B\.tws\b
 ^blib/
 ^pm_to_blib
 ^MakeMaker-\d

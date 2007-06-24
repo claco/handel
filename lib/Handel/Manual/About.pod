@@ -1,0 +1,144 @@
+=head1 NAME
+
+Handel::Manual::About - A few words about the Handel Framework.
+
+=head1 DESCRIPTION
+
+Handel is a cart/order/checkout framework with L<AxKit|AxKit> taglib
+support , TT2 (Template Toolkit) support and L<Catalyst::Helper|Catalyst::Helper> support. It was created
+for the conversion of an IIS/ASP based commerce site to Apache/ModPerl, but I decided that it might be
+useful to others so here it is.
+
+For the curious, Handel is German for commerce.
+
+=head1 WEBSITE
+
+You can get the latest news, source, documentation and wiki help at
+http://handelframework.com/.
+
+=head1 SOURCE
+
+You can browse the latest source code at L<http://handelframework.com/source/>, or get the latest version
+of the source code from the Handel subversion repository at
+L<http://svn.handelframework.com/CPAN/Handel/>.
+
+=head1 MAILING LIST
+
+Join the mailing list at
+L<http://lists.rawmode.org/cgi-bin/mailman/listinfo/handel>. Big thanks to
+gabb@#catalyst for the list space.
+
+=head1 IRC
+
+I can be found most nights on IRC in the following channels:
+
+    claco@#handel@irc.perl.org 
+    claco@#dbix-class@irc.perl.org 
+    claco@#catalyst@irc.perl.org 
+
+=head1 PHILOSOPHY
+
+The Handel philosophy is to provide a framework of reusable parts and not an entire solution. No two shopping
+carts or checkout processes are alike so it's impossible to create The One Great Solution.
+
+Handel is built in layers, each of which should and can be reusable on their own. The storage layer deals
+with mapping generic actions like adding items, creating carts, etc  to specific storage mechanisms like
+DBIC, DBI, XML, etc. The interface classes, like Handel::Cart, take care of providing one possible public
+API for consuming the storage layer classes.
+
+=head1 GOALS
+
+=head2 Database Agnostic
+
+Thanks to DBIx::Class and a general avoidance of auto incrementing ids, Handel should run in any database
+that DBIx::Class supports.
+
+=head2 Schema Agnostic
+
+The default schema isn't enough for everyone. Some have existing schemas in place, and some just need to
+add a field or two. Handel aims to have the ability to use as many disparate schema configurations as
+possible through a storage layer to abstract schema access without hardcoding specifics in the top level
+Cart/Order/Item classes.
+
+=head2 Implementation Agnostic
+
+Handel should be able to be used from the command line, from a web page, from a SOAP service, or from
+a GUI application. It's simply a data access mechanism. Any interaction with forms, web pages, browsers,
+cookies, etc is the responsibility of the consumer/programmer.
+
+=head2 Checkout Agnostic
+
+A checkout process means different things to different people in different situations. The Handel checkout
+pipeline by itself does absolutely nothing with an order. Instead, it's a plugin manager that allows you to
+specify and build plugins to do various actions (payment authorization, address validation, fax delivery, etc).
+Each site, server, page, even process() call can have its own unique order processing pipeline.
+
+=head2 Easy Integration
+
+Handel aims to provide as much glue as possible for existing application and page templating systems.
+
+=head1 FEATURES
+
+=head2 Basic Add/Edit/Delete/Save/Restore Cart Operations
+
+What cart would be complete without the usual operations: add, update, delete, save, and restore.
+
+=head2 Plugin Based Order Processing Pipeline
+
+With just a few lines of code, you can utilize the power of CPAN to add address validation, credit card
+authorization, or even email confirmations to your checkout process. With a building block style order
+processing pipeline, your checkout process can be as easy or as complex as you need it to be.
+
+=head2 Runs On Any Database
+
+Handel runs on any database that DBIx::Class supports. That list includes, but is not limited to
+SQLite, MySQL, Postgres, DB2, MSSQL, and Oracle. In theory, it should also work and any generic DBI
+driver that can handle table relations and join statements.
+
+=head2 Currency Conversion and Formatting
+
+Handel includes support for currency conversion and formatting on all currency related fields.
+
+=head2 Highly Customizable
+
+Choose your level of dragons. You can use the default schema, adding column or two, or go full tilt and use
+a completely different schema.
+
+=head2 Easy Integration with Catalyst
+
+Handel includes Catalyst::Helper modules to make adding Handel functionality into a Catalyst website as
+easy as possible.
+
+=head2 Easy Integration with AxKit
+
+Handel includes basic Cart/Order/Checkout taglibs for use inside of AxKit XSP pages.
+
+=head2 Easy Integration with Template Toolkit
+
+Handel includes Cart/Order/Checkout plugins for those who use Template Toolkit as their page language of
+choice.
+
+=head1 WHAT HANDEL IS
+
+Handel is a framework to enable simple cart and order record maintenance with a plugin based checkout
+process.
+
+=head1 WHAT HANDEL ISN'T
+
+Handel is not Intershop, Cart32, WebGUI, a CMS or a complete web commerce packageB<(1)>.
+
+B<(1)> While it is not a complete web based commerce system, I do plan on having feature complete
+working demos sites so people can still quick-start their own projects. There is also a Catalyst/Handel
+commerce project in the works called Mango.
+
+=head1 MAD PROPAGE
+
+I big shout at to the DBix::Class folk for all the support. Without the flexibility that DBIx::Class provides,
+Handel would be a much less flexible.
+
+=head1 AUTHOR
+
+    Christopher H. Laco
+    CPAN ID: CLACO
+    claco@chrislaco.com
+    http://today.icantfocus.com/blog/

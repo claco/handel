@@ -1,0 +1,32 @@
+=head1 NAME
+
+Handel::Manual::KnownIssues - Known issues when working with Handel.
+
+=head1 DESCRIPTION
+
+This is a list of know issues and problems when working with Handel.
+
+=head1 ISSUES
+
+=head2 Misspelled currency name
+
+=head3 Problem
+
+When using the currency C<format> or C<name> methods for Canadian currency, the name is returned as
+I<Candian> instead of I<Canadian>.
+
+=head3 Resolution
+
+Update your Locale::Currency module, which is part of the perl core modules and Locale::Codes dist on
+CPAN. Unfortunately, there appears to be some version number games going on between CVS revision
+numbers and perl module numbers and CPAN version numbers.
+
+In CPAN world, version 2.07 has the spelling correction installed. You may have to install over your core
+version to fix the issue, depending on what your @INC looks like.
+
+=head1 AUTHOR
+
+    Christopher H. Laco
+    CPAN ID: CLACO
+    claco@chrislaco.com
+    http://today.icantfocus.com/blog/

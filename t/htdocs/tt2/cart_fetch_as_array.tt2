@@ -1,14 +1,14 @@
 [%# $Id$ %]
 [% USE hcart  = Handel.Cart %]
 <body>
-    [% IF (cart = hcart.fetch(undef, hcart.RETURNAS_ARRAY)) %]
+    [% IF (cart = hcart.search.all) %]
 		<cart>
 			<count>[% cart.0.count %]</count>
 			<description>[% cart.0.description %]</description>
 			<id>[% cart.0.id %]</id>
 			<name>[% cart.0.name %]</name>
 			<shopper>[% cart.0.shopper %]</shopper>
-			<subtotal>[% cart.0.subtotal %]</subtotal>
+			<subtotal>[% cart.0.subtotal.value %]</subtotal>
 			<type>[% cart.0.type %]</type>
 		</cart>
 		<cart>
@@ -17,7 +17,7 @@
 			<id>[% cart.1.id %]</id>
 			<name>[% cart.1.name %]</name>
 			<shopper>[% cart.1.shopper %]</shopper>
-			<subtotal>[% cart.1.subtotal %]</subtotal>
+			<subtotal>[% cart.1.subtotal.value %]</subtotal>
 			<type>[% cart.1.type %]</type>
 		</cart>
 	[% ELSE %]

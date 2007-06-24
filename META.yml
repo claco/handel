@@ -1,39 +1,64 @@
 --- #YAML:1.0
 name: Handel
-abstract: Simple commerce framework with AxKit/TT/Catalyst support
+abstract: A cart/order/checkout framework with AxKit/TT/Catalyst support
 author: Christopher H. Laco <claco@chrislaco.com>
-version: 0.33
+version: 1.00000
 version_from: lib/Handel.pm
 installdirs: site
 license: perl
 requires:
-  Class::DBI: 0.96
-  Class::Data::Inheritable: 0
-  DBI: 1.36
+  DBIx::Class: 0.08000
+  DBIx::Class::UUIDColumns: 0.01
+  DBIx::Class::Validation: 0.01001
+  Data::Currency: 0.03
+  Class::Accessor::Grouped: 0.03
+  Class::ISA: 0
+  Class::Inspector: 0
+  Clone: 0
   Error: 0.14
   Locale::Maketext: 1.06
-  Module::Pluggable: 2.95
-  version: 0
-build_requires:
-  Test::More: 0.48
-recommends:
-  AxKit: 1.61
-  Catalyst: 5.5
-  Class::DBI: 3.0.12
-  Data::FormValidator: 4.00
-  HTML::FillInForm: 1.04
-  Finance-Currency-Convert-WebserviceX: 0.03
+  Module::Pluggable: 3.1
+  Scalar::Util: 0
+  Tie::Hash: 0
+  DateTime: 0
+  DateTime::Format::MySQL: 0
   Locale::Currency::Format: 1.22
   Locale::Currency: 2.07
+  Finance::Currency::Convert::WebserviceX: 0.03
+  FormValidator::Simple: 0.17
+  NEXT: 0
+  FileHandle: 0,
+  File::Spec::Functions: 0
+  File::Path: 0
+  Module::Starter: 1.42
+  SQL::Translator: 0.08
+  Getopt::Long: 0
+  Pod::Usage: 0
+  DBD::SQLite: 0
+build_requires:
+  Test::More: 0.61
+recommends:
+  AxKit: 1.61
+  Catalyst::Runtime: 5.7001
+  Catalyst::Devel: 1.0
+  HTML::FillInForm: 1.04
   Pod::Coverage: 0.14
   Template: 2.14
+  YAML: 0.58
   Test::Pod: 1.00
   Test::Pod::Coverage: 1.04
   Test:Strict: 0.05
   Test::Spelling: 0.10
+  Test::NoTabs: 0.01
+  Test::Perl::Critic: 0.07
+  Test::CheckManifest: 0.07
+  Test::MockObject: 1.07
 no_index:
   directory:
     - demo
     - sql
 distribution_type: module
 generated_by: ExtUtils::MakeMaker version 6.17
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.2.html
+  version: 1.2

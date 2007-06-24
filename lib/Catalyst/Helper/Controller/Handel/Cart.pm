@@ -1,702 +1,14 @@
 # $Id$
+## no critic (ProhibitCaptureWithoutTest)
 package Catalyst::Helper::Controller::Handel::Cart;
 use strict;
 use warnings;
-use Path::Class;
-use Catalyst 5.56;
-
-sub mk_compclass {
-    my ($self, $helper, $model, $checkout) = @_;
-    my $file = $helper->{'file'};
-    my $dir  = dir($helper->{'base'}, 'root', $helper->{'uri'});
-
-    $model     ||= 'Cart';
-    $checkout  ||= 'Checkout';
-
-    $model = $model =~ /^(.*::M(odel)?::)?(.*)$/i ? $3 : 'Cart';
-    $helper->{'model'} = $model;
-
-    my $couri = $checkout =~ /^(.*::C(ontroller)?::)?(.*)$/i ? lc($3) : 'checkout';
-    $couri =~ s/::/\//g;
-    $helper->{'couri'} = $couri;
-
-    $helper->mk_dir($dir);
-    $helper->render_file('controller', $file);
-    $helper->render_file('view', file($dir, 'view.tt'));
-    $helper->render_file('list', file($dir, 'list.tt'));
-};
-
-sub mk_comptest {
-    my ($self, $helper) = @_;
-    my $test = $helper->{'test'};
-
-    $helper->render_file('test', $test);
-};
-
-1;
-__DATA__
-__controller__
-package [% class %];
-use strict;
-use warnings;
-use Handel::Constants qw(:returnas :cart);
-use Data::FormValidator 4.00;
-use base 'Catalyst::Base';
-
-our $DFV;
-
-# Until this patch [hopefully] get's dumped into DFV 4.03, I've inlined the msgs
-# method below with the following path applied to it:
-#
-#--- Results.pm.orig Wed Aug 31 22:27:27 2005
-#+++ Results.pm  Wed Sep 14 17:40:28 2005
-#@@ -584,7 +584,9 @@
-#    if ($self->has_missing) {
-#        my $missing = $self->missing;
-#        for my $m (@$missing) {
-#-           $msgs{$m} = _error_msg_fmt($profile{format},$profile{missing});
-#+            $msgs{$m} = _error_msg_fmt($profile{format},
-#+                (ref $profile{missing} eq 'HASH' ?
-#+                    ($profile{missing}->{$m} || $profile{missing}->{default} || 'Missing') : $profile{missing}));
-#        }
-#    }
 
 BEGIN {
-    eval 'use Data::FormValidator 4.00';
-    if (!$@) {
-        #############################################################
-        # This is here until the patch makes it to release
-        #############################################################
-        no warnings 'redefine';
-        sub Data::FormValidator::Results::msgs {
-            my $self = shift;
-            my $controls = shift || {};
-            if (defined $controls and ref $controls ne 'HASH') {
-                die "$0: parameter passed to msgs must be a hash ref";
-            }
-
-
-            # Allow msgs to be called more than one to accumulate error messages
-            $self->{msgs} ||= {};
-            $self->{profile}{msgs} ||= {};
-            $self->{msgs} = { %{ $self->{msgs} }, %$controls };
-
-            # Legacy typo support.
-            for my $href ($self->{msgs}, $self->{profile}{msgs}) {
-                if (
-                     (not defined $href->{invalid_separator})
-                     &&  (defined $href->{invalid_seperator})
-                 ) {
-                    $href->{invalid_separator} = $href->{invalid_seperator};
-                }
-            }
-
-            my %profile = (
-                prefix  => '',
-                missing => 'Missing',
-                invalid => 'Invalid',
-                invalid_separator => ' ',
-
-                format  => '<span style="color:red;font-weight:bold"><span class="dfv_errors">* %s</span></span>',
-                %{ $self->{msgs} },
-                %{ $self->{profile}{msgs} },
-            );
-
-
-            my %msgs = ();
-
-            # Add invalid messages to hash
-                #  look at all the constraints, look up their messages (or provide a default)
-                #  add field + formatted constraint message to hash
-            if ($self->has_invalid) {
-                my $invalid = $self->invalid;
-                for my $i ( keys %$invalid ) {
-                    $msgs{$i} = join $profile{invalid_separator}, map {
-                        Data::FormValidator::Results::_error_msg_fmt($profile{format},($profile{constraints}{$_} || $profile{invalid}))
-                        } @{ $invalid->{$i} };
-                }
-            }
-
-            # Add missing messages, if any
-            if ($self->has_missing) {
-                my $missing = $self->missing;
-                for my $m (@$missing) {
-                    $msgs{$m} = Data::FormValidator::Results::_error_msg_fmt($profile{format},
-                      (ref $profile{missing} eq 'HASH' ?
-                          ($profile{missing}->{$m} || $profile{missing}->{default} || 'Missing') : $profile{missing}));
-                }
-            }
-
-            my $msgs_ref = Data::FormValidator::Results::prefix_hash($profile{prefix},\%msgs);
-
-            $msgs_ref->{ $profile{any_errors} } = 1 if defined $profile{any_errors};
-
-            return $msgs_ref;
-        }
-        #############################################################
-
-        $DFV = Data::FormValidator->new({
-            cart_add => {
-                required => [qw/sku quantity/],
-                optional => [qw/price description/],
-                field_filters => {
-                    sku         => ['trim'],
-                    quantity    => ['pos_integer'],
-                    price       => ['pos_decimal'],
-                    description => ['trim']
-                },
-                msgs => {
-                    missing => {
-                        default  => 'Field is blank!',
-                        sku      => 'The SKU field is required',
-                        quantity => 'The quantity field is required and must be a positive number'
-                    },
-                    format => '%s'
-                }
-            },
-            cart_update => {
-                required      => [qw/id quantity/],
-                field_filters => {
-                    id       => ['trim'],
-                    quantity => ['pos_integer']
-                },
-                msgs => {
-                    missing => {
-                        default  => 'Field is blank!',
-                        id       => 'The Id field is required for updating a cart item',
-                        quantity => 'The quantity field is required and must be a positive number'
-                    },
-                    format => '%s'
-                }
-            },
-            cart_delete => {
-                required => ['id'],
-                field_filters => {
-                    id => ['trim']
-                },
-                msgs => {
-                    missing => {
-                        id => 'The Id field is required for delete a cart item'
-                    },
-                    format => '%s'
-                }
-            },
-            cart_save => {
-                required => [qw/name/],
-                field_filters => {
-                    name => ['trim']
-                },
-                msgs => {
-                    missing => {
-                        default => 'Field is blank',
-                        name    => 'The Name field is required to save a cart'
-                    },
-                    format => '%s'
-                }
-            },
-            cart_restore => {
-                required => [qw/id mode/],
-                field_filters => {
-                    id   => ['trim'],
-                    mode => ['digit']
-                },
-                msgs => {
-                    missing => {
-                        default => 'Field is blank',
-                        id      => 'The id field is required for restoring saved cartds',
-                        mode    => 'The mode field is required for restoring saved carts'
-                    },
-                    format => '%s'
-                }
-            },
-            cart_destroy => {
-                required => ['id'],
-                field_filters => {
-                    id => ['trim']
-                },
-                msgs => {
-                    missing => {
-                        id => 'The Id field is required for deleting saved carts'
-                    },
-                    format => '%s'
-                }
-            },
-        });
-    };
+    use Catalyst 5.7001;
+    use Catalyst::Utils;
+    use Path::Class;
 };
-
-sub begin : Private {
-    my ($self, $c) = @_;
-
-    if (!$c->req->cookie('shopperid')) {
-        $c->stash->{'shopperid'} = $c->model('[% model %]')->uuid;
-        $c->res->cookies->{'shopperid'} = {value => $c->stash->{'shopperid'}, path => '/'};
-
-        $c->stash->{'cart'} = $c->model('[% model %]')->new({
-            shopper => $c->stash->{'shopperid'},
-            type    => CART_TYPE_TEMP
-        });
-    } else {
-        $c->stash->{'shopperid'} = $c->req->cookie('shopperid')->value;
-
-        $c->stash->{'cart'} = $c->model('[% model %]')->load({
-            shopper => $c->stash->{'shopperid'},
-            type    => CART_TYPE_TEMP
-        }, RETURNAS_ITERATOR)->first;
-
-        if (!$c->stash->{'cart'}) {
-            $c->stash->{'cart'} = $c->model('[% model %]')->new({
-                shopper => $c->stash->{'shopperid'},
-                type    => CART_TYPE_TEMP
-            });
-        };
-    };
-};
-
-sub end : Private {
-    my ($self, $c) = @_;
-
-    $c->forward($c->view('TT'))
-        unless ( $c->res->output || $c->res->body || ! $c->stash->{template} );
-};
-
-sub default : Private {
-    my ($self, $c) = @_;
-
-    $c->forward('view');
-};
-
-sub view : Local {
-    my ($self, $c) = @_;
-
-    $c->stash->{'template'} = '[% uri.replace('^/', '') %]/view.tt';
-};
-
-sub add : Local {
-    my ($self, $c) = @_;
-    my @messages;
-    my $sku         = $c->request->param('sku');
-    my $quantity    = $c->request->param('quantity');
-    my $price       = $c->request->param('price');
-    my $description = $c->request->param('description');
-
-    if ($c->req->method eq 'POST') {
-        my $results;
-
-        if ($DFV) {
-            $results = $DFV->check($c->req->parameters, 'cart_add');
-        };
-
-        if ($results || !$DFV) {
-            if ($results) {
-                $sku         = $results->valid('sku');
-                $quantity    = $results->valid('quantity');
-                $price       = $results->valid('price');
-                $description = $results->valid('description');
-            };
-
-            $quantity ||= 1;
-
-            eval {
-                $c->stash->{'cart'}->add({
-                    sku         => $sku,
-                    quantity    => $quantity,
-                    price       => $price,
-                    description => $description
-                });
-            };
-            if ($@) {
-                push @messages, $@;
-            };
-        } else {
-            push @messages, map {$_} values %{$results->msgs};
-        };
-    };
-
-    if (scalar @messages) {
-        $c->stash->{'template'} = '[% uri.replace('^/', '') %]/view.tt';
-        $c->stash->{'messages'} = \@messages;
-    } else {
-        $c->res->redirect($c->req->base . '[% uri.replace('^/', '') %]/');
-    };
-};
-
-sub update : Local {
-    my ($self, $c) = @_;
-    my @messages;
-    my $id       = $c->request->param('id');
-    my $quantity = $c->request->param('quantity');
-
-    if ($c->req->method eq 'POST') {
-        my $results;
-
-        if ($DFV) {
-            $results = $DFV->check($c->req->parameters, 'cart_update');
-        };
-
-        if ($results || !$DFV) {
-            if ($results) {
-                $id       = $results->valid('id');
-                $quantity = $results->valid('quantity');
-            };
-
-            $quantity ||= 1;
-
-            my $item = $c->stash->{'cart'}->items({
-                id => $id
-            });
-
-            eval {
-                if ($item) {
-                    $item->quantity($quantity);
-                };
-            };
-            if ($@) {
-                push @messages, $@;
-            };
-
-            undef $item;
-        } else {
-            push @messages, map {$_} values %{$results->msgs};
-        };
-    };
-
-    if (scalar @messages) {
-        $c->stash->{'template'} = '[% uri.replace('^/', '') %]/view.tt';
-        $c->stash->{'messages'} = \@messages;
-    } else {
-        $c->res->redirect($c->req->base . '[% uri.replace('^/', '') %]/');
-    };
-};
-
-sub clear : Local {
-    my ($self, $c) = @_;
-    my @messages;
-
-    if ($c->req->method eq 'POST') {
-        eval {
-            $c->stash->{'cart'}->clear;
-        };
-        if ($@) {
-            push @messages, $@;
-        };
-    };
-
-    if (scalar @messages) {
-        $c->stash->{'template'} = '[% uri.replace('^/', '') %]/view.tt';
-        $c->stash->{'messages'} = \@messages;
-    } else {
-        $c->res->redirect($c->req->base . '[% uri.replace('^/', '') %]/');
-    };
-};
-
-sub delete : Local {
-    my ($self, $c) = @_;
-    my @messages;
-    my $id = $c->request->param('id');
-
-    if ($c->req->method eq 'POST') {
-        my $results;
-
-        if ($DFV) {
-            $results = $DFV->check($c->req->parameters, 'cart_delete');
-        };
-
-        if ($results || !$DFV) {
-            if ($results) {
-                $id       = $results->valid('id');
-            };
-
-            eval {
-                $c->stash->{'cart'}->delete({
-                    id => $id
-                });
-            };
-            if ($@) {
-                push @messages, $@;
-            };
-        } else {
-            push @messages, map {$_} values %{$results->msgs};
-        };
-    };
-
-    if (scalar @messages) {
-        $c->stash->{'template'} = '[% uri.replace('^/', '') %]/view.tt';
-        $c->stash->{'messages'} = \@messages;
-    } else {
-        $c->res->redirect($c->req->base . '[% uri.replace('^/', '') %]/');
-    };
-};
-
-sub empty : Local {
-    my ($self, $c) = @_;
-
-    $c->forward('clear');
-};
-
-sub list : Local {
-    my ($self, $c) = @_;
-    my @messages;
-
-    eval {
-        $c->stash->{'carts'} = $c->model('[% model %]')->load({
-            shopper => $c->stash->{'shopperid'},
-            type    => CART_TYPE_SAVED
-        }, RETURNAS_ITERATOR);
-    };
-    if ($@) {
-        push @messages, $@;
-
-        $c->stash->{'messages'} = \@messages;
-    };
-
-    $c->stash->{'template'} = '[% uri.replace('^/', '') %]/list.tt';
-};
-
-sub save : Local {
-    my ($self, $c) = @_;
-    my @messages;
-    my $name = $c->req->param('name');
-
-    if ($c->req->method eq 'POST') {
-        my $results;
-
-        if ($DFV) {
-            $results = $DFV->check($c->req->parameters, 'cart_save');
-        };
-
-        if ($results || !$DFV) {
-            if ($results) {
-                $name = $results->valid('name');
-            };
-
-            eval {
-                $c->stash->{'cart'}->name($name);
-                $c->stash->{'cart'}->save;
-            };
-            if ($@) {
-                push @messages, $@;
-            };
-
-        } else {
-            push @messages, map {$_} values %{$results->msgs};
-        };
-    };
-
-    if (scalar @messages) {
-        $c->stash->{'template'} = '[% uri.replace('^/', '') %]/view.tt';
-        $c->stash->{'messages'} = \@messages;
-    } else {
-        $c->res->redirect($c->req->base . '[% uri.replace('^/', '') %]/');
-    };
-};
-
-sub restore : Local {
-    my ($self, $c) = @_;
-    my @messages;
-    my $id   = $c->req->param('id');
-    my $mode = $c->req->param('mode') || CART_MODE_APPEND;
-
-    if ($c->req->method eq 'POST') {
-        my $results;
-
-        if ($DFV) {
-            $results = $DFV->check($c->req->parameters, 'cart_restore');
-        };
-
-        if ($results || !$DFV) {
-            if ($results) {
-                $id   = $results->valid('id');
-                $mode = $results->valid('mode');
-            };
-
-            eval {
-                $c->stash->{'cart'}->restore({id => $id}, $mode);
-            };
-            if ($@) {
-                push @messages, $@;
-            };
-
-            $c->res->redirect($c->req->base . '[% uri.replace('^/', '') %]/');
-        } else {
-            push @messages, map {$_} values %{$results->msgs};
-        };
-    };
-
-    if (scalar @messages) {
-        $c->stash->{'messages'} = \@messages;
-        $c->forward('list');
-    } else {
-        $c->res->redirect($c->req->base . '[% uri.replace('^/', '') %]/');
-    };
-};
-
-sub destroy : Local {
-    my ($self, $c) = @_;
-    my @messages;
-    my $id = $c->req->param('id');
-
-    if ($c->req->method eq 'POST') {
-        my $results;
-
-        if ($DFV) {
-            $results = $DFV->check($c->req->parameters, 'cart_destroy');
-        };
-
-        if ($results || !$DFV) {
-            if ($results) {
-                $id   = $results->valid('id');
-            };
-
-            eval {
-                $c->model('[% model %]')->destroy({
-                    id => $id
-                });
-            };
-            if ($@) {
-                push @messages, $@;
-            };
-        } else {
-            push @messages, map {$_} values %{$results->msgs};
-        };
-    };
-
-    if (scalar @messages) {
-        $c->stash->{'messages'} = \@messages;
-        $c->forward('list');
-    } else {
-        $c->res->redirect($c->req->base . '[% uri.replace('^/', '') %]/list/');
-    };
-};
-
-1;
-__test__
-use Test::More tests => 2;
-use strict;
-use warnings;
-
-use_ok('Catalyst::Test', '[% app %]');
-use_ok('[% class %]');
-__view__
-[% TAGS [- -] %]
-[% USE HTML %]
-<h1>Your Shopping Cart</h1>
-<p>
-    <a href="[% base _ '[- uri.replace('^/', '') -]/' %]">View Cart</a> |
-    <a href="[% base _ '[- uri.replace('^/', '') -]/list/' %]">View Saved Carts</a>
-</p>
-[% IF messages %]
-    <ul>
-        [% FOREACH message IN messages %]
-            <li>[% message %]</li>
-        [% END %]
-    </ul>
-[% END %]
-[% IF cart.count %]
-    <table border="0" cellpadding="3" cellspacing="5">
-        <tr>
-            <th align="left">SKU</th>
-            <th align="left">Description</th>
-            <th align="right">Price</th>
-            <th align="center">Quantity</th>
-            <th align="right">Total</th>
-            <th colspan="2"></th>
-        </tr>
-    [% FOREACH item = cart.items %]
-        <tr>
-            <form action="[% base _ '[- uri.replace('^/', '') -]/update/' %]" method="post">
-                <input type="hidden" name="id" value="[% HTML.escape(item.id) %]">
-                <td align="left">[% HTML.escape(item.sku) %]</td>
-                <td align="left">[% HTML.escape(item.description) %]</td>
-                <td align="right">[% HTML.escape(item.price.format(undef, 'FMT_SYMBOL')) %]</td>
-                <td align="center"><input style="text-align: center;" type="text" size="3" name="quantity" value="[% HTML.escape(item.quantity) %]"></td>
-                <td align="right">[% HTML.escape(item.total.format(undef, 'FMT_SYMBOL')) %]</td>
-                <td><input type="submit" value="Update"></td>
-            </form>
-            <form action="[% base _ '[- uri.replace('^/', '') -]/delete/' %]" method="post">
-                <input type="hidden" name="id" value="[% HTML.escape(item.id) %]">
-                <td>
-                    <input type="submit" value="Delete">
-                </td>
-            </form>
-        </tr>
-    [% END %]
-        <tr>
-            <td colspan="7" height="20"></td>
-        </tr>
-        <tr>
-            <th colspan="4" align="right">Subtotal:</th>
-            <td align="right">[% HTML.escape(cart.subtotal.format(undef, 'FMT_SYMBOL')) %]</td>
-            <td colspan="2"></td>
-        </tr>
-        <tr>
-            <td colspan="7" align="right">
-                <form action="[% base _ '[- uri.replace('^/', '') -]/empty/' %]" method="post">
-                    <input type="submit" value="Empty Cart">
-                </form>
-                <form action="[% base  _ '[- couri.replace('^/', '') -]/' %]" method="get">
-                    <input type="submit" value="Checkout">
-                </form>
-            </td>
-        </tr>
-    </table>
-    <form action="[% base _ '[- uri.replace('^/', '') -]/save/' %]" method="post">
-        <input type="text" name="name">
-        <input type="submit" value="Save Cart">
-    </form>
-[% ELSE %]
-    <p>Your shopping cart is empty.</p>
-[% END %]
-__list__
-[% TAGS [- -] %]
-[% USE HTML %]
-<h1>Your Saved Shopping Carts</h1>
-<p>
-    <a href="[% base _ '[- uri.replace('^/', '') -]/' %]">View Cart</a> |
-    <a href="[% base _ '[- uri.replace('^/', '') -]/list/' %]">View Saved Carts</a>
-</p>
-[% IF messages %]
-    <ul>
-        [% FOREACH message IN messages %]
-            <li>[% message %]</li>
-        [% END %]
-    </ul>
-[% END %]
-[% IF carts.count %]
-    <table border="0" cellpadding="3" cellspacing="5">
-        <tr>
-            <th align="left">Name</th>
-            <th align="right">Restore Mode</th>
-            <th></th>
-        </tr>
-    [% WHILE (cart = carts.next) %]
-        <tr>
-            <td align="left" valign="top">[% HTML.escape(cart.name) %]</td>
-            <td>
-                <form action="[% base _ '[- uri.replace('^/', '') -]/restore/' %]" method="POST">
-                    <input type="hidden" name="id" value="[% HTML.escape(cart.id) %]">
-                    <select name="mode">
-                        [% USE hc = Handel.Constants %]
-                        <option value="[% HTML.escape(hc.CART_MODE_APPEND) %]">Append</option>
-                        <option value="[% HTML.escape(hc.CART_MODE_MERGE) %]">Merge</option>
-                        <option value="[% HTML.escape(hc.CART_MODE_REPLACE) %]">Replace</option>
-                    </select>
-                    <input type="submit" value="Restore Cart">
-                </form>
-            </td>
-            <td>
-                <form action="[% base _ '[- uri.replace('^/', '') -]/destroy/' %]" method="POST">
-                    <input type="hidden" name="id" value="[% HTML.escape(cart.id) %]">
-                    <input type="submit" value="Delete">
-                </form>
-            </td>
-        </tr>
-    [% END %]
-    </table>
-[% ELSE %]
-    <p>You have no saved shopping carts.</p>
-[% END %]
-__END__
 
 =head1 NAME
 
@@ -725,13 +37,7 @@ qualified package name:
 In all three cases everything before M{odel)|C(ontroller) will be stripped and the class CartModel
 will be used.
 
-By default, the code generated by this helper requires Data::FormValidator 4.00 or greater
-to be installed for it's form validation. If you don't want to install Data::FormValidator,
-simply comment out this line in the generated controller class:
-
-    use Data::FormValidator 4.00;
-
-The code is designed to work without Data::FormValidator 4.00 installed.
+B<The code generated by this helper requires FormValidator::Simple and YAML to be installed to operate.>
 
 =head1 METHODS
 
@@ -739,9 +45,56 @@ The code is designed to work without Data::FormValidator 4.00 installed.
 
 Makes a Handel::Cart Controller class and template files for you.
 
+=cut
+
+sub mk_compclass {
+    my ($self, $helper, $model, $checkout) = @_;
+    my $file = $helper->{'file'};
+    my $dir  = dir($helper->{'base'}, 'root', $helper->{'uri'});
+
+    $model     ||= 'Cart';
+    $checkout  ||= 'Checkout';
+
+    $model =~ /^(.*::M(odel)?::)?(.*)$/i;
+    $model = $3 ? $3 : 'Cart';
+    $helper->{'model'} = $model;
+
+    $checkout =~ /^(.*::C(ontroller)?::)?(.*)$/i;
+    my $couri = $3 ? lc($3) : 'checkout';
+    $couri =~ s/::/\//g;
+    $helper->{'couri'} = $couri;
+
+
+    $helper->{'action'} = Catalyst::Utils::class2prefix($helper->{'class'});
+
+    $helper->mk_dir($dir);
+    $helper->render_file('controller', $file);
+
+    $helper->render_file('default', file($dir, 'default'));
+    $helper->render_file('list', file($dir, 'list'));
+    $helper->render_file('errors', file($dir, 'errors'));
+    $helper->render_file('profiles', file($dir, 'profiles.yml'));
+    $helper->render_file('messages', file($dir, 'messages.yml'));
+
+    $helper->render_file('products', file($helper->{'base'}, 'root', 'static', 'products.htm'));
+
+    return 1;
+};
+
 =head2 mk_comptest
 
 Makes a Handel::Cart Controller test for you.
+
+=cut
+
+sub mk_comptest {
+    my ($self, $helper) = @_;
+    my $test = $helper->{'test'};
+
+    $helper->render_file('test', $test);
+
+    return 1;
+};
 
 =head1 SEE ALSO
 
@@ -753,3 +106,645 @@ L<Catalyst::Manual>, L<Catalyst::Helper>, L<Handel::Cart>
     CPAN ID: CLACO
     claco@chrislaco.com
     http://today.icantfocus.com/blog/
+
+=cut
+
+1;
+__DATA__
+
+=begin pod_to_ignore
+
+__controller__
+package [% class %];
+use strict;
+use warnings;
+
+BEGIN {
+    use base qw/Catalyst::Controller/;
+    use Handel::Constants qw/:cart/;
+    use FormValidator::Simple 0.17;
+    use YAML;
+};
+
+=head1 NAME
+
+[% class %] - Catalyst Controller
+
+=head1 DESCRIPTION
+
+Catalyst Controller.
+
+=head1 METHODS
+
+=head2 COMPONENT
+
+=cut
+
+sub COMPONENT {
+    my $self = shift->NEXT::COMPONENT(@_);
+
+    $self->{'validator'} = FormValidator::Simple->new;
+    $self->{'validator'}->set_messages(
+        $_[0]->path_to('root', '[% action %]', 'messages.yml')
+    );
+
+    $self->{'profiles'} = YAML::LoadFile($_[0]->path_to('root', '[% action %]', 'profiles.yml'));
+
+    return $self;
+};
+
+=head2 default 
+
+Default action when browsing to [% uri %]/. If no session exists, or the shopper
+id isn't set, no cart will be loaded. This keeps non-shoppers like Google
+and others from wasting sessions and cart records for no good reason.
+
+=cut
+
+sub default : Private {
+    my ($self, $c) = @_;
+    $c->stash->{'template'} = '[% action %]/default';
+
+    if ($c->sessionid && $c->session->{'shopper'}) {
+        if (my $cart = $c->forward('load')) {
+            $c->stash->{'cart'} = $cart;
+            $c->stash->{'items'} = $cart->items;
+        };
+    };
+
+    return;
+};
+
+=head2 add
+
+=over
+
+=item Parameters: (See L<Handel::Cart/add>)
+
+=back
+
+Adds an item to the current cart during POST.
+
+    [% uri %]/add/
+
+=cut
+
+sub add : Local {
+    my ($self, $c) = @_;
+    
+    if ($c->req->method eq 'POST') {
+        my $cart = $c->forward('create');
+        $cart->add($c->req->params);
+    };
+
+    $c->res->redirect($c->uri_for('[% uri %]/'));
+};
+
+=head2 clear
+
+Clears all items form the current shopping cart during POST.
+
+    [% uri %]/clear/
+
+=cut
+
+sub clear : Local {
+    my ($self, $c) = @_;
+
+    if ($c->req->method eq 'POST') {
+        if (my $cart = $c->forward('load')) {
+            $cart->clear;
+        };
+    };
+
+    $c->res->redirect($c->uri_for('[% uri %]/'));
+};
+
+=head2 create
+
+Creats a new temporary shopping cart or returns the existing cart, creating a
+new session shopper id if necessary.
+
+    my $cart = $c->forward('create');
+
+=cut
+
+sub create : Private {
+    my ($self, $c) = @_;
+
+    if (!$c->session->{'shopper'}) {
+        $c->session->{'shopper'} = $c->model('[% model %]')->storage->new_uuid;
+    };
+
+    if (my $cart = $c->forward('load')) {
+        return $cart;
+    } else {
+        return $c->model('[% model %]')->create({
+            shopper => $c->session->{'shopper'},
+            type    => CART_TYPE_TEMP
+        });
+    };
+
+    return;
+};
+
+=head2 delete
+
+=over
+
+=item Parameters: id
+
+=back
+
+Deletes an item from the current shopping cart during a POST.
+
+    [% uri %]/delete/
+
+=cut
+
+sub delete : Local {
+    my ($self, $c) = @_;
+
+    if ($c->req->method eq 'POST') {
+        if ($c->forward('validate')) {
+            if (my $cart = $c->forward('load')) {
+                $cart->delete({
+                    id => $c->req->params->{'id'}
+                });
+
+                $c->res->redirect($c->uri_for('[% uri %]/'));
+            };
+        } else {
+            $c->forward('default');
+        };
+    } else {
+        $c->res->redirect($c->uri_for('[% uri %]/'));
+    };
+
+    return;
+};
+
+=head2 destroy
+
+=over
+
+=item Parameters: id
+
+=back
+
+Deletes the specified saved cart and all of its items during a POST.
+
+    [% uri %]/destroy/
+
+=cut
+
+sub destroy : Local {
+    my ($self, $c) = @_;
+
+    if ($c->req->method eq 'POST') {
+        if ($c->forward('validate')) {
+            my $cart = $c->model('[% model %]')->search({
+                id      => $c->req->params->{'id'},
+                shopper => $c->session->{'shopper'},
+                type    => CART_TYPE_SAVED
+            })->first;
+
+            if ($cart) {
+                $cart->destroy;
+            } else {
+                warn "not cart";
+            };
+
+            $c->res->redirect($c->uri_for('[% uri %]/list/'));
+        } else {
+            $c->forward('list');
+        };
+    } else {
+        $c->res->redirect($c->uri_for('[% uri %]/'));
+    };
+
+    return;
+};
+
+=head2 list
+
+Displays a list of the current shoppers saved carts/wishlists.
+
+    [% uri %]/list/
+
+=cut
+
+sub list : Local {
+    my ($self, $c) = @_;
+    $c->stash->{'template'} = '[% action %]/list';
+
+    if ($c->sessionid && $c->session->{'shopper'}) {
+        my $carts = $c->model('[% model %]')->search({
+            shopper => $c->session->{'shopper'},
+            type    => CART_TYPE_SAVED
+        });
+
+        $c->stash->{'carts'} = $carts;
+    };
+
+    return;
+};
+
+=head2 load
+
+Loads the shoppers current cart.
+
+    my $cart = $c->forward('load');
+
+=cut
+
+sub load : Private {
+    my ($self, $c) = @_;
+
+    if ($c->sessionid && $c->session->{'shopper'}) {
+        return $c->model('[% model %]')->search({
+            shopper => $c->session->{'shopper'},
+            type    => CART_TYPE_TEMP
+        })->first;
+    };
+
+    return;
+};
+
+=head2 restore
+
+=over
+
+=item Parameters: id
+
+=back
+
+Restores a saved shopping cart into the shoppers current cart during a POST.
+
+    [% uri %]/restore/
+
+=cut
+
+sub restore : Local {
+    my ($self, $c) = @_;
+
+    if ($c->req->method eq 'POST') {
+        if ($c->forward('validate')) {
+            if (my $cart = $c->forward('create')) {
+                $cart->restore({
+                    id      => $c->req->param('id'),
+                    shopper => $c->session->{'shopper'},
+                    type    => CART_TYPE_SAVED
+                }, $c->req->param('mode') || CART_MODE_APPEND);
+
+                $c->res->redirect($c->uri_for('[% uri %]/'));
+            };
+        } else {
+            $c->forward('list');
+        };
+    } else {
+        $c->res->redirect($c->uri_for('[% uri %]/'));
+    };
+
+    return;
+};
+
+=head2 save
+
+=over
+
+=item Parameters: name
+
+=back
+
+Saves the current cart with the name specified.
+
+    [% uri %]/save/
+
+=cut
+
+sub save : Local {
+    my ($self, $c) = @_;
+
+    if ($c->req->method eq 'POST') {
+        if ($c->forward('validate')) {
+            if (my $cart = $c->forward('load')) {
+                $cart->name($c->req->param('name') || 'My Cart');
+                $cart->save;
+
+                $c->res->redirect($c->uri_for('[% uri %]/list/'));
+            };
+        } else {
+            $c->forward('default');
+        };
+    } else {
+        $c->res->redirect($c->uri_for('[% uri %]/'));
+    };
+
+    return;
+};
+
+=head2 update
+
+=over
+
+=item Parameters: quantity
+
+=back
+
+Updates the specified cart item qith the quantity given.
+
+    [% uri %]/update/
+
+=cut
+
+sub update : Local {
+    my ($self, $c) = @_;
+
+    if ($c->req->method eq 'POST') {
+        if ($c->forward('validate')) {
+            if (my $cart = $c->forward('load')) {
+                my $item = $cart->items({
+                    id => $c->req->param('id')
+                })->first;
+
+                if ($item) {
+                    $item->quantity($c->req->param('quantity'));
+                };
+
+                $c->res->redirect($c->uri_for('[% uri %]/'));
+            };
+        } else {
+            $c->forward('default');
+        };
+    } else {
+        $c->res->redirect($c->uri_for('[% uri %]/'));
+    };
+
+    return;
+};
+
+=head2 validate
+
+Validates the current form parameters using the profile in profiles.yml that
+matches the current action.
+
+    if ($c->forward('validate')) {
+    
+    };
+
+=cut
+
+sub validate : Private {
+    my ($self, $c) = @_;
+
+    $self->{'validator'}->results->clear;
+
+    my $results = $self->{'validator'}->check(
+        $c->req,
+        $self->{'profiles'}->{$c->action}
+    );
+
+    if ($results->success) {
+        return $results;
+    } else {
+        $c->stash->{'errors'} = $results->messages($c->action);
+    };
+
+    return;
+};
+
+=head1 AUTHOR
+
+A clever guy
+
+=head1 LICENSE
+
+This library is free software, you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
+
+1;
+__test__
+use Test::More tests => 3;
+use strict;
+use warnings;
+
+use_ok('Catalyst::Test', '[% app %]');
+use_ok('[% class %]');
+
+ok(request('[% uri %]')->is_success, 'Request should succeed');
+__default__
+[% TAGS [- -] -%]
+[% USE HTML %]
+<h1>Your Shopping Cart</h1>
+[% INCLUDE [- action -]/errors %]
+[% IF items.count %]
+    <table border="0" cellpadding="3" cellspacing="5">
+        <tr>
+            <th align="left">SKU</th>
+            <th align="left">Description</th>
+            <th align="right">Price</th>
+            <th align="center">Quantity</th>
+            <th align="right">Total</th>
+            <th colspan="2"></th>
+        </tr>
+	[% WHILE (item = items.next) %]
+        <tr>
+            <form action="[% c.uri_for('[- uri -]/update/') %]" method="post">
+                <input type="hidden" name="id" value="[% HTML.escape(item.id) %]">
+                <td align="left">[% HTML.escape(item.sku) %]</td>
+                <td align="left">[% HTML.escape(item.description) %]</td>
+                <td align="right">[% HTML.escape(item.price.format(undef, 'FMT_SYMBOL')) %]</td>
+                <td align="center"><input style="text-align: center;" type="text" size="3" name="quantity" value="[% HTML.escape(item.quantity) %]"></td>
+                <td align="right">[% HTML.escape(item.total.format(undef, 'FMT_SYMBOL')) %]</td>
+                <td><input type="submit" value="Update"></td>
+            </form>
+            <form action="[% c.uri_for('[- uri -]/delete/') %]" method="POST">
+                <input type="hidden" name="id" value="[% HTML.escape(item.id) %]">
+                <td>
+                    <input type="submit" value="Delete">
+                </td>
+            </form>
+        </tr>
+	[% END %]
+        <tr>
+            <td colspan="7" height="20"></td>
+        </tr>
+        <tr>
+            <th colspan="4" align="right">Subtotal:</th>
+            <td align="right">[% HTML.escape(cart.subtotal.format(undef, 'FMT_SYMBOL')) %]</td>
+            <td colspan="2"></td>
+        </tr>
+        <tr>
+            <td colspan="7" align="right">
+                <form action="[% c.uri_for('[- uri -]/clear/') %]" method="POST">
+                    <input type="submit" value="Empty Cart">
+                </form>
+                <form action="[% c.uri_for('/[- couri -]/') %]" method="POST">
+                    <input type="submit" value="Checkout">
+                </form>
+            </td>
+        </tr>
+    </table>
+    <form action="[% c.uri_for('[- uri -]/save/') %]" method="POST">
+        <input type="text" name="name">
+        <input type="submit" value="Save Cart">
+    </form>
+[% ELSE %]
+    <p>Your shopping cart is empty.</p>
+[% END %]
+__list__
+[% TAGS [- -] -%]
+[% USE HTML %]
+<h1>Your Saved Shopping Carts</h1>
+[% INCLUDE [- action -]/errors %]
+[% IF carts.count %]
+    <table border="0" cellpadding="3" cellspacing="5">
+        <tr>
+            <th align="left">Name</th>
+            <th align="right">Restore Mode</th>
+            <th></th>
+        </tr>
+    [% WHILE (cart = carts.next) %]
+        <tr>
+            <td align="left" valign="top">[% HTML.escape(cart.name) %]</td>
+            <td>
+                <form action="[% c.uri_for('[- uri -]/restore/') %]" method="POST">
+                    <input type="hidden" name="id" value="[% HTML.escape(cart.id) %]">
+                    <select name="mode">
+                        [% USE hc = Handel.Constants %]
+                        <option value="[% HTML.escape(hc.CART_MODE_APPEND) %]">Append</option>
+                        <option value="[% HTML.escape(hc.CART_MODE_MERGE) %]">Merge</option>
+                        <option value="[% HTML.escape(hc.CART_MODE_REPLACE) %]">Replace</option>
+                    </select>
+                    <input type="submit" value="Restore Cart">
+                </form>
+            </td>
+            <td>
+                <form action="[% c.uri_for('[- uri -]/destroy/') %]" method="POST">
+                    <input type="hidden" name="id" value="[% HTML.escape(cart.id) %]">
+                    <input type="submit" value="Delete">
+                </form>
+            </td>
+        </tr>
+    [% END %]
+    </table>
+[% ELSE %]
+    <p>You have no saved shopping carts.</p>
+[% END %]
+__errors__
+[% TAGS [- -] -%]
+[% IF errors %]
+	<ul class="errors">
+	[% FOREACH error IN errors %]
+		<li>[% HTML.escape(error) %]</li>
+	[% END %]
+	</ul>
+[% END %]
+__messages__
+[% action %]/save:
+  name:
+    NOT_BLANK: The name field cannot be empty.
+    LENGTH: The name field must be between 1 and 50 characters.
+[% action %]/update:
+  id:
+    REGEX: The id field is in the wrong format.
+  quantity:
+    NOT_BLANK: The quantity field cannot be empty.
+    UINT: The quantity field must be a positive number.
+[% action %]/delete:
+  id:
+    REGEX: The id field is in the wrong format.
+[% action %]/destroy:
+  id:
+    REGEX: The id field is in the wrong format.
+[% action %]/restore:
+  id:
+    REGEX: The id field is in the wrong format.
+  mode:
+    BETWEEN: The mode field must be between 1 and 3.
+__profiles__
+[% action %]/save:
+  - name
+  - [ [NOT_BLANK], [LENGTH, 1, 50] ]
+[% action %]/delete:
+  - id
+  -
+    -
+      - REGEX
+      - !perl/regexp:
+        REGEXP: '^[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}$'
+        MODIFIERS: i
+[% action %]/destroy:
+  - id
+  -
+    -
+      - REGEX
+      - !perl/regexp:
+        REGEXP: '^[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}$'
+        MODIFIERS: i
+[% action %]/update:
+  - id
+  -
+    -
+      - REGEX
+      - !perl/regexp:
+        REGEXP: '^[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}$'
+        MODIFIERS: i
+  - quantity
+  - [ [NOT_BLANK], [UINT] ]
+[% action %]/restore:
+  - id
+  -
+    -
+      - REGEX
+      - !perl/regexp:
+        REGEXP: '^[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}$'
+        MODIFIERS: i
+  - mode
+  - [ [BETWEEN, 1, 3] ]
+__products__
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Nifty New Products</title>
+		<base href="http://localhost:3000/" />
+	</head>
+	<body>
+		<h1>Nifty New Products</h1>
+		<p>
+			<a href="[% uri %]/">View Cart</a> |
+		</p>
+		<h2>Mendlefarg 3000</h2>
+		<p>
+			It slices. It dices. It MVCs!
+		</p>
+		<form action="[% uri %]/add/" method="POST">
+		  <p>
+    			<input type="hidden" name="sku" value="MFG3000" />
+    			<input type="hidden" name="description" value="Mendlefarg 3000" />
+    			<input type="hidden" name="price" value="19.95" />
+    			<input type="text" name="quantity" value="1" size="3" />
+    			<input type="submit" value="Add To Cart" />
+          </p>
+         </form>
+
+		<h2>Flimblebot 98</h2>
+		<p>
+			The most advanced flimble-based bot response software ever!
+		</p>
+		<form action="[% uri %]/add/" method="POST">
+		  <p>
+			<input type="hidden" name="sku" value="FB98" />
+			<input type="hidden" name="description" value="Flimblebot 98 Single-User" />
+			<input type="hidden" name="price" value="12.34" />
+			<input type="text" name="quantity" value="1" size="3" />
+			<input type="submit" value="Add To Cart" />
+          </p>
+		</form>
+	</body>
+</html>
+__END__
