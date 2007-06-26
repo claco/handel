@@ -343,7 +343,7 @@ BEGIN {
 ## test convert
 SKIP: {
     eval 'use Test::MockObject 1.07';
-    skip 'Test::MockObject 1.07 not installed', 46 if $@;
+    skip 'Test::MockObject 1.07 not installed', 48 if $@;
 
 
     ## convert with code

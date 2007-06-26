@@ -1,5 +1,11 @@
 Revision history for Perl module Handel
 
+1.00001 Mon June 25 22:05:26 2007
+    - Fixed basic.t use_ok failures due to dev install
+    - Fixed various test skip counts
+    - Fixed Component::Validation to deal with new
+        DBIC::Validation/throw_exception changes
+
 1.00000 Sun June 24 08:57:22 2007
     - constraint_price now uses $currency->value if value isa
         Data::Currency object

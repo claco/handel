@@ -2,16 +2,16 @@
 name: Handel
 abstract: A cart/order/checkout framework with AxKit/TT/Catalyst support
 author: Christopher H. Laco <claco@chrislaco.com>
-version: 1.00000
+version: 1.00001
 version_from: lib/Handel.pm
 installdirs: site
 license: perl
 requires:
-  DBIx::Class: 0.08000
-  DBIx::Class::UUIDColumns: 0.01
-  DBIx::Class::Validation: 0.01001
-  Data::Currency: 0.03
-  Class::Accessor::Grouped: 0.03
+  DBIx::Class: 0.08002
+  DBIx::Class::UUIDColumns: 0.02000
+  DBIx::Class::Validation: 0.02000
+  Data::Currency: 0.04002
+  Class::Accessor::Grouped: 0.06000
   Class::ISA: 0
   Class::Inspector: 0
   Clone: 0

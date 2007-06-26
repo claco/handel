@@ -22,6 +22,20 @@ sub throw_exception { ## no critic (RequireFinalReturn)
     };
 };
 
+sub validate {
+    my $self = shift;
+    my $result;
+
+    eval {
+        $result = $self->next::method(@_);
+    };
+    if ($@) {
+        $self->throw_exception($@);
+    };
+
+    return $result;
+};
+
 1;
 __END__
 

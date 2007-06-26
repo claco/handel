@@ -5,7 +5,7 @@ use warnings;
 
 BEGIN {
     use lib 't/lib';
-    use Handel::Test tests => 63;
+    use Handel::Test tests => 61;
 
     use_ok('Handel');
     use_ok('Handel::Base');
@@ -33,9 +33,7 @@ BEGIN {
     use_ok('Handel::Iterator::Results');
     use_ok('Handel::L10N');
     use_ok('Handel::L10N::en_us');
-    use_ok('Handel::L10N::es_es');
     use_ok('Handel::L10N::fr');
-    use_ok('Handel::L10N::zh_tw');
     use_ok('Handel::Order');
     use_ok('Handel::Order::Item');
     use_ok('Handel::Order::Schema');

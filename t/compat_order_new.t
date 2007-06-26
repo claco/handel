@@ -663,7 +663,7 @@ SKIP: {
 
     SKIP: {
         eval 'use Test::MockObject 1.07';
-        skip 'Test::MockObject 1.07 not installed', 6 if $@;
+        skip 'Test::MockObject 1.07 not installed', 7 if $@;
 
         ## add a new order and test process::OK (in mock series)
         {
