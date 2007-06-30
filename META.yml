@@ -2,7 +2,7 @@
 name: Handel
 abstract: A cart/order/checkout framework with AxKit/TT/Catalyst support
 author: Christopher H. Laco <claco@chrislaco.com>
-version: 1.00001
+version: 1.00002
 version_from: lib/Handel.pm
 installdirs: site
 license: perl

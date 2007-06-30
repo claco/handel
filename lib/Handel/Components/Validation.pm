@@ -72,6 +72,12 @@ If validation
 fails, a L<Handel::Exception::Validation|Handel::Exception::Validation> will be
 thrown containing the the result object returned from the validation module.
 
+=head2 validate
+
+Validates the data using the specified validation module/profile. If validation
+succeeds, the result object from the validaiton module is returned. If
+validation fails, a Handel:Exception::Validation will be thrown.
+
 =head2 throw_exception
 
 Wraps DBIx::Class::Validation exceptions in Handel exceptions and rethrows. See
