@@ -1,6 +1,6 @@
 Revision history for Perl module Handel
 
-1.00002
+1.00002 Sat June 30 17:15:12 2007
     - Catalyst Model tests now skip when Catalyst not installed
     - Fixed Catalyst tests after fresh perl install explosion
     - Fixed pod coverage
