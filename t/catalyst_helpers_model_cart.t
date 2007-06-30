@@ -26,9 +26,11 @@ BEGIN {
     plan(skip_all =>
         'Test::File::Contents 0.02 not installed') if $@;
 
-    plan tests => 8;
+    plan tests => 10;
 
     use_ok('Catalyst::Helper');
+    use_ok('Catalyst::Helper::Model::Handel::Cart');
+    use_ok('Catalyst::Model::Handel::Cart');
 };
 
 my $helper = Catalyst::Helper->new;

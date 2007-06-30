@@ -7,6 +7,14 @@ BEGIN {
     use lib 't/lib';
     use Handel::Test;
 
+    eval 'use Catalyst 5.7001';
+    plan(skip_all =>
+        'Catalyst 5.7001 not installed') if $@;
+
+    eval 'use Catalyst::Devel 1.0';
+    plan(skip_all =>
+        'Catalyst::Devel 1.0 not installed') if $@;
+
     eval 'use Test::MockObject 1.07';
     if (!$@) {
         plan tests => 14;

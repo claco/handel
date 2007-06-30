@@ -18,6 +18,10 @@ BEGIN {
     plan(skip_all =>
         'Catalyst::Devel 1.0 not installed') if $@;
 
+    eval 'use Catalyst::View::TT';
+    plan(skip_all =>
+        'Catalyst::View::TT not installed') if $@;
+
     eval 'use Test::File 1.10';
     plan(skip_all =>
         'Test::File 1.10 not installed') if $@;
@@ -26,9 +30,17 @@ BEGIN {
     plan(skip_all =>
         'Test::File::Contents 0.02 not installed') if $@;
 
-    plan tests => 58;
+    plan tests => 66;
 
     use_ok('Catalyst::Helper');
+    use_ok('Catalyst::Helper::Handel::Scaffold');
+    use_ok('Catalyst::Helper::Model::Handel::Cart');
+    use_ok('Catalyst::Model::Handel::Cart');
+    use_ok('Catalyst::Helper::Model::Handel::Order');
+    use_ok('Catalyst::Model::Handel::Order');
+    use_ok('Catalyst::Helper::Controller::Handel::Cart');
+    use_ok('Catalyst::Helper::Controller::Handel::Order');
+    use_ok('Catalyst::Helper::Controller::Handel::Checkout');
 };
 
 my $helper = Catalyst::Helper->new;
