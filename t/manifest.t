@@ -17,6 +17,6 @@ BEGIN {
 
 ok_manifest({
     exclude => ['/t/var', '/cover_db', '/t/conf', '/t/logs/', '/t/htdocs/index.html'],
-    filter  => [qr/\.svn/, qr/cover/, qr/\.tws/, qr/(SMOKE$|TEST$)/],
+    filter  => [qr/\.svn/, qr/cover/, qr/\.tws/, qr/(SMOKE$|TEST$)/, qr/Build(.bat)?/],
     bool    => 'or'
 });
