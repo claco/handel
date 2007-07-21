@@ -7,7 +7,7 @@ BEGIN {
     use lib 't/lib';
     use Handel::Test;
 
-    plan skip_all => 'set TEST_CRITIC or TEST_PRIVATE to enable this test' unless $ENV{TEST_CRITIC} || $ENV{TEST_PRIVATE};
+    plan skip_all => 'set TEST_AUTHOR to enable this test' unless $ENV{TEST_AUTHOR};
 
     eval 'use Test::Perl::Critic 1.01';
     plan skip_all => 'Test::Perl::Critic 1.01 not installed' if $@;
