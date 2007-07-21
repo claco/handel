@@ -120,6 +120,13 @@ This is included in perl 5.8. It is used by the quick start code.
 
 This is included in perl 5.8. It is used by the quick start code.
 
+=head3 FormValidator::Simple
+
+Version 0.17 or greater.
+
+This module is only required if you plan on using the generated scaffolding code from the supplied Catalyst
+Controller/Model Helpers.
+
 =head2 Optional Modules
 
 The following modules are not required for Handel to run, although some features may be unavailable
@@ -150,17 +157,6 @@ Version 1.0 or greater.
 
 Catalyst::Devel is only required if you plan on using the supplied Catalyst Helpers to generate scaffolding or
 started code.
-
-=head3 FormValidator::Simple
-
-Version 0.16 or greater.
-
-This module is only required if you plan on using the generated scaffolding code from the supplied Catalyst
-Controller/Model Helpers.
-
-B<Note: As of 0.99_07, I'm still waiting on some serious patches to FV::S to get applied or for the author to
-surface. I have a private special version of this with the patches applied. Email me if you plan on using the
-scaffolding.>
 
 =head3 HTML::FiillInForm
 
