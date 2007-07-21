@@ -7,7 +7,10 @@ if ($ENV{TEST_HTTP}) {
     eval 'use Apache::Test 1.27';
     if ($@) {
         print "Apache-Test >= 1.27 is required!\n";
+        tests 't/*.t';
     } else {
+        tests join(' ', glob('t/*.t'));
+
         require Apache::TestMM;
         Apache::TestMM->import(qw(test clean));
 
@@ -31,6 +34,7 @@ if ($ENV{TEST_HTTP}) {
     };
 } else {
     print 'Set TEST_HTTP to enable Apache-Test/HTTP tests', "\n";
+    tests 't/*.t';
 };
 
 name 'Handel';
@@ -69,11 +73,11 @@ requires 'DBD::SQLite';
 build_requires 'Test::More' => '0.61';
 
 feature 'Rose::DB::Object Support',
-  -default                   => 1,
+  -default                   => 0,
   'Handel::Storage::RDBO' => '1.00001';
 
 feature 'Catalyst Support',
-  -default => 1,
+  -default => 0,
   'Catalyst::Runtime' => '5.7007',
   'Catalyst::Devel' => '1.02',
   'HTML::FillInForm' => '1.05';
@@ -84,7 +88,6 @@ feature 'AxKit Support',
 
 install_script 'script/handel.pl';
 
-tests 't/*.t t/*/*.t';
 clean_files 'smoke-report-* t/var Handel-* t/TEST t/SMOKE t/logs t/conf/apache_test_config.pm t/conf/extra.conf t/conf/httpd.conf t/conf/modperl_inc.pl t/conf/modperl_startup.pl t/htdocs/index.html t/var';
 
 eval {
