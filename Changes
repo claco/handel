@@ -1,5 +1,6 @@
 Revision history for Perl module Handel
 
+1.00003 Tue July 24 20:55:32 2007
     - Changed tests to use TEST_AUTHOR instead
     - Converted to Module::Install
 
