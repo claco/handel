@@ -72,9 +72,9 @@ requires 'Pod::Usage';
 requires 'DBD::SQLite';
 build_requires 'Test::More' => '0.61';
 
-feature 'Rose::DB::Object Support',
-  -default                   => 0,
-  'Handel::Storage::RDBO' => '1.00001';
+#feature 'Rose::DB::Object Support',
+#  -default                   => 0,
+#  'Handel::Storage::RDBO' => '1.00001';
 
 feature 'Catalyst Support',
   -default => 0,
