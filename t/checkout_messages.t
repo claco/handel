@@ -28,7 +28,7 @@ sub run {
     ## test for Handel::Exception::Argument where message is not a scalar
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $checkout = $subclass->new({pluginpaths => 'Handel::LOADNOTHING'});
 
             $checkout->add_message([1, 2, 3]);
@@ -46,7 +46,7 @@ sub run {
     ## test for Handel::Exception::Argument where message is not a Handel::Checkout;:Message subclass
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $fake = bless {}, 'FakeModule';
             my $checkout = $subclass->new({pluginpaths => 'Handel::LOADNOTHING'});
 

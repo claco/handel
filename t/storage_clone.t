@@ -82,7 +82,7 @@ BEGIN {
     ## throw exception as a class method
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $storage = Handel::Storage->clone;
 
             fail('no exception thrown');

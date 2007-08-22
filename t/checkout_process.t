@@ -42,7 +42,7 @@ sub run {
     ## test for Handel::Exception::Checkout where no order is loaded
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $checkout = $subclass->new;
 
             $checkout->process;
@@ -61,7 +61,7 @@ sub run {
     ## or string
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $checkout = $subclass->new;
             $checkout->process({'1234' => 1});
 
@@ -366,7 +366,7 @@ sub run {
 
 
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         $checkout->process;
 
         fail('no exception thrown');

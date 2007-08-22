@@ -16,10 +16,10 @@ BEGIN {
 ## Check simple translation through Handel::L10N
 {
     local %ENV = ();
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     is(translate('Language'), "English", 'got English');
 
-    local $ENV{'LANG'} = 'fr';
+    local $ENV{'LANGUAGE'} = 'fr';
     is(translate('Language'), "Français", 'got French');
 };
 
@@ -27,7 +27,7 @@ BEGIN {
 ## Test translation in exceptions
 {
     local %ENV = ();
-    local $ENV{'LANG'} = 'fr';
+    local $ENV{'LANGUAGE'} = 'fr';
 
     ## check the stock exceptions
     try {
@@ -84,7 +84,7 @@ BEGIN {
 ## test translation within another module that uses the exceptions
 {
     local %ENV = (Path => '');
-    local $ENV{'LANG'} = 'fr';
+    local $ENV{'LANGUAGE'} = 'fr';
 
     require Handel::Cart;
 

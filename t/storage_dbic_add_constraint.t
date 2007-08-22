@@ -42,7 +42,7 @@ my $schema = $storage->schema_instance;
 is_deeply($schema->class($storage->schema_source)->constraints, {'id' => {'Check Id' => $sub}}, 'constraints are loaded');
 
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->add_constraint('name', second => sub{});
 
     fail('no exception thrown');

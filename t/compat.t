@@ -7,6 +7,7 @@ BEGIN {
     use lib 't/lib';
     use Handel::Test tests => 15;
 
+    local $ENV{'LANGUAGE'} = 'en'; 
     local $SIG{__WARN__} = sub {
         like(shift, qr/deprecated/);
     };

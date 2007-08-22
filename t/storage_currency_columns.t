@@ -29,7 +29,7 @@ is_deeply([$storage->currency_columns], [qw/foo bar/], 'set currency columns');
 ## throw exception when primary column doesn't exists in columns
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         $storage->currency_columns(qw/bar quix/);
 
         fail('no exception thrown');

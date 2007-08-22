@@ -38,6 +38,7 @@ is(Handel::Checkout::_path_to_array(''), '', 'path to array returns nothing for 
         local $SIG{'__WARN__'} = sub {
             $warning = shift;
         };
+        local $ENV{'LANGUAGE'} = 'en';
         is(Handel::Checkout::Plugin->register, undef, 'register does nothing');
         like($warning, qr/plugin .* defined register/i, 'warning was set');
     };
@@ -51,7 +52,7 @@ is(Handel::Checkout::_path_to_array(''), '', 'path to array returns nothing for 
     $checkout->add_handler(CHECKOUT_PHASE_INITIALIZE, sub{}, 350);
 
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         $checkout->add_handler(CHECKOUT_PHASE_INITIALIZE, sub{}, 350);
 
         fail('no exception thrown');
@@ -76,7 +77,7 @@ sub run {
     ## test for Handel::Exception::Argument on bad add_handler phase
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $checkout = $subclass->new;
 
             $checkout->add_handler(42, sub{});
@@ -94,7 +95,7 @@ sub run {
     ## test for Handel::Exception::Argument on bad CODE reference
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $checkout = $subclass->new;
 
             $checkout->add_handler(CHECKOUT_PHASE_INITIALIZE, 'foo');
@@ -112,7 +113,7 @@ sub run {
     ## Add a custom phase and verify it works in add_handler
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
 
             #clean out the new constant between subclass runs
             {

@@ -27,7 +27,7 @@ sub run {
     ## or Handle::Cart subclass
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             $subclass->restore(id => '1234');
 
             fail('no exception thrown');
@@ -44,7 +44,7 @@ sub run {
     ## or Handle::Cart::Item subclass
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $fakeitem = bless {}, 'FakeItem';
             $subclass->restore($fakeitem);
 

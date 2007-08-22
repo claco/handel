@@ -20,6 +20,8 @@ BEGIN {
     use_ok('Handel::Constants', qw(:order :returnas));
     use_ok('Handel::Exception', ':try');
 
+    local $ENV{'LANGUAGE'} = 'en';
+
     local $SIG{__WARN__} = sub {
         like(shift, qr/deprecated/);
     };

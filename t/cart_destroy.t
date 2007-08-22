@@ -40,7 +40,7 @@ sub run {
     ## Test for Handel::Exception::Argument where first param is not a hashref
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             $subclass->destroy(id => '1234');
 
             fail('no exception thrown');

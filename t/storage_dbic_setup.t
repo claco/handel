@@ -37,7 +37,7 @@ is($storage->validation_class, 'Handel::Base', 'validation class was set');
 
 ## throw exception if no result is passed
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->setup;
 
     fail('no exception thrown');
@@ -51,7 +51,7 @@ try {
 
 ## throw exception if no result is passed
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->setup({});
 
     fail('no exception thrown');

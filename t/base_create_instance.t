@@ -50,7 +50,7 @@ $result->set_always('storage', $storage);
 ## throw exception when result is given
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         my $instance = Handel::Base->create_instance;
 
         fail('no exception thrown');
@@ -66,7 +66,7 @@ $result->set_always('storage', $storage);
 ## throw exception when called as object method
 #{
 #    try {
-#        local $ENV{'LANG'} = 'en';
+#        local $ENV{'LANGUAGE'} = 'en';
 #        my $base = bless {}, 'Handel::Base';
 #        my $instance = $base->create_instance($result);
 #

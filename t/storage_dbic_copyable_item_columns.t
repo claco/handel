@@ -45,7 +45,7 @@ is_deeply([sort $storage->copyable_item_columns], [qw/cart description price qua
 
 ## no item storage
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->item_storage_class(undef);
     $storage->item_storage(undef);
     $storage->copyable_item_columns;
@@ -61,7 +61,7 @@ try {
 
 ## no item relationship
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->item_relationship(undef);
     $storage->copyable_item_columns;
 

@@ -26,7 +26,7 @@ BEGIN {
 ## throw exception when setting a bogus order class
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         Handel::Checkout->order_class('Funklebean');
 
         fail('no exception thrown');
@@ -67,7 +67,7 @@ sub run {
     ## test for Handel::Exception::Checkout when no order can be found as a string
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $checkout = $subclass->new;
             $checkout->order('1234');
 
@@ -84,7 +84,7 @@ sub run {
     ## test for Handel::Exception::Chckout when no order is found as hash
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $checkout = $subclass->new({order => '1234'});
 
             ok(!$checkout->order, 'no order set');
@@ -102,7 +102,7 @@ sub run {
     ## test for Handel::Exception::Argument where order object is not a Handel::Order object
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $checkout = $subclass->new;
             my $fake = bless {}, 'MyObject::Foo';
             $checkout->order($fake);
@@ -120,7 +120,7 @@ sub run {
     ## test for Handel::Exception::Argument where order option object is not a Handel::Order object
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $fake = bless {}, 'MyObject::Foo';
             my $checkout = $subclass->new({order => $fake});
 

@@ -36,7 +36,7 @@ is($storage->count_items($result), 2, 'counted 2 items');
 
 ## throw exception if no result is passed
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->count_items;
 
     fail('no exception thrown');
@@ -50,7 +50,7 @@ try {
 
 ## throw exception when adding an item to something with incorrect relationship
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->item_relationship('foo');
     $storage->count_items($result);
 
@@ -65,7 +65,7 @@ try {
 
 ## throw exception when adding an item with no defined relationship
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->item_relationship(undef);
     $storage->count_items($result);
 

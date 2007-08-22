@@ -29,6 +29,8 @@ is_deeply([$storage->primary_columns], [qw/foo bar baz/], 'added primary columns
 ## throw exception when primary column doesn't exists in columns
 {
     try {
+
+        local $ENV{'LANGUAGE'} = 'en';
         $storage->primary_columns(qw/bar quix/);
 
         fail('no exception thrown');

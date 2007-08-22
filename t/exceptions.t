@@ -40,7 +40,7 @@ BEGIN {
 ## get default text
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         throw Handel::Exception;
 
         fail('no exception thrown');
@@ -57,7 +57,7 @@ BEGIN {
 ## don't set details if it's a ref
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         throw Handel::Exception(-details => {foo => 'bar'});
 
         fail('no exception thrown');
@@ -74,7 +74,7 @@ BEGIN {
 ## set the results
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         throw Handel::Exception( -results => {foo => 'bar'});
 
         fail('no exception thrown');
@@ -93,7 +93,7 @@ BEGIN {
 foreach (qw/Taglib Order Checkout Constraint Storage Validation Virtual/) {
     my $class = "Handel::Exception::$_";
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         throw $class;
 
         fail('no exception thrown');

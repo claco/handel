@@ -18,7 +18,7 @@ isa_ok($storage, 'Handel::Storage');
 
 ## throw exception if no hash ref is passed
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->set_default_values;
 
     fail('no exception thrown');

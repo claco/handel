@@ -39,6 +39,8 @@ sub run {
     ## test for Handel::Exception::Argument where first param is not a hashref
     {
         try {
+
+            local $ENV{'LANGUAGE'} = 'en';
             my $item = $subclass->create(sku => 'FOO');
 
             fail('no exception thrown');

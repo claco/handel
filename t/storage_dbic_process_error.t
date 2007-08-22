@@ -29,7 +29,7 @@ my $storage = Handel::Storage::DBIC->new({
 
 ## pass an exception object right on through
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     Handel::Storage::DBIC->process_error(Handel::Exception->new);
 
     fail('no exception thrown');
@@ -44,7 +44,7 @@ try {
 
 ## catch 'is not unique' DBIC errors
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->schema_instance->resultset($storage->schema_source)->create({
         id      => '11111111-1111-1111-1111-111111111111',
         shopper => '11111111-1111-1111-1111-111111111111'
@@ -61,7 +61,7 @@ try {
 
 ## catch 'value already exists' DBIC errors
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->process_error('id value already exists');
 
     fail('no exception thrown');
@@ -75,7 +75,7 @@ try {
 
 ## catch other DBIC errors
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->schema_instance->resultset('Foo')->create({
         id => '11111111-1111-1111-1111-111111111111'
     });
@@ -94,7 +94,7 @@ my $message = 'Custom Foo';
 my $error = bless(\$message, 'Foo');
 
 eval {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->process_error($error);
 };
 if ($@) {

@@ -42,7 +42,7 @@ sub run {
     ## test for Handel::Exception::Argument where first param is not a hashref
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $cart = $subclass->create(sku => 'SKU1234');
 
             fail('no exception thrown');
@@ -58,7 +58,7 @@ sub run {
     ## test for Handel::Exception::Constraint during cart new for bogus shopper
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $cart = $subclass->create({
                 id      => '11111111-1111-1111-1111-111111111111',
                 shopper => 'crap'
@@ -77,7 +77,7 @@ sub run {
     ## test for Handel::Exception::Constraint during cart new for empty shopper
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $cart = $subclass->create({
                 id      => '11111111-1111-1111-1111-111111111111'
             });
@@ -96,7 +96,7 @@ sub run {
     ## specified and cart type has been set to CART_TYPE_SAVED
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $cart = $subclass->create({
                 id      => '11111111-1111-1111-1111-111111111111',
                 shopper => '33333333-3333-3333-3333-333333333333',
@@ -121,7 +121,7 @@ sub run {
         );
 
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $cart = $subclass->create(\%data);
 
             fail('no exception thrown');
@@ -142,7 +142,7 @@ SKIP: {
     ## test for raw db key violation
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $cart = $subclass->create({
                 id      => '11111111-1111-1111-1111-111111111111',
                 shopper => '11111111-1111-1111-1111-111111111111'

@@ -42,7 +42,7 @@ sub run {
     ## or Handle::Cart::Item subclass
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $newitem = $subclass->add(id => '1234');
 
             fail('no exception thrown');
@@ -59,7 +59,7 @@ sub run {
     ## or Handle::Cart::Item subclass
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $fakeitem = bless {}, 'FakeItem';
             my $newitem = $subclass->add($fakeitem);
 

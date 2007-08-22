@@ -22,7 +22,7 @@ BEGIN {
     ## throw exception when setting a bogus schema class
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             $storage->schema_class('Funklebean');
 
             fail('no exception thrown');

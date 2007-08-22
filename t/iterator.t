@@ -16,7 +16,7 @@ BEGIN {
 ## test for exception when no hashref is given
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         my $iterator = Handel::Iterator->new;
 
         fail('no exception thrown');
@@ -32,7 +32,7 @@ BEGIN {
 ## test for exception when no data is given
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         my $iterator = Handel::Iterator->new({});
 
         fail('no exception thrown');
@@ -48,7 +48,7 @@ BEGIN {
 ## test for exception when no result class is given
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         my $iterator = Handel::Iterator->new({
             data => [qw/a b c/]
         });
@@ -66,7 +66,7 @@ BEGIN {
 ## test for exception when no storage is given
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         my $iterator = Handel::Iterator->new({
             data => [qw/a b c/],
             result_class => 'Foo'
@@ -100,7 +100,7 @@ BEGIN {
 ## test for exception when no result is given
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         my $iterator = bless {}, 'Handel::Iterator';
         my $result = $iterator->create_result;
 
@@ -117,7 +117,7 @@ BEGIN {
 ## test for exception when no storage is given
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         my $iterator = bless {}, 'Handel::Iterator';
         my $result = $iterator->create_result('foo');
 
@@ -135,7 +135,7 @@ BEGIN {
 {
     foreach my $method (qw/all count first last next reset/) {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $iterator = bless {}, 'Handel::Iterator';
             $iterator->$method;
 

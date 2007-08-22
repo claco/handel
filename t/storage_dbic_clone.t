@@ -30,7 +30,7 @@ my $storage = Handel::Storage::DBIC->new({
 
 ## not a class method
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
 
     Handel::Storage::DBIC->clone;
 

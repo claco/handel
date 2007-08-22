@@ -72,7 +72,7 @@ $result->clear;
 ## throw exception when no column param is sent
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         $base->set_column;
 
         fail('no exception thrown');
@@ -88,7 +88,7 @@ $result->clear;
 ## throw exception when column param is empty
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         $base->set_column('');
 
         fail('no exception thrown');
@@ -104,7 +104,7 @@ $result->clear;
 ## throw exception as a class method
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         Handel::Base->set_column;
 
         fail('no exception thrown');

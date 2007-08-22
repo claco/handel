@@ -17,7 +17,7 @@ BEGIN {
 ## test for exception when no hashref is given
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         my $iterator = Handel::Iterator::Results->new;
 
         fail('no exception thrown');
@@ -33,7 +33,7 @@ BEGIN {
 ## test for exception when no data is given
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         my $iterator = Handel::Iterator::Results->new({});
 
         fail('no exception thrown');
@@ -49,7 +49,7 @@ BEGIN {
 ## test for exception when a non blessed data is given
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         my $iterator = Handel::Iterator::Results->new({
             data => {}
         });
@@ -67,7 +67,7 @@ BEGIN {
 ## test for exception when a blessed, non iterator is given
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         my $data = bless {}, 'Handel::Exception';
         my $iterator = Handel::Iterator::Results->new({
             data => $data
@@ -91,7 +91,7 @@ BEGIN {
     });
 
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         my $iterator = Handel::Iterator::Results->new({
             data => $results
         });

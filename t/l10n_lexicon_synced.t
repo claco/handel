@@ -11,7 +11,7 @@ BEGIN {
     if($@) {
         plan skip_all => 'Module::Find not installed';
     } else {
-        plan tests => 133;
+        plan tests => 199;
         setmoduledirs('lib');
     };
 

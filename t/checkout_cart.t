@@ -51,7 +51,7 @@ sub run {
     ## now tests for order not found since constraint_uuid is gone for subclassing
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $checkout = Handel::Checkout->new;
 
             $checkout->cart('1234');
@@ -70,7 +70,7 @@ sub run {
     ## now tests for order not found since constraint_uuid is gone for subclassing
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $checkout = Handel::Checkout->new({cart => '1234'});
 
             fail('no exception thrown');
@@ -86,7 +86,7 @@ sub run {
     ## test for Handel::Exception::Argument where cart object is not a Handel::Cart object
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $checkout = Handel::Checkout->new;
             my $fake = bless {}, 'MyObject::Foo';
             $checkout->cart($fake);
@@ -104,7 +104,7 @@ sub run {
     ## test for Handel::Exception::Argument where cart option object is not a Handel::Cart object
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $fake = bless {}, 'MyObject::Foo';
             my $checkout = Handel::Checkout->new({cart => $fake});
 

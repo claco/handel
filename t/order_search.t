@@ -55,7 +55,7 @@ sub run {
     ## throw exception when options isn't a hashref
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             $subclass->search({id => '1234'}, []);
 
             fail('no exception thrown');

@@ -19,7 +19,7 @@ isa_ok($storage, 'Handel::Storage');
 
 ## throw exception if no hash ref is passed
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->check_constraints;
 
     fail('no exception thrown');
@@ -44,7 +44,7 @@ $storage->constraints({
 
 ## throw exception if constraints fail
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->check_constraints($data);
 
     fail('no exception thrown');

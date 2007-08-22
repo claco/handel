@@ -55,6 +55,8 @@ use_ok('Handel::Subclassing::Order');
 use_ok('Handel::Subclassing::OrderOnly');
 use_ok('Handel::Subclassing::Cart');
 
+local $ENV{'LANGUAGE'} = 'en';
+
 local $SIG{__WARN__} = sub {
     like(shift, qr/deprecated/);
 };

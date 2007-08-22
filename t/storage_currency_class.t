@@ -22,7 +22,7 @@ BEGIN {
     ## throw exception when setting a bogus currency class
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             $storage->currency_class('Funklebean');
 
             fail('no exception thrown');

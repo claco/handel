@@ -108,7 +108,7 @@ my $result = bless {'storage_result' => $cart}, 'GenericResult';
 
 ## throw exception if no result is passed
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->search_items;
 
     fail('no exception thrown');
@@ -122,7 +122,7 @@ try {
 
 ## throw exception if no hash ref is passed
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->search_items($result, []);
 
     fail('no exception thrown');
@@ -136,7 +136,7 @@ try {
 
 ## throw exception when searching to something with incorrect relationship
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->item_relationship('foo');
     $storage->search_items($result, {
         id       => '99999999-9999-9999-9999-999999999999',
@@ -156,7 +156,7 @@ try {
 
 ## throw exception when adding an item with no defined relationship
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->item_relationship(undef);
     $storage->search_items($result, {
         id       => '99999999-9999-9999-9999-999999999999',

@@ -26,7 +26,7 @@ BEGIN {
     ## throw exception when setting a bogus storage class
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             $base->storage_class('Funklebean');
 
             fail('no exception thrown');

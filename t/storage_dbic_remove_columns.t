@@ -61,7 +61,7 @@ ok(!$schema->source($item_storage->schema_source)->has_column('quantity'), 'quan
 
 ## dbic doesn't remove the accessor method, but it should throw and exception
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $cart->name;
 
     fail('no exception thrown');

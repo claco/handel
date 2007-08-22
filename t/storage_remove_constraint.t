@@ -53,7 +53,7 @@ is_deeply($storage->constraints, {}, 'removed all constraints');
 
 ## throw exception when no column is specified
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->remove_constraint;
 
     fail('no exception thrown');
@@ -66,7 +66,7 @@ try {
 
 ## throw exception when no name is specified
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->remove_constraint('col');
 
     fail('no exception thrown');

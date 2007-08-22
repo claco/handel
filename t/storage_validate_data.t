@@ -30,7 +30,7 @@ is($storage->validate_data({}), undef, 'no validation data is set');
 
 ## throw exception if no hash ref is passed
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->validate_data;
 
     fail('no exception thrown');
@@ -44,7 +44,7 @@ try {
 
 ## throw exception if not ARRAYREF for FV::S
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->validation_profile({});
     $storage->validate_data({});
 
@@ -86,7 +86,7 @@ SKIP: {
 
     ## throw exception if not HASHREF for D::FV
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         $storage->validation_module('Data::FormValidator');
         $storage->validation_profile([]);
         $storage->validate_data({});

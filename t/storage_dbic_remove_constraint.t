@@ -48,7 +48,7 @@ is_deeply($storage->constraints, {'id' => {'Check It Again' => $sub}}, 'constrai
 my $schema = $storage->schema_instance;
 
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->remove_constraint('name', 'Check Name');
 
     fail('no exception thrown');

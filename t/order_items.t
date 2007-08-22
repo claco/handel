@@ -88,7 +88,7 @@ sub run {
         ## throw exception when options isn't a hashref
         {
             try {
-                local $ENV{'LANG'} = 'en';
+                local $ENV{'LANGUAGE'} = 'en';
                 $order->items({}, []);
 
                 fail('no exception thrown');
@@ -111,7 +111,7 @@ sub run {
         ## throw exception when filter isn't a hashref
         {
             try {
-                local $ENV{'LANG'} = 'en';
+                local $ENV{'LANGUAGE'} = 'en';
                 $order->items(['foo']);
 
                 fail('no exception thrown');

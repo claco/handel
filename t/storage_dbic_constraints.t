@@ -59,7 +59,7 @@ my $storage = Handel::Storage::DBIC->new({
     ## throw exception for bogus name
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             $cart->name('12345');
             $cart->update;
 
@@ -100,7 +100,7 @@ my $storage = Handel::Storage::DBIC->new({
     ## throw exception when no column is passed
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             $class->add_constraint(undef, second => sub{});
 
             fail('no exception thrown');
@@ -115,7 +115,7 @@ my $storage = Handel::Storage::DBIC->new({
     ## throw exception when no name is passed
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             $class->add_constraint('id', undef, sub{});
 
             fail('no exception thrown');
@@ -130,7 +130,7 @@ my $storage = Handel::Storage::DBIC->new({
     ## throw exception when no constraint is passed
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             $class->add_constraint('id', 'second' => undef);
 
             fail('no exception thrown');
@@ -145,7 +145,7 @@ my $storage = Handel::Storage::DBIC->new({
     ## throw exception when non-CODEREF is passed
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             $class->add_constraint('id', 'second' => []);
 
             fail('no exception thrown');
@@ -161,7 +161,7 @@ my $storage = Handel::Storage::DBIC->new({
     ## throw exception when setting a constraints with open schema_instance
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             $storage->constraints({
                 field => {'do_field' => sub{}}
             });
@@ -179,7 +179,7 @@ my $storage = Handel::Storage::DBIC->new({
     ## throw exception when setting a bogus constraint class
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             $storage->constraints_class('Funklebean');
 
             fail('no exception thrown');
@@ -240,7 +240,7 @@ my $storage = Handel::Storage::DBIC->new({
     ## throw exception for bogus sku
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             $item->sku('12345');
             $item->update;
 

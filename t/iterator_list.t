@@ -16,7 +16,7 @@ BEGIN {
 ## test for exception when non-ARRAY is given
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         my $iterator = Handel::Iterator::List->new({
             data => {}
         });
@@ -34,7 +34,7 @@ BEGIN {
 ## make sure exceptions pass through
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         my $iterator = Handel::Iterator::List->new({
             data => []
         });

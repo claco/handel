@@ -24,7 +24,7 @@ BEGIN {
 {
     my $data = bless {}, 'Handel::Iterator';
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         my $iterator = Handel::Iterator::DBIC->new({
             data => $data
         });
@@ -42,7 +42,7 @@ BEGIN {
 ## test for exception when non-blessed is given
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         my $iterator = Handel::Iterator::DBIC->new({
             data => {}
         });
@@ -61,7 +61,7 @@ BEGIN {
 {
     my $data = bless {}, 'DBIx::Class::ResultSet';
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         my $iterator = Handel::Iterator::DBIC->new({
             data => $data
         });

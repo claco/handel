@@ -96,7 +96,7 @@ my $storage = Handel::Storage::DBIC->new({
     ## throw exception when setting a default_values with open schema_instance
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             $storage->default_values({
                 field => 'foo'
             });
@@ -113,7 +113,7 @@ my $storage = Handel::Storage::DBIC->new({
     ## throw exception when setting a bogus defaults class
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             $storage->default_values_class('Funklebean');
 
             fail('no exception thrown');

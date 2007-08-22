@@ -130,7 +130,7 @@ my $storage = Handel::Storage::DBIC->new({
     ## throw exception if schema_class is empty
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $storage = Handel::Storage::DBIC->new({
                 schema_source   => 'Carts',
                 connection_info => [$dsn]
@@ -149,7 +149,7 @@ my $storage = Handel::Storage::DBIC->new({
     ## throw exception if schema_source is empty
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $storage = Handel::Storage::DBIC->new({
                 schema_class    => 'Handel::Cart::Schema',
                 connection_info => [$dsn]
@@ -168,7 +168,7 @@ my $storage = Handel::Storage::DBIC->new({
     ## throw exception if item_relationship is missing
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $storage = Handel::Storage::DBIC->new({
                 schema_class       => 'Handel::Cart::Schema',
                 schema_source      => 'Carts',
@@ -285,7 +285,7 @@ my $storage = Handel::Storage::DBIC->new({
     ## throw exception if schema_class is empty
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             Handel::Storage::DBIC->schema_class(undef);
             Handel::Storage::DBIC->schema_instance;
 
@@ -301,7 +301,7 @@ my $storage = Handel::Storage::DBIC->new({
     ## throw exception if schema_source is empty
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             Handel::Storage::DBIC->schema_class('Handel::Cart::Schema');
             Handel::Storage::DBIC->schema_source(undef);
             Handel::Storage::DBIC->schema_instance;
@@ -318,7 +318,7 @@ my $storage = Handel::Storage::DBIC->new({
     ## throw exception if item_relationship is missing
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             Handel::Storage::DBIC->schema_class('Handel::Cart::Schema');
             Handel::Storage::DBIC->schema_source('Carts');
             Handel::Storage::DBIC->item_storage_class('Handel::Storage::DBIC::Cart::Item');

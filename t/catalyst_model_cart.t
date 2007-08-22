@@ -82,7 +82,7 @@ BEGIN {
 ## throw exception when bogus cart_class is given
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         my $model = Catalyst::Model::Handel::Cart->COMPONENT;
 
         fail('no exception thrown');

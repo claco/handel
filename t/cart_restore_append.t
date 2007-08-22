@@ -43,7 +43,7 @@ sub run {
         })->first;
 
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             $cart->restore({id => '1234'}, 42);
 
             fail('no exception thrown');

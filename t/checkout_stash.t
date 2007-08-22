@@ -67,7 +67,7 @@ sub run {
 ## test for exception when non-hashref is given
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         my $stash = Handel::Checkout::Stash->new([]);
 
         fail('no exception thrown');

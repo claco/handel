@@ -21,7 +21,7 @@ SKIP: {
     skip 'Test::MockObject 1.07 not installed', 4 if $@;
 
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         throw Handel::Exception;
 
         fail('no exception thrown');

@@ -29,7 +29,7 @@ ok(constraint_quantity(1),          'numeric quantity');
     ok(constraint_quantity(5),     'quantity <= max');
 
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         constraint_quantity(6);
 
         fail('no exception thrown');

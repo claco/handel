@@ -41,7 +41,7 @@ sub run {
     ## test for Handel::Exception::Argument where first param is not a hashref
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $cart = $subclass->search(id => '1234');
 
             fail('no exception thrown');
@@ -57,7 +57,7 @@ sub run {
     ## throw exception when options isn't a hashref
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             $subclass->search({id => '1234'}, []);
 
             fail('no exception thrown');

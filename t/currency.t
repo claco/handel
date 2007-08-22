@@ -60,7 +60,7 @@ BEGIN {
 ## throw exception when bad currency code is set in new
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         my $currency = Handel::Currency->new(1.23, 'BAD');
 
         fail('no exception thrown');
@@ -93,7 +93,7 @@ BEGIN {
     my $currency = Handel::Currency->new(1.23);
 
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
 
         $currency->code('BAD');
 
@@ -112,7 +112,7 @@ BEGIN {
     my $currency = Handel::Currency->new(1.23);
 
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         local $ENV{'HandelCurrencyCode'} = 'BAD';
 
         $currency->stringify;
@@ -135,7 +135,7 @@ BEGIN {
     my $currency = Handel::Currency->new(1.23);
 
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         local $ENV{'HandelCurrencyCode'} = '';
         local $Handel::ConfigReader::DEFAULTS{'HandelCurrencyCode'} = 'BAD';
 
@@ -156,7 +156,7 @@ BEGIN {
     my $currency = Handel::Currency->new(1.23);
 
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         local $ENV{'HandelCurrencyCode'} = '';
         local $Handel::ConfigReader::DEFAULTS{'HandelCurrencyCode'} = '';
 
@@ -305,7 +305,7 @@ BEGIN {
     my $currency = Handel::Currency->new(1.23);
 
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         local $ENV{'HandelCurrencyCode'} = '';
         local $Handel::ConfigReader::DEFAULTS{'HandelCurrencyCode'} = '';
 
@@ -324,7 +324,7 @@ BEGIN {
 ## throw exception when converter_class can't be loaded
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         Handel::Currency->converter_class('Bogus');
 
         fail('no exception thrown');
@@ -410,7 +410,7 @@ SKIP: {
         my $currency = Handel::Currency->new(1.23);
 
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             local $ENV{'HandelCurrencyCode'} = '';
             local $Handel::ConfigReader::DEFAULTS{'HandelCurrencyCode'} = '';
 
@@ -431,7 +431,7 @@ SKIP: {
         my $currency = Handel::Currency->new(1.23, 'USD');
 
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
 
             $currency->convert;
 
@@ -450,7 +450,7 @@ SKIP: {
         my $currency = Handel::Currency->new(1.23, 'USD');
 
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
 
             no warnings 'redefine';
             local *Handel::Currency::code = sub {

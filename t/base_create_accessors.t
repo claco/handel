@@ -47,7 +47,7 @@ $Handel::Base::_storage = $storage;
 ## throw exception when storage returns no column accessors
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         Handel::Base->create_accessors;
 
         fail('no exception thrown');
@@ -63,7 +63,7 @@ $Handel::Base::_storage = $storage;
 ## throw exception when storage returns no column accessors
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         Handel::Base->create_accessors;
 
         fail('no exception thrown');
@@ -79,7 +79,7 @@ $Handel::Base::_storage = $storage;
 ## throw exception as an object method
 {
     try {
-        local $ENV{'LANG'} = 'en';
+        local $ENV{'LANGUAGE'} = 'en';
         my $base = bless {}, 'Handel::Base';
         $base->create_accessors;
 

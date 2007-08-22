@@ -49,7 +49,7 @@ sub run {
         isa_ok($cart, $subclass);
 
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             $cart->type('abc');
 
             fail('no exception thrown');
@@ -75,7 +75,7 @@ sub run {
         isa_ok($cart, $subclass);
 
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             $cart->name(undef);
             $cart->save;
 

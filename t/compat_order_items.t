@@ -20,6 +20,8 @@ BEGIN {
     use_ok('Handel::Constants', qw(:order :returnas));
     use_ok('Handel::Exception', ':try');
 
+    local $ENV{'LANGUAGE'} = 'en';
+
     local $SIG{__WARN__} = sub {
         like(shift, qr/deprecated/);
     };
@@ -103,7 +105,7 @@ sub run {
         ## throw exception when filter isn't a hashref
         {
             try {
-                local $ENV{'LANG'} = 'en';
+                local $ENV{'LANGUAGE'} = 'en';
                 $order->items(['foo']);
 
                 fail('no exception thrown');

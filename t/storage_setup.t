@@ -101,7 +101,7 @@ BEGIN {
     ## throw exception if setup gets no $args
     {
         try {
-            local $ENV{'LANG'} = 'en';
+            local $ENV{'LANGUAGE'} = 'en';
             my $storage = Handel::Storage->new;
             $storage->setup();
 

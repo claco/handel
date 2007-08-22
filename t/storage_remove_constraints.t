@@ -49,7 +49,7 @@ is_deeply($storage->constraints, {'id' => {'Check Id' => $sub, 'Check It Again' 
 
 ## throw exception when no column is specified
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->remove_constraints;
 
     fail('no exception thrown');

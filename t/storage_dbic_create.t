@@ -44,7 +44,7 @@ is(refaddr $result->{'storage'}, refaddr $storage, 'result storae is original st
 
 ## throw exception if no hash ref is passed
 try {
-    local $ENV{'LANG'} = 'en';
+    local $ENV{'LANGUAGE'} = 'en';
     $storage->create;
 
     fail('no exception thrown');

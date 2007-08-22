@@ -1,5 +1,10 @@
 Revision history for Perl module Handel
 
+1.00004 Tue Aug 21 21:01:10 2007
+    - Removed RDBO M::I feature in Makefile.PL (RT#28461,ANDK)
+    - Fixed exception tests message checks under l10n (RT#28927,RDROUSIES)
+    - Added Bulgarian L10N - Kliment A. Ognianov
+
 1.00003 Tue July 24 20:55:32 2007
     - Changed tests to use TEST_AUTHOR instead
     - Converted to Module::Install
