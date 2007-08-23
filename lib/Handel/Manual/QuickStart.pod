@@ -231,6 +231,8 @@ permissions to create tables.
     $ perl script/myapp_handel.pl --install --dsn mydsn --user myuser --pass mypass
     Installed/created database schema
 
+Edit MyApp.pm and load the Session plugins and a Session::Store/State plugins of your choosing.
+
 Now, just run your shiny new Catalyst/Handel application:
 
     $ perl script/myapp_server.pl

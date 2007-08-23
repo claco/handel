@@ -668,8 +668,8 @@ Options:
 
 Example:
 
-    perl scripts/[% scriptname %] schema --default
-    perl scripts/[% scriptname %] schema --install --dsn=dbi:mysql:dbname=handel:host=localhost
+    perl script/[% scriptname %] schema --default
+    perl script/[% scriptname %] schema --install --dsn=dbi:mysql:dbname=handel:host=localhost
 
 =head1 AUTHOR
 

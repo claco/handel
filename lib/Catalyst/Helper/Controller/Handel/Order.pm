@@ -112,7 +112,7 @@ BEGIN {
     use base qw/Catalyst::Controller/;
     use Handel::Constants qw/:order/;
     use FormValidator::Simple 0.17;
-    use YAML;
+    use YAML 0.65;
 };
 
 =head1 NAME
@@ -469,30 +469,30 @@ __view__
                     <tr>
                             <td align="left">[% HTML.escape(item.sku) %]</td>
                             <td align="left">[% HTML.escape(item.description) %]</td>
-                            <td align="right">[% HTML.escape(item.price.format(undef, 'FMT_SYMBOL')) %]</td>
+                            <td align="right">[% HTML.escape(item.price.as_string('FMT_SYMBOL')) %]</td>
                             <td align="center">[% HTML.escape(item.quantity) %]</td>
-                            <td align="right">[% HTML.escape(item.total.format(undef, 'FMT_SYMBOL')) %]</td>
+                            <td align="right">[% HTML.escape(item.total.as_string('FMT_SYMBOL')) %]</td>
                     </tr>
                 [% END %]
                     <tr>
                             <td align="right" colspan="4">Subtotal:</td>
-                            <td align="right">[% HTML.escape(order.subtotal.format(undef, 'FMT_SYMBOL')) %]</td>
+                            <td align="right">[% HTML.escape(order.subtotal.as_string('FMT_SYMBOL')) %]</td>
                     </tr>
                     <tr>
                             <td align="right" colspan="4">Tax:</td>
-                            <td align="right">[% HTML.escape(order.tax.format(undef, 'FMT_SYMBOL')) %]</td>
+                            <td align="right">[% HTML.escape(order.tax.as_string('FMT_SYMBOL')) %]</td>
                     </tr>
                     <tr>
                             <td align="right" colspan="4">Shipping:</td>
-                            <td align="right">[% HTML.escape(order.shipping.format(undef, 'FMT_SYMBOL')) %]</td>
+                            <td align="right">[% HTML.escape(order.shipping.as_string('FMT_SYMBOL')) %]</td>
                     </tr>
                     <tr>
                             <td align="right" colspan="4">Handling:</td>
-                            <td align="right">[% HTML.escape(order.handling.format(undef, 'FMT_SYMBOL')) %]</td>
+                            <td align="right">[% HTML.escape(order.handling.as_string('FMT_SYMBOL')) %]</td>
                     </tr>
                     <tr>
                             <td align="right" colspan="4">Total:</td>
-                            <td align="right">[% HTML.escape(order.total.format(undef, 'FMT_SYMBOL')) %]</td>
+                            <td align="right">[% HTML.escape(order.total.as_string('FMT_SYMBOL')) %]</td>
                     </tr>
                 </table>
             </td>
@@ -522,8 +522,6 @@ __profiles__
   -
     -
       - REGEX
-      - !perl/regexp:
-        REGEXP: '^[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}$'
-        MODIFIERS: i
+      - !!perl/regexp (?i-xsm:^[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}$)
 
 __END__

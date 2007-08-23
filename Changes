@@ -1,5 +1,9 @@
 Revision history for Perl module Handel
 
+1.00005 Wed Aug 22 21:42:33 2007
+    - Catalyst Helper code uses as_string instead of format
+    - Updated profiles regexps for newer YAML
+
 1.00004 Tue Aug 21 21:01:10 2007
     - Removed RDBO M::I feature in Makefile.PL (RT#28461,ANDK)
     - Fixed exception tests message checks under l10n (RT#28927,RDROUSIES)

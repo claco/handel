@@ -123,7 +123,7 @@ BEGIN {
     use base qw/Catalyst::Controller/;
     use Handel::Constants qw/:cart/;
     use FormValidator::Simple 0.17;
-    use YAML;
+    use YAML 0.65;
 };
 
 =head1 NAME
@@ -556,9 +556,9 @@ __default__
                 <input type="hidden" name="id" value="[% HTML.escape(item.id) %]">
                 <td align="left">[% HTML.escape(item.sku) %]</td>
                 <td align="left">[% HTML.escape(item.description) %]</td>
-                <td align="right">[% HTML.escape(item.price.format(undef, 'FMT_SYMBOL')) %]</td>
+                <td align="right">[% HTML.escape(item.price.as_string('FMT_SYMBOL')) %]</td>
                 <td align="center"><input style="text-align: center;" type="text" size="3" name="quantity" value="[% HTML.escape(item.quantity) %]"></td>
-                <td align="right">[% HTML.escape(item.total.format(undef, 'FMT_SYMBOL')) %]</td>
+                <td align="right">[% HTML.escape(item.total.as_string('FMT_SYMBOL')) %]</td>
                 <td><input type="submit" value="Update"></td>
             </form>
             <form action="[% c.uri_for('[- uri -]/delete/') %]" method="POST">
@@ -574,7 +574,7 @@ __default__
         </tr>
         <tr>
             <th colspan="4" align="right">Subtotal:</th>
-            <td align="right">[% HTML.escape(cart.subtotal.format(undef, 'FMT_SYMBOL')) %]</td>
+            <td align="right">[% HTML.escape(cart.subtotal.as_string('FMT_SYMBOL')) %]</td>
             <td colspan="2"></td>
         </tr>
         <tr>
@@ -674,25 +674,19 @@ __profiles__
   -
     -
       - REGEX
-      - !perl/regexp:
-        REGEXP: '^[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}$'
-        MODIFIERS: i
+      - !!perl/regexp (?i-xsm:^[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}$)
 [% action %]/destroy:
   - id
   -
     -
       - REGEX
-      - !perl/regexp:
-        REGEXP: '^[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}$'
-        MODIFIERS: i
+      - !!perl/regexp (?i-xsm:^[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}$)
 [% action %]/update:
   - id
   -
     -
       - REGEX
-      - !perl/regexp:
-        REGEXP: '^[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}$'
-        MODIFIERS: i
+      - !!perl/regexp (?i-xsm:^[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}$)
   - quantity
   - [ [NOT_BLANK], [UINT] ]
 [% action %]/restore:
@@ -700,9 +694,7 @@ __profiles__
   -
     -
       - REGEX
-      - !perl/regexp:
-        REGEXP: '^[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}$'
-        MODIFIERS: i
+      - !!perl/regexp (?i-xsm:^[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}$)
   - mode
   - [ [BETWEEN, 1, 3] ]
 __products__
