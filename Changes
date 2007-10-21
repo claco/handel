@@ -3,6 +3,8 @@ Revision history for Perl module Handel
 1.00006 Sun Oct 21 13:10:23 2007
     - Updated Clone prereq version to 0.28 (Collin Condray)
     - Fixed Quicktart to use schema --install (Charlie Garrison)
+    - Fixed various spelling errors and critic checks
+    - Added test skips for DBD::SQLite 1.14
 
 1.00005 Wed Aug 22 21:42:33 2007
     - Catalyst Helper code uses as_string instead of format

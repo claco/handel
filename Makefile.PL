@@ -76,6 +76,7 @@ feature 'Catalyst Support',
   -default => 0,
   'Catalyst::Runtime' => '5.7007',
   'Catalyst::Devel' => '1.02',
+  'Catalyst::View::TT' => 0,
   'YAML' => '0.65',
   'HTML::FillInForm' => '1.05';
 

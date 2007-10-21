@@ -54,3 +54,5 @@ allow = $@
 
 # I agree, just not here.
 #[-ValuesAndExpressions::ProhibitMagicNumbers]
+[-Subroutines::RequireArgUnpacking]
+[-Subroutines::ProhibitManyArgs]

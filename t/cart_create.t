@@ -135,7 +135,7 @@ sub run {
 
 
 SKIP: {
-    if (DBD::SQLite->VERSION eq '1.13') {
+    if (DBD::SQLite->VERSION eq '1.13' || DBD::SQLite->VERSION eq '1.14') {
         skip 'DBD::SQLite 1.13 wonky on some platforms', 2;
     };
 
