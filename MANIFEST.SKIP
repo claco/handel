@@ -46,6 +46,7 @@ Build.bat
 \.tmp$
 \#$
 \b\.#
+\.kpf$
 
 # Avoid author test files.
 \bpod-spelling.t$

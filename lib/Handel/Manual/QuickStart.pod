@@ -80,14 +80,14 @@ B<Note:> The database you specify must already exist and you need to use a user/
 permissions to create tables.
 
     $ cd MyApp
-    $ perl script/myapp_handel.pl --install --dsn dbi:mysql:handel:localhost --user myuser --pass mypass
+    $ perl script/myapp_handel.pl schema --install --dsn dbi:mysql:handel:localhost --user myuser --pass mypass
     Installed/created database schema
 
 If you want to use a local SQLite database, you can simply pass the --default option which will create a
 database in MyApp/data/handel.db
 
     $ cd MyApp
-    $ perl script/myapp_handel.pl --install --default
+    $ perl script/myapp_handel.pl schema --install --default
     Installed/created database schema
 
 Now, simply treat the newly created code as any other CPAN distribution:
@@ -228,7 +228,7 @@ B<Note:> The database you specify must already exist and you need to use a user/
 permissions to create tables.
 
     $ cd MyApp
-    $ perl script/myapp_handel.pl --install --dsn mydsn --user myuser --pass mypass
+    $ perl script/myapp_handel.pl schema --install --dsn mydsn --user myuser --pass mypass
     Installed/created database schema
 
 Edit MyApp.pm and load the Session plugins and a Session::Store/State plugins of your choosing.
