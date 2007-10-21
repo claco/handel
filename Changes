@@ -1,5 +1,7 @@
 Revision history for Perl module Handel
 
+    - Updated Clone prereq version to 0.28
+
 1.00005 Wed Aug 22 21:42:33 2007
     - Catalyst Helper code uses as_string instead of format
     - Updated profiles regexps for newer YAML

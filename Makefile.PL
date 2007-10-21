@@ -49,7 +49,7 @@ requires 'Data::Currency'           => '0.04002';
 requires 'Class::Accessor::Grouped' => '0.03';
 requires 'Class::ISA';
 requires 'Class::Inspector';
-requires 'Clone';
+requires 'Clone' => '0.28';
 requires 'Error'                    => '0.14';
 requires 'Locale::Maketext'         => '1.06';
 requires 'Module::Pluggable'        => '3.1';
