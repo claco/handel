@@ -6,6 +6,8 @@ use warnings;
 
 BEGIN {
     use base qw/Class::Accessor::Grouped/;
+    use Scalar::Util ();
+
     __PACKAGE__->mk_group_accessors('simple', qw/storage_result storage/);
 };
 
@@ -14,11 +16,11 @@ sub can {
 };
 
 sub delete {
-    throw Handel::Exception::Virtual;
+    Handel::Exception::Virtual->throw;
 };
 
 sub discard_changes {
-    throw Handel::Exception::Virtual;
+    Handel::Exception::Virtual->throw;
 };
 
 sub has_column {
@@ -31,7 +33,7 @@ sub has_column {
 };
 
 sub update {
-    throw Handel::Exception::Virtual;
+    Handel::Exception::Virtual->throw;
 };
 
 sub add_item {
@@ -56,7 +58,7 @@ sub items {
 
 sub create_instance {
     my ($self, $result, $storage) = @_;
-    my $class = blessed $self ? blessed $self : $self;
+    my $class = Scalar::Util::blessed $self ? Scalar::Util::blessed $self : $self;
 
     return bless {
         storage_result => $result,
