@@ -1,5 +1,9 @@
 Revision history for Perl module Handel
 
+1.00007 Tue Jan 1 12:16:23 2008
+    - Fixed instance of using blessed without loading Scalar::Util
+    - Use DBIx::Class 0.08008 and set default DATETIME timezones to UTC
+
 1.00006 Sun Oct 21 13:10:23 2007
     - Updated Clone prereq version to 0.28 (Collin Condray)
     - Fixed Quicktart to use schema --install (Charlie Garrison)
