@@ -406,6 +406,12 @@ sub search {
 
     if ($filter) {
         $filter = $self->_migrate_wildcards($filter);
+
+        foreach my $key (keys %{$filter}) {
+            if ($key !~ /\./) {
+                $filter->{"me.$key"} = delete $filter->{$key};
+            };
+        };
     };
 
     my $resultset = $schema->resultset($source)->search($filter, @_);
@@ -438,6 +444,12 @@ sub search_items {
 
     if ($filter) {
         $filter = $self->_migrate_wildcards($filter);
+
+        foreach my $key (keys %{$filter}) {
+            if ($key !~ /\./) {
+                $filter->{"me.$key"} = delete $filter->{$key};
+            };
+        };
     };
 
     my $resultset = $storage_result->search_related($self->item_relationship, $filter, @_);

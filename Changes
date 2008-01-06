@@ -1,5 +1,11 @@
 Revision history for Perl module Handel
 
+1.00008 Sun Jan 6 17:36:23 2008
+    - Storage::DBIC search/search_items now assume that any filter
+        column is me. if there is no . in the name. This is a fix
+        for Mango, which joins pricing for wishlists and a search on
+        id yields ambiguous column name errors.
+
 1.00007 Tue Jan 1 12:16:23 2008
     - Fixed instance of using blessed without loading Scalar::Util
     - Use DBIx::Class 0.08008 and set default DATETIME timezones to UTC
