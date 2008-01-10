@@ -184,8 +184,15 @@ sub restore {
         $self->clear;
 
         my $first = $carts[0];
-        $self->name($first->name);
-        $self->description($first->description);
+
+        ## this is hacky..needs to be more generic
+        ## since neither could have them, or rename them
+        if ($self->can('name') && $first->can('name')) {
+            $self->name($first->name);
+        };
+        if ($self->can('description') && $first->can('description')) {
+            $self->description($first->description);
+        };
 
         foreach my $cart (@carts) {
             my @items = $cart->items->all;
@@ -197,8 +204,10 @@ sub restore {
         foreach my $cart (@carts) {
             my @items = $cart->items->all;
             foreach my $item (@items) {
-                if (my $exists = $self->items({sku => $item->sku})->first){
-                    $exists->quantity($item->quantity + $exists->quantity);
+                if (my $exists = $self->items({sku => $item->sku})->first) {
+                    $exists->update({
+                        quantity => $item->quantity + $exists->quantity
+                    });
                 } else {
                     $self->add($item);
                 };
