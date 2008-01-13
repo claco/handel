@@ -1,17 +1,3 @@
-\bRCS\b
-\bCVS\b
-,v$
-\B\.svn\b
-\B\.tws\b
-^blib/
-^pm_to_blib
-^MakeMaker-\d
-Makefile$
-Makefile.old$
-\.db
-t/TEST$
-t/SMOKE$
-^blibdirs\.ts
 # Avoid version control files.
 \bRCS\b
 \bCVS\b
@@ -22,6 +8,7 @@ t/SMOKE$
 aegis.log$
 \bconfig$
 \bbuild$
+\.DS_Store$
 
 # Avoid Makemaker generated and utility files.
 \bMakefile$
@@ -46,7 +33,6 @@ Build.bat
 \.tmp$
 \#$
 \b\.#
-\.kpf$
 Handel.kpf
 
 # Avoid author test files.
