@@ -1,6 +1,6 @@
 Revision history for Perl module Handel
 
-1.00009
+1.00009 Sat Jan 12 22:14:22 2008
     - Cart->restore does update instead of quantity in case autoupdates
         are disabled
     - Cart->restore(REPLACE) now checks to make sure name/description exists
