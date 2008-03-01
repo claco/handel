@@ -1,5 +1,10 @@
 Revision history for Perl module Handel
 
+1.00010 Sat Mar 1 13:59:23 2008
+    - Fixed some perl critic failures
+    - Added Session plugins to Catalyst support prereqs
+    - Added reminder to add Session plugins to MyApp in starter
+
 1.00009 Sat Jan 12 22:14:22 2008
     - Cart->restore does update instead of quantity in case autoupdates
         are disabled

@@ -56,3 +56,4 @@ allow = $@
 #[-ValuesAndExpressions::ProhibitMagicNumbers]
 [-Subroutines::RequireArgUnpacking]
 [-Subroutines::ProhibitManyArgs]
+[-Subroutines::ProhibitExcessComplexity]

@@ -58,6 +58,8 @@ sub mk_stuff {
     $helper->{'handel_auto_wire_models'} = 1;
     $self->SUPER::mk_stuff(@_);
 
+    warn "\n\aDon't forget to add Session, Session::Store::File and Session::State::Cookie to $base.pm!\n";
+
     return;
 };
 

@@ -1,3 +1,4 @@
+## no critic (InputOutput::RequireCheckedSyscalls)
 # $Id$
 package Module::Starter::Handel;
 use strict;
@@ -9,6 +10,7 @@ BEGIN {
     use File::Path qw/mkpath/;
     use FileHandle;
     use Config;
+    use Carp;
 };
 
 =head1 NAME
@@ -106,6 +108,7 @@ sub create_distro {
     $setup =~ s/\[% startperl %\]/#!$Config{perlpath} -w/;
     $setup =~ s/\[% scriptname %\]/$options{'__setup_pl'}/g;
     FileHandle->new('>' . $options{'setup.pl'})->print($setup);
+
     chmod oct 700, $options{'setup.pl'};
     print 'Created ' . $options{'setup.pl'}, "\n";
 

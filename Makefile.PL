@@ -77,6 +77,9 @@ feature 'Catalyst Support',
   'Catalyst::Runtime' => '5.7007',
   'Catalyst::Devel' => '1.02',
   'Catalyst::View::TT' => 0,
+  'Catalyst::Plugin::Session',
+  'Catalyst::Plugin::Session::Store::File',
+  'Catalyst::Plugin::Session::State::Cookie',
   'YAML' => '0.65',
   'HTML::FillInForm' => '1.05';
 

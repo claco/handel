@@ -34,13 +34,13 @@ sub constraint_quantity {
 
     my $cfg    = Handel->config;
     my $max    = $cfg->{'HandelMaxQuantity'};
-    my $action = $cfg->{'HandelMaxQuantityAction'};
+    my $action = lc $cfg->{'HandelMaxQuantityAction'};
 
-    if ($action =~ /^exception$/i && $max) {
+    if ($action eq 'exception' && $max) {
         throw Handel::Exception::Constraint( -details =>
             translate('QUANTITY_GT_MAX', $value, $max)
         ) if $value > $max; ## no critic
-    } elsif ($action =~ /^adjust$/i && $max) {
+    } elsif ($action eq 'adjust' && $max) {
         if (ref($object) && $value && $value > $max) {
             $changing->{'quantity'} = $max;
         };
@@ -62,12 +62,12 @@ sub constraint_price {
 sub constraint_uuid {
     my $value = defined $_[0] ? shift : '';
 
-    return ($value =~ m/  ^[0-9a-f]{8}-
+    return ($value =~ m{  ^[0-9a-f]{8}-
                            [0-9a-f]{4}-
                            [0-9a-f]{4}-
                            [0-9a-f]{4}-
                            [0-9a-f]{12}$
-                      /ix);
+                      }ix);
 };
 
 sub constraint_cart_type {
