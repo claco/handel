@@ -66,7 +66,7 @@ sub create { ## no critic (ProhibitExcessComplexity)
     };
 
     if (defined $cart) {
-        if ($cart->can('shopper') && !defined $data->{'shopper'}) {
+        if ($cart->storage->has_column('shopper') && !defined $data->{'shopper'}) {
             $data->{'shopper'} = $cart->shopper;
         };
     };
