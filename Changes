@@ -2,6 +2,7 @@ Revision history for Perl module Handel
 
 1.00011
     - Order->create($cart) uses storage->has_column instead of can
+    - Removed Build.PL to make Module::Install happy
 
 1.00010 Sat Mar 1 13:59:23 2008
     - Fixed some perl critic failures
