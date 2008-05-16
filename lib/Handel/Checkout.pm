@@ -258,8 +258,7 @@ sub process {
         translate('NO_ORDER_LOADED')
     ) unless $self->order; ## no critic
 
-    $self->stash->clear;
-    $self->_setup($self);
+    $self->_setup;
 
     {
         $self->order->result->txn_begin;
@@ -293,7 +292,7 @@ sub process {
         $self->order->result->txn_commit;
     };
 
-    $self->_teardown($self);
+    $self->_teardown;
 
     return CHECKOUT_STATUS_OK;
 };
