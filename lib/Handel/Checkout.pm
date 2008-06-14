@@ -225,7 +225,7 @@ sub phases {
             $phases = [map(eval "$_", _path_to_array($phases))];
         };
 
-        $self->{'phases'} = $phases;
+        $self->{'phases'} = [map {eval "$_"} @{$phases}];
     } else {
         if (wantarray) {
             return (scalar @{$self->{'phases'}}) ? @{$self->{'phases'}} : @{&CHECKOUT_DEFAULT_PHASES}; ## no critic

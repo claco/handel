@@ -5,7 +5,7 @@ use warnings;
 
 BEGIN {
     use lib 't/lib';
-    use Handel::Test tests => 141;
+    use Handel::Test tests => 159;
 
     use_ok('Handel::Checkout');
     use_ok('Handel::Subclassing::Checkout');
@@ -133,6 +133,19 @@ sub run {
     };
 
 
+    ## Set the phases and make sure they stick as string
+    {
+        my $checkout = $subclass->new;
+
+        $checkout->phases(['CHECKOUT_PHASE_AUTHORIZE']);
+
+        my $phases = $checkout->phases;
+        isa_ok($phases, 'ARRAY');
+        is(scalar @{$phases}, 1, 'has 1 phase');
+        is($phases->[0], CHECKOUT_PHASE_AUTHORIZE, 'authorize set');
+    };
+
+
     ## Set the phases using news' phases option and make sure they stick
     {
         my $checkout = $subclass->new({phases => [CHECKOUT_PHASE_DELIVER]});
@@ -158,6 +171,18 @@ sub run {
     ## check scalar/list context returns on set phases
     {
         my $checkout = $subclass->new({phases => [CHECKOUT_PHASE_DELIVER, CHECKOUT_PHASE_INITIALIZE]});
+        my @phases = $checkout->phases;
+        is(scalar @phases, 2, 'has 2 phases');
+
+        my $phases = $checkout->phases;
+        isa_ok($phases, 'ARRAY');
+        is(scalar @{$phases}, 2, 'has 2 phases');
+    };
+
+
+    ## check scalar/list context returns on set phases
+    {
+        my $checkout = $subclass->new({phases => ['CHECKOUT_PHASE_DELIVER', 'CHECKOUT_PHASE_INITIALIZE']});
         my @phases = $checkout->phases;
         is(scalar @phases, 2, 'has 2 phases');
 

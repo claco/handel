@@ -4,6 +4,7 @@ Revision history for Perl module Handel
     - Order->create($cart) uses storage->has_column instead of can
     - Removed Build.PL to make Module::Install happy
     - Removed $self->stash->clear call in Checkout->process
+    - Checkout->new phases now eval stringsin arrayref correctly
 
 1.00010 Sat Mar 1 13:59:23 2008
     - Fixed some perl critic failures
