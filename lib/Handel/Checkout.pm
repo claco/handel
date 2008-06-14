@@ -13,6 +13,7 @@ BEGIN {
     use Module::Pluggable::Object;
     use Class::Inspector;
     use Scalar::Util qw/blessed/;
+    use Carp;
 
     use base qw/Class::Accessor::Grouped/;
     __PACKAGE__->mk_group_accessors('component_class', qw/order_class stash_class/);
@@ -76,9 +77,11 @@ sub add_handler {
     my ($self, $phase, $ref, $preference) = @_;
     my ($package) = caller;
 
-    throw Handel::Exception::Argument( -details =>
-        translate('PARAM1_NOT_CHECKOUT_PHASE')
-    ) unless constraint_checkout_phase($phase); ## no critic
+    if ($phase !~ /\D+/i) {
+        throw Handel::Exception::Argument( -details =>
+            translate('PARAM1_NOT_CHECKOUT_PHASE')
+        ) unless constraint_checkout_phase($phase); ## no critic
+    };
 
     throw Handel::Exception::Argument( -details =>
         translate('PARAM1_NOT_CODEREF')
@@ -131,6 +134,8 @@ sub add_message {
 sub add_phase {
     my ($self, $name, $value, $import) = @_;
     my $caller = (caller);
+
+    carp 'add_phase is deprecated and will be removed in a future release';
 
     if (Handel::Constants->can($name)) {
         throw Handel::Exception::Constraint(
@@ -222,10 +227,10 @@ sub phases {
 
         if (! ref $phases) {
             # holy crap, that actually worked!
-            $phases = [map(eval "$_", _path_to_array($phases))];
+            $phases = [map(eval "$_" || $_, _path_to_array($phases))];
         };
 
-        $self->{'phases'} = [map {eval "$_"} @{$phases}];
+        $self->{'phases'} = [map {eval "$_" || $_} @{$phases}];
     } else {
         if (wantarray) {
             return (scalar @{$self->{'phases'}}) ? @{$self->{'phases'}} : @{&CHECKOUT_DEFAULT_PHASES}; ## no critic

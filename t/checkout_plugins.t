@@ -5,7 +5,7 @@ use warnings;
 
 BEGIN {
     use lib 't/lib';
-    use Handel::Test tests => 1275;
+    use Handel::Test tests => 1308;
 
     use_ok('Handel::Checkout');
     use_ok('Handel::Checkout::Plugin');
@@ -155,6 +155,31 @@ sub run {
         isa_ok($checkout->{'handlers'}->{1}->{1}->[0], 'Handel::TestPlugins::First');
         is(ref $checkout->{'handlers'}->{1}->{1}->[1], 'CODE', 'stored code ref');
         $checkout->{'handlers'}->{1}->{1}->[1]->($plugin);
+        ok($plugin->{'handler_called'}, 'handler called');
+    };
+
+
+    ## Load all string phase plugins in a new path
+    {
+        local $ENV{'HandelPluginPaths'} = 'Handel::StringPlugins';
+
+        my $checkout = $subclass->new;
+        my %plugins = map { ref $_ => $_ } $checkout->plugins;
+
+        is(scalar keys %plugins, 2, 'loaded s plugins');
+        ok(exists $plugins{'Handel::StringPlugins::First'}, 'first plugin exists');
+        ok(!exists $plugins{'Handel::OtherTestPlugins::Second'}, 'second plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestPlugin'}, 'test plugin not loaded');
+        ok(!exists $plugins{'Handel::Checkout::Plugin::TestBogusPlugin'}, 'bogus plugin not loaded');
+
+        my $plugin = $plugins{'Handel::StringPlugins::First'};
+        isa_ok($plugin, 'Handel::Checkout::Plugin');
+        ok($plugin->{'init_called'}, 'init was called');
+        ok($plugin->{'register_called'}, 'register was called');
+
+        isa_ok($checkout->{'handlers'}->{'CHECKOUT_PHASE_STRING'}->{1}->[0], 'Handel::StringPlugins::First');
+        is(ref $checkout->{'handlers'}->{'CHECKOUT_PHASE_STRING'}->{1}->[1], 'CODE', 'stored code ref');
+        $checkout->{'handlers'}->{'CHECKOUT_PHASE_STRING'}->{1}->[1]->($plugin);
         ok($plugin->{'handler_called'}, 'handler called');
     };
 

@@ -11,7 +11,7 @@ BEGIN {
     if($@) {
         plan skip_all => 'DBD::SQLite not installed';
     } else {
-        plan tests => 196;
+        plan tests => 211;
     };
 
     use_ok('Handel::Checkout');
@@ -208,6 +208,41 @@ sub run {
         is($items->first->total+0, 0, 'total is 0');
         $items->next;
         is($items->next->total+0, 0, 'total is 0');
+
+        my @messages = $checkout->messages;
+        is(scalar @messages, 0, 'has no messages');
+    };
+
+
+    ## Run a successful test pipeline using string phases
+    {
+        my $order = Handel::Order->create({
+            shopper => '00000000-0000-0000-0000-000000000000'
+        });
+            $order->add({
+                sku      => 'SKU1',
+                quantity => 1,
+                price    => 1.11
+            });
+            $order->add({
+                sku      => 'SKU2',
+                quantity => 2,
+                price    => 2.22
+            });
+
+        my $checkout = $subclass->new({
+            pluginpaths => 'Handel::StringPlugins',
+            loadplugins => 'Handel::StringPlugins::InitializeTotals',
+            phases      => ['CHECKOUT_PHASE_STRING'],
+            order       => $order
+        });
+        is($checkout->process, CHECKOUT_STATUS_OK, 'processed OK');
+
+        my $items = $order->items;
+        is($order->subtotal+0, 5.55, 'subtotal is 5.55');
+        is($items->first->total+0, 1.11, 'total is 1.11');
+        $items->next;
+        is($items->next->total+0, 4.44, 'total is 4.44');
 
         my @messages = $checkout->messages;
         is(scalar @messages, 0, 'has no messages');

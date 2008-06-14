@@ -51,6 +51,7 @@ requires 'Class::ISA';
 requires 'Class::Inspector';
 requires 'Clone' => '0.28';
 requires 'Error'                    => '0.14';
+requires 'Carp';
 requires 'Locale::Maketext'         => '1.06';
 requires 'Module::Pluggable'        => '3.1';
 requires 'Module::Starter'          => '1.42';
