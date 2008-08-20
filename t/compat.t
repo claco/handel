@@ -12,9 +12,11 @@ BEGIN {
         like(shift, qr/deprecated/);
     };
     use_ok('Handel::Compat');
-    
+
     ## load Handel::Base for tests.
     ## in the wild, the superclasses already have it
+    ## eat C3 warnings in 5.10
+    local $SIG{__WARN__} = sub{};
     use_ok('Handel::Base');
     use_ok('Handel::Constraints', 'constraint_uuid');
     push @Handel::Compat::ISA, 'Handel::Base';

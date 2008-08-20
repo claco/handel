@@ -5,10 +5,12 @@
 ,B$
 ,D$
 \B\.svn\b
+\B\.git\b
 aegis.log$
 \bconfig$
 \bbuild$
 \.DS_Store$
+
 
 # Avoid Makemaker generated and utility files.
 \bMakefile$

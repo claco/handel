@@ -12,7 +12,7 @@ BEGIN {
     if($@) {
         plan skip_all => 'DBD::SQLite not installed';
     } else {
-        plan tests => 10;
+        plan tests => 11;
     };
 
     use_ok('Handel::Storage::DBIC');
@@ -53,6 +53,7 @@ isnt(refaddr $storage, refaddr $clone, 'clone is not the original');
 my $schema = $storage->schema_instance;
 is(refaddr $storage->_schema_instance, refaddr $schema, 'clone is a full copy');
 my $cloned = $storage->clone;
+isnt(refaddr $storage, refaddr $cloned, 'clone is not the original');
 is($cloned->_schema_instance, undef, 'unset clone schema instance');
 is(refaddr $storage->schema_instance, refaddr $schema, 'original schema in tact');
 

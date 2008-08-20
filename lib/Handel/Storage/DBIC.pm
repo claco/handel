@@ -25,8 +25,8 @@ BEGIN {
 
     use Handel::Exception qw/:try/;
     use Handel::L10N qw/translate/;
-    use Clone ();
     use Scalar::Util qw/blessed weaken/;
+    use Clone ();
 };
 
 __PACKAGE__->constraints_class('Handel::Components::Constraints');
@@ -102,7 +102,10 @@ sub clone {
         my $schema = $self->_schema_instance;
         $self->_schema_instance(undef);
 
-        my $clone = Clone::clone($self);
+        my $clone = $self->SUPER::clone;
+
+        ## filthy hack until I figure out wtf Clone isn't doing in 5.10
+        $clone->{'connection_info'} = [@{$self->{'connection_info'} || []}];
 
         $self->_schema_instance($schema);
 
