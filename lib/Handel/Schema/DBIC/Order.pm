@@ -38,17 +38,13 @@ __PACKAGE__->add_columns(
         data_type     => 'datetime',
         is_nullable   => 1,
         default_value => undef,
-        extra         => {
-            timezone  => 'UTC'
-        }
+        timezone  => 'UTC'
     },
     updated => {
         data_type     => 'datetime',
         is_nullable   => 1,
         default_value => undef,
-        extra         => {
-            timezone  => 'UTC'
-        }
+        timezone  => 'UTC'
     },
     comments => {
         data_type     => 'varchar',
