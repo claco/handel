@@ -1,5 +1,13 @@
 Revision history for Perl module Handel
 
+1.00012
+    - Upgraded to Test::File::Contents 0.05 (LESTERM)
+    - Fixed: timzone in extra => {} is deprecated, its now directly on the
+	    columns definition (LESTERM)
+	- Added CONTRIBUTORS file
+	- Tweaked manifest.t for .git
+
+
 1.00011 Wed Aug 20 19:32:44 2008
     - Order->create($cart) uses storage->has_column instead of can
     - Removed Build.PL to make Module::Install happy
