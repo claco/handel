@@ -28,7 +28,6 @@ BEGIN {
     };
 };
 
-
 ## test for exception when no data is given
 {
     try {
@@ -96,7 +95,6 @@ BEGIN {
     is(refaddr $iterator->storage, refaddr $storage, 'storage was set');
 };
 
-
 ## test for exception when no result is given
 {
     try {
@@ -130,7 +128,6 @@ BEGIN {
     };
 };
 
-
 ## test abstract methods
 {
     foreach my $method (qw/all count first last next reset/) {
@@ -149,25 +146,22 @@ BEGIN {
     };
 };
 
-
 SKIP: {
     eval 'use Test::MockObject 1.07';
     skip 'Test::MockObject 1.07 not installed', 7 if $@;
-
     Test::MockObject->fake_module('MyResult' => (
         create_instance => sub {
             my $class = shift;
             return bless {result => shift, storage => shift}, $class;
         }
     ));
-
     my $data = [qw/a b c/];
     my $storage = bless {}, 'MyStorage';
     my $iterator = Handel::Iterator->new({
         data => $data, result_class => 'MyResult', storage => $storage
     });
-    isa_ok($iterator, 'Handel::Iterator');
-
+    my $class = ref($iterator); # Needed to avoid segfault! Why?
+    isa_ok($class, 'Handel::Iterator');
 
     ## get result using internal storage
     {
