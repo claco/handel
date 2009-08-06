@@ -71,6 +71,7 @@ requires 'SQL::Translator'          => '0.08';
 requires 'Getopt::Long';
 requires 'Pod::Usage';
 requires 'DBD::SQLite';
+requires 'Data::Currency';
 build_requires 'Test::More' => '0.61';
 
 feature 'Catalyst Support',

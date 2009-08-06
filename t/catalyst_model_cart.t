@@ -17,7 +17,7 @@ BEGIN {
 
     eval 'use Test::MockObject 1.07';
     if (!$@) {
-        plan tests => 14;
+        plan tests => 13;
     } else {
         plan skip_all => 'Test::MockObject 1.07 not installed';
     };
@@ -81,17 +81,13 @@ BEGIN {
 
 ## throw exception when bogus cart_class is given
 {
-    try {
+    eval {
         local $ENV{'LANGUAGE'} = 'en';
         my $model = Catalyst::Model::Handel::Cart->COMPONENT;
 
         fail('no exception thrown');
-    } catch Error::Simple with {
-        pass('caught simple exception');
-        like(shift, qr/could not load cart class/i, 'could not load class in message');
-    } otherwise {
-        fail('caught other exception');
     };
+    like($@, qr/could not load cart class/i, 'could not load class in message');
 };
 
 
