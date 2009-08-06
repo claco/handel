@@ -1,5 +1,4 @@
-#!perl -wT
-# $Id$
+#!perl -w
 ## no critic (ProhibitPackageVars, ProhibitStringyEval, RequireCarping)
 use strict;
 use warnings;

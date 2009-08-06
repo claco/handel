@@ -1,4 +1,4 @@
-#!perl -wT
+#!perl -w
 # $Id: /local/CPAN/Handel/trunk/t/cart_create.t 1988 2007-10-21T21:05:56.869869Z claco  $
 use strict;
 use warnings;

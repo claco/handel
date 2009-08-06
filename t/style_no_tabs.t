@@ -1,5 +1,4 @@
-#!perl -wT
-# $Id$
+#!perl -w
 use strict;
 use warnings;
 use lib 't/lib';

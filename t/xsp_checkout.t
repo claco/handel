@@ -1,5 +1,4 @@
-#!perl -wT
-# $Id$
+#!perl -w
 ## no critic (RequireTestLabels)
 use strict;
 use warnings;
