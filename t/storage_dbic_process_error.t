@@ -10,11 +10,12 @@ BEGIN {
     if($@) {
         plan skip_all => 'DBD::SQLite not installed';
     } else {
-        plan tests => 13;
+        plan tests => 16;
     };
 
     use_ok('Handel::Storage::DBIC');
     use_ok('Handel::Exception', ':try');
+    use_ok('Handel::L10N', qw(translate));
 };
 
 my $storage = Handel::Storage::DBIC->new({
@@ -53,6 +54,19 @@ try {
 } catch Handel::Exception::Constraint with {
     pass('caught constraint exception');
     like(shift, qr/id value already exists/i, 'value exists in message');
+} otherwise {
+    fail('other exception caught');
+};
+
+## catch 'are not unique' DBIC errors
+try {
+    local $ENV{'LANGUAGE'} = 'en';
+    $storage->process_error('DBD::SQLite::st execute failed: columns col1, col2 are not unique');
+
+    fail('no exception thrown');
+} catch Handel::Exception::Constraint with {
+    pass('caught constraint exception');
+    cmp_ok(shift->text, 'eq', translate('COLUMN_VALUE_EXISTS', "col1, col2"), 'check COLUMN_VALUE_EXISTS message');
 } otherwise {
     fail('other exception caught');
 };

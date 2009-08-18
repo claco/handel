@@ -259,8 +259,8 @@ sub process_error { ## no critic (RequireFinalReturn)
         die $message; ## no critic
     };
 
-    if ($message =~ /column\s+(.*)\s+is not unique/) {
-        my $details = translate('COLUMN_VALUE_EXISTS', $1); ## no critic
+    if ($message =~ /column(s){0,1}\s+(.*)\s+(is|are) not unique/) {
+        my $details = translate('COLUMN_VALUE_EXISTS', $2); ## no critic
 
         throw Handel::Exception::Constraint(-text => $details);
     } elsif ($message =~ /\s*(.*)\s+value already exists/) {
