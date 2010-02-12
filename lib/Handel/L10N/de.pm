@@ -1,6 +1,6 @@
 ## no critic
 # $Id$
-package Handel::L10N::en_us;
+package Handel::L10N::de;
 use strict;
 use warnings;
 use utf8;
@@ -11,199 +11,199 @@ BEGIN {
 };
 
 %Lexicon = (
-    Language => 'English',
+    Language => 'Deutsch',
 
     COMPAT_DEPRECATED =>
-        'Handel::Compat is deprecated and will go away in a future release.',
+        'Handel::Compat ist missbilligt und wird künftig nicht mehr zur Verfügung stehen.',
 
     COMPCLASS_NOT_LOADED =>
-        'The component class [_1] [_2] could not be loaded',
+        'Die Komponentenklasse [_1] [_2] konnte nicht geladen werden',
 
     PARAM1_NOT_HASHREF =>
-        'Param 1 is not a HASH reference',
+        'Parameter 1 ist keine HASH-Referenz',
 
     PARAM1_NOT_HASHREF_CARTITEM =>
-        'Param 1 is not a HASH reference or Handel::Cart::Item',
+        'Parameter 1 ist weder eine HASH-Referenz noch ein Handel::Cart::Item-Objekt',
 
     PARAM1_NOT_HASHREF_CART =>
-        'Param 1 is not a HASH reference or Handel::Cart',
+        'Parameter 1 ist weder eine HASH-Referenz noch ein Handel::Cart-Objekt',
 
     PARAM1_NOT_HASHREF_ORDER =>
-        'Param 1 is not a HASH reference or Handel::Order',
+        'Parameter 1 ist weder eine HASH-Referenz noch ein Handel::Order-Objekt',
 
     PARAM1_NOT_CHECKOUT_PHASE =>
-        'Param 1 is not a valid CHECKOUT_PHASE_* value',
+        'Parameter 1 ist kein gültiger CHECKOUT_PHASE_*-Wert',
 
     PARAM1_NOT_CODEREF =>
-        'Param 1 is not a CODE reference',
+        'Parameter 1 ist keine CODE-Referenz',
 
     PARAM1_NOT_CHECKOUT_MESSAGE =>
-        'Param 1 is not a Handel::Checkout::Message object or text message',
+        'Parameter 1 ist weder ein Handel::Checkout::Message-Objekt noch eine Textnachricht',
 
     PARAM1_NOT_HASH_CARTITEM_ORDERITEM =>
-        'Param 1 is not a HASH reference, Handel::Cart::Item or Handel::Order::Item',
+        'Parameter 1 ist weder eine HASH-Referenz, noch ein Handel::Cart::Item- oder Handel::Order::Item-Objekt',
 
     PARAM1_NOT_ARRAYREF_STRING =>
-        'Param 1 is not an ARRAY reference or string',
+        'Parameter 1 ist weder eine ARRAY-Referenz noch ein String',
 
     PARAM2_NOT_HASHREF =>
-        'Param 2 is not a HASH reference',
+        'Parameter 2 ist keine HASH-Referenz',
 
     CARTPARAM_NOT_HASH_CART =>
-        'Cart reference is not a HASH reference or Handel::Cart',
+        'Die Cart-Referenz ist weder eine HASH-Referenz noch ein Handel::Cart-Objekt',
 
     COLUMN_NOT_SPECIFIED =>
-        'No column was specified',
+        'Es wurde keine Spalte festgelegt',
 
     COLUMN_NOT_FOUND =>
-        'Column [_1] does not exist',
+        'Die Spalte [_1] existiert nicht',
 
     COLUMN_VALUE_EXISTS =>
-        '[_1] value already exists',
+        'Der Wert [_1] existiert bereits',
 
     CONSTRAINT_NAME_NOT_SPECIFIED =>
-        'No constraint name was specified',
+        'Es wurde kein constraint-Name festgelegt',
 
     CONSTRAINT_NOT_SPECIFIED =>
-        'No constraint was specified',
+        'Es wurde kein constraint festgelegt',
 
     UNKNOWN_RESTORE_MODE =>
-        'Unknown restore mode',
+        'Unbekannter restore-Modus',
 
     HANDLER_EXISTS_IN_PHASE =>
-        'There is already a handler in phase ([_1]) for preference ([_2]) from the plugin ([_3])',
+        'In der Phase ([_1]) gibt es bereits einen Handler für die Präferenz ([_2]) im Plugin ([_3])',
 
     CONSTANT_NAME_ALREADY_EXISTS =>
-        'A constant named [_1] already exists in Handel::Constants',
+        'Es gibt bereits eine Konstante [_1] in Handel::Constants',
 
     CONSTANT_VALUE_ALREADY_EXISTS =>
-        'A phase constant value of [_1] already exists',
+        'Es gibt bereits einen konstanten Wert [_1]',
 
     CONSTANT_EXISTS_IN_CALLER =>
-        'A constant named [_1] already exists in caller [_2]',
+        'Es gibt bereits eine Konstante [_1] im caller [_2]',
 
     NO_ORDER_LOADED =>
-        'No order is assocated with this checkout process',
+        'Mit diesem checkout-Prozess ist keine Bestellung assoziiert',
 
     CART_NOT_FOUND =>
-        'Could not find a cart matching the supplied search criteria',
+        'Zu diesem Suchkriterium wurde kein Einkaufswagen gefunden',
 
     ORDER_NOT_FOUND =>
-        'Could not find an order matching the supplied search criteria',
+        'Zu diesem Suchkriterium wurde keine Bestellung gefunden',
 
     ORDER_CREATE_FAILED_CART_EMPTY =>
-        'Could not create a new order because the supplied cart is empty',
+        'Es konnte keine Bestellung angelegt werden weil der Einkaufswagen leer ist',
 
     ROLLBACK_FAILED =>
-        'Transaction aborted. Rollback failed: [_1]',
+        'Die Transaktion wurde abgebrochen. Rollback fehlgeschlagen: [_1]',
 
     QUANTITY_GT_MAX =>
-        'The quantity requested ([_1]) is greater than the maximum quantity allowed ([_2])',
+        'Die angeforderte Menge ([_1]) ist größer als die maximal erlaubte Menge ([_2])',
 
     CURRENCY_CODE_INVALID =>
-        'Currency code [_1] is invalid or malformed',
+        'Der Währungs-Code [_1] ist ungültig oder kaputt',
 
     UNHANDLED_EXCEPTION =>
-        'An unspecified error has occurred',
+        'Es ist ein unbekannter Fehler aufgetreten',
 
     CONSTRAINT_EXCEPTION =>
-        'The supplied field(s) failed database constraints',
+        'Die übergebenen Felder entsprachen nicht den Datenbank-constraints',
 
     ARGUMENT_EXCEPTION =>
-        'The argument supplied is invalid or of the wrong type',
+        'Das übergebene Argument ist ungültig oder vom falschen Typ',
 
     XSP_TAG_EXCEPTION =>
-        'The tag is out of scope or missing required child tags',
+        'Der tag ist nicht sichtbar oder es fehlen benötigte child-tags',
 
     ORDER_EXCEPTION =>
-        'An error occurred while while creating or validating the current order',
+        'Während der Bereitstellung oder Überprüfung der Bestellung ist ein Fehler aufgetreten',
 
     CHECKOUT_EXCEPTION =>
-        'An error occurred during the checkout process',
+        'Während des checkout-Prozesses ist ein Fehler aufgetreten',
 
     STORAGE_EXCEPTION =>
-        'An error occurred while loading storage',
+        'Beim Laden des storage ist ein Fehler aufgetreten',
 
     VALIDATION_EXCEPTION =>
-        'The data could not be written because it failed validation',
+        'Die Daten waren ungültig und konnten daher nicht geschrieben werden',
 
     VIRTUAL_METHOD =>
-        'Virtual method not implemented',
+        'Die virtuelle Methode ist nicht implementiert',
 
     NO_STORAGE =>
-        'Storage not supplied',
+        'Storage nicht übergeben',
 
     NO_RESULT_CLASS =>
-        'Result class not supplied',
+        'Keine result-Klasse übergeben',
 
     NO_ITERATOR_DATA =>
-        'Iterator data not supplied',
+        'Keine iterator-Daten übergeben',
 
     ITERATOR_DATA_NOT_ARRAYREF =>
-        'Iterator data is not an ARRAY reference',
+        'Die iterator-Daten sind keine ARRAY-Referenz',
 
     ITERATOR_DATA_NOT_RESULTSET =>
-        'Iterator data is not a DBIx::Class::Resultset',
+        'Die iterator-Daten sind kein DBIx::Class::Resultset',
 
     ITERATOR_DATA_NOT_RESULTS_ITERATOR =>
-        'Iterator data is not an iterator',
+        'Die iterator-Daten sind kein Iterator',
 
     NO_RESULT =>
-        'No result exists or result not supplied',
+        'Es existiert kein Ergebnis oder es wurde keines übergeben',
 
     NOT_CLASS_METHOD =>
-        'Not a class method',
+        'Keine Klassenmethode',
 
     NOT_OBJECT_METHOD =>
-        'Not an object method',
+        'Keine Objektmethode',
 
     FVS_REQUIRES_ARRAYREF =>
-        'FormValidator::Simple requires an ARRAYREF based profile',
+        'FormValidator::Simple benötigt ein Profil auf der Basis einer ARRAY-Referenz',
 
     DFV_REQUIRES_HASHREF =>
-        'Data::FormValidator requires an HASHREF based profile',
+        'Data::FormValidator benötigt ein Profil auf der Basis einer HASH-Referenz',
 
     PLUGIN_HAS_NO_REGISTER =>
-        'Attempt to register plugin that hasn\'t defined register',
+        'Versuch, ein Plugin zu registrieren, das kein register definiert hat',
 
     ADD_CONSTRAINT_EXISTING_SCHEMA =>
-        'Can not add constraints to an existing schema instance',
+        'Zu einer existierenden schema-Instanz können keine constraints hinzugefügt werden',
 
     REMOVE_CONSTRAINT_EXISTING_SCHEMA =>
-        'Can not remove constraints to an existing schema instance',
+        'Von einer existierenden schema-Instanz können  eine constraints entfernt werden',
 
     SETUP_EXISTING_SCHEMA =>
-        'A schema instance has already been initialized',
+        'Es wurde bereits eine schema-Instanz initialisiert',
 
     COMPDATA_EXISTING_SCHEMA =>
-        'Can not assign [_1] to an existing schema instance',
+        'Konnte [_1] nicht einer existierenden schema-Instanz hinzufügen',
 
     ITEM_RELATIONSHIP_NOT_SPECIFIED =>
-        'No item relationship defined',
+        'Keine item-Beziehung definiert',
 
     ITEM_STORAGE_NOT_DEFINED =>
-        'No item storage or item storage class defined',
+        'Kein item-storage oder keine item-storage-Klasse definiert',
 
     SCHEMA_SOURCE_NOT_SPECIFIED =>
-        'No schema_source is specified',
+        'Keine schema_source spezifiziert',
 
     SCHEMA_CLASS_NOT_SPECIFIED =>
-        'No schema_class is specified',
+        'Keine schema_class spezifiziert',
 
     SCHEMA_SOURCE_NO_RELATIONSHIP =>
-        'The source [_1] has no relationship named [_2]',
+        'Die Quelle [_1] hat keine Beziehung namens [_2]',
 
     TAG_NOT_ALLOWED_IN_OTHERS =>
-        'Tag [_1] not valid inside of other Handel tags',
+        'Tag [_1] ist innerhalb anderer Handel-tags ungültig',
 
     TAG_NOT_ALLOWED_HERE =>
-        'Tag [_1] not valid here',
+        'Tag [_1] ist hier ungültig',
 
     TAG_NOT_ALLOWED_IN_TAG =>
-        'Tag [_1] not valid inside of tag [_2]',
+        'Tag [_1] ist innerhalb von tag [_2] ungültig',
 
     NO_COLUMN_ACCESSORS =>
-        'Storage did not return any column accessors',
+        'Storage hat keine Spalten-accessors zurückgegeben',
 );
 
 1;
@@ -211,7 +211,7 @@ __END__
 
 =head1 NAME
 
-Handel::L10N::en_us - Handel Language Pack: US English
+Handel::L10N::de - Handel Language Pack: German (deutsch)
 
 =head1 AUTHOR
 
@@ -219,3 +219,5 @@ Handel::L10N::en_us - Handel Language Pack: US English
     CPAN ID: CLACO
     claco@chrislaco.com
     http://today.icantfocus.com/blog/
+
+    Translation: Mirko Westermeier (mirko@westermeier.de)

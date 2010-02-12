@@ -5,7 +5,7 @@ use utf8;
 
 BEGIN {
     use lib 't/lib';
-    use Handel::Test tests => 11;
+    use Handel::Test tests => 12;
 
     use_ok('Handel::L10N', 'translate');
     use_ok('Handel::Exception', ':try');
@@ -20,6 +20,9 @@ BEGIN {
 
     local $ENV{'LANGUAGE'} = 'fr';
     is(translate('Language'), "Français", 'got French');
+
+    local $ENV{'LANGUAGE'} = 'de';
+    is(translate('Language'), "Deutsch", 'got German');
 };
 
 
