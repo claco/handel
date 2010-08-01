@@ -8,7 +8,7 @@ Revision history for Perl module Handel
 	- Tweaked manifest.t for .git
 	- Tweaked spelling tests
 	- Updated PREREQ
-	- Tested on 5.10.1, 5.12.1
+	- Tested on 5.8.9, 5.10.1, 5.12.1
 
 
 1.00011 Wed Aug 20 19:32:44 2008
