@@ -42,48 +42,48 @@ license 'perl';
 perl_version '5.008001';
 all_from 'lib/Handel.pm';
 
-requires 'DBIx::Class'              => '0.08008';
-requires 'DBIx::Class::UUIDColumns' => '0.02000';
-requires 'DBIx::Class::Validation'  => '0.02000';
+requires 'DBIx::Class'              => '0.08123';
+requires 'DBIx::Class::UUIDColumns' => '0.02005';
+requires 'DBIx::Class::Validation'  => '0.02005';
 requires 'Data::Currency'           => '0.04002';
-requires 'Class::Accessor::Grouped' => '0.03';
-requires 'Class::ISA';
-requires 'Class::Inspector';
-requires 'Clone' => '0.28';
-requires 'Error'                    => '0.14';
-requires 'Carp';
-requires 'Locale::Maketext'         => '1.06';
-requires 'Module::Pluggable'        => '3.1';
-requires 'Module::Starter'          => '1.42';
-requires 'Scalar::Util';
-requires 'Tie::Hash';
-requires 'DateTime';
-requires 'DateTime::Format::MySQL';
+requires 'Class::Accessor::Grouped' => '0.09003';
+requires 'Class::ISA'               => '0.36';
+requires 'Class::Inspector'         => '1.24';
+requires 'Clone'                    => '0.31';
+requires 'Error'                    => '0.17016';
+requires 'Carp'                     => '1.16';
+requires 'Locale::Maketext'         => '1.14';
+requires 'Module::Pluggable'        => '3.9';
+requires 'Module::Starter'          => '1.54';
+requires 'Scalar::Util'             => '1.22';
+requires 'Tie::Hash'                => '1.03';
+requires 'DateTime'                 => '0.61';
+requires 'DateTime::Format::MySQL'  => '0.04';
 requires 'Locale::Currency'         => '2.07';
-requires 'Locale::Currency::Format' => '1.22';
-requires 'FormValidator::Simple'    => '0.17';
-requires 'Finance::Currency::Convert::WebserviceX' => '0.03';
-requires 'NEXT';
-requires 'FileHandle';
-requires 'File::Spec::Functions';
-requires 'File::Path';
-requires 'SQL::Translator'          => '0.08';
-requires 'Getopt::Long';
-requires 'Pod::Usage';
-requires 'DBD::SQLite';
-requires 'Data::Currency';
-build_requires 'Test::More' => '0.61';
+requires 'Locale::Currency::Format' => '1.28';
+requires 'FormValidator::Simple'    => '0.28';
+requires 'Finance::Currency::Convert::WebserviceX' => '0.07001';
+requires 'NEXT'                     => '0.64';
+requires 'FileHandle'               => '2.02';
+requires 'File::Spec::Functions'    => '3.3';
+requires 'File::Path'               => '2.08';
+requires 'SQL::Translator'          => '0.11006';
+requires 'Getopt::Long'             => '2.38';
+requires 'Pod::Usage'               => '1.36';
+requires 'DBD::SQLite'              => '1.29';
+requires 'Data::Currency'           => '0.04002';
+build_requires 'Test::More' => '0.94';
 
 feature 'Catalyst Support',
   -default => 0,
-  'Catalyst::Runtime' => '5.7007',
-  'Catalyst::Devel' => '1.02',
-  'Catalyst::View::TT' => 0,
-  'Catalyst::Plugin::Session',
-  'Catalyst::Plugin::Session::Store::File',
-  'Catalyst::Plugin::Session::State::Cookie',
-  'YAML' => '0.65',
-  'HTML::FillInForm' => '1.05';
+  'Catalyst::Runtime'               => '5.80025',
+  'Catalyst::Devel'                 => '1.28',
+  'Catalyst::View::TT'              => '0.34',
+  'Catalyst::Plugin::Session'       => '0.3',
+  'Catalyst::Plugin::Session::Store::File'      => '0.18',
+  'Catalyst::Plugin::Session::State::Cookie'    => '0.17',
+  'YAML'                => '0.71',
+  'HTML::FillInForm'    => '2.00';
 
 feature 'AxKit Support',
   -default                   => 0,

@@ -1,11 +1,14 @@
 Revision history for Perl module Handel
 
-1.00012
+1.00012 Sun Aug 1 13:40:04 2010
     - Upgraded to Test::File::Contents 0.05 (LESTERM)
     - Fixed: timzone in extra => {} is deprecated, its now directly on the
 	    columns definition (LESTERM)
 	- Added CONTRIBUTORS file
 	- Tweaked manifest.t for .git
+	- Tweaked spelling tests
+	- Updated PREREQ
+	- Tested on 5.10.1, 5.12.1
 
 
 1.00011 Wed Aug 20 19:32:44 2008
