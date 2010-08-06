@@ -1,5 +1,8 @@
 Revision history for Perl module Handel
 
+1.00013 Thur Aug 5 21:12:36 2010
+	- Fixed live currency conversion compat tests to be author only
+
 1.00012 Sun Aug 1 13:40:04 2010
     - Upgraded to Test::File::Contents 0.05 (LESTERM)
     - Fixed: timzone in extra => {} is deprecated, its now directly on the

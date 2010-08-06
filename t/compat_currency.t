@@ -41,6 +41,7 @@ BEGIN {
 
 
 SKIP: {
+    skip 'Skipping live tests', 8 unless $ENV{TEST_AUTHOR};
     eval 'use Finance::Currency::Convert::WebserviceX 0.03';
     skip 'Finance::Currency::Convert::WebserviceX 0.03 not installed', 8 if $@;
 
@@ -79,6 +80,7 @@ SKIP: {
 };
 
 SKIP: {
+    skip 'Skipping live tests', 4 unless $ENV{TEST_AUTHOR};
     eval 'use Locale::Currency';
     skip 'Locale::Currency not installed', 4 if $@;
 
@@ -108,10 +110,11 @@ SKIP: {
 };
 
 SKIP: {
+    skip 'Skipping live tests', 6 unless $ENV{TEST_AUTHOR};
     eval 'use Locale::Currency';
     eval 'use Finance::Currency::Convert::WebserviceX 0.03' if !$@;
     eval 'use Locale::Currency::Format' if !$@;
-    skip 'Format and Convert not installed', 4 if $@;
+    skip 'Format and Convert not installed', 6 if $@;
 
     my $currency = Handel::Compat::Currency->new(1.23);
     isa_ok($currency, 'Handel::Compat::Currency');
