@@ -69,7 +69,7 @@ sub run {
 
         my $related_items = $cart->count;
         is($related_items, 1, 'has 1 item');
-        is($cart->subtotal+0, 9.99, 'subtotal is 9.99');
+        cmp_currency($cart->subtotal+0, 9.99, 'subtotal is 9.99');
         is($cart->delete({sku => 'SKU3333'}), 1, 'deleted sku3333');
         is($cart->count, 0, 'has 0 items');
         is($cart->subtotal+0, 0, 'subtotal is 0');
@@ -108,7 +108,7 @@ sub run {
 
         my $related_items = $cart->count;
         is($related_items, 2, 'has 2 items');
-        is($cart->subtotal+0, 45.51, 'subtotal is 45.51');
+        cmp_currency($cart->subtotal+0, 45.51, 'subtotal is 45.51');
         ok($cart->delete({sku => 'SKU%'}), 'deleted SKU%');
         is($cart->count, 0, 'has 0 items');
         is($cart->subtotal+0, 0, 'subtotal is 0');

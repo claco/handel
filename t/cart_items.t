@@ -53,7 +53,7 @@ sub run {
         is($cart->name, 'Cart 1', 'got name');
         is($cart->description, 'Test Temp Cart 1', 'got description');
         is($cart->count, 2, 'has 2 items');
-        is($cart->subtotal+0, 5.55, 'subtotal is 5.55');
+        cmp_currency($cart->subtotal+0, 5.55, 'subtotal is 5.55');
         if ($subclass ne 'Handel::Cart') {
             is($cart->custom, 'custom', 'got custom field');
         };
@@ -68,9 +68,9 @@ sub run {
         is($item1->cart, $cart->id, 'cart id is set');
         is($item1->sku, 'SKU1111', 'got sku');
         is($item1->quantity, 1, 'quantity is 1');
-        is($item1->price+0, 1.11, 'price is 1.11');
+        cmp_currency($item1->price+0, 1.11, 'price is 1.11');
         is($item1->description, 'Line Item SKU 1', 'got description');
-        is($item1->total+0, 1.11, 'total is 1.11');
+        cmp_currency($item1->total+0, 1.11, 'total is 1.11');
         if ($itemclass ne 'Handel::Cart::Item') {
             is($item1->custom, 'custom', 'got custom field');
         };
@@ -82,9 +82,9 @@ sub run {
         is($item2->cart, $cart->id, 'cart id is set');
         is($item2->sku, 'SKU2222', 'got sku');
         is($item2->quantity, 2, 'quantity is 2');
-        is($item2->price+0, 2.22, 'price is 2.22');
+        cmp_currency($item2->price+0, 2.22, 'price is 2.22');
         is($item2->description, 'Line Item SKU 2', 'got description');
-        is($item2->total+0, 4.44, 'total is 4.44');
+        cmp_currency($item2->total+0, 4.44, 'total is 4.44');
         if ($itemclass ne 'Handel::Cart::Item') {
             is($item2->custom, 'custom', 'got custom field');
         };
@@ -176,7 +176,7 @@ sub run {
         is($cart->name, 'Cart 1', 'got name');
         is($cart->description, 'Test Temp Cart 1', 'got description');
         is($cart->count, 2, 'has 2 items');
-        is($cart->subtotal+0, 5.55, 'total is 5.55');
+        cmp_currency($cart->subtotal+0, 5.55, 'total is 5.55');
         if ($subclass ne 'Handel::Cart') {
             is($cart->custom, 'custom', 'got custom field');
         };
@@ -191,9 +191,9 @@ sub run {
         is($item1->cart, $cart->id, 'cart id is set');
         is($item1->sku, 'SKU1111', 'got sku');
         is($item1->quantity, 1, 'quantity is 1');
-        is($item1->price+0, 1.11, 'price is 1.11');
+        cmp_currency($item1->price+0, 1.11, 'price is 1.11');
         is($item1->description, 'Line Item SKU 1', 'got description');
-        is($item1->total+0, 1.11, 'total is 1.11');
+        cmp_currency($item1->total+0, 1.11, 'total is 1.11');
         if ($itemclass ne 'Handel::Cart::Item') {
             is($item1->custom, 'custom', 'got custom field');
         };
@@ -205,9 +205,9 @@ sub run {
         is($item2->cart, $cart->id, 'cart id is set');
         is($item2->sku, 'SKU2222', 'got sku');
         is($item2->quantity, 2, 'quantity is 2');
-        is($item2->price+0, 2.22, 'price is 2.22');
+        cmp_currency($item2->price+0, 2.22, 'price is 2.22');
         is($item2->description, 'Line Item SKU 2', 'got description');
-        is($item2->total+0, 4.44, 'total is 4.44');
+        cmp_currency($item2->total+0, 4.44, 'total is 4.44');
         if ($itemclass ne 'Handel::Cart::Item') {
             is($item2->custom, 'custom', 'got custom field');
         };
@@ -231,7 +231,7 @@ sub run {
         is($cart->name, 'Cart 1', 'got name');
         is($cart->description, 'Test Temp Cart 1', 'got description');
         is($cart->count, 2, 'has 2 items');
-        is($cart->subtotal+0, 5.55, 'subtotal is 5.55');
+        cmp_currency($cart->subtotal+0, 5.55, 'subtotal is 5.55');
         if ($subclass ne 'Handel::Cart') {
             is($cart->custom, 'custom', 'got custom field');
         };
@@ -259,7 +259,7 @@ sub run {
         is($cart->name, 'Cart 1', 'got name');
         is($cart->description, 'Test Temp Cart 1', 'got description');
         is($cart->count, 2, 'has 2 items');
-        is($cart->subtotal+0, 5.55, 'subtotal is 5.55');
+        cmp_currency($cart->subtotal+0, 5.55, 'subtotal is 5.55');
         if ($subclass ne 'Handel::Cart') {
             is($cart->custom, 'custom', 'got custom field');
         };
@@ -275,9 +275,9 @@ sub run {
         is($item2->cart, $cart->id, 'cart id is set');
         is($item2->sku, 'SKU2222', 'got sku');
         is($item2->quantity, 2, 'quantity is 2');
-        is($item2->price+0, 2.22, 'price is 2.22');
+        cmp_currency($item2->price+0, 2.22, 'price is 2.22');
         is($item2->description, 'Line Item SKU 2', 'got description');
-        is($item2->total+0, 4.44, 'total is 4.44');
+        cmp_currency($item2->total+0, 4.44, 'total is 4.44');
         if ($itemclass ne 'Handel::Cart::Item') {
             is($item2->custom, 'custom', 'got custom field');
         };
@@ -301,7 +301,7 @@ sub run {
         is($cart->name, 'Cart 1', 'got name');
         is($cart->description, 'Test Temp Cart 1', 'got description');
         is($cart->count, 2, 'has 2 items');
-        is($cart->subtotal+0, 5.55, 'subtotal is 5.55');
+        cmp_currency($cart->subtotal+0, 5.55, 'subtotal is 5.55');
         if ($subclass ne 'Handel::Cart') {
             is($cart->custom, 'custom', 'got custom field');
         };
@@ -329,7 +329,7 @@ sub run {
         is($cart->name, 'Cart 1', 'got name');
         is($cart->description, 'Test Temp Cart 1', 'got description');
         is($cart->count, 2, 'has 2 items');
-        is($cart->subtotal+0, 5.55, 'subtotal is 5.55');
+        cmp_currency($cart->subtotal+0, 5.55, 'subtotal is 5.55');
         if ($subclass ne 'Handel::Cart') {
             is($cart->custom, 'custom', 'got custom field');
         };
@@ -358,7 +358,7 @@ sub run {
         is($cart->name, 'Cart 1', 'got name');
         is($cart->description, 'Test Temp Cart 1', 'got description');
         is($cart->count, 2, 'has 2 items');
-        is($cart->subtotal+0, 5.55, 'subtotal is 2.22');
+        cmp_currency($cart->subtotal+0, 5.55, 'subtotal is 2.22');
         if ($subclass ne 'Handel::Cart') {
             is($cart->custom, 'custom', 'got custom field');
         };
@@ -386,7 +386,7 @@ sub run {
         is($cart->name, 'Cart 1', 'got name');
         is($cart->description, 'Test Temp Cart 1', 'got description');
         is($cart->count, 2, 'has 2 items');
-        is($cart->subtotal+0, 5.55, 'subtotal is 5.55');
+        cmp_currency($cart->subtotal+0, 5.55, 'subtotal is 5.55');
         if ($subclass ne 'Handel::Cart') {
             is($cart->custom, 'custom', 'got custom field');
         };

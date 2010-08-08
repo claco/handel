@@ -6,6 +6,9 @@ BEGIN {
     use lib 't/lib';
     use Handel::Test;
     use Handel::TestHelper qw/comp_to_file/;
+    use Config;
+
+    plan(skip_all => 'Skipping tests under uselongdouble') if $Config{'uselongdouble'};
 
     eval 'use Template 2.07';
     plan(skip_all => 'Template Toolkit 2.07 not installed') if $@;

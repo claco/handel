@@ -64,7 +64,7 @@ sub run {
         is($item1->orderid, $order->id);
         is($item1->sku, 'SKU1111');
         is($item1->quantity, 1);
-        is($item1->price+0, 1.11);
+        cmp_currency($item1->price+0, 1.11);
         is($item1->description, 'Line Item SKU 1');
         if ($itemclass ne 'Handel::Order::Item') {
             is($item1->custom, 'custom');
@@ -77,7 +77,7 @@ sub run {
         is($item2->orderid, $order->id);
         is($item2->sku, 'SKU2222');
         is($item2->quantity, 2);
-        is($item2->price+0, 2.22);
+        cmp_currency($item2->price+0, 2.22);
         is($item2->description, 'Line Item SKU 2');
         if ($itemclass ne 'Handel::Order::Item') {
             is($item2->custom, 'custom');
@@ -153,7 +153,7 @@ sub run {
         is($item1->orderid, $order->id);
         is($item1->sku, 'SKU1111');
         is($item1->quantity, 1);
-        is($item1->price+0, 1.11);
+        cmp_currency($item1->price+0, 1.11);
         is($item1->description, 'Line Item SKU 1');
         if ($itemclass ne 'Handel::Order::Item') {
             is($item1->custom, 'custom');
@@ -166,7 +166,7 @@ sub run {
         is($item2->orderid, $order->id);
         is($item2->sku, 'SKU2222');
         is($item2->quantity, 2);
-        is($item2->price+0, 2.22);
+        cmp_currency($item2->price+0, 2.22);
         is($item2->description, 'Line Item SKU 2');
         if ($itemclass ne 'Handel::Order::Item') {
             is($item2->custom, 'custom');
@@ -229,7 +229,7 @@ sub run {
         is($item2->orderid, $order->id);
         is($item2->sku, 'SKU2222');
         is($item2->quantity, 2);
-        is($item2->price+0, 2.22);
+        cmp_currency($item2->price+0, 2.22);
         is($item2->description, 'Line Item SKU 2');
         if ($itemclass ne 'Handel::Order::Item') {
             is($item2->custom, 'custom');

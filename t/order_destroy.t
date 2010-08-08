@@ -71,7 +71,7 @@ sub run {
 
         my $related_items = $order->count;
         is($related_items, 1);
-        is($order->subtotal+0, 5.55);
+        cmp_currency($order->subtotal+0, 5.55);
         if ($subclass ne 'Handel::Order') {
             is($order->custom, 'custom');
         };

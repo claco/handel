@@ -9,7 +9,7 @@ BEGIN {
     use Test::More;
     use File::Spec::Functions qw/catfile catdir/;
 
-    @Handel::Test::EXPORT = @Test::More::EXPORT;
+    @Handel::Test::EXPORT = (@Test::More::EXPORT, 'cmp_currency');
 
     __PACKAGE__->mk_group_accessors('inherited', qw/db_dir db_file/);
 };
@@ -140,6 +140,12 @@ sub populate_schema {
             ['55555555-5555-5555-5555-555555555555', '33333333-3333-3333-3333-333333333333','SKU1111',5,5.55,0,'Line Item SKU 5', 'custom']
         ]);
     };
+};
+
+sub cmp_currency {
+    my ($got, $expected, $test_name) = @_;
+
+    is( sprintf("%.2f", $got), sprintf("%.2f", $expected), $test_name);
 };
 
 1;

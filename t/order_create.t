@@ -668,16 +668,16 @@ SKIP: {
         isa_ok($order, 'Handel::Order');
         isa_ok($order, $subclass);
         is($order->count, 1);
-        is($order->subtotal+0, 6.66);
+        cmp_currency($order->subtotal+0, 6.66);
 
         my $orderitem = $order->items->first;
         isa_ok($orderitem, 'Handel::Order::Item');
         isa_ok($orderitem, $itemclass);
         is($orderitem->sku, 'sku2');
         is($orderitem->quantity, 3);
-        is($orderitem->price+0, 2.22);
+        cmp_currency($orderitem->price+0, 2.22);
         is($orderitem->description, 'My Second Item');
-        is($orderitem->total+0, 6.66);
+        cmp_currency($orderitem->total+0, 6.66);
         is($orderitem->orderid, $order->id);
     };
 

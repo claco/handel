@@ -2,6 +2,7 @@ Revision history for Perl module Handel
 
 1.00013 Thur Aug 5 21:12:36 2010
 	- Fixed live currency conversion compat tests to be author only
+	- Fixed decimal comparison under -Duselongdouble compiled Perls
 
 1.00012 Sun Aug 1 13:40:04 2010
     - Upgraded to Test::File::Contents 0.05 (LESTERM)

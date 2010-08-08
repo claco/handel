@@ -12,6 +12,7 @@ BEGIN {
     use Handel::L10N qw/translate/;
     use Locale::Currency;
     use Scalar::Util qw/blessed/;
+    use Config;
 };
 
 @EXPORT_OK = qw/&constraint_quantity
@@ -56,7 +57,11 @@ sub constraint_price {
         $value = $value->value;
     };
 
-    return ($value =~ /^\d{1,5}(\.\d{1,2})?$/);
+    if ($Config{'uselongdouble'}) {
+        return ($value =~ /^\d{1,5}(\.\d{1,17})?$/);        
+    } else {
+        return ($value =~ /^\d{1,5}(\.\d{1,2})?$/);
+    };
 };
 
 sub constraint_uuid {

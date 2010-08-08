@@ -5,6 +5,7 @@ use warnings;
 BEGIN {
     use lib 't/lib';
     use Handel::Test tests => 20;
+    use Config;
 
     use_ok('Handel::Constraints', qw(:all));
     use_ok('Handel::Currency');
@@ -17,7 +18,13 @@ ok(!constraint_price(-14),          'negative number price');
 ok(!constraint_price(-25.79),       'negative float price');
 ok(constraint_price(0),             'zero price');
 ok(constraint_price(0.00),          'zero float price');
-ok(!constraint_price(345.345),      'overextended price float');
+
+SKIP: {
+    skip 'skip when uselongdouble is defined', 1 if $Config{'uselongdouble'};
+
+    ok(!constraint_price(345.345),      'overextended price float');
+};
+
 ok(!constraint_price(1234567.00),   'overextended price float');
 ok(!constraint_price(1234567),      'overextended price int');
 ok(constraint_price(25),            'positive int price');

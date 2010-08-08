@@ -104,7 +104,7 @@ sub run {
         is($cart->name, 'Cart 1');
         is($cart->description, 'Test Temp Cart 1');
         is($cart->count, 2);
-        is($cart->subtotal, 5.55);
+        cmp_currency($cart->subtotal, 5.55);
         if ($subclass ne 'Handel::Cart') {
             is($cart->custom, 'custom');
         };
@@ -143,7 +143,7 @@ sub run {
         is($cart1->name, 'Cart 1');
         is($cart1->description, 'Test Temp Cart 1');
         is($cart1->count, 2);
-        is($cart1->subtotal, 5.55);
+        cmp_currency($cart1->subtotal, 5.55);
         if ($subclass ne 'Handel::Cart') {
             is($cart1->custom, 'custom');
         };
@@ -157,7 +157,7 @@ sub run {
         is($cart2->name, 'Cart 2');
         is($cart2->description, 'Test Temp Cart 2');
         is($cart2->count, 1);
-        is($cart2->subtotal, 9.99);
+        cmp_currency($cart2->subtotal, 9.99);
         if ($subclass ne 'Handel::Cart') {
             is($cart2->custom, 'custom');
         };
@@ -171,7 +171,7 @@ sub run {
         is($cart3->name, 'Cart 3');
         is($cart3->description, 'Saved Cart 1');
         is($cart3->count, 2);
-        is($cart3->subtotal, 45.51);
+        cmp_currency($cart3->subtotal, 45.51);
         if ($subclass ne 'Handel::Cart') {
             is($cart3->custom, 'custom');
         };
@@ -192,7 +192,7 @@ sub run {
         is($cart1->name, 'Cart 1');
         is($cart1->description, 'Test Temp Cart 1');
         is($cart1->count, 2);
-        is($cart1->subtotal, 5.55);
+        cmp_currency($cart1->subtotal, 5.55);
         if ($subclass ne 'Handel::Cart') {
             is($cart1->custom, 'custom');
         };
@@ -206,7 +206,7 @@ sub run {
         is($cart2->name, 'Cart 2');
         is($cart2->description, 'Test Temp Cart 2');
         is($cart2->count, 1);
-        is($cart2->subtotal, 9.99);
+        cmp_currency($cart2->subtotal, 9.99);
         if ($subclass ne 'Handel::Cart') {
             is($cart2->custom, 'custom');
         };
@@ -220,7 +220,7 @@ sub run {
         is($cart3->name, 'Cart 3');
         is($cart3->description, 'Saved Cart 1');
         is($cart3->count, 2);
-        is($cart3->subtotal, 45.51);
+        cmp_currency($cart3->subtotal, 45.51);
         if ($subclass ne 'Handel::Cart') {
             is($cart3->custom, 'custom');
         };
@@ -244,7 +244,7 @@ sub run {
         is($cart->name, 'Cart 2');
         is($cart->description, 'Test Temp Cart 2');
         is($cart->count, 1);
-        is($cart->subtotal, 9.99);
+        cmp_currency($cart->subtotal, 9.99);
         if ($subclass ne 'Handel::Cart') {
             is($cart->custom, 'custom');
         };
@@ -267,7 +267,7 @@ sub run {
         is($cart1->name, 'Cart 1');
         is($cart1->description, 'Test Temp Cart 1');
         is($cart1->count, 2);
-        is($cart1->subtotal, 5.55);
+        cmp_currency($cart1->subtotal, 5.55);
         if ($subclass ne 'Handel::Cart') {
             is($cart1->custom, 'custom');
         };
@@ -281,7 +281,7 @@ sub run {
         is($cart2->name, 'Cart 2');
         is($cart2->description, 'Test Temp Cart 2');
         is($cart2->count, 1);
-        is($cart2->subtotal, 9.99);
+        cmp_currency($cart2->subtotal, 9.99);
         if ($subclass ne 'Handel::Cart') {
             is($cart2->custom, 'custom');
         };
@@ -295,7 +295,7 @@ sub run {
         is($cart3->name, 'Cart 3');
         is($cart3->description, 'Saved Cart 1');
         is($cart3->count, 2);
-        is($cart3->subtotal, 45.51);
+        cmp_currency($cart3->subtotal, 45.51);
         if ($subclass ne 'Handel::Cart') {
             is($cart3->custom, 'custom');
         };
