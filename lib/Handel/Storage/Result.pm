@@ -12,6 +12,8 @@ BEGIN {
 };
 
 sub can {
+    return unless Scalar::Util::blessed($_[0]);
+
     return shift->storage_result->can(shift);
 };
 
