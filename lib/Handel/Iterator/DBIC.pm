@@ -47,7 +47,7 @@ sub first {
 
 sub last {
     my $self = shift;
-    my $last = $self->count - 1;
+    my $last = $self->count > 0 ? $self->count - 1 : 0;
     my $result = $self->data->slice($last, $last)->first;
 
     return $result ? $self->create_result($result) : undef;

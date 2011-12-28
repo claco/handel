@@ -85,8 +85,9 @@ try {
     fail('no exception thrown');
 } catch Handel::Exception::Storage with {
     pass('caught storage exception');
-    like(shift, qr/no such relationship/i, 'no relationship in message');
+    like(shift, qr/no relationship/i, 'no relationship in message');
 } otherwise {
+    warn $_[0];
     fail('caught other exception');
 };
 

@@ -50,7 +50,7 @@ sub run {
 
         try {
             local $ENV{'LANGUAGE'} = 'en';
-            $cart->type('abc');
+            $cart->type(-1);
 
             fail('no exception thrown');
         } catch Handel::Exception::Constraint with {

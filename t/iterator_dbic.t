@@ -162,7 +162,7 @@ SKIP: {
 
 
     # check methods with empty list
-    $iterator->{data} = $schema->resultset('Carts')->search(id => '0');
+    $iterator->{data} = $schema->resultset('Carts')->search({id => '0'});
     is($iterator->first, undef, 'first returns undef on empty list');
     is($iterator->last, undef, 'last returns undef on empty list');
     is($iterator->next, undef, 'next returns undef on empty list');

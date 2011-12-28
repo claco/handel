@@ -81,6 +81,10 @@ sub add_item {
         -details => translate('ITEM_RELATIONSHIP_NOT_SPECIFIED')
     ) unless $self->item_relationship; ## no critic
 
+    throw Handel::Exception::Storage(
+        -details => translate('SCHEMA_SOURCE_NO_RELATIONSHIP', ref $storage_result, $self->item_relationship)
+    ) unless $storage_result->can('add_to_' . $self->item_relationship); ## no critic
+
     my $item = $storage_result->create_related($self->item_relationship, @_);
     my $item_storage = $item->result_source->{'__handel_storage'};
 

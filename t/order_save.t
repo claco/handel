@@ -48,7 +48,7 @@ sub run {
         isa_ok($order, $subclass);
 
         try {
-            $order->type('abc');
+            $order->type(-1);
 
             fail;
         } catch Handel::Exception::Constraint with {

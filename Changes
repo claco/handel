@@ -1,5 +1,7 @@
 Revision history for Perl module Handel
 
+  - Fixed various warnings and test failures on recent DBIx::Class
+
 1.00013 Sun Aug 8 17:07:36 2010
 	- Fixed live currency conversion compat tests to be author only
 	- Fixed decimal comparison under -Duselongdouble compiled Perls
