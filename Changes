@@ -1,5 +1,7 @@
 Revision history for Perl module Handel
 
+1.00014 Fri Dec 30 09:59:24 2011
+  - Update to latest Class::Accessor::Grouped to fix warnings
   - Fixed various warnings and test failures on recent DBIx::Class
 
 1.00013 Sun Aug 8 17:07:36 2010
