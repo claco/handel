@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use vars qw/$VERSION/;
 
-$VERSION = '1.00013';
+$VERSION = '1.00014';
 
 BEGIN {
     use base qw/Class::Accessor::Grouped/;
