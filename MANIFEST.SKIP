@@ -10,6 +10,7 @@ aegis.log$
 \bconfig$
 \bbuild$
 \.DS_Store$
+\bMYMETA.*
 
 
 # Avoid Makemaker generated and utility files.
